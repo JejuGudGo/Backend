@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -26,9 +25,17 @@ public class User {
 
     private String password;
 
+    private String nickname;
+
+    private Long randomTag;
+
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
     private String provider;
+
+    private LocalDateTime createdAt;
+
+    private boolean isDeleted;
 }
 
