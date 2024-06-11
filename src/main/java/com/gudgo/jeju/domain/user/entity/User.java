@@ -27,15 +27,18 @@ public class User {
 
     private String nickname;
 
-    private Long randomTag;
+    @Column(name = "number_tag")
+    private Long numberTag;
 
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
     private String provider;
 
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    private boolean isDeleted;
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
 }
 

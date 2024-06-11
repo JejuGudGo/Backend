@@ -59,6 +59,15 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     private String setRedirectUrl (CustomOAuth2User customOAuth2User) {
-        return "";
+        String encodedUserId = URLEncoder.encode(String.valueOf(customOAuth2User.getUser().getId()), StandardCharsets.UTF_8);
+        String encodedNickname = URLEncoder.encode(String.valueOf(customOAuth2User.getUser().getNickname()), StandardCharsets.UTF_8);
+        String encodedNumberTag = URLEncoder.encode(String.valueOf(customOAuth2User.getUser().getNumberTag()), StandardCharsets.UTF_8);
+
+        String frontendRedirectURL = String.format(
+                "%s/oauth/callback?userId=%s&nickname=%s&numberTag=%s",
+                PRE_FRONT_REDIRECT_URL, encodedUserId, encodedNickname, encodedNumberTag
+        );
+
+        return frontendRedirectURL;
     }
 }
