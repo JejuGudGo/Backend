@@ -1,4 +1,4 @@
-package com.gudgo.jeju.domain.nickname.entity;
+package com.gudgo.jeju.global.auth.nickname.entity;
 
 
 import jakarta.persistence.Entity;
@@ -13,11 +13,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Noun {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class Adjective {
+
+    @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String noun;
+    private String adjective;
 
 }

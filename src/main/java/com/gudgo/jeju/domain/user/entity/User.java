@@ -27,6 +27,8 @@ public class User {
 
     private String nickname;
 
+    private String name;
+
     @Column(name = "number_tag")
     private Long numberTag;
 
@@ -40,5 +42,10 @@ public class User {
 
     @Column(name = "is_deleted")
     private boolean isDeleted = false;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+
 }
 

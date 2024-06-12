@@ -1,9 +1,9 @@
 package com.gudgo.jeju.global.util;
 
-import com.gudgo.jeju.domain.nickname.entity.Adjective;
-import com.gudgo.jeju.domain.nickname.entity.Noun;
-import com.gudgo.jeju.domain.nickname.repository.AdjectiveRepository;
-import com.gudgo.jeju.domain.nickname.repository.NounRepository;
+import com.gudgo.jeju.global.auth.nickname.repository.AdjectiveRepository;
+import com.gudgo.jeju.global.auth.nickname.repository.NounRepository;
+import com.gudgo.jeju.global.auth.nickname.entity.Adjective;
+import com.gudgo.jeju.global.auth.nickname.entity.Noun;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
