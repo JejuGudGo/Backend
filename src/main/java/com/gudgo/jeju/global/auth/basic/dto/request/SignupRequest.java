@@ -16,8 +16,12 @@ public record SignupRequest(
         // 소문자, 특수문자, 8-20 자리 비밀번호
         String password,
         String nickname,
+        String name,
+
         String provider,
         LocalDateTime createdAt,
-        boolean isDeleted
+        boolean isDeleted,
+
+        String phoneNumber
 
 ) {}

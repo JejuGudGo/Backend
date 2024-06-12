@@ -57,6 +57,8 @@ public class SignupService {
                 .provider("basic")
                 .createdAt(LocalDateTime.now())
                 .isDeleted(signupRequestDto.isDeleted())
+                .name(signupRequestDto.name())
+                .phoneNumber(signupRequestDto.phoneNumber())
                 .build();
 
         userRepository.save(user);
