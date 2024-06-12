@@ -1,4 +1,4 @@
-package com.gudgo.jeju.global.data.olle;
+package com.gudgo.jeju.global.data.olle.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,7 +19,7 @@ public class JeJuOlleCourseData {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     
-    private Long order;
+    private Long orderNumber;
     
     private double latitude;
     
@@ -39,5 +39,9 @@ public class JeJuOlleCourseData {
     
     public void setUpdatedAt(OffsetDateTime updatedAt) {
         this.time = updatedAt;
+    }
+
+    public void setCourse(JeJuOlleCourse jeJuOlleCourse) {
+        this.jeJuOlleCourse = jeJuOlleCourse;
     }
 }

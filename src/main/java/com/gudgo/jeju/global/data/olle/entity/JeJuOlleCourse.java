@@ -1,4 +1,4 @@
-package com.gudgo.jeju.global.data.olle;
+package com.gudgo.jeju.global.data.olle.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,7 +19,7 @@ public class JeJuOlleCourse {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private Long courseNumber;
+    private String courseNumber;
 
     private String title;
 
@@ -30,4 +30,6 @@ public class JeJuOlleCourse {
     private double endLatitude;
 
     private double endLongitude;
+
+    private boolean wheelchairAccessible;
 }

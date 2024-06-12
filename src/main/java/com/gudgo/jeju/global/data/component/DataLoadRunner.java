@@ -1,5 +1,6 @@
 package com.gudgo.jeju.global.data.component;
 
+import com.gudgo.jeju.global.data.olle.service.GpxToDatabaseService;
 import com.gudgo.jeju.global.data.tourAPI.common.service.LoadCsvService;
 import com.gudgo.jeju.global.data.tourAPI.spot.service.TourApiRequestService;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +17,12 @@ public class DataLoadRunner implements CommandLineRunner {
 
     private final LoadCsvService loadCsvService;
     private final TourApiRequestService tourApiRequestService;
+    private final GpxToDatabaseService gpxToDatabaseService;
 
     @Override
     public void run(String... args) throws IOException {
         loadCsvService.loadTourApiCommonCsvData();
-        tourApiRequestService.loadTourApiCsvData();
+//        tourApiRequestService.loadTourApiCsvData();
+        gpxToDatabaseService.convertGpxToDatabase();
     }
 }
