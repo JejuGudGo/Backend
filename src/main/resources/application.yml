@@ -69,3 +69,8 @@ logging:
 
     web:
       debug
+
+tour:
+  api:
+    key:
+      ${TOUR_API_KEY}
