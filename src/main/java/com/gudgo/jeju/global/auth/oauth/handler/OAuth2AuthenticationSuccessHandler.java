@@ -25,8 +25,6 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private String PRE_FRONT_REDIRECT_URL = "http://localhost:5173";
-    private final ObjectMapper objectMapper;
-    private final UserRepository userRepository;
     private final TokenGenerator tokenGenerator;
     private final CookieUtil cookieUtil;
     private final RedisUtil redisUtil;
