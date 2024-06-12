@@ -24,7 +24,7 @@ public class PostImage {
 
     @ManyToOne
     @JoinColumn(name = "postId")
-    private Post post;
+    private Posts posts;
 
 
     private void setIsDeleted(boolean isDeleted) {

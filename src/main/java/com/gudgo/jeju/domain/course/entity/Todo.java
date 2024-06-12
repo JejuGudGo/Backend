@@ -19,7 +19,7 @@ public class Todo {
     @Enumerated(value = EnumType.STRING)
     private TodoType todoType;
 
-    private Long order;
+    private Long orderNumber;
 
     private String content;
 
@@ -37,8 +37,8 @@ public class Todo {
         this.todoType = todoType;
     }
 
-    private void setOrder(Long order) {
-        this.order = order;
+    private void setorderNumber(Long orderNumber) {
+        this.orderNumber = orderNumber;
     }
 
     private void setContent(String content) {

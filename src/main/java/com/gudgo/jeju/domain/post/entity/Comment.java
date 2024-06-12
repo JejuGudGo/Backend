@@ -31,7 +31,7 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "postId")
-    private Post post;
+    private Posts posts;
 
 
     private void setContent(String content) {

@@ -21,7 +21,7 @@ public class CourseInfo {
     @Enumerated(value = EnumType.STRING)
     private CourseType courseType;
 
-    private Long order;
+    private Long orderNumber;
 
     private String address;
 
@@ -53,8 +53,8 @@ public class CourseInfo {
         this.courseType = courseType;
     }
 
-    public void setOrder(Long order) {
-        this.order = order;
+    public void setorderNumber(Long orderNumber) {
+        this.orderNumber = orderNumber;
     }
 
     public void setLatitude(double latitude) {
