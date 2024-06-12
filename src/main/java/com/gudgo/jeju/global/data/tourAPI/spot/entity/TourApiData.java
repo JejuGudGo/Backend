@@ -1,6 +1,6 @@
 package com.gudgo.jeju.global.data.tourAPI.spot.entity;
 
-import com.gudgo.jeju.global.data.tourAPI.common.entity.TourApiCategory3;
+import com.gudgo.jeju.global.data.tourAPI.common.entity.TourApiSubContentType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,14 +23,17 @@ public class TourApiData {
 
     private String address;
 
-    private Long content;
+    @Column(columnDefinition = "TEXT")
+    private String content;
 
     private Double latitude;
 
     private Double longitude;
 
+    @Column(columnDefinition = "TEXT")
     private String pageUrl;
 
+    @Lob
     private String info;
 
     private String closeDay;
@@ -43,6 +46,7 @@ public class TourApiData {
 
     private String eventEndDate;
 
+    @Column(columnDefinition = "TEXT")
     private String fee;
 
     private String time;
@@ -53,9 +57,11 @@ public class TourApiData {
 
     private String availablePet;
 
-    private String eventOverview;
-
+    @Column(columnDefinition = "TEXT")
     private String eventContent;
+
+    @Column(columnDefinition = "TEXT")
+    private String eventFee;
 
     private String eventPlace;
 
@@ -67,6 +73,6 @@ public class TourApiData {
 
 
     @ManyToOne
-    @JoinColumn(name = "tourApiCategory3Id")
-    private TourApiCategory3 tourApiCategory3;
+    @JoinColumn(name = "tourApiSubContentTypeId")
+    private TourApiSubContentType tourApiSubContentType;
 }

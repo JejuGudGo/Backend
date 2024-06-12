@@ -1,6 +1,7 @@
 package com.gudgo.jeju.global.data.component;
 
-import com.gudgo.jeju.global.data.tourAPI.common.service.TourApiService;
+import com.gudgo.jeju.global.data.tourAPI.common.service.LoadCsvService;
+import com.gudgo.jeju.global.data.tourAPI.spot.service.TourApiRequestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -13,12 +14,12 @@ import java.io.IOException;
 @Slf4j
 public class DataLoadRunner implements CommandLineRunner {
 
-    private final TourApiService tourApiService;
+    private final LoadCsvService loadCsvService;
+    private final TourApiRequestService tourApiRequestService;
 
     @Override
     public void run(String... args) throws IOException {
-        log.info("Starting CSV data load...");
-        tourApiService.loadTourApiCommonCsvData();
-        log.info("CSV data load completed.");
+        loadCsvService.loadTourApiCommonCsvData();
+        tourApiRequestService.loadTourApiCsvData();
     }
 }

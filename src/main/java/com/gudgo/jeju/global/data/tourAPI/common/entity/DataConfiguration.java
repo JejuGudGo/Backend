@@ -1,4 +1,4 @@
-package com.gudgo.jeju.global.data.config;
+package com.gudgo.jeju.global.data.tourAPI.common.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,4 +23,13 @@ public class DataConfiguration {
     private String configKey;
     private boolean configValue;
     private LocalDate updatedAt;
+
+
+    public void setConfigValue(boolean configValue) {
+        this.configValue = configValue;
+    }
+
+    public void setUpdatedAt(LocalDate updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }

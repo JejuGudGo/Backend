@@ -11,14 +11,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TourApiCategory3 {
+public class TourApiSubContentType {
     @Id
-    private String categoryCode;
-
-    private String categoryName;
+    private String subContentId;
 
 
     @ManyToOne
-    @JoinColumn(name = "tourApiCategory2Id")
-    private TourApiCategory2 tourApiCategory2;
+    @JoinColumn(name = "tourApiCategory3Id")
+    private TourApiCategory3 tourApiCategory3;
 }

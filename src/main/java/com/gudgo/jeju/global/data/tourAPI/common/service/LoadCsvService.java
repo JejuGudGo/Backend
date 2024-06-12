@@ -1,7 +1,7 @@
 package com.gudgo.jeju.global.data.tourAPI.common.service;
 
-import com.gudgo.jeju.global.data.config.DataConfiguration;
-import com.gudgo.jeju.global.data.config.DataConfigurationRepository;
+import com.gudgo.jeju.global.data.tourAPI.common.entity.DataConfiguration;
+import com.gudgo.jeju.global.data.tourAPI.common.repository.DataConfigurationRepository;
 import com.gudgo.jeju.global.data.tourAPI.common.entity.*;
 import com.gudgo.jeju.global.data.tourAPI.common.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class TourApiService {
+public class LoadCsvService {
 
     private final TourApiContentTypeRepository contentTypeRepository;
     private final TourApiCategory1Repository category1Repository;
@@ -31,7 +31,7 @@ public class TourApiService {
         DataConfiguration checkDataConfig = dataConfigurationRepository.findByConfigKey("TourDataCommon")
                 .orElse(null);
 
-        if (checkDataConfig == null) {
+        if (checkDataConfig == null || !checkDataConfig.isConfigValue()) {
             Map<String, TourApiContentType> contentTypeMap = new HashMap<>();
             Map<String, TourApiCategory1> category1Map = new HashMap<>();
             Map<String, TourApiCategory2> category2Map = new HashMap<>();
@@ -57,19 +57,19 @@ public class TourApiService {
                                             .title(contentTypeName)
                                             .build()));
 
-                    TourApiCategory1 category1 = category1Map.computeIfAbsent(cat2,
+                    TourApiCategory1 category1 = category1Map.computeIfAbsent(cat1,
                             code -> category1Repository.save(
                                     TourApiCategory1.builder()
-                                            .categoryCode(cat2)
-                                            .categoryName(cat2Name)
+                                            .categoryCode(cat1)
+                                            .categoryName(cat1Name)
                                             .tourApiContentType(contentType)
                                             .build()));
 
-                    TourApiCategory2 category2 = category2Map.computeIfAbsent(cat3,
+                    TourApiCategory2 category2 = category2Map.computeIfAbsent(cat2,
                             code -> category2Repository.save(
                                     TourApiCategory2.builder()
-                                            .categoryCode(cat3)
-                                            .categoryName(cat3Name)
+                                            .categoryCode(cat2)
+                                            .categoryName(cat2Name)
                                             .tourApiCategory1(category1)
                                             .build()));
 
