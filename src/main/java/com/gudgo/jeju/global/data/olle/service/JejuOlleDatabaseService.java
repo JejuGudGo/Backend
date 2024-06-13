@@ -2,6 +2,7 @@ package com.gudgo.jeju.global.data.olle.service;
 
 import com.gudgo.jeju.global.data.olle.entity.JeJuOlleCourse;
 import com.gudgo.jeju.global.data.olle.entity.JeJuOlleCourseData;
+import com.gudgo.jeju.global.data.olle.entity.OlleType;
 import com.gudgo.jeju.global.data.olle.repository.JeJuOlleCourseDataRepository;
 import com.gudgo.jeju.global.data.olle.repository.JeJuOlleCourseRepository;
 import com.gudgo.jeju.global.data.tourAPI.common.entity.DataConfiguration;
@@ -30,7 +31,7 @@ import java.util.regex.Pattern;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class GpxToDatabaseService {
+public class JejuOlleDatabaseService {
     private final JeJuOlleCourseRepository courseRepository;
     private final JeJuOlleCourseDataRepository courseDataRepository;
     private final DataConfigurationRepository dataConfigurationRepository;
@@ -48,7 +49,7 @@ public class GpxToDatabaseService {
                 String fileName = gpxFile.getName();
                 boolean wheelchairAccessible = fileName.contains("휠체어구간");
                 String courseTitle = fileName.replace("제주올레길_", "")
-                        .replace("제주올레길_휠체어구간_", "")
+                        .replace("휠체어구간 ", "")
                         .replace(".gpx", "")
                         .replace("_", " ");
                 String courseNumber = extractCourseNumber(fileName);
@@ -62,13 +63,19 @@ public class GpxToDatabaseService {
                 }
             }
 
-            DataConfiguration dataConfiguration = DataConfiguration.builder()
-                    .configKey("OlleDataLoaded")
-                    .configValue(true)
-                    .updatedAt(LocalDate.now())
-                    .build();
+            if (checkDataConfig == null) {
+                DataConfiguration dataConfiguration = DataConfiguration.builder()
+                        .configKey("OlleDataLoaded")
+                        .configValue(true)
+                        .updatedAt(LocalDate.now())
+                        .build();
 
-            dataConfigurationRepository.save(dataConfiguration);
+                dataConfigurationRepository.save(dataConfiguration);
+
+            } else if (!checkDataConfig.isConfigValue()){
+                checkDataConfig.setConfigValue(true);
+                dataConfigurationRepository.save(checkDataConfig);
+            }
 
             log.info("===============================================================================");
             log.info("OlleData loaded successfully");
@@ -82,7 +89,7 @@ public class GpxToDatabaseService {
     }
 
     private String extractCourseNumber(String fileName) {
-        Pattern pattern = Pattern.compile("제주올레길(?:_휠체어구간)?_([0-9]+(-[0-9]+)?)코스");
+        Pattern pattern = Pattern.compile("제주올레길(?:휠체어구간 )?_([0-9]+(-[0-9]+)?)코스");
         Matcher matcher = pattern.matcher(fileName);
         if (matcher.find()) {
             return matcher.group(1);
@@ -102,6 +109,7 @@ public class GpxToDatabaseService {
 
             if (!jeJuOlleCourseDataList.isEmpty()) {
                 JeJuOlleCourse course = JeJuOlleCourse.builder()
+                        .olleType(OlleType.JEJU)
                         .courseNumber(courseNumber)
                         .title(title)
                         .startLatitude(jeJuOlleCourseDataList.get(0).getLatitude())

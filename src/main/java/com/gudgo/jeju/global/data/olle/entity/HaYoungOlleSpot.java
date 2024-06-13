@@ -1,4 +1,4 @@
-package com.gudgo.jeju.global.data.tourAPI.course.entity;
+package com.gudgo.jeju.global.data.olle.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,15 +11,18 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WalkingCourseImage {
+public class HaYoungOlleSpot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
-    private String imageUrl;
+    private String title;
 
+    private double latitude;
+
+    private double longitude;
 
     @ManyToOne
-    @JoinColumn(name = "walkingCourseId")
-    private WalkingCourse walkingCourse;
+    @JoinColumn(name = "jeJuOlleCourseId")
+    private JeJuOlleCourse jeJuOlleCourse;
 }

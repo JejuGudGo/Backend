@@ -17,8 +17,6 @@ public class TourApiData {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long categoryId;
-
     private String title;
 
     private String address;

@@ -82,13 +82,19 @@ public class LoadCsvService {
                 }
             }
 
-            DataConfiguration dataConfiguration = DataConfiguration.builder()
-                    .configKey("TourDataCommon")
-                    .configValue(true)
-                    .updatedAt(LocalDate.now())
-                    .build();
+            if (checkDataConfig == null) {
+                DataConfiguration dataConfiguration = DataConfiguration.builder()
+                        .configKey("TourDataCommon")
+                        .configValue(true)
+                        .updatedAt(LocalDate.now())
+                        .build();
 
-            dataConfigurationRepository.save(dataConfiguration);
+                dataConfigurationRepository.save(dataConfiguration);
+
+            } else if (!checkDataConfig.isConfigValue()){
+                checkDataConfig.setConfigValue(true);
+                dataConfigurationRepository.save(checkDataConfig);
+            }
 
         } else {
             log.info("===============================================================================");

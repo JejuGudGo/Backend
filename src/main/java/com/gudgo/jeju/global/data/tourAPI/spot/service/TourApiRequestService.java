@@ -45,7 +45,7 @@ public class TourApiRequestService {
     private final String FRONT_URL = "http://apis.data.go.kr/B551011/KorService1/";
 
     @Transactional
-    public void loadTourApiCsvData() throws IOException {
+    public void loadTourApiRequestData() throws IOException {
         log.info("===============================================================================");
         log.info("Starting to load Tour API CSV data...");
         log.info("===============================================================================");
@@ -79,13 +79,19 @@ public class TourApiRequestService {
             }
         }
 
-        DataConfiguration dataConfiguration = DataConfiguration.builder()
-                .configKey("TourDataSpot")
-                .configValue(true)
-                .updatedAt(LocalDate.now())
-                .build();
+        if (checkDataConfig == null) {
+            DataConfiguration dataConfiguration = DataConfiguration.builder()
+                    .configKey("TourDataSpot")
+                    .configValue(true)
+                    .updatedAt(LocalDate.now())
+                    .build();
 
-        dataConfigurationRepository.save(dataConfiguration);
+            dataConfigurationRepository.save(dataConfiguration);
+
+        } else if (!checkDataConfig.isConfigValue()){
+            checkDataConfig.setConfigValue(true);
+            dataConfigurationRepository.save(checkDataConfig);
+        }
 
         log.info("===============================================================================");
         log.info("DataConfiguration updated!");
