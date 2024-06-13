@@ -24,7 +24,6 @@ spring:
             client-secret: ${GOOGLE_CLIENT_SECRET}
             scope:
               - email
-              - profile
 
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
