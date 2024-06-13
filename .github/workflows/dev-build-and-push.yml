@@ -41,10 +41,10 @@ jobs:
           echo "GOOGLE_REDIRECT_URL=${{ secrets.GOOGLE_REDIRECT_URL }}" >> .env
           echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
           echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
+          echo "TOUR_API_KEY=${{ secrets.TOUR_API_KEY }}" >> .env
           echo "COOL_SMS_KEY=${{ secrets.COOL_SMS_KEY }}" >> .env
           echo "COOL_SMS_SECRET_KEY=${{ secrets.COOL_SMS_SECRET_KEY }}" >> . env
           echo "SEND_NUMBER=${{ secrets.SEND_NUMBER }}" >> .env
-          
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
