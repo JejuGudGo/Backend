@@ -27,7 +27,8 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             response.setStatus(HttpStatus.BAD_REQUEST.value());
             setResponse(response, "AUTH_02");
 
-        } else if (authException instanceof InsufficientAuthenticationException) {
+        }
+        else if (authException instanceof InsufficientAuthenticationException) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             setResponse(response, "AUTH_03");
         }

@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -26,9 +25,27 @@ public class User {
 
     private String password;
 
+    private String nickname;
+
+    private String name;
+
+    @Column(name = "number_tag")
+    private Long numberTag;
+
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
     private String provider;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+
 }
 

@@ -37,10 +37,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             return new CustomOAuth2User(user.get(), oAuth2User.getAttributes());
 
         }
-//        else {
-//            User newUser = oAuth2SignupService.signup(provider, oAuth2UserInfo);
-//            return new CustomOAuth2User(newUser, oAuth2User.getAttributes());
-//        }
-        return new CustomOAuth2User(user.get(), oAuth2User.getAttributes());
+        else {
+            User newUser = oAuth2SignupService.signup(provider, oAuth2UserInfo);
+            return new CustomOAuth2User(newUser, oAuth2User.getAttributes());
+        }
     }
 }
