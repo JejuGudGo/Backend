@@ -26,7 +26,7 @@ public class DataLoadRunner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         loadCsvService.loadTourApiCommonCsvData();
-        tourApiRequestService.loadTourApiRequestData();
+        tourApiRequestService.prepareTourApiData();
 
         jejuOlleDatabaseService.convertGpxToDatabase();
         haYoungOlleDatabaseService.loadHaYoungData();

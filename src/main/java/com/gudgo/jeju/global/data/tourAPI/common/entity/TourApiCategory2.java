@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TourApiCategory2 {
     @Id
-    private String categoryCode;
+    private String id;
 
     private String categoryName;
 

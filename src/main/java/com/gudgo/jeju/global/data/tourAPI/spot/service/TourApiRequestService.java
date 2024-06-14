@@ -1,21 +1,23 @@
 package com.gudgo.jeju.global.data.tourAPI.spot.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gudgo.jeju.global.data.cache.TourApiSpotCachingService;
 import com.gudgo.jeju.global.data.tourAPI.common.entity.DataConfiguration;
 import com.gudgo.jeju.global.data.tourAPI.common.entity.TourApiCategory3;
+import com.gudgo.jeju.global.data.tourAPI.common.entity.TourApiContentType;
 import com.gudgo.jeju.global.data.tourAPI.common.entity.TourApiSubContentType;
 import com.gudgo.jeju.global.data.tourAPI.common.repository.DataConfigurationRepository;
 import com.gudgo.jeju.global.data.tourAPI.common.repository.TourApiCategory3Repository;
+import com.gudgo.jeju.global.data.tourAPI.common.repository.TourApiContentTypeRepository;
 import com.gudgo.jeju.global.data.tourAPI.common.repository.TourApiSubContentTypeRepository;
-import com.gudgo.jeju.global.data.tourAPI.spot.entity.TourApiData;
-import com.gudgo.jeju.global.data.tourAPI.spot.entity.TourApiImage;
-import com.gudgo.jeju.global.data.tourAPI.spot.repository.TourApiDataRepository;
+import com.gudgo.jeju.global.data.tourAPI.spot.entity.TourApiSpotData;
+import com.gudgo.jeju.global.data.tourAPI.spot.entity.TourApiSpotImage;
+import com.gudgo.jeju.global.data.tourAPI.spot.repository.TourApiSpotDataRepository;
 import com.gudgo.jeju.global.data.tourAPI.spot.repository.TourApiImageRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -27,6 +29,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -36,79 +39,60 @@ public class TourApiRequestService {
     @Value("${tour.api.key}")
     private String KEY;
 
+    private final TourApiContentTypeRepository  tourApiContentTypeRepository;
     private final TourApiCategory3Repository tourApiCategory3Repository;
     private final TourApiSubContentTypeRepository tourApiSubContentTypeRepository;
-    private final TourApiDataRepository tourApiDataRepository;
+    private final TourApiSpotDataRepository tourApiSpotDataRepository;
     private final TourApiImageRepository tourApiImageRepository;
     private final DataConfigurationRepository dataConfigurationRepository;
+    private final TourApiSpotCachingService tourApiSpotCachingService;
 
     private final String FRONT_URL = "http://apis.data.go.kr/B551011/KorService1/";
 
-    @Transactional
-    public void loadTourApiRequestData() throws IOException {
+    public void prepareTourApiData() throws IOException {
         log.info("===============================================================================");
-        log.info("Starting to load Tour API CSV data...");
+        log.info("Starting to prepare Tour API CSV data...");
         log.info("===============================================================================");
 
-        DataConfiguration checkDataConfig = dataConfigurationRepository.findByConfigKey("TourDataSpot")
+        DataConfiguration checkDataConfig = dataConfigurationRepository.findByConfigKey("TourSpotCommon")
                 .orElse(null);
 
         if (checkDataConfig == null || !checkDataConfig.isConfigValue()) {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new ClassPathResource("csv/api.csv").getInputStream()));
-            String line;
+            List<TourApiContentType> tourApiContentTypes = tourApiContentTypeRepository.findAll();
 
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(",");
-                String contentTypeId = data[0];
-                String cat1 = data[2];
-                String cat2 = data[4];
-                String cat3 = data[6];
-
-                listRequestApi(contentTypeId, cat1, cat2, cat3, 1);
-
-//                int pageNo = 1;
-//                int totalCount = 0;
-//                do {
-//                    log.info("===============================================================================");
-//                    log.info("Processing page number is {}", pageNo);
-//                    log.info("===============================================================================");
-//
-//                    totalCount = listRequestApi(contentTypeId, cat1, cat2, cat3, pageNo);
-//                    pageNo++;
-//                } while ((pageNo - 1) * 10 < totalCount);
+            for (TourApiContentType tourApiContentType : tourApiContentTypes) {
+                String id = tourApiContentType.getId();
+                RequestRowNumber(id);
             }
+
+            if (checkDataConfig == null) {
+                DataConfiguration dataConfiguration = DataConfiguration.builder()
+                        .configKey("TourSpotCommon")
+                        .configValue(true)
+                        .updatedAt(LocalDate.now())
+                        .build();
+
+                dataConfigurationRepository.save(dataConfiguration);
+
+            } else if (!checkDataConfig.isConfigValue()){
+                checkDataConfig.setConfigValue(true);
+                dataConfigurationRepository.save(checkDataConfig);
+            }
+
+        } else {
+            log.info("===============================================================================");
+            log.info("TourApiCommonCsvData is already loaded");
+            log.info("===============================================================================");
         }
-
-        if (checkDataConfig == null) {
-            DataConfiguration dataConfiguration = DataConfiguration.builder()
-                    .configKey("TourDataSpot")
-                    .configValue(true)
-                    .updatedAt(LocalDate.now())
-                    .build();
-
-            dataConfigurationRepository.save(dataConfiguration);
-
-        } else if (!checkDataConfig.isConfigValue()){
-            checkDataConfig.setConfigValue(true);
-            dataConfigurationRepository.save(checkDataConfig);
-        }
-
-        log.info("===============================================================================");
-        log.info("DataConfiguration updated!");
-        log.info("===============================================================================");
-
     }
 
-    @Transactional
-    public int listRequestApi(String contentTypeId, String cat1, String cat2, String cat3, int pageNo) throws IOException {
-        String url = FRONT_URL + "areaBasedList1?ServiceKey=" + KEY +
-                "&MobileOS=ETC&MobileApp=AppTest&_type=json&numOfRows=10&pageNo=" + pageNo +
-                "&listYN=Y&arrange=A&areaCode=39&sigunguCode=&contentTypeId=" + contentTypeId +
-                "&cat1=" + cat1 + "&cat2=" + cat2 + "&cat3=" + cat3;
+    private void RequestRowNumber(String contentTypeId) throws IOException {
+        String requestUrl = FRONT_URL + "areaBasedList1?ServiceKey=" + KEY +
+                "&MobileOS=ETC&MobileApp=AppTest&_type=json&numOfRows=" + "&pageNo=1" +
+                "&listYN=N&arrange=A&areaCode=39&sigunguCode=&contentTypeId=" + contentTypeId +
+                "&cat1=&cat2=&cat3=";
 
-        TourApiCategory3 tourApiCategory3 = tourApiCategory3Repository.findById(cat3).get();
-
-        Map<String, Object> response = sendGetRequest(url);
+        Map<String, Object> response = sendGetRequest(requestUrl);
         if (response != null) {
             Map<String, Object> responseBody = (Map<String, Object>) response.get("response");
 
@@ -116,7 +100,44 @@ public class TourApiRequestService {
                 Map<String, Object> body = (Map<String, Object>) responseBody.get("body");
 
                 if (body != null) {
-                    int totalCount = (int) body.get("totalCount");
+                    if (body.containsKey("items")) {
+                        Object items = body.get("items");
+
+                        if (items instanceof Map) {
+                            Map<String, Object> itemsMap = (Map<String, Object>) items;
+
+                            if (itemsMap.containsKey("item")) {
+                                List<Map<String, Object>> itemList = (List<Map<String, Object>>) itemsMap.get("item");
+
+                                for (Map<String, Object> item : itemList) {
+                                    String rowNumber = item.get("totalCnt").toString();
+
+                                    if (!rowNumber.equals("0") || !rowNumber.isBlank()) {
+                                        RequestList(contentTypeId, rowNumber);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void RequestList(String contentTypeId, String rowNumber) throws IOException {
+        String listUrl = FRONT_URL + "areaBasedList1?ServiceKey=" + KEY +
+                "&MobileOS=ETC&MobileApp=AppTest&_type=json&numOfRows=" + rowNumber + "&pageNo=1" +
+                "&listYN=Y&arrange=A&areaCode=39&sigunguCode=&contentTypeId=" + contentTypeId +
+                "&cat1=&cat2=&cat3=";
+
+        Map<String, Object> response = sendGetRequest(listUrl);
+        if (response != null) {
+            Map<String, Object> responseBody = (Map<String, Object>) response.get("response");
+
+            if (responseBody != null) {
+                Map<String, Object> body = (Map<String, Object>) responseBody.get("body");
+
+                if (body != null) {
 
                     if (body.containsKey("items")) {
                         Object items = body.get("items");
@@ -128,41 +149,50 @@ public class TourApiRequestService {
                                 List<Map<String, Object>> itemList = (List<Map<String, Object>>) itemsMap.get("item");
 
                                 for (Map<String, Object> item : itemList) {
+                                    String cat3 = item.get("cat3").toString();
                                     String contentId = item.get("contentid").toString();
+                                    String longitude = item.get("mapy").toString();
+                                    String latitude = item.get("mapx").toString();
+                                    String updateTime = item.get("modifiedtime").toString();
 
-                                    TourApiSubContentType tourApiSubContentType = TourApiSubContentType.builder()
-                                            .tourApiCategory3(tourApiCategory3)
-                                            .subContentId(contentId)
-                                            .build();
+                                    Optional<TourApiCategory3> tourApiCategory3 = tourApiCategory3Repository.findById(cat3);
 
-                                    tourApiSubContentTypeRepository.save(tourApiSubContentType);
+                                    if (tourApiCategory3.isPresent()) {
+                                        TourApiSubContentType tourApiSubContentType = TourApiSubContentType.builder()
+                                                .tourApiCategory3(tourApiCategory3.get())
+                                                .id(contentId)
+                                                .longitude(longitude)
+                                                .latitude(latitude)
+                                                .updatedAt(updateTime)
+                                                .build();
 
-                                    detailRequestApi(contentId, contentTypeId);
+                                        tourApiSubContentTypeRepository.save(tourApiSubContentType);
+                                    }
                                 }
                             }
                         } else {
+                            log.warn("===============================================================================");
                             log.warn("Items is not a Map: {}", items);
+                            log.warn("===============================================================================");
                         }
                     }
-                    return totalCount;
                 }
             }
         } else {
-            log.error("Failed to get response from API");
+            log.info("===============================================================================");
+            log.info("Failed to get response...");
+            log.info("===============================================================================");
         }
-        return 0;
     }
 
     @Transactional
-    public void detailRequestApi(String contentId, String contentTypeId) throws IOException {
+    public void requestSpotDetail(String contentId, String contentTypeId) throws IOException {
         List<String> images = new ArrayList<>();
         TourApiSubContentType tourApiSubContentType = tourApiSubContentTypeRepository.findById(contentId).get();
 
         String title = "";
         String address = "";
         String content = "";
-        String latitude = "";
-        String longitude = "";
         String pageUrl = "";
         String info = "";
         String closeDay = "";
@@ -175,7 +205,6 @@ public class TourApiRequestService {
         String park = "";
         String rentStroller = "";
         String availablePet = "";
-        String eventOverview = "";
         String eventContent = "";
         String eventFee = "";
         String eventPlace = "";
@@ -232,14 +261,6 @@ public class TourApiRequestService {
 
                                 if (item.containsKey("addr1")) {
                                     address = item.get("addr1").toString();
-                                }
-
-                                if (item.containsKey("mapx")) {
-                                    latitude = item.get("mapx").toString();
-                                }
-
-                                if (item.containsKey("mapy")) {
-                                    longitude = item.get("mapy").toString();
                                 }
 
                                 if (item.containsKey("overview")) {
@@ -417,13 +438,10 @@ public class TourApiRequestService {
             log.error("Failed to get response from API");
         }
 
-        TourApiData tourApiData = TourApiData.builder()
-                .tourApiSubContentType(tourApiSubContentType)
+        TourApiSpotData tourApiSpotData = TourApiSpotData.builder()
                 .title(title)
                 .address(address)
                 .content(content)
-                .latitude(Double.parseDouble(latitude))
-                .longitude(Double.parseDouble(longitude))
                 .availablePet(availablePet)
                 .pageUrl(pageUrl)
                 .park(park)
@@ -445,24 +463,34 @@ public class TourApiRequestService {
                 .guideService(guideService)
                 .build();
 
-        tourApiDataRepository.save(tourApiData);
+        tourApiSpotDataRepository.save(tourApiSpotData);
+
+        tourApiSubContentType.setTourApiSpotData(tourApiSpotData);
+        tourApiSubContentTypeRepository.save(tourApiSubContentType);
 
         log.info("===============================================================================");
         log.info("All TourApiSpot Info saved!");
         log.info("===============================================================================");
 
         for (String image : images) {
-            TourApiImage tourApiImage = TourApiImage.builder()
-                    .tourApiData(tourApiData)
+            TourApiSpotImage tourApiSpotImage = TourApiSpotImage.builder()
+                    .tourApiSpotData(tourApiSpotData)
                     .imageUrl(image)
                     .build();
 
-            tourApiImageRepository.save(tourApiImage);
+            tourApiImageRepository.save(tourApiSpotImage);
         }
 
         log.info("===============================================================================");
         log.info("All TourApiSpot Images saved!");
         log.info("===============================================================================");
+
+        tourApiSpotCachingService.setSpotData(contentId);
+
+        log.info("===============================================================================");
+        log.info("TourApiSpot info cached!");
+        log.info("===============================================================================");
+
     }
 
     private Map<String, Object> sendGetRequest(String urlString) throws IOException {
@@ -479,12 +507,13 @@ public class TourApiRequestService {
         BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
         String inputLine;
         StringBuilder response = new StringBuilder();
+
         while ((inputLine = br.readLine()) != null) {
             response.append(inputLine);
         }
+
         br.close();
 
-        // 응답이 JSON 형식인지 확인
         if (response.charAt(0) != '{' && response.charAt(0) != '[') {
             log.info("===============================================================================");
             log.error("Invalid response format: " + response);
@@ -496,5 +525,4 @@ public class TourApiRequestService {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(response.toString(), Map.class);
     }
-
 }

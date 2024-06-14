@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TourApiContentType {
     @Id
-    private String contentType;
+    private String id;
 
     private String title;
 }
