@@ -53,14 +53,14 @@ public class LoadCsvService {
                     TourApiContentType contentType = contentTypeMap.computeIfAbsent(contentTypeId,
                             id -> contentTypeRepository.save(
                                     TourApiContentType.builder()
-                                            .contentType(contentTypeId)
+                                            .id(contentTypeId)
                                             .title(contentTypeName)
                                             .build()));
 
                     TourApiCategory1 category1 = category1Map.computeIfAbsent(cat1,
                             code -> category1Repository.save(
                                     TourApiCategory1.builder()
-                                            .categoryCode(cat1)
+                                            .id(cat1)
                                             .categoryName(cat1Name)
                                             .tourApiContentType(contentType)
                                             .build()));
@@ -68,14 +68,14 @@ public class LoadCsvService {
                     TourApiCategory2 category2 = category2Map.computeIfAbsent(cat2,
                             code -> category2Repository.save(
                                     TourApiCategory2.builder()
-                                            .categoryCode(cat2)
+                                            .id(cat2)
                                             .categoryName(cat2Name)
                                             .tourApiCategory1(category1)
                                             .build()));
 
                     category3Repository.save(
                             TourApiCategory3.builder()
-                                    .categoryCode(cat3)
+                                    .id(cat3)
                                     .categoryName(cat3Name)
                                     .tourApiCategory2(category2)
                                     .build());

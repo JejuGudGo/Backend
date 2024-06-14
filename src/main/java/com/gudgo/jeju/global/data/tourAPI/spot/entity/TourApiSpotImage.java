@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TourApiImage {
+public class TourApiSpotImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,6 +20,6 @@ public class TourApiImage {
 
 
     @ManyToOne
-    @JoinColumn(name = "tourApiDataId")
-    private TourApiData tourApiData;
+    @JoinColumn(name = "tourApiSpotDataId")
+    private TourApiSpotData tourApiSpotData;
 }

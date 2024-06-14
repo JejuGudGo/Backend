@@ -1,6 +1,5 @@
 package com.gudgo.jeju.global.data.tourAPI.spot.entity;
 
-import com.gudgo.jeju.global.data.tourAPI.common.entity.TourApiSubContentType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TourApiData {
+public class TourApiSpotData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,10 +22,6 @@ public class TourApiData {
 
     @Column(columnDefinition = "TEXT")
     private String content;
-
-    private Double latitude;
-
-    private Double longitude;
 
     @Column(columnDefinition = "TEXT")
     private String pageUrl;
@@ -68,9 +63,4 @@ public class TourApiData {
     private String toilet;
 
     private String reserveInfo;
-
-
-    @ManyToOne
-    @JoinColumn(name = "tourApiSubContentTypeId")
-    private TourApiSubContentType tourApiSubContentType;
 }
