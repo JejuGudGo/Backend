@@ -27,5 +27,5 @@ public class Profile {
     @Column(name="profile_image_url")
     private String profileImageUrl;
 
-    private String rank;
+    private String userRank;
 }

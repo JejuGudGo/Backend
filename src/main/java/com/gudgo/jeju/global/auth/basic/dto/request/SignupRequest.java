@@ -16,12 +16,15 @@ public record SignupRequest(
         // 소문자, 특수문자, 8-20 자리 비밀번호
         String password,
         String nickname,
+
+        @NotBlank(message = "이름을 입력해주세요")
         String name,
 
         String provider,
         LocalDateTime createdAt,
         boolean isDeleted,
 
+        @NotBlank(message = "전화번호를 입력해주세요")
         String phoneNumber
 
 ) {}
