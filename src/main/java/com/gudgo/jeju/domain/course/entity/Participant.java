@@ -1,10 +1,7 @@
 package com.gudgo.jeju.domain.course.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
@@ -22,8 +19,10 @@ public class Participant {
 
     private String profileImageUrl;
 
+    @Setter
     private boolean approval;
 
+    @Setter
     private boolean isDeleted;
 
 
@@ -31,12 +30,4 @@ public class Participant {
     @JoinColumn(name = "courseId")
     private Course course;
 
-
-    private void setApproval(boolean approval) {
-        this.approval = approval;
-    }
-
-    private void setIsDeleted(boolean isDeleted) {
-        this.isDeleted = isDeleted;
-    }
 }

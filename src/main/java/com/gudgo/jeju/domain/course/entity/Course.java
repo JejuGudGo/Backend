@@ -35,6 +35,8 @@ public class Course {
 
     private Long originalCreatorId;
 
+    private Long originalCoursed;
+
 
     @ManyToOne
     @JoinColumn(name = "userId")
