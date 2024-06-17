@@ -43,7 +43,7 @@ jobs:
           echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
           echo "TOUR_API_KEY=${{ secrets.TOUR_API_KEY }}" >> .env
           echo "COOL_SMS_KEY=${{ secrets.COOL_SMS_KEY }}" >> .env
-          echo "COOL_SMS_SECRET_KEY=${{ secrets.COOL_SMS_SECRET_KEY }}" >> . env
+          echo "COOL_SMS_SECRET_KEY=${{ secrets.COOL_SMS_SECRET_KEY }}" >> .env
           echo "SEND_NUMBER=${{ secrets.SEND_NUMBER }}" >> .env
 
       - name: Build with Gradle
