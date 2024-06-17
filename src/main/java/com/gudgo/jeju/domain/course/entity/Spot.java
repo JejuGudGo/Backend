@@ -23,32 +23,23 @@ public class Spot {
     private TourApiCategory1 tourApiCategory1;
 
 
-    @Setter
     private String title;
 
-    @Setter
     @Enumerated(value = EnumType.STRING)
     private CourseType courseType;
 
-    @Setter
-    private Long orderNumber;
+    private Long order;
 
-    @Setter
     private String address;
 
-    @Setter
     private double latitude;
 
-    @Setter
     private double longitude;
 
-    @Setter
-    private boolean isDeleted;
+    private boolean isDeleted = false;
 
-    @Setter
-    private boolean isCompleted;
+    private boolean isCompleted = false;
 
-    @Setter
     private long count;
 
 

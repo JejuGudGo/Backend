@@ -19,10 +19,8 @@ public class Participant {
 
     private String profileImageUrl;
 
-    @Setter
     private boolean approval;
 
-    @Setter
     private boolean isDeleted;
 
 

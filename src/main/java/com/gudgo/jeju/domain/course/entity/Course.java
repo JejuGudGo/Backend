@@ -2,14 +2,12 @@ package com.gudgo.jeju.domain.course.entity;
 
 import com.gudgo.jeju.domain.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+
 
 @Entity
 @Getter
@@ -25,38 +23,33 @@ public class Course {
 
     private LocalTime time;
 
-    private LocalDateTime startAt;
+    private LocalDate startAt;
 
     private String summary;
 
     private LocalDate createdAt;
 
-    private boolean isDeleted;
+    private boolean isCompleted = false;
+
+    private boolean isDeleted = false;
 
     private Long originalCreatorId;
 
-    private Long originalCoursed;
+    private Long originalCourseId;
 
 
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
 
-
-    public void setTitle(String title) {
-        this.title = title;
+    public void updateOriginalCourseId(Long id) {
+        this.originalCourseId = id;
     }
 
-    public void setTime(LocalTime time) {
-        this.time = time;
-    }
+    public void softDelete(boolean isDeleted) { this.isDeleted = true; }
 
-    public void setStartAt(LocalDateTime startAt) {
-        this.startAt = startAt;
-    }
 
-    public void setIsDeleted(boolean isDeleted) {
-        this.isDeleted = isDeleted;
-    }
+
+
 
 }

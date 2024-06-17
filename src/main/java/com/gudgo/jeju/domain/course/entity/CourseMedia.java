@@ -18,16 +18,12 @@ public class CourseMedia {
     @JoinColumn(name = "courseId")
     private Course course;
 
-    @Setter
     private String imageUrl;
 
-    @Setter
     private String content;
 
-    @Setter
     private double latitude;
 
-    @Setter
     private double longitude;
 
 }
