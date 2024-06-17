@@ -17,18 +17,6 @@ spring:
   #          starttls:
   #            enable: true
 
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            redirect-uri: ${GOOGLE_REDIRECT_URL}
-            client-id: ${GOOGLE_CLIENT_ID}
-            client-secret: ${GOOGLE_CLIENT_SECRET}
-            scope:
-              - email
-              - profile
-
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
     show-sql: true
@@ -56,6 +44,25 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            redirect-uri: ${GOOGLE_REDIRECT_URL}
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+
+coolsms:
+  api:
+    key: ${COOLSMS_KEY}
+    secret: ${COOLSMS_SECRET_KEY}
+
+sendNumber: ${SEND_NUMBER}
 
 logging:
   level:
