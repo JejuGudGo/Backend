@@ -28,17 +28,34 @@ public class Comment {
 
     private boolean isDeleted;
 
-
     @ManyToOne
     @JoinColumn(name = "postId")
     private Posts posts;
 
 
-    private void setContent(String content) {
-        this.content = content;
+    public Comment withContent(String content) {
+        return Comment.builder()
+                .id(this.id)
+                .parentCommentId(this.parentCommentId)
+                .nickname(this.nickname)
+                .numberTag(this.numberTag)
+                .profileImageUrl(this.profileImageUrl)
+                .content(content != null ? content : this.content)
+                .isDeleted(this.isDeleted)
+                .posts(this.posts)
+                .build();
     }
 
-    private void setIsDeleted(boolean isDeleted) {
-        this.isDeleted = isDeleted;
+    public Comment withIsDeleted(boolean isDeleted) {
+        return Comment.builder()
+                .id(this.id)
+                .parentCommentId(this.parentCommentId)
+                .nickname(this.nickname)
+                .numberTag(this.numberTag)
+                .profileImageUrl(this.profileImageUrl)
+                .content(this.content)
+                .isDeleted(isDeleted)
+                .posts(this.posts)
+                .build();
     }
 }

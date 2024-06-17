@@ -1,12 +1,15 @@
 package com.gudgo.jeju.global.auth.basic.service;
 
 
+import com.gudgo.jeju.domain.profile.entity.Profile;
+import com.gudgo.jeju.domain.profile.repository.ProfileRepository;
 import com.gudgo.jeju.domain.user.entity.Role;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
 import com.gudgo.jeju.global.auth.basic.dto.request.SignupRequest;
 import com.gudgo.jeju.global.util.RandomNicknameUtil;
 import com.gudgo.jeju.global.util.RandomNumberUtil;
+import com.gudgo.jeju.global.util.image.service.ImageSettingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +27,7 @@ public class SignupService {
     private final PasswordEncoder passwordEncoder;
     private final RandomNumberUtil randomNumberUtil;
     private final RandomNicknameUtil randomNicknameUtil;
+    private final ProfileRepository profileRepository;
 
     @Transactional
     public void signup(@Valid SignupRequest signupRequestDto) {
@@ -33,7 +37,12 @@ public class SignupService {
                     throw new IllegalArgumentException("User with this email and provider already exists");
                 });
 
+        Profile profile = Profile.builder()
+                .profileImageUrl("")
+                .build();
+
         User user = User.builder()
+                .profile(profile)
                 .email(signupRequestDto.email())
                 .password(passwordEncoder.encode(signupRequestDto.password()))
                 .nickname(randomNicknameUtil.set())
@@ -47,5 +56,6 @@ public class SignupService {
                 .build();
 
         userRepository.save(user);
+        profileRepository.save(profile);
     }
 }

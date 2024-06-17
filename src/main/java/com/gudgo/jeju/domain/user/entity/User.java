@@ -1,5 +1,6 @@
 package com.gudgo.jeju.domain.user.entity;
 
+import com.gudgo.jeju.domain.profile.entity.Profile;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
@@ -47,5 +48,8 @@ public class User {
     private String phoneNumber;
 
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profileId")
+    private Profile profile;
 }
 
