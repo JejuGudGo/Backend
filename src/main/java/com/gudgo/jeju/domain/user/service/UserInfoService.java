@@ -26,7 +26,8 @@ public class UserInfoService {
                 user.getEmail(),
                 user.getNickname(),
                 user.getName(),
-                user.getNumberTag()
+                user.getNumberTag(),
+                user.getProfile().getProfileImageUrl()
         );
     }
 }

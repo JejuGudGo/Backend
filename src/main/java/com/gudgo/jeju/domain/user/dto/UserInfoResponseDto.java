@@ -5,6 +5,7 @@ public record UserInfoResponseDto(
         String email,
         String nickname,
         String name,
-        Long numberTag
+        Long numberTag,
+        String profileImageUrl
 ) {
 }
