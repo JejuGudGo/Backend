@@ -6,7 +6,5 @@ public record UserInfoResponseDto(
         String nickname,
         String name,
         Long numberTag
-
-
 ) {
 }

@@ -20,10 +20,11 @@ public class UserInfoService {
     public UserInfoResponseDto get(Long userid) {
         User user = userRepository.findById(userid)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
         return new UserInfoResponseDto(
                 user.getId(),
-                user.getNickname(),
                 user.getEmail(),
+                user.getNickname(),
                 user.getName(),
                 user.getNumberTag()
         );
