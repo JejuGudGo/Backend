@@ -1,7 +1,6 @@
 package com.gudgo.jeju.global.auth.basic.service;
 
 
-import com.gudgo.jeju.domain.user.dto.SignupRequestDto;
 import com.gudgo.jeju.domain.user.entity.Role;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
@@ -29,35 +28,20 @@ public class SignupService {
     @Transactional
     public void signup(@Valid SignupRequest signupRequestDto) {
         // 이메일 중복 확인
-        userRepository.findByEmailAndProvider(signupRequestDto.email(), signupRequestDto.provider())
+        userRepository.findByEmailAndProvider(signupRequestDto.email(), "basic")
                 .ifPresent(u -> {
                     throw new IllegalArgumentException("User with this email and provider already exists");
                 });
 
-//        String nickname = signupRequestDto.nickname();
-//
-//        // 사용자가 닉네임을 입력하지 않은 경우 : 랜덤 닉네임 생성
-//        if (nickname == null || nickname.isEmpty()) {
-//            nickname = randomNicknameUtil.set();
-//        } else {
-//            // 사용자가 입력한 닉네임에 대해 중복 확인
-//            userRepository.findByNickname(signupRequestDto.nickname())
-//                    .ifPresent(u-> {
-//                        throw new IllegalArgumentException("Nickname already exists");
-//                    });
-//        }
-
-
         User user = User.builder()
                 .email(signupRequestDto.email())
                 .password(passwordEncoder.encode(signupRequestDto.password()))
-//                .nickname(nickname)
                 .nickname(randomNicknameUtil.set())
                 .numberTag(randomNumberUtil.set())
                 .role(Role.USER)
                 .provider("basic")
                 .createdAt(LocalDateTime.now())
-                .isDeleted(signupRequestDto.isDeleted())
+                .isDeleted(false)
                 .name(signupRequestDto.name())
                 .phoneNumber(signupRequestDto.phoneNumber())
                 .build();

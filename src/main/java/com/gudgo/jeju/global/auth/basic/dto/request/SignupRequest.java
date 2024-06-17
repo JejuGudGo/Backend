@@ -20,11 +20,6 @@ public record SignupRequest(
         @NotBlank(message = "이름을 입력해주세요")
         String name,
 
-        String provider,
-        LocalDateTime createdAt,
-        boolean isDeleted,
-
         @NotBlank(message = "전화번호를 입력해주세요")
         String phoneNumber
-
 ) {}
