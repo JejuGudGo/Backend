@@ -44,6 +44,7 @@ jobs:
           echo "SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }}" >> .env
           echo "SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }}" >> .env
           echo "TOUR_API_KEY=${{ secrets.TOUR_API_KEY }}" >> .env
+          echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
@@ -63,7 +64,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Push image
+      - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
           push: true
@@ -72,7 +73,4 @@ jobs:
           context: .
           build-args: |
             JAR_FILE=build/libs/jeju-0.0.1-SNAPSHOT.jar
-          platforms: |
-            linux/amd64
-            linux/arm64
-            windows/amd64
+          platforms: linux/amd64,linux/arm64
