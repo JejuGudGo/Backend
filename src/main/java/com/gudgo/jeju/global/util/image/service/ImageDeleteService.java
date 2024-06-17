@@ -13,8 +13,8 @@ import java.nio.file.Path;
 @RequiredArgsConstructor
 public class ImageDeleteService {
     private final ImageSettingService imageSettingService;
-    public void deleteImage(Long userId) throws IOException {
-        Path rootLocation = imageSettingService.setImagePath(Category.PROFILE);
+    public void deleteImage(Long userId, Category category) throws IOException {
+        Path rootLocation = imageSettingService.setImagePath(category);
         DirectoryStream<Path> stream = Files.newDirectoryStream(rootLocation);
 
         for (Path path : stream) {
