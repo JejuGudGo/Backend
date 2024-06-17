@@ -73,7 +73,7 @@ public class JejuOlleDatabaseService {
                 dataConfigurationRepository.save(dataConfiguration);
 
             } else if (!checkDataConfig.isConfigValue()){
-                checkDataConfig.setConfigValue(true);
+                checkDataConfig.withConfigValue(true);
                 dataConfigurationRepository.save(checkDataConfig);
             }
 
@@ -122,7 +122,7 @@ public class JejuOlleDatabaseService {
                 course = courseRepository.save(course);
 
                 for (JeJuOlleCourseData jeJuOlleCourseData : jeJuOlleCourseDataList) {
-                    jeJuOlleCourseData.setCourse(course);
+                    jeJuOlleCourseData.withJeJuOlleCourse(course);
                 }
 
                 courseDataRepository.saveAll(jeJuOlleCourseDataList);

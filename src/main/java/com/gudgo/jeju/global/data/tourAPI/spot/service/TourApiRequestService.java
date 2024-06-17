@@ -75,7 +75,7 @@ public class TourApiRequestService {
                 dataConfigurationRepository.save(dataConfiguration);
 
             } else if (!checkDataConfig.isConfigValue()){
-                checkDataConfig.setConfigValue(true);
+                checkDataConfig.withConfigValue(true);
                 dataConfigurationRepository.save(checkDataConfig);
             }
 
@@ -465,7 +465,7 @@ public class TourApiRequestService {
 
         tourApiSpotDataRepository.save(tourApiSpotData);
 
-        tourApiSubContentType.setTourApiSpotData(tourApiSpotData);
+        tourApiSubContentType.withTourApiSpotData(tourApiSpotData);
         tourApiSubContentTypeRepository.save(tourApiSubContentType);
 
         log.info("===============================================================================");

@@ -27,7 +27,30 @@ public class Profile {
     private String userRank;
 
 
-    private void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
+    public Profile withWalkingTime(Time walkingTime) {
+        return Profile.builder()
+                .id(this.id)
+                .walkingTime(walkingTime != null ? walkingTime : this.walkingTime)
+                .profileImageUrl(this.profileImageUrl)
+                .userRank(this.userRank)
+                .build();
+    }
+
+    public Profile withProfileImageUrl(String profileImageUrl) {
+        return Profile.builder()
+                .id(this.id)
+                .walkingTime(this.walkingTime)
+                .profileImageUrl(profileImageUrl != null ? profileImageUrl : this.profileImageUrl)
+                .userRank(this.userRank)
+                .build();
+    }
+
+    public Profile withUserRank(String userRank) {
+        return Profile.builder()
+                .id(this.id)
+                .walkingTime(this.walkingTime)
+                .profileImageUrl(this.profileImageUrl)
+                .userRank(userRank != null ? userRank : this.userRank)
+                .build();
     }
 }

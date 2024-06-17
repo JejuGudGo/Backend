@@ -31,7 +31,6 @@ public class Posts {
 
     private boolean isDeleted;
 
-
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
@@ -41,15 +40,42 @@ public class Posts {
     private Course course;
 
 
-    private void setTitle(String title) {
-        this.title = title;
+    public Posts withTitle(String title) {
+        return Posts.builder()
+                .id(this.id)
+                .postType(this.postType)
+                .title(title != null ? title : this.title)
+                .content(this.content)
+                .createdAt(this.createdAt)
+                .isDeleted(this.isDeleted)
+                .user(this.user)
+                .course(this.course)
+                .build();
     }
 
-    private void setContent(String content) {
-        this.content = content;
+    public Posts withContent(String content) {
+        return Posts.builder()
+                .id(this.id)
+                .postType(this.postType)
+                .title(this.title)
+                .content(content != null ? content : this.content)
+                .createdAt(this.createdAt)
+                .isDeleted(this.isDeleted)
+                .user(this.user)
+                .course(this.course)
+                .build();
     }
 
-    private void setIsDeleted(boolean isDeleted) {
-        this.isDeleted = isDeleted;
+    public Posts withIsDeleted(boolean isDeleted) {
+        return Posts.builder()
+                .id(this.id)
+                .postType(this.postType)
+                .title(this.title)
+                .content(this.content)
+                .createdAt(this.createdAt)
+                .isDeleted(isDeleted)
+                .user(this.user)
+                .course(this.course)
+                .build();
     }
 }

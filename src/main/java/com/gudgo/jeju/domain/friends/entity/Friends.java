@@ -21,11 +21,7 @@ public class Friends {
 
     private boolean isApproval;
 
-    private String nickname;
-
-    private String numberTag;
-
-    private String profileImageUrl;
+    private Long friendUserId;
 
     private boolean isDeleted;
 
@@ -35,11 +31,23 @@ public class Friends {
     private User user;
 
 
-    public void setIsApproval(boolean isApproval) {
-        this.isApproval = isApproval;
+    public Friends withIsApproval(boolean isApproval) {
+        return Friends.builder()
+                .id(this.id)
+                .isRequest(this.isRequest)
+                .isApproval(isApproval)
+                .isDeleted(this.isDeleted)
+                .user(this.user)
+                .build();
     }
 
-    public void setIsDeleted(boolean isDeleted) {
-        this.isDeleted = isDeleted;
+    public Friends withIsDeleted(boolean isDeleted) {
+        return Friends.builder()
+                .id(this.id)
+                .isRequest(this.isRequest)
+                .isApproval(this.isApproval)
+                .isDeleted(isDeleted)
+                .user(this.user)
+                .build();
     }
 }
