@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,10 +36,13 @@ public class CourseService {
 
     @Transactional
     public void newCourse(@Valid CourseCreateRequestDto requestDto, HttpServletRequest request) {
+        // 프론트로부터 전송받은 거리(distance) 값을 도보 시간으로 변환한다.
+        LocalTime walkingTime = getWalkingTime(requestDto);
+
         Course course = Course.builder()
                 .user(getUser(request))
                 .title(requestDto.title())
-                .time(requestDto.time())
+                .time(walkingTime)
                 .summary(requestDto.summary())
                 .createdAt(LocalDate.now())
                 .originalCreatorId(getUser(request).getId())    // 현재 userId
@@ -74,7 +78,7 @@ public class CourseService {
     @Transactional
     public void deleteCourse(Long courseId) {
         Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new IllegalArgumentException("Course not found with id: " + courseId));
+                .orElseThrow(() -> new EntityNotFoundException("Course not found with id: " + courseId));
 
         // isDeleted = true 변경
         Course updatedCourse = course.withDeleted();
@@ -116,6 +120,16 @@ public class CourseService {
                 ));
             }
         }
+    }
+
+    private LocalTime getWalkingTime(CourseCreateRequestDto requestDto) {
+        int walkingTimeMinutes = requestDto.distance() / 67;
+
+        int hours = walkingTimeMinutes / 60;
+        int minutes = walkingTimeMinutes % 60;
+
+        return LocalTime.of(hours, minutes);
+
     }
 
 

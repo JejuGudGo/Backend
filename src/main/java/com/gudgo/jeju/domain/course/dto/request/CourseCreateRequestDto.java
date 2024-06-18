@@ -6,7 +6,7 @@ import java.time.LocalTime;
 
 public record CourseCreateRequestDto(
         String title,
-        LocalTime time,
-        String summary
+        String summary,
+        int distance
 ) {
 }
