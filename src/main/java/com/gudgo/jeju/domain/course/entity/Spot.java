@@ -42,11 +42,62 @@ public class Spot {
 
     private long count;
 
-    public void softDelete() {
-        this.isDeleted = true;
-    }
-    public void updateIsCompleted() { this.isCompleted = true; }
+//    public void softDelete() {
+//        this.isDeleted = true;
+//    }
+//    public void updateIsCompleted() { this.isCompleted = true; }
+//
+//    public void updateCount() { this.count++; }
 
-    public void updateCount() { this.count++; }
+    public Spot withDeleted() {
+        return Spot.builder()
+                .id(this.id)
+                .course(this.course)
+                .tourApiCategory1(this.tourApiCategory1)
+                .title(this.title)
+                .courseType(this.courseType)
+                .order(this.order)
+                .address(this.address)
+                .latitude(this.latitude)
+                .longitude(this.longitude)
+                .isDeleted(true)
+                .isCompleted(this.isCompleted)
+                .count(this.count)
+                .build();
+    }
+
+    public Spot withCompleted() {
+        return Spot.builder()
+                .id(this.id)
+                .course(this.course)
+                .tourApiCategory1(this.tourApiCategory1)
+                .title(this.title)
+                .courseType(this.courseType)
+                .order(this.order)
+                .address(this.address)
+                .latitude(this.latitude)
+                .longitude(this.longitude)
+                .isDeleted(this.isDeleted)
+                .isCompleted(true)
+                .count(this.count)
+                .build();
+    }
+
+    public Spot withIncreasedCount() {
+        return Spot.builder()
+                .id(this.id)
+                .course(this.course)
+                .tourApiCategory1(this.tourApiCategory1)
+                .title(this.title)
+                .courseType(this.courseType)
+                .order(this.order)
+                .address(this.address)
+                .latitude(this.latitude)
+                .longitude(this.longitude)
+                .isDeleted(this.isDeleted)
+                .isCompleted(this.isCompleted)
+                .count(this.count + 1)
+                .build();
+    }
 
 }

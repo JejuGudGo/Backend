@@ -44,17 +44,80 @@ public class Course {
     @JoinColumn(name = "userId")
     private User user;
 
-    public void updateOriginalCourseId(Long id) {
-        this.originalCourseId = id;
+//    public void updateOriginalCourseId(Long id) {
+//        this.originalCourseId = id;
+//    }
+//
+//    public void softDelete() { this.isDeleted = true; }
+//
+//    public void updateStartAt(PlanUpdateStartRequestDto requestDto) {
+//        this.startAt = requestDto.getStartAt();}
+//
+//    public void updateIsCompleted() {
+//        this.isCompleted = true;
+//    }
+
+    public Course withIsCompleted() {
+        return Course.builder()
+                .id(this.id)
+                .title(this.title)
+                .time(this.time)
+                .startAt(this.startAt)
+                .summary(this.summary)
+                .createdAt(this.createdAt)
+                .isCompleted(true)
+                .isDeleted(this.isDeleted)
+                .originalCourseId(this.originalCourseId)
+                .originalCreatorId(this.originalCreatorId)
+                .user(this.user)
+                .build();
+    }
+    public Course withOriginalCourseId(Long courseId) {
+        return Course.builder()
+                .id(this.id)
+                .title(this.title)
+                .time(this.time)
+                .startAt(this.startAt)
+                .summary(this.summary)
+                .createdAt(this.createdAt)
+                .isCompleted(this.isCompleted)
+                .isDeleted(this.isDeleted)
+                .originalCourseId(courseId)
+                .originalCreatorId(this.originalCreatorId)
+                .user(this.user)
+                .build();
     }
 
-    public void softDelete() { this.isDeleted = true; }
+    public Course withStartAt(PlanUpdateStartRequestDto requestDto) {
+        return Course.builder()
+                .id(this.id)
+                .title(this.title)
+                .time(this.time)
+                .startAt(requestDto.getStartAt())
+                .summary(this.summary)
+                .createdAt(this.createdAt)
+                .isCompleted(this.isCompleted)
+                .isDeleted(this.isDeleted)
+                .originalCourseId(this.originalCourseId)
+                .originalCreatorId(this.originalCreatorId)
+                .user(this.user)
+                .build();
+    }
 
-    public void updateStartAt(PlanUpdateStartRequestDto requestDto) {
-        this.startAt = requestDto.getStartAt();}
-
-    public void updateIsCompleted() {
-        this.isCompleted = true;
+    public Course withDeleted() {
+        return Course.builder()
+                .id(this.id)
+                .title(this.title)
+                .time(this.time)
+                .startAt(this.startAt)
+                .summary(this.summary)
+                .createdAt(this.createdAt)
+                .isCompleted(this.isCompleted)
+                .isDeleted(true)
+                .originalCourseId(this.originalCourseId)
+                .originalCreatorId(this.originalCreatorId)
+                .user(this.user)
+                .build();
     }
 
 

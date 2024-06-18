@@ -47,7 +47,7 @@ public class CourseService {
         Course savedCourse = courseRepository.save(course);
 
         // 저장된 course 객체의 ID값을 originalCoureseId에 설정
-        savedCourse.updateOriginalCourseId(savedCourse.getId());
+        savedCourse.withOriginalCourseId(savedCourse.getId());
 
         // 다시 저장하여 originalCourseId 업데이트
         courseRepository.save(savedCourse);
@@ -77,7 +77,7 @@ public class CourseService {
                 .orElseThrow(() -> new IllegalArgumentException("Course not found with id: " + courseId));
 
         // isDeleted = true 변경
-        course.softDelete();
+        course.withDeleted();
         courseRepository.save(course);
     }
 

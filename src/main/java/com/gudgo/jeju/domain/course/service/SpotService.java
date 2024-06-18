@@ -69,19 +69,22 @@ public class SpotService {
     @Transactional
     public void completedSpot(Long id) {
         Spot spot = findSpotById(id);
-        spot.updateIsCompleted();
+        Spot updatedSpot = spot.withCompleted();
+        spotRepository.save(updatedSpot);
     }
 
     @Transactional
     public void increaseCount(Long id) {
         Spot spot = findSpotById(id);
-        spot.updateCount();
+        Spot updatedSpot = spot.withIncreasedCount();
+        spotRepository.save(updatedSpot);
     }
 
     @Transactional
     public void deleteSpot(Long id) {
         Spot spot = findSpotById(id);
-        spot.softDelete();
+        Spot updateeSpot = spot.withDeleted();
+        spotRepository.save(updateeSpot);
     }
 
     private Spot findSpotById(Long id) {
