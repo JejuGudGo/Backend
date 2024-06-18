@@ -5,6 +5,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.sql.Time;
+import java.time.LocalTime;
 
 public class Rank {
     @Id
@@ -12,6 +13,6 @@ public class Rank {
     private Long id;
     private String title;
     private String level;
-    private Time minimum;
-    private Time maximum;
+    private LocalTime minimum;
+    private LocalTime maximum;
 }

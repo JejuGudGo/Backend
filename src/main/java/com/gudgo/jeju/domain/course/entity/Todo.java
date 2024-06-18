@@ -28,8 +28,4 @@ public class Todo {
     private boolean isDeleted;
 
 
-    @ManyToOne
-    @JoinColumn(name = "courseId")
-    private Course course;
-
 }

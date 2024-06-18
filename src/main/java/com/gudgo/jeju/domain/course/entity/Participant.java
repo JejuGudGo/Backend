@@ -13,16 +13,11 @@ public class Participant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nickname;
+    private Long participantUserId;
 
-    private String numberTag;
-
-    private String profileImageUrl;
-
-    private boolean approval;
+    private boolean approved;
 
     private boolean isDeleted;
-
 
     @ManyToOne
     @JoinColumn(name = "courseId")

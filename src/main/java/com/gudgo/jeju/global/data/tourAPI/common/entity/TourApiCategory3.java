@@ -19,6 +19,6 @@ public class TourApiCategory3 {
 
 
     @ManyToOne
-    @JoinColumn(name = "tourApiCategory2Id")
+    @JoinColumn(name = "categoryId")
     private TourApiCategory2 tourApiCategory2;
 }

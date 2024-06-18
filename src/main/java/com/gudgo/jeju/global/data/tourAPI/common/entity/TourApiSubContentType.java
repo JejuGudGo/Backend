@@ -24,12 +24,8 @@ public class TourApiSubContentType {
 
 
     @ManyToOne
-    @JoinColumn(name = "tourApiCategory3Id")
-    private TourApiCategory3 tourApiCategory3;
-
-    @OneToOne
-    @JoinColumn(name = "tourApiSpotDataId")
-    private TourApiSpotData tourApiSpotData;
+    @JoinColumn(name = "id")
+    private TourApiCategory3 categoryId;
 
 
     public void setUpdatedAt(String updatedAt) {

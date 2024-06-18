@@ -1,5 +1,6 @@
 package com.gudgo.jeju.domain.post.entity;
 
+import com.gudgo.jeju.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,12 +19,6 @@ public class Comment {
 
     private Long parentCommentId;
 
-    private String nickname;
-
-    private Long numberTag;
-
-    private String profileImageUrl;
-
     private String content;
 
     private boolean isDeleted;
@@ -32,6 +27,10 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "postId")
     private Posts posts;
+
+    @ManyToOne
+    @JoinColumn(name="id")
+    private User user;
 
 
     private void setContent(String content) {

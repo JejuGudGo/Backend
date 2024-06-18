@@ -21,19 +21,15 @@ public class Friends {
 
     private boolean isApproval;
 
-    private String nickname;
-
-    private String numberTag;
-
-    private String profileImageUrl;
-
     private boolean isDeleted;
-
 
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name="friendUserId")
+    private Friends friends;
 
     public void setIsApproval(boolean isApproval) {
         this.isApproval = isApproval;

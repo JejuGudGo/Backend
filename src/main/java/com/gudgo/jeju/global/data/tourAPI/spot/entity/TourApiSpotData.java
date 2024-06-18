@@ -1,5 +1,6 @@
 package com.gudgo.jeju.global.data.tourAPI.spot.entity;
 
+import com.gudgo.jeju.global.data.tourAPI.common.entity.TourApiSubContentType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -63,4 +64,8 @@ public class TourApiSpotData {
     private String toilet;
 
     private String reserveInfo;
+
+    @OneToOne
+    @JoinColumn(name = "subContentTypeId")  // 외래 키 컬럼을 지정합니다.
+    private TourApiSubContentType tourApiSubContentType;
 }

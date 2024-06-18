@@ -2,6 +2,7 @@ package com.gudgo.jeju.domain.post.entity;
 
 import com.gudgo.jeju.domain.course.entity.Course;
 import com.gudgo.jeju.domain.user.entity.User;
+import com.gudgo.jeju.global.data.olle.entity.JeJuOlleCourse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,6 +32,7 @@ public class Posts {
 
     private boolean isDeleted;
 
+    private Long companionsNum;
 
     @ManyToOne
     @JoinColumn(name = "userId")
@@ -39,6 +41,11 @@ public class Posts {
     @OneToOne
     @JoinColumn(name = "courseId")
     private Course course;
+
+    @OneToOne
+    @JoinColumn(name="olleId")
+    private JeJuOlleCourse jeJuOlleCourse;
+
 
 
     private void setTitle(String title) {
