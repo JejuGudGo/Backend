@@ -14,6 +14,11 @@ import org.springframework.web.bind.annotation.*;
 public class CoursePostController {
     private final CoursePostService coursePostService;
 
+    @GetMapping(value = "" )
+    ResponseEntity<?> getCoursePosts() {
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping(value = "/{postId}")
     public ResponseEntity<CoursePostResponse> getCoursePost(@PathVariable("postId") Long postId) {
         CoursePostResponse response = coursePostService.read(postId);
@@ -28,7 +33,7 @@ public class CoursePostController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping(value = "/{postId}")
+    @PatchMapping(value = "/{postId}")
     public ResponseEntity<CoursePostResponse> updateCoursePost(@PathVariable("postId") Long postId, @RequestBody CoursePostUpdateRequest request) {
         CoursePostResponse response = coursePostService.update(postId, request);
 
