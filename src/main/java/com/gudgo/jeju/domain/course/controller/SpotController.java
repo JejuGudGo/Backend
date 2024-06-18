@@ -23,7 +23,7 @@ public class SpotController {
     /* POST: 새로운 스팟 생성
      * POST /api/v1/spot */
     @PostMapping(value = "/spot")
-    public ResponseEntity<?> spot(@Valid @RequestBody SpotCreateRequestDto spotCreateRequestDto) {
+    public ResponseEntity<?> newSpot(@Valid @RequestBody SpotCreateRequestDto spotCreateRequestDto) {
         spotService.newSpot(spotCreateRequestDto);
         return ResponseEntity.ok().build();
     }
@@ -39,13 +39,34 @@ public class SpotController {
     }
 
     /* GET: id값으로 특정 스팟 조회
-     * GET /api/v1/course/spot?courseId={id} */
-    @GetMapping(value ="/course/spot")
+     * GET /api/v1/spot?courseId={id} */
+    @GetMapping(value ="/spot")
     public  ResponseEntity<SpotResponseDto> getSpot(@RequestParam Long id) {
         return ResponseEntity.ok(spotService.getSpot(id));
     }
 
-    // 수정
+    /* PATCH: id값으로 특정 스팟 완료 처리
+     * PATCH /api/v1/spot/{id}/complete */
+    @PatchMapping(value = "/spot/{id}/complete")
+    public ResponseEntity<?> completeSpot(@PathVariable Long id) {
+        spotService.completedSpot(id);
+        return ResponseEntity.ok().build();
+    }
+
+    /* PATCH: id값으로 특정 스팟의 코스 선택 횟수 증가
+     * PATCH /api/v1/spot/{id}/increase-count */
+    @PatchMapping("/spot/{id}/increase-count")
+    public ResponseEntity<?> increaseCount(@PathVariable Long id) {
+        spotService.increaseCount(id);
+        return ResponseEntity.ok().build();
+    }
 
     // 삭제
+    /* DELETE: id값으로 특정 스팟 삭제
+    *  DELETE /api/vi/spot/{id}*/
+    @DeleteMapping(value = "/spot/{id}")
+    public ResponseEntity<?> deleteSpot(@PathVariable Long id) {
+        spotService.deleteSpot(id);
+        return ResponseEntity.ok().build();
+    }
 }

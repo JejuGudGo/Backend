@@ -42,6 +42,11 @@ public class Spot {
 
     private long count;
 
+    public void softDelete() {
+        this.isDeleted = true;
+    }
+    public void updateIsCompleted() { this.isCompleted = true; }
 
+    public void updateCount() { this.count++; }
 
 }
