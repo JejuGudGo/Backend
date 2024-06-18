@@ -34,13 +34,4 @@ public class PostImage {
                 .posts(this.posts)
                 .build();
     }
-
-    public PostImage withPosts(Posts posts) {
-        return PostImage.builder()
-                .id(this.id)
-                .imageUrl(this.imageUrl)
-                .isDeleted(this.isDeleted)
-                .posts(posts != null ? posts : this.posts)
-                .build();
-    }
 }
