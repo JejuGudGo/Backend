@@ -31,6 +31,7 @@ public class Posts {
 
     private boolean isDeleted;
 
+
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
