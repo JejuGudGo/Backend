@@ -12,7 +12,8 @@ public record CourseResponseDto(
         LocalDate createdAt,
         boolean isDeleted,
         Long originalCreatorId,
-        Long originalCourseId
+        Long originalCourseId,
+        String summary
 
 
 ) {

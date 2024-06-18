@@ -37,14 +37,12 @@ public class UserCourseController {
     }
 
 
-
     /* GET : 특정 user가 생성한 코스 목록 조회
     *  GET /api/v1/course/user?userid={userId}) */
     @GetMapping(value = "/courses/user")
     public ResponseEntity<List<CourseResponseDto>> getCourseListByUser(HttpServletRequest request) {
         return ResponseEntity.ok(courseService.getCourseListByUser(request));
     }
-
 
 
     /* DELETE : 코스 삭제
@@ -62,8 +60,5 @@ public class UserCourseController {
 //        courseService.updateCourse(courseId, updateCourseRequestDto);
 //        return ResponseEntity.ok().build();
 //    }
-
-
-
 
 }

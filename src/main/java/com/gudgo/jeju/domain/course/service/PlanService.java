@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -33,47 +34,37 @@ public class PlanService {
     private final SubjectExtractor subjectExtractor;
     private final UserRepository userRepository;
 
-    private Long getUserId(HttpServletRequest request) {
-        String token = tokenExtractor.getAccessTokenFromHeader(request);    // 요청 헤더에서 AccessToken 추출
-
-        return subjectExtractor.getUserIdFromToken(token);  // 토큰에서 userid 추출
-    }
 
     @Transactional
-    public void newPlan(@Valid PlanCreateRequestDto planCreateRequestDto, HttpServletRequest request) {
+    public void newPlan(@Valid PlanCreateRequestDto requestDto, HttpServletRequest request) {
 
-        Long userId = getUserId(request);
-
-        // userId로 User 객체 조회
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
-
-
-
-        Long originalCourseId = planCreateRequestDto.originalCourseId();   // originalCourseId : client로 부터 받은 원작자 코스 인덱스
+        // originalCourseId : client로 부터 받은 원작자 코스 인덱스
+        Long originalCourseId = requestDto.originalCourseId();
 
         // originalCourseId로 Course 객체 조회
         Course originalCourse = courseRepository.findById(originalCourseId)
                 .orElseThrow(() -> new EntityNotFoundException("Course not found with id: " + originalCourseId));
 
-
-        Long originalCreatorId = originalCourse.getUser().getId();  // originalCreatorId : 원작자 코스를 작성한 유저의 userid
+        // originalCreatorId : 원작자 코스를 작성한 유저의 userid
+        Long originalCreatorId = originalCourse.getUser().getId();
 
         Course newPlan = Course.builder()
                 .user(getUser(request))
-                .startAt(planCreateRequestDto.startAt())
+                .startAt(requestDto.startAt())
                 .title(originalCourse.getTitle())
-//                .time()
-//                .summary()
+                .time(requestDto.time().toLocalTime())
+                .summary(requestDto.summary())
+                .createdAt(LocalDate.now())
                 .originalCreatorId(originalCreatorId)
-                .originalCourseId(planCreateRequestDto.originalCourseId())
+                .originalCourseId(requestDto.originalCourseId())
                 .build();
 
         courseRepository.save(newPlan);
     }
 
+    @Transactional(readOnly = true)
     public List<PlanResponseDto> getPlanListByUser(HttpServletRequest request) {
-        Long userId = getUserId(request);
+        Long userId = getUser(request).getId();
 
         List<Course> planList =  courseRepository.findByUserIdAndIsDeletedFalse(userId);
         List<PlanResponseDto> userPlanList = new ArrayList<>();
@@ -82,6 +73,7 @@ public class PlanService {
         return userPlanList;
     }
 
+    @Transactional(readOnly = true)
     public PlanResponseDto getPlanByCourseId(Long courseId) {
         Course plan = courseRepository.findById(courseId)
                 .orElseThrow(() -> new EntityNotFoundException("Course not found"));
@@ -100,15 +92,35 @@ public class PlanService {
         );
     }
 
+    @Transactional
+    public void updatePlanStartAt(Long courseId, PlanUpdateStartRequestDto requestDto) {
+        Course plan = courseRepository.findById(courseId)
+                .orElseThrow(() -> new IllegalArgumentException("plan not found with id: " + courseId));
+        plan.updateStartAt(requestDto);
+    }
+
+    @Transactional
+    public void updatePlanIsCompleted(Long courseId) {
+        Course plan = courseRepository.findById(courseId)
+                .orElseThrow(() -> new IllegalArgumentException("plan not found with id: " + courseId));
+
+        plan.updateIsCompleted();
+    }
+
+    public void deletePlan(Long courseId) {
+        Course plan = courseRepository.findById(courseId)
+                .orElseThrow(() -> new IllegalArgumentException("plan not found with id: " + courseId));
+        plan.softDelete();
+        courseRepository.save(plan);
+    }
+
     private User getUser(HttpServletRequest request) {
         String token = tokenExtractor.getAccessTokenFromHeader(request);    // 요청 헤더에서 AccessToken 추출
         Long userid = subjectExtractor.getUserIdFromToken(token);           // 토큰에서 userid 추출
 
         // userid로 User 객체 조회
-        User user = userRepository.findById(userid)
+        return userRepository.findById(userid)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userid));
-
-        return user;
     }
 
     private void findIdDifferentOriginalCourseId(List<Course> planList, List<PlanResponseDto> userPlanList) {
@@ -128,26 +140,5 @@ public class PlanService {
                 ));
             }
         }
-    }
-
-    public void updatePlanStartAt(Long courseId, PlanUpdateStartRequestDto requestDto) {
-        Course plan = courseRepository.findById(courseId)
-                .orElseThrow(() -> new IllegalArgumentException("plan not found with id: " + courseId));
-
-        courseRepository.save(plan);
-    }
-
-    public void updatePlanIsCompleted(Long courseId, PlanUpdateIsCompletedRequestDto requestDto) {
-        Course plan = courseRepository.findById(courseId)
-                .orElseThrow(() -> new IllegalArgumentException("plan not found with id: " + courseId));
-
-        courseRepository.save(plan);
-    }
-
-    public void deletePlan(Long courseId) {
-        Course plan = courseRepository.findById(courseId)
-                .orElseThrow(() -> new IllegalArgumentException("plan not found with id: " + courseId));
-        plan.softDelete(true);
-        courseRepository.save(plan);
     }
 }

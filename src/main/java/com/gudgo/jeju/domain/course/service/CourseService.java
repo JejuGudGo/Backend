@@ -33,29 +33,15 @@ public class CourseService {
     private final UserRepository userRepository;
 
 
-    private Long getUserId(HttpServletRequest request) {
-        String token = tokenExtractor.getAccessTokenFromHeader(request);    // 요청 헤더에서 AccessToken 추출
-
-        return subjectExtractor.getUserIdFromToken(token);   // 토큰에서 userid 추출
-    }
-
-
     @Transactional
-    public void newCourse(@Valid CourseCreateRequestDto courseCreateRequestDto, HttpServletRequest request) {
-
-        Long userid = getUserId(request);
-
-        // User 객체 조회
-        User user = userRepository.findById(userid)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userid));
-
-
+    public void newCourse(@Valid CourseCreateRequestDto requestDto, HttpServletRequest request) {
         Course course = Course.builder()
-                .user(user)
-                .title(courseCreateRequestDto.title())
-//                .time()
+                .user(getUser(request))
+                .title(requestDto.title())
+                .time(requestDto.time())
+                .summary(requestDto.summary())
                 .createdAt(LocalDate.now())
-                .originalCreatorId(userid)    // 현재 userId
+                .originalCreatorId(getUser(request).getId())    // 현재 userId
                 .build();
 
         Course savedCourse = courseRepository.save(course);
@@ -67,35 +53,31 @@ public class CourseService {
         courseRepository.save(savedCourse);
     }
 
+    @Transactional(readOnly = true)
     public List<CourseResponseDto> getCourseList() {
         List<Course> courseList = courseRepository.findAllByIsDeletedFalse();
         List<CourseResponseDto> originalCourseList = new ArrayList<>();
-
         findIdEqualsOriginalCourseId(courseList, originalCourseList);
-
         return originalCourseList;
     }
 
+    @Transactional(readOnly = true)
     public List<CourseResponseDto> getCourseListByUser(HttpServletRequest request) {
-
-        Long userId = getUserId(request);
-
+        Long userId = getUser(request).getId();
         List<Course> courseList = courseRepository.findByUserIdAndIsDeletedFalse(userId);
         List<CourseResponseDto> originalCourseList = new ArrayList<>();
-
         findIdEqualsOriginalCourseId(courseList, originalCourseList);
-
         return originalCourseList;
     }
 
 
+    @Transactional
     public void deleteCourse(Long courseId) {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("Course not found with id: " + courseId));
 
         // isDeleted = true 변경
-        course.softDelete(true);
-
+        course.softDelete();
         courseRepository.save(course);
     }
 
@@ -109,6 +91,15 @@ public class CourseService {
 //    }
 
 
+    private User getUser(HttpServletRequest request) {
+        String token = tokenExtractor.getAccessTokenFromHeader(request);    // 요청 헤더에서 AccessToken 추출
+        Long userid = subjectExtractor.getUserIdFromToken(token);           // 토큰에서 userid 추출
+
+        // userid로 User 객체 조회
+        return userRepository.findById(userid)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userid));
+    }
+
     private void findIdEqualsOriginalCourseId(List<Course> courseList, List<CourseResponseDto> originalCourseList) {
         for (Course course : courseList) {
             if (Objects.equals(course.getId(), course.getOriginalCourseId())) {
@@ -120,7 +111,8 @@ public class CourseService {
                         course.getCreatedAt(),
                         course.isDeleted(),
                         course.getOriginalCreatorId(),
-                        course.getOriginalCourseId()
+                        course.getOriginalCourseId(),
+                        course.getSummary()
                 ));
             }
         }

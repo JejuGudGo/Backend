@@ -49,9 +49,9 @@ public class UserPlanController {
     }
 
     /* PATCH : 걷기 계획 이벤트 시작일 수정
-    *  PATCH : /api/vi/plan/update-start/{courseId}  */
+     * PATCH : /api/v1/plan/{courseId}/update-start  */
     // 유저 걷기 계획 이벤트 시작일 수정
-    @PatchMapping(value = "/plan/update-start/{courseId}")
+    @PatchMapping(value = "/plan/{courseId}/update-start")
     public ResponseEntity<?> updatePlanStartAt(@PathVariable Long courseId, @Valid @RequestBody PlanUpdateStartRequestDto requestDto) {
         planService.updatePlanStartAt(courseId, requestDto);
         return ResponseEntity.ok().build();
@@ -59,10 +59,10 @@ public class UserPlanController {
 
 
     /* PATCH : 걷기 계획 완료 여부 수정
-    *  PATCH : /api/vi/plan/update-completed/{courseId} */
-    @PatchMapping(value = "/plan/update-completed/{courseId}")
+    *  PATCH : /api/vi/plan/{courseId}/update-completed */
+    @PatchMapping(value = "/plan/{courseId}/update-completed")
     public ResponseEntity<?> updatePlanIsCompleted(@PathVariable Long courseId, @Valid @RequestBody PlanUpdateIsCompletedRequestDto requestDto) {
-        planService.updatePlanIsCompleted(courseId, requestDto);
+        planService.updatePlanIsCompleted(courseId);
         return ResponseEntity.ok().build();
     }
 

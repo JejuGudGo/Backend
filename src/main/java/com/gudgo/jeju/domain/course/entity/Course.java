@@ -1,5 +1,7 @@
 package com.gudgo.jeju.domain.course.entity;
 
+import com.gudgo.jeju.domain.course.dto.request.PlanUpdateIsCompletedRequestDto;
+import com.gudgo.jeju.domain.course.dto.request.PlanUpdateStartRequestDto;
 import com.gudgo.jeju.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -46,10 +48,14 @@ public class Course {
         this.originalCourseId = id;
     }
 
-    public void softDelete(boolean isDeleted) { this.isDeleted = true; }
+    public void softDelete() { this.isDeleted = true; }
 
+    public void updateStartAt(PlanUpdateStartRequestDto requestDto) {
+        this.startAt = requestDto.getStartAt();}
 
-
+    public void updateIsCompleted() {
+        this.isCompleted = true;
+    }
 
 
 }
