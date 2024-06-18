@@ -44,19 +44,6 @@ public class Course {
     @JoinColumn(name = "userId")
     private User user;
 
-//    public void updateOriginalCourseId(Long id) {
-//        this.originalCourseId = id;
-//    }
-//
-//    public void softDelete() { this.isDeleted = true; }
-//
-//    public void updateStartAt(PlanUpdateStartRequestDto requestDto) {
-//        this.startAt = requestDto.getStartAt();}
-//
-//    public void updateIsCompleted() {
-//        this.isCompleted = true;
-//    }
-
     public Course withIsCompleted() {
         return Course.builder()
                 .id(this.id)

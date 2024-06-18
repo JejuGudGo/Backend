@@ -96,7 +96,8 @@ public class PlanService {
     public void updatePlanStartAt(Long courseId, PlanUpdateStartRequestDto requestDto) {
         Course plan = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("plan not found with id: " + courseId));
-        plan.withStartAt(requestDto);
+        Course updatedPlan = plan.withStartAt(requestDto);
+        courseRepository.save(updatedPlan);
     }
 
     @Transactional
@@ -104,14 +105,16 @@ public class PlanService {
         Course plan = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("plan not found with id: " + courseId));
 
-        plan.withDeleted();
+        Course updatedPlan = plan.withDeleted();
+        courseRepository.save(updatedPlan);
     }
 
+    @Transactional
     public void deletePlan(Long courseId) {
         Course plan = courseRepository.findById(courseId)
                 .orElseThrow(() -> new IllegalArgumentException("plan not found with id: " + courseId));
-        plan.withDeleted();
-        courseRepository.save(plan);
+        Course updatedPlan = plan.withDeleted();
+        courseRepository.save(updatedPlan);
     }
 
     private User getUser(HttpServletRequest request) {
