@@ -6,10 +6,14 @@ import com.gudgo.jeju.domain.post.entity.Comment;
 import com.gudgo.jeju.domain.post.entity.QComment;
 import com.gudgo.jeju.domain.user.entity.QUser;
 import com.gudgo.jeju.domain.user.entity.User;
+import com.gudgo.jeju.global.util.PaginationUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,7 +27,7 @@ public class CommentQueryService {
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
-    public List<CommentResponse> getPostImages(Long postId) {
+    public Page<CommentResponse> getPostImages(Long postId, Pageable pageable) {
         QComment qComment = QComment.comment;
 
         List<Comment> comments = queryFactory
@@ -52,10 +56,10 @@ public class CommentQueryService {
                 })
                 .toList();
 
-        return commentResponses;
+        return PaginationUtil.listToPage(commentResponses, pageable);
     }
 
-    public List<NestedCommentResponse> getNestedComments(Long commentId) {
+    public Page<NestedCommentResponse> getNestedComments(Long commentId, Pageable pageable) {
         QComment qComment = QComment.comment;
 
         List<Comment> nestedComments = queryFactory
@@ -84,7 +88,7 @@ public class CommentQueryService {
                 })
                 .collect(Collectors.toList());
 
-        return nestedCommentResponses;
+        return PaginationUtil.listToPage(nestedCommentResponses, pageable);
     }
 
     private User findUserById(Long userId) {

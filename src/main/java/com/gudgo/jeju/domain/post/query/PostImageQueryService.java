@@ -1,6 +1,6 @@
 package com.gudgo.jeju.domain.post.query;
 
-import com.gudgo.jeju.domain.post.dto.response.ColumnImageResponse;
+import com.gudgo.jeju.domain.post.dto.response.PostImageReponse;
 import com.gudgo.jeju.domain.post.entity.PostImage;
 import com.gudgo.jeju.domain.post.entity.QPostImage;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -11,15 +11,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ImageQueryService {
+public class PostImageQueryService {
     private final JPAQueryFactory queryFactory;
 
     @Autowired
-    public ImageQueryService(EntityManager entityManager) {
+    public PostImageQueryService(EntityManager entityManager) {
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
-    public List<ColumnImageResponse> getPostImages(Long postId) {
+    public List<PostImageReponse> getPostImages(Long postId) {
         QPostImage qPostImage = QPostImage.postImage;
 
         List<PostImage> postImages = queryFactory
@@ -28,13 +28,13 @@ public class ImageQueryService {
                         .and(qPostImage.isDeleted.isFalse()))
                 .fetch();
 
-        List<ColumnImageResponse> columnImageResponses = postImages.stream()
-                .map(postImage -> new ColumnImageResponse(
+        List<PostImageReponse> postImageReponses = postImages.stream()
+                .map(postImage -> new PostImageReponse(
                         postImage.getId(),
                         postImage.getImageUrl()
                 ))
                 .toList();
 
-        return columnImageResponses;
+        return postImageReponses;
     }
 }
