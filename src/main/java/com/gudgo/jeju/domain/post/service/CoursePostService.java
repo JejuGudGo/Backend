@@ -30,14 +30,13 @@ public class CoursePostService {
     private final ValidationUtil validationUtil;
 
 
-    @Transactional
-    public CoursePostResponse read(Long postId) {
+    public CoursePostResponse get(Long postId) {
         Posts posts = postsRepository.findById(postId)
                 .orElseThrow(EntityNotFoundException::new);
 
         LocalDate courseStartDate = posts.getCourse().getStartAt();
 
-        if (courseStartDate.isAfter(LocalDate.now())) {
+        if (courseStartDate.isAfter(LocalDate.now()) && !posts.isFinished()) {
             posts.withIsFinished(true);
 
             CoursePostResponse coursePostResponse = getResponse(posts);
