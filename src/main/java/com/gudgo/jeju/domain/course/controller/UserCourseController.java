@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/course")
 @RequiredArgsConstructor
 @Slf4j
 @RestController
@@ -22,7 +22,7 @@ public class UserCourseController {
 
     /* POST: 새로운 코스 생성
     *  POST /api/v1/course/user */
-    @PostMapping(value = "/course")
+    @PostMapping(value = "/user")
     public ResponseEntity<?> create(@Valid @RequestBody CourseCreateRequestDto courseCreateRequestDto, HttpServletRequest request) {
         courseService.newCourse(courseCreateRequestDto, request);
         return ResponseEntity.ok().build();
@@ -37,8 +37,8 @@ public class UserCourseController {
 
 
     /* GET : 특정 user가 생성한 코스 목록 조회
-    *  GET /api/v1/course/user?userid={userId}) */
-    @GetMapping(value = "/courses/user")
+    *  GET /api/v1/course/user */
+    @GetMapping(value = "/user")
     public ResponseEntity<List<CourseResponseDto>> getCourseListByUser(HttpServletRequest request) {
         return ResponseEntity.ok(courseService.getCourseListByUser(request));
     }
@@ -46,7 +46,7 @@ public class UserCourseController {
 
     /* DELETE : 코스 삭제
      * DELETE /api/v1/course/user/{courseId}) */
-    @DeleteMapping(value = "/courses/{courseId}")
+    @DeleteMapping(value = "/user/{courseId}")
     public ResponseEntity<?> deleteCourse(@PathVariable Long courseId) {
         courseService.deleteCourse(courseId);
         return ResponseEntity.ok().build();

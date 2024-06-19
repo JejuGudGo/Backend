@@ -30,8 +30,8 @@ public class SpotController {
 
 
     /* GET: courseId가 동일한 것들을 리스트로 반환(코스 순서 기준으로 오름차순 정렬)
-     * GET /api/v1/course/spots?courseId={courseId} */
-    @GetMapping(value = "/course/spots")
+     * GET /api/v1/spots?courseId={courseId} */
+    @GetMapping(value = "/spots")
     public ResponseEntity<List<SpotResponseDto>> getSpotsByCourseId(@RequestParam Long courseId) {
         List<SpotResponseDto> spots = spotService.getSpotsByCourseId(courseId);
         return ResponseEntity.ok(spots);
