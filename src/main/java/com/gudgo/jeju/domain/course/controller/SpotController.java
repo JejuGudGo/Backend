@@ -23,7 +23,7 @@ public class SpotController {
     /* POST: 새로운 스팟 생성
      * POST /api/v1/spot */
     @PostMapping(value = "/spot")
-    public ResponseEntity<?> newSpot(@Valid @RequestBody SpotCreateRequestDto spotCreateRequestDto) {
+    public ResponseEntity<?> create(@Valid @RequestBody SpotCreateRequestDto spotCreateRequestDto) {
         spotService.newSpot(spotCreateRequestDto);
         return ResponseEntity.ok().build();
     }
@@ -53,7 +53,7 @@ public class SpotController {
         return ResponseEntity.ok().build();
     }
 
-    /* PATCH: id값으로 특정 스팟의 코스 선택 횟수 증가
+    /* PATCH: id값으로 특정 스팟의 선택 횟수 증가
      * PATCH /api/v1/spot/{id}/increase-count */
     @PatchMapping("/spot/{id}/increase-count")
     public ResponseEntity<?> increaseCount(@PathVariable Long id) {

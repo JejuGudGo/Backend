@@ -28,7 +28,7 @@ public class Spot {
     @Enumerated(value = EnumType.STRING)
     private CourseType courseType;
 
-    private Long order;
+    private Long orderNumber;
 
     private String address;
 
@@ -56,7 +56,7 @@ public class Spot {
                 .tourApiCategory1(this.tourApiCategory1)
                 .title(this.title)
                 .courseType(this.courseType)
-                .order(this.order)
+                .orderNumber(this.orderNumber)
                 .address(this.address)
                 .latitude(this.latitude)
                 .longitude(this.longitude)
@@ -73,7 +73,7 @@ public class Spot {
                 .tourApiCategory1(this.tourApiCategory1)
                 .title(this.title)
                 .courseType(this.courseType)
-                .order(this.order)
+                .orderNumber(this.orderNumber)
                 .address(this.address)
                 .latitude(this.latitude)
                 .longitude(this.longitude)
@@ -90,7 +90,7 @@ public class Spot {
                 .tourApiCategory1(this.tourApiCategory1)
                 .title(this.title)
                 .courseType(this.courseType)
-                .order(this.order)
+                .orderNumber(this.orderNumber)
                 .address(this.address)
                 .latitude(this.latitude)
                 .longitude(this.longitude)

@@ -65,7 +65,4 @@ public class TourApiSpotData {
 
     private String reserveInfo;
 
-    @OneToOne
-    @JoinColumn(name = "subContentTypeId")  // 외래 키 컬럼을 지정합니다.
-    private TourApiSubContentType tourApiSubContentType;
 }

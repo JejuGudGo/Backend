@@ -20,16 +20,29 @@ public class DataConfiguration {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String configKey;
+
     private boolean configValue;
+
     private LocalDate updatedAt;
 
 
-    public void setConfigValue(boolean configValue) {
-        this.configValue = configValue;
+    public DataConfiguration withConfigValue(boolean configValue) {
+        return DataConfiguration.builder()
+                .id(this.id)
+                .configKey(this.configKey)
+                .configValue(configValue)
+                .updatedAt(this.updatedAt)
+                .build();
     }
 
-    public void setUpdatedAt(LocalDate updatedAt) {
-        this.updatedAt = updatedAt;
+    public DataConfiguration withUpdatedAt(LocalDate updatedAt) {
+        return DataConfiguration.builder()
+                .id(this.id)
+                .configKey(this.configKey)
+                .configValue(this.configValue)
+                .updatedAt(updatedAt != null ? updatedAt : this.updatedAt)
+                .build();
     }
 }

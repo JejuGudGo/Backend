@@ -1,9 +1,8 @@
 package com.gudgo.jeju.domain.course.controller;
 
 
-import com.gudgo.jeju.domain.course.dto.request.CourseCreateRequestDto;
+import com.gudgo.jeju.domain.course.dto.request.course.CourseCreateRequestDto;
 import com.gudgo.jeju.domain.course.dto.response.CourseResponseDto;
-import com.gudgo.jeju.domain.course.repository.CourseRepository;
 import com.gudgo.jeju.domain.course.service.CourseService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -24,7 +23,7 @@ public class UserCourseController {
     /* POST: 새로운 코스 생성
     *  POST /api/v1/course/user */
     @PostMapping(value = "/course")
-    public ResponseEntity<?> course(@Valid @RequestBody CourseCreateRequestDto courseCreateRequestDto, HttpServletRequest request) {
+    public ResponseEntity<?> create(@Valid @RequestBody CourseCreateRequestDto courseCreateRequestDto, HttpServletRequest request) {
         courseService.newCourse(courseCreateRequestDto, request);
         return ResponseEntity.ok().build();
     }

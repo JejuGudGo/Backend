@@ -1,13 +1,11 @@
 package com.gudgo.jeju.domain.course.entity;
 
-import com.gudgo.jeju.domain.course.dto.request.PlanUpdateIsCompletedRequestDto;
-import com.gudgo.jeju.domain.course.dto.request.PlanUpdateStartRequestDto;
+import com.gudgo.jeju.domain.course.dto.request.plan.PlanUpdateStartRequestDto;
 import com.gudgo.jeju.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 

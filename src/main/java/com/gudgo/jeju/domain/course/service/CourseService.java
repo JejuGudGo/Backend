@@ -1,7 +1,7 @@
 package com.gudgo.jeju.domain.course.service;
 
 
-import com.gudgo.jeju.domain.course.dto.request.CourseCreateRequestDto;
+import com.gudgo.jeju.domain.course.dto.request.course.CourseCreateRequestDto;
 import com.gudgo.jeju.domain.course.dto.response.CourseResponseDto;
 import com.gudgo.jeju.domain.course.entity.Course;
 import com.gudgo.jeju.domain.course.repository.CourseRepository;

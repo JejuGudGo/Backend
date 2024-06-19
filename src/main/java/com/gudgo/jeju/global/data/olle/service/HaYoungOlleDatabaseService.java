@@ -82,7 +82,7 @@ public class HaYoungOlleDatabaseService {
                 dataConfigurationRepository.save(dataConfiguration);
 
             } else if (!checkDataConfig.isConfigValue()){
-                checkDataConfig.setConfigValue(true);
+                checkDataConfig.withConfigValue(true);
                 dataConfigurationRepository.save(checkDataConfig);
             }
 
@@ -144,7 +144,7 @@ public class HaYoungOlleDatabaseService {
                 dataConfigurationRepository.save(dataConfiguration);
 
             } else if (!checkDataConfig.isConfigValue()){
-                checkDataConfig.setConfigValue(true);
+                checkDataConfig.withConfigValue(true);
                 dataConfigurationRepository.save(checkDataConfig);
             }
 
@@ -206,7 +206,7 @@ public class HaYoungOlleDatabaseService {
                 dataConfigurationRepository.save(dataConfiguration);
 
             } else if (!checkDataConfig.isConfigValue()){
-                checkDataConfig.setConfigValue(true);
+                checkDataConfig.withConfigValue(true);
                 dataConfigurationRepository.save(checkDataConfig);
             }
 

@@ -9,5 +9,5 @@ import java.util.List;
 
 
 public interface SpotRepository extends JpaRepository<Spot, Long> {
-    List<Spot> findByCourseIdOrderByOrderAsc(Long courseId);
+    List<Spot> findByCourseIdOrderByOrderNumberAsc(Long courseId);
 }

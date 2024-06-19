@@ -1,9 +1,9 @@
 package com.gudgo.jeju.domain.course.controller;
 
 
-import com.gudgo.jeju.domain.course.dto.request.PlanCreateRequestDto;
-import com.gudgo.jeju.domain.course.dto.request.PlanUpdateIsCompletedRequestDto;
-import com.gudgo.jeju.domain.course.dto.request.PlanUpdateStartRequestDto;
+import com.gudgo.jeju.domain.course.dto.request.plan.PlanCreateRequestDto;
+import com.gudgo.jeju.domain.course.dto.request.plan.PlanUpdateIsCompletedRequestDto;
+import com.gudgo.jeju.domain.course.dto.request.plan.PlanUpdateStartRequestDto;
 import com.gudgo.jeju.domain.course.dto.response.PlanResponseDto;
 import com.gudgo.jeju.domain.course.service.PlanService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,13 +23,22 @@ public class UserPlanController {
     private final PlanService planService;
 
 
-   /* POST: 걷기 계획 생성
-   *  POST: /api/v1/plan/user   */
-    @PostMapping(value = "/plan")
-    public ResponseEntity<?> plan(@Valid @RequestBody PlanCreateRequestDto planCreateRequestDto, HttpServletRequest request) {
-        planService.newPlan(planCreateRequestDto, request);
+   /* POST: 걷기 계획 생성 (유저 코스 퍼오기)
+   *  POST: /api/v1/plan/user-course   */
+    @PostMapping(value = "/plan/user-course")
+    public ResponseEntity<?> createByUserCourse(@Valid @RequestBody PlanCreateRequestDto planCreateRequestDto, HttpServletRequest request) {
+        planService.newPlanByUserCourse(planCreateRequestDto, request);
         return ResponseEntity.ok().build();
     }
+
+    /* POST: 걷기 계획 생성 (올레 코스 퍼오기)
+     *  POST: /api/v1/plan/olle-course   */
+//    @PostMapping(value = "/plan/olle-course")
+//    public ResponseEntity<?> createByOlleCourse(@Valid @RequestBody PlanCreateRequestDto planCreateRequestDto, HttpServletRequest request) {
+//        planService.newPlanByOlleCourse(planCreateRequestDto, request);
+//        return ResponseEntity.ok().build();
+//    }
+
 
     /* GET: 걷기 계획 목록 조회
      * GET: /api/v1/plans/user   */

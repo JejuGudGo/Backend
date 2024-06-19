@@ -1,6 +1,7 @@
 package com.gudgo.jeju.domain.course.entity;
 
 
+import com.gudgo.jeju.domain.course.dto.request.course.CourseMediaUpdateRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,4 +27,14 @@ public class CourseMedia {
 
     private double longitude;
 
+    public CourseMedia withContentAndImageUrl(CourseMediaUpdateRequestDto requestDto) {
+        return CourseMedia.builder()
+                .id(this.getId())
+                .course(this.getCourse())
+                .content(requestDto.content())
+                .imageUrl(requestDto.imageUrl())
+                .latitude(this.getLatitude())
+                .longitude(this.getLongitude())
+                .build();
+    }
 }

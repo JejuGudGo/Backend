@@ -1,4 +1,4 @@
-package com.gudgo.jeju.domain.course.dto.request;
+package com.gudgo.jeju.domain.course.dto.request.plan;
 
 import java.sql.Time;
 import java.time.LocalDate;

@@ -26,7 +26,7 @@ public class SpotService {
     private final SpotRepository spotRepository;
     private final CourseRepository courseRepository;
     private final TourApiCategory1Repository tourApiCategory1Repository;
-
+    private final PlanService planService;
 
     @Transactional
     public void newSpot(@Valid SpotCreateRequestDto requestDto) {
@@ -42,7 +42,7 @@ public class SpotService {
                 .tourApiCategory1(tourApiCategory1)
                 .title(requestDto.title())
                 .courseType(requestDto.courseType())
-                .order(requestDto.order())
+                .orderNumber(requestDto.order())
                 .address(requestDto.address())
                 .latitude(requestDto.latitude())
                 .longitude(requestDto.longitude())
@@ -53,7 +53,7 @@ public class SpotService {
 
     @Transactional
     public List<SpotResponseDto> getSpotsByCourseId(Long courseId) {
-        List<Spot> spots = spotRepository.findByCourseIdOrderByOrderAsc(courseId);
+        List<Spot> spots = spotRepository.findByCourseIdOrderByOrderNumberAsc(courseId);
         return spots.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
@@ -71,6 +71,11 @@ public class SpotService {
         Spot spot = findSpotById(id);
         Spot updatedSpot = spot.withCompleted();
         spotRepository.save(updatedSpot);
+
+        // 마지막 스팟일 경우, 걷기 계획 완료 처리
+        Long courseId = spot.getCourse().getId();
+        isLastSpotCompleted(courseId, id, spot);
+
     }
 
     @Transactional
@@ -95,7 +100,7 @@ public class SpotService {
     private SpotResponseDto convertToDto(Spot spot) {
         return new SpotResponseDto(
                 spot.getId(),
-                spot.getOrder(),
+                spot.getOrderNumber(),
                 spot.getAddress(),
                 spot.getTitle(),
                 spot.getCount(),
@@ -106,5 +111,14 @@ public class SpotService {
                 spot.isCompleted(),
                 spot.getCourse() != null ? spot.getCourse().getId() : null
         );
+    }
+
+    private void isLastSpotCompleted(Long courseId, Long spotId, Spot spot) {
+        List<Spot> spots = spotRepository.findByCourseIdOrderByOrderNumberAsc(courseId);
+
+        int finalSpotIndex = spots.size() - 1;
+        if (spots.get(finalSpotIndex).getId().equals(spotId) && spot.isCompleted()) {
+            planService.updatePlanIsCompleted(courseId);
+        }
     }
 }

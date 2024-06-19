@@ -29,7 +29,7 @@ public class Comment {
     private Posts posts;
 
     @ManyToOne
-    @JoinColumn(name="id")
+    @JoinColumn(name="userId")
     private User user;
 
 

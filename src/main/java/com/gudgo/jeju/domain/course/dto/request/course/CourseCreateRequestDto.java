@@ -1,4 +1,4 @@
-package com.gudgo.jeju.domain.course.dto.request;
+package com.gudgo.jeju.domain.course.dto.request.course;
 
 import org.springframework.cglib.core.Local;
 
