@@ -20,19 +20,11 @@ public class PostImage {
 
     private boolean isDeleted;
 
+
     @ManyToOne
-    @JoinColumn(name = "postId")
+    @JoinColumn(name = "postsId")
     private Posts posts;
 
-
-    public PostImage withImageUrl(String imageUrl) {
-        return PostImage.builder()
-                .id(this.id)
-                .imageUrl(imageUrl != null ? imageUrl : this.imageUrl)
-                .isDeleted(this.isDeleted)
-                .posts(this.posts)
-                .build();
-    }
 
     public PostImage withIsDeleted(boolean isDeleted) {
         return PostImage.builder()
@@ -40,15 +32,6 @@ public class PostImage {
                 .imageUrl(this.imageUrl)
                 .isDeleted(isDeleted)
                 .posts(this.posts)
-                .build();
-    }
-
-    public PostImage withPosts(Posts posts) {
-        return PostImage.builder()
-                .id(this.id)
-                .imageUrl(this.imageUrl)
-                .isDeleted(this.isDeleted)
-                .posts(posts != null ? posts : this.posts)
                 .build();
     }
 }
