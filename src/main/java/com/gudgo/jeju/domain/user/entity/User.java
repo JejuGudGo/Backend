@@ -1,6 +1,7 @@
 package com.gudgo.jeju.domain.user.entity;
 
 import com.gudgo.jeju.domain.course.entity.Todo;
+import com.gudgo.jeju.domain.profile.entity.Profile;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -47,9 +47,13 @@ public class User {
     @Column(name = "is_deleted")
     private boolean isDeleted = false;
 
+
+    @OneToOne
+    @JoinColumn(name = "profileId")
+    private Profile profile;
+
     @OneToOne
     @JoinColumn(name = "todoId")
     private Todo todo;
-
 }
 
