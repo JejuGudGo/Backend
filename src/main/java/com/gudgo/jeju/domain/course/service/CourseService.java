@@ -57,6 +57,23 @@ public class CourseService {
         courseRepository.save(updatedCourse);
     }
 
+    public CourseResponseDto getCourse(Long courseId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new EntityNotFoundException("course not found id=" + courseId));
+        return new CourseResponseDto(
+                course.getId(),
+                course.getTitle(),
+                course.getTime(),
+                course.getStartAt(),
+                course.getCreatedAt(),
+                course.isDeleted(),
+                course.getOriginalCreatorId(),
+                course.getOriginalCreatorId(),
+                course.getSummary()
+
+        );
+    }
+
     @Transactional(readOnly = true)
     public List<CourseResponseDto> getCourseList() {
         List<Course> courseList = courseRepository.findAllByIsDeletedFalse();

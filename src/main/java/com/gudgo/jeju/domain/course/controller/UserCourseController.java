@@ -28,6 +28,11 @@ public class UserCourseController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping(value = "{courseId}")
+    public ResponseEntity<CourseResponseDto> getCourse(@PathVariable("courseId") Long courseId) {
+        return ResponseEntity.ok(courseService.getCourse(courseId));
+    }
+
     /* GET: 모든 사용자의 코스 목록 조회
     *  GET /api/v1/course/users */
     @GetMapping(value = "/users")
