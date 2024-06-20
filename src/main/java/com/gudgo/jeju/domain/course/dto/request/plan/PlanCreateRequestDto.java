@@ -5,7 +5,10 @@ import java.time.LocalDate;
 
 public record PlanCreateRequestDto(
         LocalDate startAt,
+        String title,
         Time time,
         Long originalCourseId,
-        String summary){
+        String summary,
+        String olleType){
+
 }

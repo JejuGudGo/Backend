@@ -5,6 +5,7 @@ import com.gudgo.jeju.domain.course.dto.request.plan.PlanCreateRequestDto;
 import com.gudgo.jeju.domain.course.dto.request.plan.PlanUpdateStartRequestDto;
 import com.gudgo.jeju.domain.course.dto.response.PlanResponseDto;
 import com.gudgo.jeju.domain.course.entity.Course;
+import com.gudgo.jeju.domain.course.entity.CourseType;
 import com.gudgo.jeju.domain.course.repository.CourseRepository;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
@@ -50,16 +51,35 @@ public class PlanService {
         Course newPlan = Course.builder()
                 .user(getUser(request))
                 .startAt(requestDto.startAt())
-                .title(originalCourse.getTitle())
+                .title(requestDto.title())
                 .time(requestDto.time().toLocalTime())
                 .summary(requestDto.summary())
                 .createdAt(LocalDate.now())
                 .originalCreatorId(originalCreatorId)
                 .originalCourseId(requestDto.originalCourseId())
+                .type(CourseType.valueOf(requestDto.olleType()))
                 .build();
 
         courseRepository.save(newPlan);
     }
+
+    @Transactional
+    public void newPlanByOlleCourse(@Valid PlanCreateRequestDto requestDto, HttpServletRequest request) {
+
+        Course newPlan = Course.builder()
+                .user(getUser(request))
+                .startAt(requestDto.startAt())
+                .title(requestDto.title())
+                .time(requestDto.time().toLocalTime())
+                .summary(requestDto.summary())
+                .createdAt(LocalDate.now())
+                .type(CourseType.valueOf(requestDto.olleType()))
+                .olleCourseId(requestDto.originalCourseId())
+                .build();
+
+        courseRepository.save(newPlan);
+    }
+
 
     @Transactional(readOnly = true)
     public List<PlanResponseDto> getPlanListByUser(HttpServletRequest request) {

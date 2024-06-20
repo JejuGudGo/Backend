@@ -33,17 +33,17 @@ public class UserPlanController {
 
     /* POST: 걷기 계획 생성 (올레 코스 퍼오기)
      *  POST: /api/v1/plan/olle-course   */
-//    @PostMapping(value = "/olle-course")
-//    public ResponseEntity<?> createByOlleCourse(@Valid @RequestBody PlanCreateRequestDto planCreateRequestDto, HttpServletRequest request) {
-//        planService.newPlanByOlleCourse(planCreateRequestDto, request);
-//        return ResponseEntity.ok().build();
-//    }
+    @PostMapping(value = "/olle-course")
+    public ResponseEntity<?> createByOlleCourse(@Valid @RequestBody PlanCreateRequestDto planCreateRequestDto, HttpServletRequest request) {
+        planService.newPlanByOlleCourse(planCreateRequestDto, request);
+        return ResponseEntity.ok().build();
+    }
 
 
     /* GET: 걷기 계획 목록 조회
      * GET: /api/v1/plan/user   */
 
-    // 유저 걷기 계획 목록 조회 (parameter : userid)
+    // 유저 걷기 계획 목록 조회
     @GetMapping(value = "/user")
     public ResponseEntity<List<PlanResponseDto>> getPlanList(HttpServletRequest request) {
         return ResponseEntity.ok(planService.getPlanListByUser(request));
