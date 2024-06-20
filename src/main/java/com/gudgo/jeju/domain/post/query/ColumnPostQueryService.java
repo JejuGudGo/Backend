@@ -54,7 +54,8 @@ public class ColumnPostQueryService {
                             profileImageUrl,
                             user.getNumberTag(),
                             post.getTitle(),
-                            post.getContent()
+                            post.getContent(),
+                            postImageQueryService.getPostImages(post.getId())
                     );
                 })
                 .toList();

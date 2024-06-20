@@ -27,7 +27,7 @@ public class CommentQueryService {
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
-    public Page<CommentResponse> getPostImages(Long postId, Pageable pageable) {
+    public Page<CommentResponse> getComments(Long postId, Pageable pageable) {
         QComment qComment = QComment.comment;
 
         List<Comment> comments = queryFactory
@@ -78,6 +78,7 @@ public class CommentQueryService {
                     }
 
                     return new NestedCommentResponse(
+                            nestedComment.getParentCommentId(),
                             nestedComment.getId(),
                             user.getId(),
                             user.getNickname(),

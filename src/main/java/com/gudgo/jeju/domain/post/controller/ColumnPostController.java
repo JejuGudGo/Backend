@@ -32,20 +32,20 @@ public class ColumnPostController {
     }
 
     @PostMapping(value = "")
-    public ResponseEntity<?> createColumnPost(
+    public ResponseEntity<ColumnPostResponse> createColumnPost(
             @RequestPart("request") ColumnPostCreateRequest request,
             @RequestPart("image") MultipartFile[] images) throws Exception {
-        columnPostService.create(request, images);
+        ColumnPostResponse response = columnPostService.create(request, images);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping(value = "/{postId}")
     public ResponseEntity<?> updateColumnPost(
             @PathVariable("postId") Long postId, @RequestBody ColumnPostUpdateRequest request) {
-        columnPostService.update(postId, request);
+        ColumnPostResponse response = columnPostService.update(postId, request);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping(value = "/{postId}")
