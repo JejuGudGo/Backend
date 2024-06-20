@@ -10,6 +10,7 @@ import com.gudgo.jeju.global.data.tourAPI.common.repository.DataConfigurationRep
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Service;
@@ -35,8 +36,8 @@ import java.util.regex.Pattern;
 @Slf4j
 @RequiredArgsConstructor
 public class JejuOlleDatabaseService {
-    private final JeJuOlleCourseRepository courseRepository;
-    private final JeJuOlleCourseDataRepository courseDataRepository;
+    private final JeJuOlleCourseRepository jeJuOlleCourseRepository;
+    private final JeJuOlleCourseDataRepository jeJuOlleCourseDataRepository;
     private final DataConfigurationRepository dataConfigurationRepository;
 
     @Transactional
@@ -68,10 +69,12 @@ public class JejuOlleDatabaseService {
                         log.warn("Course number not found for file: {}", fileName);
                         log.warn("===============================================================================");
                     }
+
                 } catch (IOException e) {
                     log.error("Error reading GPX file: {}", resource.getFilename(), e);
                 }
             }
+
 
             if (checkDataConfig == null) {
                 DataConfiguration dataConfiguration = DataConfiguration.builder()
@@ -143,13 +146,13 @@ public class JejuOlleDatabaseService {
                         .wheelchairAccessible(wheelchairAccessible)
                         .build();
 
-                course = courseRepository.save(course);
+                course = jeJuOlleCourseRepository.save(course);
 
                 for (JeJuOlleCourseData jeJuOlleCourseData : jeJuOlleCourseDataList) {
                     jeJuOlleCourseData.withJeJuOlleCourse(course);
                 }
 
-                courseDataRepository.saveAll(jeJuOlleCourseDataList);
+                jeJuOlleCourseDataRepository.saveAll(jeJuOlleCourseDataList);
             }
         } catch (Exception e) {
             log.error("===============================================================================");
@@ -206,5 +209,54 @@ public class JejuOlleDatabaseService {
             return nodeList.item(0).getTextContent();
         }
         return "";
+    }
+
+    public void addAdditionalData() throws IOException {
+        DataConfiguration checkDataConfig = dataConfigurationRepository.findByConfigKey("OlleAdditionalDataLoaded")
+                .orElse(null);
+
+        if (checkDataConfig == null || !checkDataConfig.isConfigValue()) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new ClassPathResource("csv/olle_course.csv").getInputStream()));
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(",");
+                String courseNumber = data[0];
+                String totalDistance = data[1];
+                String totalTime = data[2];
+
+                JeJuOlleCourse jeJuOlleCourse = jeJuOlleCourseRepository.findByOlleTypeAndCourseNumberAndWheelchairAccessible(OlleType.JEJU, courseNumber, false);
+
+                if (jeJuOlleCourse != null) {
+                    jeJuOlleCourse = jeJuOlleCourse.withTotalDistanceAndTotalTime(totalDistance, totalTime);
+                    jeJuOlleCourseRepository.save(jeJuOlleCourse);
+                } else {
+                    log.warn("Course not found for number: {}", courseNumber);
+                }
+            }
+
+            if (checkDataConfig == null) {
+                DataConfiguration dataConfiguration = DataConfiguration.builder()
+                        .configKey("OlleAdditionalData")
+                        .configValue(true)
+                        .updatedAt(LocalDate.now())
+                        .build();
+
+                dataConfigurationRepository.save(dataConfiguration);
+
+            } else if (!checkDataConfig.isConfigValue()) {
+                checkDataConfig.withConfigValue(true);
+                dataConfigurationRepository.save(checkDataConfig);
+            }
+
+            log.info("===============================================================================");
+            log.info("Olle additional Data loaded successfully");
+            log.info("===============================================================================");
+
+        } else {
+            log.info("===============================================================================");
+            log.info("Olle additional Data is already loaded");
+            log.info("===============================================================================");
+        }
     }
 }
