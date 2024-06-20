@@ -25,14 +25,22 @@ public class UserInfoController {
     @GetMapping(value = "/user")
     public ResponseEntity<UserInfoResponseDto> getUserInfo(HttpServletRequest request) {
         String token = tokenExtractor.getAccessTokenFromHeader(request);
-        Long userid = subjectExtractor.getUserIdFromToken(token);
+        Long userId = subjectExtractor.getUserIdFromToken(token);
 
-        UserInfoResponseDto userInfoResponse = userInfoService.get(userid);
+        UserInfoResponseDto userInfoResponse = userInfoService.get(userId);
 
         return ResponseEntity.ok(userInfoResponse);
 
 
     }
 
+    @PatchMapping(value = "/role")
+    public ResponseEntity<?> updateUserRole(HttpServletRequest request) {
+        String token = tokenExtractor.getAccessTokenFromHeader(request);
+        Long userId = subjectExtractor.getUserIdFromToken(token);
 
+        userInfoService.updateUserInfo(userId);
+
+        return ResponseEntity.ok().build();
+    }
 }
