@@ -19,6 +19,9 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(value = EnumType.STRING)
+    private CourseType type;
+
     private String title;
 
     private LocalTime time;
@@ -37,6 +40,7 @@ public class Course {
 
     private Long originalCourseId;
 
+    private Long olleCourseId;
 
     @ManyToOne
     @JoinColumn(name = "userId")
