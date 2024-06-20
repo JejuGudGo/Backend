@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HaYoungOlleSpot {
+public class JeJuOlleSpot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -21,6 +21,11 @@ public class HaYoungOlleSpot {
     private double latitude;
 
     private double longitude;
+
+    private String distance;
+
+    private Long orderNumber;
+
 
     @ManyToOne
     @JoinColumn(name = "jeJuOlleCourseId")

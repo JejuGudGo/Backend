@@ -7,9 +7,9 @@ import com.gudgo.jeju.global.data.olle.repository.JeJuOlleCourseDataRepository;
 import com.gudgo.jeju.global.data.olle.repository.JeJuOlleCourseRepository;
 import com.gudgo.jeju.global.data.tourAPI.common.entity.DataConfiguration;
 import com.gudgo.jeju.global.data.tourAPI.common.repository.DataConfigurationRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Service;
@@ -20,6 +20,7 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
@@ -38,6 +39,7 @@ public class JejuOlleDatabaseService {
     private final JeJuOlleCourseDataRepository courseDataRepository;
     private final DataConfigurationRepository dataConfigurationRepository;
 
+    @Transactional
     public void convertGpxToDatabase() throws IOException {
         DataConfiguration checkDataConfig = dataConfigurationRepository.findByConfigKey("OlleDataLoaded")
                 .orElse(null);
@@ -48,13 +50,16 @@ public class JejuOlleDatabaseService {
 
             for (Resource resource : resources) {
                 try (BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
-                    String fileName = resource.getFilename();
+                    File gpxFile = resource.getFile();
+                    String fileName = gpxFile.getName();
+
                     boolean wheelchairAccessible = fileName.contains("휠체어구간");
                     String courseTitle = fileName.replace("제주올레길_", "")
-                            .replace("휠체어구간 ", "")
+                            .replace("휠체어구간_", "")
                             .replace(".gpx", "")
                             .replace("_", " ");
-                    String courseNumber = extractCourseNumber(fileName);
+
+                    String courseNumber = extractCourseNumberFromTitle(courseTitle);
 
                     if (courseNumber != null) {
                         parseAndSaveGpxFile(resource, courseNumber, courseTitle, wheelchairAccessible);
@@ -63,6 +68,8 @@ public class JejuOlleDatabaseService {
                         log.warn("Course number not found for file: {}", fileName);
                         log.warn("===============================================================================");
                     }
+                } catch (IOException e) {
+                    log.error("Error reading GPX file: {}", resource.getFilename(), e);
                 }
             }
 
@@ -75,7 +82,7 @@ public class JejuOlleDatabaseService {
 
                 dataConfigurationRepository.save(dataConfiguration);
 
-            } else if (!checkDataConfig.isConfigValue()){
+            } else if (!checkDataConfig.isConfigValue()) {
                 checkDataConfig.withConfigValue(true);
                 dataConfigurationRepository.save(checkDataConfig);
             }
@@ -91,12 +98,26 @@ public class JejuOlleDatabaseService {
         }
     }
 
-    private String extractCourseNumber(String fileName) {
-        Pattern pattern = Pattern.compile("제주올레길(?:휠체어구간 )?_([0-9]+(-[0-9]+)?)코스");
-        Matcher matcher = pattern.matcher(fileName);
-        if (matcher.find()) {
-            return matcher.group(1);
+    private String extractCourseNumberFromTitle(String title) {
+        Pattern englishPattern = Pattern.compile("[a-zA-Z]");
+        Matcher englishMatcher = englishPattern.matcher(title);
+
+        if (englishMatcher.find()) {
+            Pattern coursePattern = Pattern.compile("([0-9]+(-[A-Z]))코스");
+            Matcher courseMatcher = coursePattern.matcher(title);
+
+            if (courseMatcher.find()) {
+                return courseMatcher.group(1);
+            }
+        } else {
+            Pattern coursePattern = Pattern.compile("([0-9]+(-[0-9]?)?)코스");
+            Matcher courseMatcher = coursePattern.matcher(title);
+
+            if (courseMatcher.find()) {
+                return courseMatcher.group(1);
+            }
         }
+
         return null;
     }
 

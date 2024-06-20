@@ -32,4 +32,8 @@ public class JeJuOlleCourse {
     private double endLongitude;
 
     private boolean wheelchairAccessible;
+
+    private String totalDistance;
+
+    private String totalTime;
 }
