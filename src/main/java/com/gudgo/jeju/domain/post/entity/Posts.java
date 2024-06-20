@@ -2,7 +2,6 @@ package com.gudgo.jeju.domain.post.entity;
 
 import com.gudgo.jeju.domain.course.entity.Course;
 import com.gudgo.jeju.domain.user.entity.User;
-import com.gudgo.jeju.global.data.olle.entity.JeJuOlleCourse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,11 +27,14 @@ public class Posts {
 
     private String content;
 
+    private Long companionsNum;
+
     private LocalDate createdAt;
+
+    private boolean isFinished;
 
     private boolean isDeleted;
 
-    private Long companionsNum;
 
     @ManyToOne
     @JoinColumn(name = "userId")
@@ -42,21 +44,94 @@ public class Posts {
     @JoinColumn(name = "courseId")
     private Course course;
 
-    @OneToOne
-    @JoinColumn(name="olleId")
-    private JeJuOlleCourse jeJuOlleCourse;
 
-
-
-    private void setTitle(String title) {
-        this.title = title;
+    public Posts withCourse(Course course) {
+        return Posts.builder()
+                .id(this.id)
+                .postType(this.postType)
+                .title(this.title)
+                .content(this.content)
+                .companionsNum(this.companionsNum)
+                .createdAt(this.createdAt)
+                .isFinished(this.isFinished)
+                .isDeleted(this.isDeleted)
+                .user(this.user)
+                .course(course)
+                .build();
     }
 
-    private void setContent(String content) {
-        this.content = content;
+    public Posts withTitle(String title) {
+        return Posts.builder()
+                .id(this.id)
+                .postType(this.postType)
+                .title(title)
+                .content(this.content)
+                .companionsNum(this.companionsNum)
+                .createdAt(this.createdAt)
+                .isFinished(this.isFinished)
+                .isDeleted(this.isDeleted)
+                .user(this.user)
+                .course(this.course)
+                .build();
     }
 
-    private void setIsDeleted(boolean isDeleted) {
-        this.isDeleted = isDeleted;
+    public Posts withContent(String content) {
+        return Posts.builder()
+                .id(this.id)
+                .postType(this.postType)
+                .title(this.title)
+                .content(content)
+                .companionsNum(this.companionsNum)
+                .createdAt(this.createdAt)
+                .isFinished(this.isFinished)
+                .isDeleted(this.isDeleted)
+                .user(this.user)
+                .course(this.course)
+                .build();
+    }
+
+    public Posts withCompanionsNum(Long companionsNum) {
+        return Posts.builder()
+                .id(this.id)
+                .postType(this.postType)
+                .title(this.title)
+                .content(this.content)
+                .companionsNum(companionsNum)
+                .createdAt(this.createdAt)
+                .isFinished(this.isFinished)
+                .isDeleted(this.isDeleted)
+                .user(this.user)
+                .course(this.course)
+                .build();
+    }
+
+    public Posts withIsFinished(boolean isFinished) {
+        return Posts.builder()
+                .id(this.id)
+                .postType(this.postType)
+                .title(this.title)
+                .content(this.content)
+                .companionsNum(this.companionsNum)
+                .createdAt(this.createdAt)
+                .isFinished(isFinished)
+                .isDeleted(this.isDeleted)
+                .user(this.user)
+                .course(this.course)
+                .build();
+    }
+
+    public Posts withIsDeleted(boolean isDeleted) {
+        return Posts.builder()
+                .id(this.id)
+                .postType(this.postType)
+                .title(this.title)
+                .content(this.content)
+                .companionsNum(this.companionsNum)
+                .createdAt(this.createdAt)
+                .isFinished(this.isFinished)
+                .isDeleted(isDeleted)
+                .user(this.user)
+                .course(this.course)
+                .build();
     }
 }

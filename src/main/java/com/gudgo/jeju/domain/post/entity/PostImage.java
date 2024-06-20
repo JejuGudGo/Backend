@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
 @Entity
 @Getter
 @Builder
@@ -23,11 +22,16 @@ public class PostImage {
 
 
     @ManyToOne
-    @JoinColumn(name = "postId")
+    @JoinColumn(name = "postsId")
     private Posts posts;
 
 
-    private void setIsDeleted(boolean isDeleted) {
-        this.isDeleted = isDeleted;
+    public PostImage withIsDeleted(boolean isDeleted) {
+        return PostImage.builder()
+                .id(this.id)
+                .imageUrl(this.imageUrl)
+                .isDeleted(isDeleted)
+                .posts(this.posts)
+                .build();
     }
 }

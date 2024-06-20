@@ -45,7 +45,7 @@ public class ImageUpdateService {
             return imageUrl;
 
         } catch (IOException e) {
-            //TODO: 예외 확인하기
+
             throw new Exception("파일 저장 중 오류가 발생 했습니다: " + e.getMessage());
         }
     }

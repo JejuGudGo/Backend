@@ -1,6 +1,5 @@
 package com.gudgo.jeju.domain.post.entity;
 
-import com.gudgo.jeju.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,25 +18,36 @@ public class Comment {
 
     private Long parentCommentId;
 
+    private Long userId;
+
     private String content;
 
     private boolean isDeleted;
 
-
     @ManyToOne
-    @JoinColumn(name = "postId")
+    @JoinColumn(name = "postsId")
     private Posts posts;
 
-    @ManyToOne
-    @JoinColumn(name="userId")
-    private User user;
 
-
-    private void setContent(String content) {
-        this.content = content;
+    public Comment withContent(String content) {
+        return Comment.builder()
+                .id(this.id)
+                .parentCommentId(this.parentCommentId)
+                .userId(userId)
+                .content(content != null ? content : this.content)
+                .isDeleted(this.isDeleted)
+                .posts(this.posts)
+                .build();
     }
 
-    private void setIsDeleted(boolean isDeleted) {
-        this.isDeleted = isDeleted;
+    public Comment withIsDeleted(boolean isDeleted) {
+        return Comment.builder()
+                .id(this.id)
+                .parentCommentId(this.parentCommentId)
+                .userId(this.userId)
+                .content(this.content)
+                .isDeleted(isDeleted)
+                .posts(this.posts)
+                .build();
     }
 }
