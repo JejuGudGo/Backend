@@ -1,6 +1,6 @@
 package com.gudgo.jeju.domain.post.dto.response;
 
-public record PostImageReponse(
+public record PostImageResponse(
         Long postImageId,
         String postImageUrl
 ) {

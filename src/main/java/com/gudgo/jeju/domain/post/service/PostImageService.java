@@ -1,6 +1,6 @@
 package com.gudgo.jeju.domain.post.service;
 
-import com.gudgo.jeju.domain.post.dto.response.PostImageReponse;
+import com.gudgo.jeju.domain.post.dto.response.PostImageResponse;
 import com.gudgo.jeju.domain.post.entity.PostImage;
 import com.gudgo.jeju.domain.post.entity.Posts;
 import com.gudgo.jeju.domain.post.query.PostImageQueryService;
@@ -28,9 +28,9 @@ public class PostImageService {
     private final ImageDeleteService imageDeleteService;
     private final PostImageQueryService postImageQueryService;
 
-    public List<PostImageReponse> getImages(Long postId) {
-        List<PostImageReponse> postImageReponses = postImageQueryService.getPostImages(postId);
-        return postImageReponses;
+    public List<PostImageResponse> getImages(Long postId) {
+        List<PostImageResponse> postImageRepons = postImageQueryService.getPostImages(postId);
+        return postImageRepons;
     }
 
     @Transactional
@@ -55,7 +55,7 @@ public class PostImageService {
         PostImage postImage = postImageRepository.findById(postImageId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        postImage.withIsDeleted(true);
+        postImage = postImage.withIsDeleted(true);
         postImageRepository.save(postImage);
 
         imageDeleteService.deleteImageWithUrl(postImage.getImageUrl());
