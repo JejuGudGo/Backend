@@ -27,7 +27,7 @@ public class ParticipantQueryService {
                 .join(qParticipant.course, qCourse)
                 .where(qCourse.id.eq(courseId)
                         .and(qParticipant.isDeleted.isFalse())
-                        .and(qParticipant.approval.isTrue())
+                        .and(qParticipant.approved.isTrue())
                 )
                 .fetchOne();
 
