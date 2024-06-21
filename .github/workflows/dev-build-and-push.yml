@@ -28,6 +28,7 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
+<<<<<<< HEAD
       - name: Create .env file
         run: |
           echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
@@ -46,6 +47,8 @@ jobs:
           echo "COOL_SMS_SECRET_KEY=${{ secrets.COOL_SMS_SECRET_KEY }}" >> . env
           echo "SEND_NUMBER=${{ secrets.SEND_NUMBER }}" >> .env
 
+=======
+>>>>>>> e3540c48a699981283e90c3c14a3f4a391d68abc
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
@@ -64,7 +67,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Push image
+      - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
           push: true

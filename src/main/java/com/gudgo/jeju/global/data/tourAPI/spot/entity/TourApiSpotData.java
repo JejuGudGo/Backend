@@ -1,6 +1,5 @@
 package com.gudgo.jeju.global.data.tourAPI.spot.entity;
 
-import com.gudgo.jeju.global.data.tourAPI.common.entity.TourApiSubContentType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -64,5 +63,4 @@ public class TourApiSpotData {
     private String toilet;
 
     private String reserveInfo;
-
 }

@@ -56,4 +56,3 @@ public class User {
     @JoinColumn(name = "todoId")
     private Todo todo;
 }
-

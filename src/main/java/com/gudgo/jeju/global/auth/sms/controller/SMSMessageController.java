@@ -20,7 +20,7 @@ public class SMSMessageController {
     private final SMSMessageService smsMessageService;
 
     @PostMapping(value = "/send")
-    public ResponseEntity<?> sendSMSForverification(@RequestBody @Valid SMSMessageDTO smsMessageDTO) throws Exception {
+    public ResponseEntity<?> sendSMSForVerification(@RequestBody @Valid SMSMessageDTO smsMessageDTO) throws Exception {
         smsMessageService.getSMSVerificationBeforeSignup(smsMessageDTO);
         return ResponseEntity.ok(smsMessageDTO);
     }
@@ -28,7 +28,7 @@ public class SMSMessageController {
     @PostMapping(value = "/check")
     public ResponseEntity<?> checkUserUsingVerificationCode(@RequestBody SMSVerificationDTO smsVerificationDTO) throws Exception{
         smsMessageService.checkUsersUsingVerificationCode(smsVerificationDTO.getPhoneNumber()
-        ,smsVerificationDTO.getVerificationCode());
+                ,smsVerificationDTO.getVerificationCode());
 
         return ResponseEntity.ok(smsVerificationDTO);
 

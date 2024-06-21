@@ -2,7 +2,7 @@ package com.gudgo.jeju.domain.course.service;
 
 
 import com.gudgo.jeju.domain.course.dto.request.course.CourseCreateRequestDto;
-import com.gudgo.jeju.domain.course.dto.response.UserCourseResponseDto;
+import com.gudgo.jeju.domain.course.dto.response.CourseResponseDto;
 import com.gudgo.jeju.domain.course.entity.Course;
 import com.gudgo.jeju.domain.course.repository.CourseRepository;
 import com.gudgo.jeju.domain.user.entity.User;
@@ -57,19 +57,36 @@ public class CourseService {
         courseRepository.save(updatedCourse);
     }
 
+    public CourseResponseDto getCourse(Long courseId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new EntityNotFoundException("course not found id=" + courseId));
+        return new CourseResponseDto(
+                course.getId(),
+                course.getTitle(),
+                course.getTime(),
+                course.getStartAt(),
+                course.getCreatedAt(),
+                course.isDeleted(),
+                course.getOriginalCreatorId(),
+                course.getOriginalCreatorId(),
+                course.getSummary()
+
+        );
+    }
+
     @Transactional(readOnly = true)
-    public List<UserCourseResponseDto> getCourseList() {
+    public List<CourseResponseDto> getCourseList() {
         List<Course> courseList = courseRepository.findAllByIsDeletedFalse();
-        List<UserCourseResponseDto> originalCourseList = new ArrayList<>();
+        List<CourseResponseDto> originalCourseList = new ArrayList<>();
         findIdEqualsOriginalCourseId(courseList, originalCourseList);
         return originalCourseList;
     }
 
     @Transactional(readOnly = true)
-    public List<UserCourseResponseDto> getCourseListByUser(HttpServletRequest request) {
+    public List<CourseResponseDto> getCourseListByUser(HttpServletRequest request) {
         Long userId = getUser(request).getId();
         List<Course> courseList = courseRepository.findByUserIdAndIsDeletedFalse(userId);
-        List<UserCourseResponseDto> originalCourseList = new ArrayList<>();
+        List<CourseResponseDto> originalCourseList = new ArrayList<>();
         findIdEqualsOriginalCourseId(courseList, originalCourseList);
         return originalCourseList;
     }
@@ -104,10 +121,10 @@ public class CourseService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userid));
     }
 
-    private void findIdEqualsOriginalCourseId(List<Course> courseList, List<UserCourseResponseDto> originalCourseList) {
+    private void findIdEqualsOriginalCourseId(List<Course> courseList, List<CourseResponseDto> originalCourseList) {
         for (Course course : courseList) {
             if (Objects.equals(course.getId(), course.getOriginalCourseId())) {
-                originalCourseList.add(new UserCourseResponseDto(
+                originalCourseList.add(new CourseResponseDto(
                         course.getId(),
                         course.getTitle(),
                         course.getTime(),
