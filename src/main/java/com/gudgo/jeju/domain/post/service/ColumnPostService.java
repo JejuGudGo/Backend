@@ -5,7 +5,9 @@ import com.gudgo.jeju.domain.post.dto.request.ColumnPostUpdateRequest;
 import com.gudgo.jeju.domain.post.dto.response.ColumnPostResponse;
 import com.gudgo.jeju.domain.post.entity.PostType;
 import com.gudgo.jeju.domain.post.entity.Posts;
+import com.gudgo.jeju.domain.post.query.PostImageQueryService;
 import com.gudgo.jeju.domain.post.repository.PostsRepository;
+import com.gudgo.jeju.domain.user.entity.Role;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
 import com.gudgo.jeju.global.util.ValidationUtil;
@@ -25,57 +27,91 @@ public class ColumnPostService {
     private final UserRepository userRepository;
 
     private final ValidationUtil validationUtil;
+    private final PostImageQueryService postImageQueryService;
 
     public ColumnPostResponse get(Long postId) {
-        Posts post = postsRepository.findById(postId)
+        Posts posts = postsRepository.findById(postId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        ColumnPostResponse columnPostResponse = new ColumnPostResponse(
-                post.getId(),
-                post.getUser().getId(),
-                post.getUser().getNickname(),
-                post.getUser().getProfile().getProfileImageUrl(),
-                post.getUser().getNumberTag(),
-                post.getTitle(),
-                post.getContent()
+        ColumnPostResponse response = new ColumnPostResponse(
+                postId,
+                posts.getUser().getId(),
+                posts.getUser().getNickname(),
+                posts.getUser().getProfile().getProfileImageUrl(),
+                posts.getUser().getNumberTag(),
+                posts.getTitle(),
+                posts.getContent(),
+                postImageQueryService.getPostImages(posts.getId())
         );
 
-        return columnPostResponse;
+        return response;
     }
 
     @Transactional
-    public void create(ColumnPostCreateRequest request, MultipartFile[] images) throws Exception {
+    public ColumnPostResponse create(ColumnPostCreateRequest request, MultipartFile[] images) throws Exception {
         User user = userRepository.findById(request.userId())
                 .orElseThrow(EntityNotFoundException::new);
 
-        Posts posts = Posts.builder()
-                .user(user)
-                .postType(PostType.COLUMN)
-                .title(request.title())
-                .content(request.content())
-                .createdAt(LocalDate.now())
-                .isDeleted(false)
-                .build();
+        if (user.getRole().equals(Role.AUTHOR)) {
+            Posts posts = Posts.builder()
+                    .user(user)
+                    .postType(PostType.COLUMN)
+                    .title(request.title())
+                    .content(request.content())
+                    .createdAt(LocalDate.now())
+                    .isDeleted(false)
+                    .build();
 
-        postsRepository.save(posts);
+            postsRepository.save(posts);
 
-        postImageService.uploadImages(posts.getId(), user.getId(), images);
+            postImageService.uploadImages(posts.getId(), user.getId(), images);
+
+            ColumnPostResponse response = new ColumnPostResponse(
+                    posts.getId(),
+                    posts.getUser().getId(),
+                    posts.getUser().getNickname(),
+                    posts.getUser().getProfile().getProfileImageUrl(),
+                    posts.getUser().getNumberTag(),
+                    posts.getTitle(),
+                    posts.getContent(),
+                    postImageQueryService.getPostImages(posts.getId())
+            );
+
+            return response;
+
+        } else {
+            throw new IllegalAccessException("POST_01");
+        }
     }
 
     @Transactional
-    public void update(Long postId, ColumnPostUpdateRequest request) {
+    public ColumnPostResponse update(Long postId, ColumnPostUpdateRequest request) {
         Posts posts  = postsRepository.findById(postId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        if (validationUtil.validateStringValue(request.title())) {
-            posts.withTitle(request.title());
+        if (posts.getUser().getRole().equals(Role.AUTHOR)) {
+            if (validationUtil.validateStringValue(request.title())) {
+                posts = posts.withTitle(request.title());
+            }
+
+            if (validationUtil.validateStringValue(request.content())) {
+                posts = posts.withContent(request.content());
+            }
+            postsRepository.save(posts);
         }
 
-        if (validationUtil.validateStringValue(request.content())) {
-            posts.withContent(request.content());
-        }
+        ColumnPostResponse response = new ColumnPostResponse(
+                postId,
+                posts.getUser().getId(),
+                posts.getUser().getNickname(),
+                posts.getUser().getProfile().getProfileImageUrl(),
+                posts.getUser().getNumberTag(),
+                posts.getTitle(),
+                posts.getContent(),
+                postImageQueryService.getPostImages(posts.getId())
+        );
 
-        postsRepository.save(posts);
+        return response;
     }
 
     @Transactional
@@ -83,10 +119,12 @@ public class ColumnPostService {
         Posts posts  = postsRepository.findById(postId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        if (validationUtil.validateLongValue(postId)) {
-            posts.withIsDeleted(true);
-        }
+        if (posts.getUser().getRole().equals(Role.AUTHOR)) {
+            if (validationUtil.validateLongValue(postId)) {
+                posts = posts.withIsDeleted(true);
+            }
 
-        postsRepository.save(posts);
+            postsRepository.save(posts);
+        }
     }
 }

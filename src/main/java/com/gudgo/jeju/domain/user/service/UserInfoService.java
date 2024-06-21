@@ -2,6 +2,7 @@ package com.gudgo.jeju.domain.user.service;
 
 
 import com.gudgo.jeju.domain.user.dto.UserInfoResponseDto;
+import com.gudgo.jeju.domain.user.entity.Role;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,8 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserInfoService {
     private final UserRepository userRepository;
 
-    public UserInfoResponseDto get(Long userid) {
-        User user = userRepository.findById(userid)
+    public UserInfoResponseDto get(Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         return new UserInfoResponseDto(
@@ -27,7 +28,16 @@ public class UserInfoService {
                 user.getNickname(),
                 user.getName(),
                 user.getNumberTag(),
-                user.getProfile().getProfileImageUrl()
+                user.getProfile().getProfileImageUrl(),
+                user.getRole()
         );
+    }
+
+    public void updateUserInfo(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        User updatedUser = user.withRole(Role.AUTHOR);
+        userRepository.save(updatedUser);
     }
 }

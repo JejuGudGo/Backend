@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ValidationUtil {
     public boolean validateStringValue (String value) {
-        if (value != null || !value.isEmpty()) {
+        if (value != null && !value.isEmpty()) {
             return true;
         }
 

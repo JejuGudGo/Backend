@@ -1,6 +1,6 @@
 package com.gudgo.jeju.domain.post.query;
 
-import com.gudgo.jeju.domain.post.dto.response.PostImageReponse;
+import com.gudgo.jeju.domain.post.dto.response.PostImageResponse;
 import com.gudgo.jeju.domain.post.entity.PostImage;
 import com.gudgo.jeju.domain.post.entity.QPostImage;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -19,7 +19,7 @@ public class PostImageQueryService {
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
-    public List<PostImageReponse> getPostImages(Long postId) {
+    public List<PostImageResponse> getPostImages(Long postId) {
         QPostImage qPostImage = QPostImage.postImage;
 
         List<PostImage> postImages = queryFactory
@@ -28,13 +28,13 @@ public class PostImageQueryService {
                         .and(qPostImage.isDeleted.isFalse()))
                 .fetch();
 
-        List<PostImageReponse> postImageReponses = postImages.stream()
-                .map(postImage -> new PostImageReponse(
+        List<PostImageResponse> postImageRepons = postImages.stream()
+                .map(postImage -> new PostImageResponse(
                         postImage.getId(),
                         postImage.getImageUrl()
                 ))
                 .toList();
 
-        return postImageReponses;
+        return postImageRepons;
     }
 }
