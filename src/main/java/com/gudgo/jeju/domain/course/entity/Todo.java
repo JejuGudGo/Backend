@@ -28,4 +28,28 @@ public class Todo {
     private boolean isDeleted;
 
 
+    @ManyToOne
+    @JoinColumn(name = "courseId")
+    private Course course;
+
+
+    private void setTodoType(TodoType todoType) {
+        this.todoType = todoType;
+    }
+
+    private void setorderNumber(Long orderNumber) {
+        this.orderNumber = orderNumber;
+    }
+
+    private void setContent(String content) {
+        this.content = content;
+    }
+
+    private void setIsFinished(boolean isFinished) {
+        this.isFinished =  isFinished;
+    }
+
+    private void setIsDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
 }

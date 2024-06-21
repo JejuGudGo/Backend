@@ -23,19 +23,33 @@ public class Friends {
 
     private boolean isDeleted;
 
+
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="friendUserId")
+    @JoinColumn(name="friendsId")
     private Friends friends;
 
-    public void setIsApproval(boolean isApproval) {
-        this.isApproval = isApproval;
+
+    public Friends withIsApproval(boolean isApproval) {
+        return Friends.builder()
+                .id(this.id)
+                .isRequest(this.isRequest)
+                .isApproval(isApproval)
+                .isDeleted(this.isDeleted)
+                .user(this.user)
+                .build();
     }
 
-    public void setIsDeleted(boolean isDeleted) {
-        this.isDeleted = isDeleted;
+    public Friends withIsDeleted(boolean isDeleted) {
+        return Friends.builder()
+                .id(this.id)
+                .isRequest(this.isRequest)
+                .isApproval(this.isApproval)
+                .isDeleted(isDeleted)
+                .user(this.user)
+                .build();
     }
 }

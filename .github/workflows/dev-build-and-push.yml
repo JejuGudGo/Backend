@@ -28,24 +28,6 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      - name: Create .env file
-        run: |
-          echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
-          echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
-          echo "SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }}" >> .env
-          echo "SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }}" >> .env
-          echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }}" >> .env
-          echo "SPRING_DATA_REDIS_HOST=${{ secrets.SPRING_DATA_REDIS_HOST }}" >> .env
-          echo "SPRING_DATA_REDIS_PORT=${{ secrets.SPRING_DATA_REDIS_PORT }}" >> .env
-          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
-          echo "GOOGLE_REDIRECT_URL=${{ secrets.GOOGLE_REDIRECT_URL }}" >> .env
-          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
-          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
-          echo "TOUR_API_KEY=${{ secrets.TOUR_API_KEY }}" >> .env
-          echo "COOL_SMS_KEY=${{ secrets.COOL_SMS_KEY }}" >> .env
-          echo "COOL_SMS_SECRET_KEY=${{ secrets.COOL_SMS_SECRET_KEY }}" >> . env
-          echo "SEND_NUMBER=${{ secrets.SEND_NUMBER }}" >> .env
-
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
@@ -64,7 +46,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Push image
+      - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
           push: true
@@ -77,4 +59,3 @@ jobs:
             linux/amd64
             linux/arm64
             windows/amd64
-            

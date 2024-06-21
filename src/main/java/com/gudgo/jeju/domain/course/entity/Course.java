@@ -8,7 +8,6 @@ import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-
 @Entity
 @Getter
 @Builder
@@ -42,6 +41,7 @@ public class Course {
     @JoinColumn(name = "userId")
     private User user;
 
+
     public Course withIsCompleted() {
         return Course.builder()
                 .id(this.id)
@@ -57,6 +57,7 @@ public class Course {
                 .user(this.user)
                 .build();
     }
+
     public Course withOriginalCourseId(Long courseId) {
         return Course.builder()
                 .id(this.id)
@@ -104,6 +105,4 @@ public class Course {
                 .user(this.user)
                 .build();
     }
-
-
 }
