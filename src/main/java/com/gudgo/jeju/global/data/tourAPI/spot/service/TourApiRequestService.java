@@ -151,8 +151,8 @@ public class TourApiRequestService {
                                 for (Map<String, Object> item : itemList) {
                                     String cat3 = item.get("cat3").toString();
                                     String contentId = item.get("contentid").toString();
-                                    String longitude = item.get("mapy").toString();
-                                    String latitude = item.get("mapx").toString();
+                                    double longitude = Double.parseDouble(item.get("mapy").toString());
+                                    double latitude = Double.parseDouble(item.get("mapx").toString());
                                     String updateTime = item.get("modifiedtime").toString();
 
                                     Optional<TourApiCategory3> tourApiCategory3 = tourApiCategory3Repository.findById(cat3);

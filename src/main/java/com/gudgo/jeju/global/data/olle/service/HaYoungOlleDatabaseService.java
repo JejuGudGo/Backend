@@ -47,6 +47,8 @@ public class HaYoungOlleDatabaseService {
                         .startLongitude(Double.parseDouble("126.5588624"))
                         .endLatitude(Double.parseDouble("33.2531475"))
                         .endLongitude(Double.parseDouble("126.5609703"))
+                        .totalTime("약 3시간30분")
+                        .totalDistance("8.9km")
                         .wheelchairAccessible(false)
                         .build();
 
@@ -109,6 +111,8 @@ public class HaYoungOlleDatabaseService {
                         .startLongitude(Double.parseDouble("126.5607624"))
                         .endLatitude(Double.parseDouble("33.2527143"))
                         .endLongitude(Double.parseDouble("126.5612169"))
+                        .totalTime("약 3시간")
+                        .totalDistance("6.4km")
                         .wheelchairAccessible(false)
                         .build();
 
@@ -171,6 +175,8 @@ public class HaYoungOlleDatabaseService {
                         .startLongitude(Double.parseDouble("126.5531553"))
                         .endLatitude(Double.parseDouble("33.2647366"))
                         .endLongitude(Double.parseDouble("126.5531553"))
+                        .totalTime("약 2시간30분")
+                        .totalDistance("7.5km")
                         .wheelchairAccessible(false)
                         .build();
 

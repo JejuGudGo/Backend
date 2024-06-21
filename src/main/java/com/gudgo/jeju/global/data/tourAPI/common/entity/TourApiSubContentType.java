@@ -16,9 +16,9 @@ public class TourApiSubContentType {
     @Id
     private String id;
 
-    private String latitude;
+    private double latitude;
 
-    private String longitude;
+    private double longitude;
 
     private String updatedAt;
 

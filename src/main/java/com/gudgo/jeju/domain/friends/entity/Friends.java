@@ -21,14 +21,16 @@ public class Friends {
 
     private boolean isApproval;
 
-    private Long friendUserId;
-
     private boolean isDeleted;
 
 
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name="friendsId")
+    private Friends friends;
 
 
     public Friends withIsApproval(boolean isApproval) {
