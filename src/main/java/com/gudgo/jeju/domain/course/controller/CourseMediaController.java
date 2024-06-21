@@ -21,7 +21,7 @@ public class CourseMediaController {
 
     private final CourseMediaService courseMediaService;
 
-    /* POST: 새로운 스팟 기록 생성
+    /* POST: 스팟 기록 생성
      * POST /api/v1/course/media */
     @PostMapping(value="")
     public ResponseEntity<?> create(CourseMediaCreateRequestDto requestDto) {

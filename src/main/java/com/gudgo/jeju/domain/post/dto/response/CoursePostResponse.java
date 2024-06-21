@@ -1,15 +1,17 @@
 package com.gudgo.jeju.domain.post.dto.response;
 
+import com.gudgo.jeju.domain.post.entity.PostType;
+
+import java.time.LocalDate;
+
 public record CoursePostResponse(
         Long id,
         Long userId,
-        String nickname,
-//        String profileImageUrl,
-        Long numberTag,
-        Long courseId,
+        String Content,
         String title,
-        Long participantNum,
-        Long currentParticipantNum,
-        String content
+        PostType postType,
+        Long courseId,
+        Long companionsNum,
+        LocalDate createdAt
 ) {
 }

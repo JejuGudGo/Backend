@@ -1,6 +1,5 @@
 package com.gudgo.jeju.domain.post.service;
 
-import com.gudgo.jeju.domain.course.dto.request.participant.ParticipantJoinRequest;
 import com.gudgo.jeju.domain.course.dto.response.ParticipantResponse;
 import com.gudgo.jeju.domain.course.entity.Course;
 import com.gudgo.jeju.domain.course.entity.Participant;
@@ -44,42 +43,22 @@ public class CoursePostService {
 
     private final ValidationUtil validationUtil;
 
-
-//    public CoursePostResponse get(Long postId) {
-//        Posts posts = postsRepository.findById(postId)
-//                .orElseThrow(EntityNotFoundException::new);
-//
-//        LocalDate courseStartDate = posts.getCourse().getStartAt();
-//
-//        if (courseStartDate.isAfter(LocalDate.now()) && !posts.isFinished()) {
-//
-//            CoursePostResponse coursePostResponse = getResponse(posts);
-//
-//            return coursePostResponse;
-//        }
-//
-//        return null;
-//    }
-
     public CoursePostResponse getCoursePost(Long postId) {
-        Posts posts = postsRepository.findById(postId)
+        Posts post = postsRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("posts not found id=" + postId));
 
         Long courseId = findPostById(postId).getCourse().getId();
         Long currentParticipantNum = participantRepository.countByCourseIdAndApprovedTrue(courseId);
 
         return new CoursePostResponse(
-                posts.getId(),
-                posts.getUser().getId(),
-                posts.getUser().getNickname(),
-//                posts.getUser().getProfile().getProfileImageUrl(),
-                posts.getUser().getNumberTag(),
-                posts.getCourse().getId(),
-                posts.getTitle(),
-                posts.getCompanionsNum(),
-                currentParticipantNum,
-                posts.getContent()
-
+                post.getId(),
+                post.getUser().getId(),
+                post.getContent(),
+                post.getTitle(),
+                post.getPostType(),
+                post.getCourse().getId(),
+                post.getCompanionsNum(),
+                post.getCreatedAt()
         );
 
 
@@ -252,18 +231,16 @@ public class CoursePostService {
     }
 
 
-    private CoursePostResponse getResponse(Posts posts) {
+    private CoursePostResponse getResponse(Posts post) {
         CoursePostResponse coursePostResponse = new CoursePostResponse(
-                posts.getId(),
-                posts.getUser().getId(),
-                posts.getUser().getNickname(),
-//                posts.getUser().getProfile().getProfileImageUrl(),
-                posts.getUser().getNumberTag(),
-                posts.getCourse().getId(),
-                posts.getTitle(),
-                posts.getCompanionsNum(),
-                participantQueryService.countCourseParticipant(posts.getCourse().getId()),
-                posts.getContent()
+                post.getId(),
+                post.getUser().getId(),
+                post.getContent(),
+                post.getTitle(),
+                post.getPostType(),
+                post.getCourse().getId(),
+                post.getCompanionsNum(),
+                post.getCreatedAt()
         );
 
         return coursePostResponse;
