@@ -1,5 +1,6 @@
 package com.gudgo.jeju.domain.post.query;
 
+import com.gudgo.jeju.domain.course.entity.QParticipant;
 import com.gudgo.jeju.domain.post.dto.response.CoursePostResponse;
 import com.gudgo.jeju.domain.post.entity.Posts;
 import com.gudgo.jeju.domain.post.entity.QPosts;
@@ -16,14 +17,10 @@ import java.util.List;
 @Service
 public class CoursePostQueryService {
     private final JPAQueryFactory queryFactory;
-    private final PostImageQueryService postImageQueryService;
-    private final CommentQueryService commentQueryService;
 
     @Autowired
     public CoursePostQueryService(EntityManager entityManager) {
         this.queryFactory = new JPAQueryFactory(entityManager);
-        this.postImageQueryService = new PostImageQueryService(entityManager);
-        this.commentQueryService = new CommentQueryService(entityManager);
     }
 
     public Page<CoursePostResponse> getCoursePosts(Pageable pageable) {
@@ -38,14 +35,30 @@ public class CoursePostQueryService {
                         new CoursePostResponse(
                                 post.getId(),
                                 post.getUser().getId(),
-                                post.getContent(),
-                                post.getTitle(),
-                                post.getPostType(),
+                                post.getUser().getNickname(),
+                                post.getUser().getProfile().getProfileImageUrl(),
+                                post.getUser().getNumberTag(),
                                 post.getCourse().getId(),
+                                post.getTitle(),
                                 post.getCompanionsNum(),
-                                post.getCreatedAt()
+                                getCurrentParticipantNum(post.getCourse().getId()),
+                                post.getContent()
                         ))
                 .toList();
         return PaginationUtil.listToPage(coursePostResponses, pageable);
+    }
+
+    private Long getCurrentParticipantNum(Long courseId) {
+        QParticipant qParticipant = QParticipant.participant;
+
+        Long currentParticipantNum = queryFactory
+                .select(qParticipant.count())
+                .from(qParticipant)
+                .where((qParticipant.course.id.eq(courseId)
+                        .and(qParticipant.approved.isTrue())
+                        .and(qParticipant.isDeleted.isFalse())))
+                .fetchOne();
+
+        return currentParticipantNum;
     }
 }
