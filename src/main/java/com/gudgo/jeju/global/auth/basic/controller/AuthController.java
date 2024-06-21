@@ -38,9 +38,10 @@ public class AuthController {
 
     /* 로그아웃 */
     @PostMapping(value = "/logout")
-    public void logout(HttpServletResponse response) {
+    public ResponseEntity<?> logout(HttpServletResponse response) {
         response.setHeader("Authorization", "");
         cookieUtil.deleteCookie("refreshToken", response);
+        return ResponseEntity.ok().build();
     }
 
 }

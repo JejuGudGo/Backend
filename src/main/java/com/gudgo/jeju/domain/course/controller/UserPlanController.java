@@ -23,8 +23,8 @@ public class UserPlanController {
     private final PlanService planService;
 
 
-   /* POST: 걷기 계획 생성 (유저 코스 퍼오기)
-   *  POST: /api/v1/plan/user-course   */
+    /* POST: 걷기 계획 생성 (유저 코스 퍼오기)
+     *  POST: /api/v1/plan/user-course   */
     @PostMapping(value = "/user-course")
     public ResponseEntity<?> createByUserCourse(@Valid @RequestBody PlanCreateRequestDto planCreateRequestDto, HttpServletRequest request) {
         planService.newPlanByUserCourse(planCreateRequestDto, request);
@@ -68,7 +68,7 @@ public class UserPlanController {
 
 
     /* PATCH : 걷기 계획 완료 여부 수정
-    *  PATCH : /api/vi/plan/{courseId}/update-completed */
+     *  PATCH : /api/vi/plan/{courseId}/update-completed */
     @PatchMapping(value = "/{courseId}/update-completed")
     public ResponseEntity<?> updatePlanIsCompleted(@PathVariable Long courseId, @Valid @RequestBody PlanUpdateIsCompletedRequestDto requestDto) {
         planService.updatePlanIsCompleted(courseId);

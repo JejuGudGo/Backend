@@ -21,7 +21,7 @@ public class UserCourseController {
     private final CourseService courseService;
 
     /* POST: 새로운 코스 생성
-    *  POST /api/v1/course/user */
+     *  POST /api/v1/course/user */
     @PostMapping(value = "/user")
     public ResponseEntity<?> create(@Valid @RequestBody CourseCreateRequestDto courseCreateRequestDto, HttpServletRequest request) {
         courseService.newCourse(courseCreateRequestDto, request);
@@ -34,7 +34,7 @@ public class UserCourseController {
     }
 
     /* GET: 모든 사용자의 코스 목록 조회
-    *  GET /api/v1/course/users */
+     *  GET /api/v1/course/users */
     @GetMapping(value = "/users")
     public ResponseEntity<List<CourseResponseDto>> getCourseList() {
         return ResponseEntity.ok(courseService.getCourseList());
@@ -42,7 +42,7 @@ public class UserCourseController {
 
 
     /* GET : 특정 user가 생성한 코스 목록 조회
-    *  GET /api/v1/course/user */
+     *  GET /api/v1/course/user */
     @GetMapping(value = "/user")
     public ResponseEntity<List<CourseResponseDto>> getCourseListByUser(HttpServletRequest request) {
         return ResponseEntity.ok(courseService.getCourseListByUser(request));

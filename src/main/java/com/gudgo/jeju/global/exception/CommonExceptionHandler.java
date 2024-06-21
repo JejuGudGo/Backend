@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class EntityExceptionHandler {
+public class CommonExceptionHandler {
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<?> handleEntityNotFoundException() {
         ErrorResponse errorResponse = new ErrorResponse("INVALID_VALUE_01");
@@ -31,6 +31,12 @@ public class EntityExceptionHandler {
     @ExceptionHandler(EntityExistsException.class)
     public ResponseEntity<?> handleEntityExistsException() {
         ErrorResponse errorResponse = new ErrorResponse("INVALID_VALUE_04");
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IllegalAccessException.class)
+    public ResponseEntity<?> handleIllegalAccessException() {
+        ErrorResponse errorResponse = new ErrorResponse("POST_01");
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }
