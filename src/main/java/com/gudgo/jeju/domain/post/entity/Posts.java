@@ -134,19 +134,4 @@ public class Posts {
                 .course(this.course)
                 .build();
     }
-
-    public Posts withIsFinishedAndIsDeleted(boolean isFinished, boolean isDeleted) {
-        return Posts.builder()
-                .id(this.id)
-                .postType(this.postType)
-                .title(this.title)
-                .content(this.content)
-                .companionsNum(this.companionsNum)
-                .createdAt(this.createdAt)
-                .isFinished(isFinished)
-                .isDeleted(isDeleted)
-                .user(this.user)
-                .course(this.course)
-                .build();
-    }
 }
