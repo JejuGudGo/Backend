@@ -42,8 +42,6 @@ public class UserPlanController {
 
     /* GET: 걷기 계획 목록 조회
      * GET: /api/v1/plan/user   */
-
-    // 유저 걷기 계획 목록 조회
     @GetMapping(value = "/user")
     public ResponseEntity<List<PlanResponseDto>> getPlanList(HttpServletRequest request) {
         return ResponseEntity.ok(planService.getPlanListByUser(request));
@@ -59,7 +57,6 @@ public class UserPlanController {
 
     /* PATCH : 걷기 계획 이벤트 시작일 수정
      * PATCH : /api/v1/plan/{courseId}/update-start  */
-    // 유저 걷기 계획 이벤트 시작일 수정
     @PatchMapping(value = "/{courseId}/update-start")
     public ResponseEntity<?> updatePlanStartAt(@PathVariable Long courseId, @Valid @RequestBody PlanUpdateStartRequestDto requestDto) {
         planService.updatePlanStartAt(courseId, requestDto);

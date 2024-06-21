@@ -2,7 +2,7 @@ package com.gudgo.jeju.domain.course.service;
 
 
 import com.gudgo.jeju.domain.course.dto.request.course.CourseCreateRequestDto;
-import com.gudgo.jeju.domain.course.dto.response.CourseResponseDto;
+import com.gudgo.jeju.domain.course.dto.response.UserCourseResponseDto;
 import com.gudgo.jeju.domain.course.entity.Course;
 import com.gudgo.jeju.domain.course.repository.CourseRepository;
 import com.gudgo.jeju.domain.user.entity.User;
@@ -58,18 +58,18 @@ public class CourseService {
     }
 
     @Transactional(readOnly = true)
-    public List<CourseResponseDto> getCourseList() {
+    public List<UserCourseResponseDto> getCourseList() {
         List<Course> courseList = courseRepository.findAllByIsDeletedFalse();
-        List<CourseResponseDto> originalCourseList = new ArrayList<>();
+        List<UserCourseResponseDto> originalCourseList = new ArrayList<>();
         findIdEqualsOriginalCourseId(courseList, originalCourseList);
         return originalCourseList;
     }
 
     @Transactional(readOnly = true)
-    public List<CourseResponseDto> getCourseListByUser(HttpServletRequest request) {
+    public List<UserCourseResponseDto> getCourseListByUser(HttpServletRequest request) {
         Long userId = getUser(request).getId();
         List<Course> courseList = courseRepository.findByUserIdAndIsDeletedFalse(userId);
-        List<CourseResponseDto> originalCourseList = new ArrayList<>();
+        List<UserCourseResponseDto> originalCourseList = new ArrayList<>();
         findIdEqualsOriginalCourseId(courseList, originalCourseList);
         return originalCourseList;
     }
@@ -104,10 +104,10 @@ public class CourseService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userid));
     }
 
-    private void findIdEqualsOriginalCourseId(List<Course> courseList, List<CourseResponseDto> originalCourseList) {
+    private void findIdEqualsOriginalCourseId(List<Course> courseList, List<UserCourseResponseDto> originalCourseList) {
         for (Course course : courseList) {
             if (Objects.equals(course.getId(), course.getOriginalCourseId())) {
-                originalCourseList.add(new CourseResponseDto(
+                originalCourseList.add(new UserCourseResponseDto(
                         course.getId(),
                         course.getTitle(),
                         course.getTime(),

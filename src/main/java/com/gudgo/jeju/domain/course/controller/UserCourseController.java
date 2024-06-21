@@ -2,51 +2,56 @@ package com.gudgo.jeju.domain.course.controller;
 
 
 import com.gudgo.jeju.domain.course.dto.request.course.CourseCreateRequestDto;
-import com.gudgo.jeju.domain.course.dto.response.CourseResponseDto;
+import com.gudgo.jeju.domain.course.dto.response.UserCourseResponseDto;
+import com.gudgo.jeju.domain.course.query.UserCourseQueryService;
 import com.gudgo.jeju.domain.course.service.CourseService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/api/v1/course")
+@RequestMapping("/api/v1/course/user")
 @RequiredArgsConstructor
 @Slf4j
 @RestController
 public class UserCourseController {
     private final CourseService courseService;
+    private final UserCourseQueryService userCourseQueryService;
+
+
+    /* GET: 모든 사용자의 코스 목록 조회
+     *  GET /api/v1/course/user/list */
+    @GetMapping(value = "/list")
+    public Page<UserCourseResponseDto> getCourses(Pageable pageable) {
+        return userCourseQueryService.getUserCourses(pageable);
+    }
 
     /* POST: 새로운 코스 생성
     *  POST /api/v1/course/user */
-    @PostMapping(value = "/user")
+    @PostMapping(value = "")
     public ResponseEntity<?> create(@Valid @RequestBody CourseCreateRequestDto courseCreateRequestDto, HttpServletRequest request) {
         courseService.newCourse(courseCreateRequestDto, request);
         return ResponseEntity.ok().build();
     }
 
-    /* GET: 모든 사용자의 코스 목록 조회
-    *  GET /api/v1/course/users */
-    @GetMapping(value = "/users")
-    public ResponseEntity<List<CourseResponseDto>> getCourseList() {
-        return ResponseEntity.ok(courseService.getCourseList());
-    }
-
 
     /* GET : 특정 user가 생성한 코스 목록 조회
     *  GET /api/v1/course/user */
-    @GetMapping(value = "/user")
-    public ResponseEntity<List<CourseResponseDto>> getCourseListByUser(HttpServletRequest request) {
+    @GetMapping(value = "")
+    public ResponseEntity<List<UserCourseResponseDto>> getCourseListByUser(HttpServletRequest request) {
         return ResponseEntity.ok(courseService.getCourseListByUser(request));
     }
 
 
     /* DELETE : 코스 삭제
      * DELETE /api/v1/course/user/{courseId}) */
-    @DeleteMapping(value = "/user/{courseId}")
+    @DeleteMapping(value = "/{courseId}")
     public ResponseEntity<?> deleteCourse(@PathVariable Long courseId) {
         courseService.deleteCourse(courseId);
         return ResponseEntity.ok().build();

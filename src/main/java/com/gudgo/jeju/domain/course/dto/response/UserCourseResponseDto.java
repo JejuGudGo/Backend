@@ -3,7 +3,7 @@ package com.gudgo.jeju.domain.course.dto.response;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public record CourseResponseDto(
+public record UserCourseResponseDto(
 
         Long id,
         String title,
