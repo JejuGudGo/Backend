@@ -1,14 +1,11 @@
 package com.gudgo.jeju.domain.course.entity;
 
+import com.gudgo.jeju.domain.course.dto.request.plan.PlanUpdateStartRequestDto;
 import com.gudgo.jeju.domain.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -25,15 +22,19 @@ public class Course {
 
     private LocalTime time;
 
-    private LocalDateTime startAt;
+    private LocalDate startAt;
 
     private String summary;
 
     private LocalDate createdAt;
 
-    private boolean isDeleted;
+    private boolean isCompleted = false;
+
+    private boolean isDeleted = false;
 
     private Long originalCreatorId;
+
+    private Long originalCourseId;
 
 
     @ManyToOne
@@ -41,20 +42,67 @@ public class Course {
     private User user;
 
 
-    public void setTitle(String title) {
-        this.title = title;
+    public Course withIsCompleted() {
+        return Course.builder()
+                .id(this.id)
+                .title(this.title)
+                .time(this.time)
+                .startAt(this.startAt)
+                .summary(this.summary)
+                .createdAt(this.createdAt)
+                .isCompleted(true)
+                .isDeleted(this.isDeleted)
+                .originalCourseId(this.originalCourseId)
+                .originalCreatorId(this.originalCreatorId)
+                .user(this.user)
+                .build();
     }
 
-    public void setTime(LocalTime time) {
-        this.time = time;
+    public Course withOriginalCourseId(Long courseId) {
+        return Course.builder()
+                .id(this.id)
+                .title(this.title)
+                .time(this.time)
+                .startAt(this.startAt)
+                .summary(this.summary)
+                .createdAt(this.createdAt)
+                .isCompleted(this.isCompleted)
+                .isDeleted(this.isDeleted)
+                .originalCourseId(courseId)
+                .originalCreatorId(this.originalCreatorId)
+                .user(this.user)
+                .build();
     }
 
-    public void setStartAt(LocalDateTime startAt) {
-        this.startAt = startAt;
+    public Course withStartAt(PlanUpdateStartRequestDto requestDto) {
+        return Course.builder()
+                .id(this.id)
+                .title(this.title)
+                .time(this.time)
+                .startAt(requestDto.getStartAt())
+                .summary(this.summary)
+                .createdAt(this.createdAt)
+                .isCompleted(this.isCompleted)
+                .isDeleted(this.isDeleted)
+                .originalCourseId(this.originalCourseId)
+                .originalCreatorId(this.originalCreatorId)
+                .user(this.user)
+                .build();
     }
 
-    public void setIsDeleted(boolean isDeleted) {
-        this.isDeleted = isDeleted;
+    public Course withDeleted() {
+        return Course.builder()
+                .id(this.id)
+                .title(this.title)
+                .time(this.time)
+                .startAt(this.startAt)
+                .summary(this.summary)
+                .createdAt(this.createdAt)
+                .isCompleted(this.isCompleted)
+                .isDeleted(true)
+                .originalCourseId(this.originalCourseId)
+                .originalCreatorId(this.originalCreatorId)
+                .user(this.user)
+                .build();
     }
-
 }

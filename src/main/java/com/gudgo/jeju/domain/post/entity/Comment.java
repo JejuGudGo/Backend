@@ -18,18 +18,14 @@ public class Comment {
 
     private Long parentCommentId;
 
-    private String nickname;
-
-    private Long numberTag;
-
-    private String profileImageUrl;
+    private Long userId;
 
     private String content;
 
     private boolean isDeleted;
 
     @ManyToOne
-    @JoinColumn(name = "postId")
+    @JoinColumn(name = "postsId")
     private Posts posts;
 
 
@@ -37,9 +33,7 @@ public class Comment {
         return Comment.builder()
                 .id(this.id)
                 .parentCommentId(this.parentCommentId)
-                .nickname(this.nickname)
-                .numberTag(this.numberTag)
-                .profileImageUrl(this.profileImageUrl)
+                .userId(userId)
                 .content(content != null ? content : this.content)
                 .isDeleted(this.isDeleted)
                 .posts(this.posts)
@@ -50,9 +44,7 @@ public class Comment {
         return Comment.builder()
                 .id(this.id)
                 .parentCommentId(this.parentCommentId)
-                .nickname(this.nickname)
-                .numberTag(this.numberTag)
-                .profileImageUrl(this.profileImageUrl)
+                .userId(this.userId)
                 .content(this.content)
                 .isDeleted(isDeleted)
                 .posts(this.posts)

@@ -1,8 +1,8 @@
 package com.gudgo.jeju.global.data.olle.service;
 
-import com.gudgo.jeju.global.data.olle.entity.HaYoungOlleSpot;
+import com.gudgo.jeju.global.data.olle.entity.JeJuOlleSpot;
 import com.gudgo.jeju.global.data.olle.entity.JeJuOlleCourse;
-import com.gudgo.jeju.global.data.olle.repository.HaYoungOlleSpotRepository;
+import com.gudgo.jeju.global.data.olle.repository.JeJuOlleSpotRepository;
 import com.gudgo.jeju.global.data.olle.repository.JeJuOlleCourseRepository;
 import com.gudgo.jeju.global.data.tourAPI.common.entity.DataConfiguration;
 import com.gudgo.jeju.global.data.tourAPI.common.repository.DataConfigurationRepository;
@@ -21,7 +21,7 @@ import java.time.LocalDate;
 public class HaYoungOlleSpotDatabaseService {
     private final DataConfigurationRepository dataConfigurationRepository;
     private final JeJuOlleCourseRepository jeJuOlleCourseRepository;
-    private final HaYoungOlleSpotRepository haYoungOlleSpotRepository;
+    private final JeJuOlleSpotRepository jeJuOlleSpotRepository;
 
     public void loadHaYoungOlleSpotCsvData() throws Exception {
         DataConfiguration checkDataConfig = dataConfigurationRepository.findByConfigKey("HaYoungOlleSpot")
@@ -41,6 +41,7 @@ public class HaYoungOlleSpotDatabaseService {
                     String title = data[1];
                     String latitude = data[2];
                     String longitude = data[3];
+                    String order = data[4];
 
                     JeJuOlleCourse jeJuOlleCourse = new JeJuOlleCourse();
 
@@ -54,14 +55,15 @@ public class HaYoungOlleSpotDatabaseService {
                         jeJuOlleCourse = jeJuOlleCourse3;
                     }
 
-                    HaYoungOlleSpot haYoungOlleSpot = HaYoungOlleSpot.builder()
+                    JeJuOlleSpot jeJuOlleSpot = JeJuOlleSpot.builder()
                             .jeJuOlleCourse(jeJuOlleCourse)
                             .title(title)
                             .longitude(Double.parseDouble(longitude))
                             .latitude(Double.parseDouble(latitude))
+                            .orderNumber(Long.parseLong(order))
                             .build();
 
-                    haYoungOlleSpotRepository.save(haYoungOlleSpot);
+                    jeJuOlleSpotRepository.save(jeJuOlleSpot);
                 }
             }
 

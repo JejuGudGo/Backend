@@ -24,7 +24,7 @@ public class Profile {
     @Column(name="profile_image_url")
     private String profileImageUrl;
 
-    private String userRank;
+    private String ranking;
 
 
     public Profile withWalkingTime(Time walkingTime) {
@@ -32,7 +32,7 @@ public class Profile {
                 .id(this.id)
                 .walkingTime(walkingTime != null ? walkingTime : this.walkingTime)
                 .profileImageUrl(this.profileImageUrl)
-                .userRank(this.userRank)
+                .ranking(this.ranking)
                 .build();
     }
 
@@ -41,7 +41,7 @@ public class Profile {
                 .id(this.id)
                 .walkingTime(this.walkingTime)
                 .profileImageUrl(profileImageUrl != null ? profileImageUrl : this.profileImageUrl)
-                .userRank(this.userRank)
+                .ranking(this.ranking)
                 .build();
     }
 
@@ -50,7 +50,7 @@ public class Profile {
                 .id(this.id)
                 .walkingTime(this.walkingTime)
                 .profileImageUrl(this.profileImageUrl)
-                .userRank(userRank != null ? userRank : this.userRank)
+                .ranking(userRank != null ? userRank : this.ranking)
                 .build();
     }
 }

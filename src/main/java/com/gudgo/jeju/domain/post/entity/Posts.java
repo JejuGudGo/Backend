@@ -27,9 +27,14 @@ public class Posts {
 
     private String content;
 
+    private Long companionsNum;
+
     private LocalDate createdAt;
 
+    private boolean isFinished;
+
     private boolean isDeleted;
+
 
     @ManyToOne
     @JoinColumn(name = "userId")
@@ -40,13 +45,30 @@ public class Posts {
     private Course course;
 
 
+    public Posts withCourse(Course course) {
+        return Posts.builder()
+                .id(this.id)
+                .postType(this.postType)
+                .title(this.title)
+                .content(this.content)
+                .companionsNum(this.companionsNum)
+                .createdAt(this.createdAt)
+                .isFinished(this.isFinished)
+                .isDeleted(this.isDeleted)
+                .user(this.user)
+                .course(course)
+                .build();
+    }
+
     public Posts withTitle(String title) {
         return Posts.builder()
                 .id(this.id)
                 .postType(this.postType)
-                .title(title != null ? title : this.title)
+                .title(title)
                 .content(this.content)
+                .companionsNum(this.companionsNum)
                 .createdAt(this.createdAt)
+                .isFinished(this.isFinished)
                 .isDeleted(this.isDeleted)
                 .user(this.user)
                 .course(this.course)
@@ -58,8 +80,40 @@ public class Posts {
                 .id(this.id)
                 .postType(this.postType)
                 .title(this.title)
-                .content(content != null ? content : this.content)
+                .content(content)
+                .companionsNum(this.companionsNum)
                 .createdAt(this.createdAt)
+                .isFinished(this.isFinished)
+                .isDeleted(this.isDeleted)
+                .user(this.user)
+                .course(this.course)
+                .build();
+    }
+
+    public Posts withCompanionsNum(Long companionsNum) {
+        return Posts.builder()
+                .id(this.id)
+                .postType(this.postType)
+                .title(this.title)
+                .content(this.content)
+                .companionsNum(companionsNum)
+                .createdAt(this.createdAt)
+                .isFinished(this.isFinished)
+                .isDeleted(this.isDeleted)
+                .user(this.user)
+                .course(this.course)
+                .build();
+    }
+
+    public Posts withIsFinished(boolean isFinished) {
+        return Posts.builder()
+                .id(this.id)
+                .postType(this.postType)
+                .title(this.title)
+                .content(this.content)
+                .companionsNum(this.companionsNum)
+                .createdAt(this.createdAt)
+                .isFinished(isFinished)
                 .isDeleted(this.isDeleted)
                 .user(this.user)
                 .course(this.course)
@@ -72,7 +126,9 @@ public class Posts {
                 .postType(this.postType)
                 .title(this.title)
                 .content(this.content)
+                .companionsNum(this.companionsNum)
                 .createdAt(this.createdAt)
+                .isFinished(this.isFinished)
                 .isDeleted(isDeleted)
                 .user(this.user)
                 .course(this.course)

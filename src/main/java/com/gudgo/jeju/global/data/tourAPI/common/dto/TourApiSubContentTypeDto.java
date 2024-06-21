@@ -5,8 +5,8 @@ import com.gudgo.jeju.global.data.tourAPI.spot.dto.TourApiSpotDto;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record TourApiSubContentTypeDto(
-        String latitude,
-        String longitude,
+        double latitude,
+        double longitude,
         String updatedAt,
         TourApiSpotDto tourApiSpotDto
 ) {
