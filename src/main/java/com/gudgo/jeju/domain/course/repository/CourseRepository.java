@@ -12,5 +12,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     List<Course> findByUserIdAndIsDeletedFalse(Long userId);
 
+    Course findByPostId(Long postId);
+
 //    List<Course> findByUserId(Long userid);
 }

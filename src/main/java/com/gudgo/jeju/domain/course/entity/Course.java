@@ -1,5 +1,6 @@
 package com.gudgo.jeju.domain.course.entity;
 
+import com.gudgo.jeju.domain.post.entity.Posts;
 import com.gudgo.jeju.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -41,12 +42,14 @@ public class Course {
 
     private Long olleCourseId;
 
-    private Long postId;
-
 
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
+
+    @OneToOne
+    @JoinColumn(name = "postId")
+    private Posts post;
 
 
     public Course withTitle(String title) {
@@ -63,7 +66,7 @@ public class Course {
                 .originalCreatorId(this.originalCreatorId)
                 .olleCourseId(this.olleCourseId)
                 .user(this.user)
-                .postId(this.postId)
+                .post(this.post)
                 .build();
     }
 
@@ -81,7 +84,7 @@ public class Course {
                 .olleCourseId(this.olleCourseId)
                 .originalCreatorId(this.originalCreatorId)
                 .user(this.user)
-                .postId(this.postId)
+                .post(this.post)
                 .build();
     }
 
@@ -99,7 +102,7 @@ public class Course {
                 .originalCreatorId(this.originalCreatorId)
                 .olleCourseId(this.olleCourseId)
                 .user(this.user)
-                .postId(this.postId)
+                .post(this.post)
                 .build();
     }
 
@@ -117,7 +120,7 @@ public class Course {
                 .originalCreatorId(this.originalCreatorId)
                 .olleCourseId(this.olleCourseId)
                 .user(this.user)
-                .postId(this.postId)
+                .post(this.post)
                 .build();
     }
 
@@ -135,11 +138,11 @@ public class Course {
                 .originalCreatorId(this.originalCreatorId)
                 .olleCourseId(this.olleCourseId)
                 .user(this.user)
-                .postId(this.postId)
+                .post(this.post)
                 .build();
     }
 
-    public Course withPostId(Long postId) {
+    public Course withPost(Posts post) {
         return Course.builder()
                 .id(this.id)
                 .title(this.title)
@@ -153,7 +156,7 @@ public class Course {
                 .originalCreatorId(this.originalCreatorId)
                 .olleCourseId(this.olleCourseId)
                 .user(this.user)
-                .postId(postId)
+                .post(post)
                 .build();
     }
 

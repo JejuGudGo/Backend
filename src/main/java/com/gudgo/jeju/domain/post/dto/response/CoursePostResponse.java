@@ -6,7 +6,6 @@ public record CoursePostResponse(
         String nickname,
         String profileImageUrl,
         Long numberTag,
-        Long courseId,
         String title,
         Long participantNum,
         Long currentParticipantNum,

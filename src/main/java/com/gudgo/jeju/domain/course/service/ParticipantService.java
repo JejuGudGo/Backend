@@ -49,7 +49,7 @@ public class ParticipantService {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        participantValidator.validateParticipantNumber(course.getPostId(), courseId);
+        participantValidator.validateParticipantNumber(course.getPost().getId(), courseId);
 
         Optional<Participant> optionalParticipant =
                 participantRepository.findByParticipantUserIdAndCourseId(userId, courseId);
@@ -88,21 +88,21 @@ public class ParticipantService {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        Posts post = postsRepository.findById(course.getPostId())
+        Posts post = postsRepository.findById(course.getPost().getId())
                 .orElseThrow(EntityNotFoundException::new);
 
         Participant participant = participantRepository.findByParticipantUserIdAndCourseId(userId, courseId)
                 .orElseThrow(EntityNotFoundException::new);
 
         if (status) {
-            approveUser(post, participant, courseId, userId);
+            approveUser(post, participant, courseId);
 
         } else {
-            notApproveUser(post, participant, courseId, userId);
+            notApproveUser(post, participant, courseId);
         }
     }
 
-    private void approveUser(Posts post, Participant participant, Long courseId, Long userId) {
+    private void approveUser(Posts post, Participant participant, Long courseId) {
         participantValidator.validateParticipantNumber(post.getId(), courseId);
 
         participant = participant.withApproved(true);
@@ -114,7 +114,7 @@ public class ParticipantService {
         }
     }
 
-    private void notApproveUser(Posts post, Participant participant, Long courseId, Long userId) {
+    private void notApproveUser(Posts post, Participant participant, Long courseId) {
         participant.withApproved(false);
         participantRepository.save(participant);
 
