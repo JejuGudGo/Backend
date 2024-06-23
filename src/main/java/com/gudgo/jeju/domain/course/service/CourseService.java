@@ -9,7 +9,6 @@ import com.gudgo.jeju.domain.course.entity.Course;
 import com.gudgo.jeju.domain.course.entity.CourseType;
 import com.gudgo.jeju.domain.course.query.CourseQueryService;
 import com.gudgo.jeju.domain.course.repository.CourseRepository;
-import com.gudgo.jeju.domain.course.validation.CourseValidationService;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
 import com.gudgo.jeju.domain.olle.entity.JeJuOlleCourse;
@@ -35,16 +34,8 @@ public class CourseService {
     private final UserRepository userRepository;
     private final JeJuOlleCourseRepository jeJuOlleCourseRepository;
 
-    private final CourseValidationService courseValidationService;
-    private final CourseQueryService courseQueryService;
-
     private final ValidationUtil validationUtil;
 
-
-    @Transactional(readOnly = true)
-    public Page<CourseResponseDto> getMyCourses(Long userId, Pageable pageable) {
-        return courseQueryService.getMyCourses(userId, pageable);
-    }
 
     public CourseResponseDto getCourse(Long courseId) {
         Course course = courseRepository.findById(courseId)
@@ -129,9 +120,7 @@ public class CourseService {
     }
 
     @Transactional
-    public void update(Long userId, Long courseId, CourseUpdateRequestDto requestDto) throws IllegalAccessException {
-        courseValidationService.validateOriginalWriter(userId, courseId);
-
+    public void update(Long courseId, CourseUpdateRequestDto requestDto) {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(EntityNotFoundException::new);
 

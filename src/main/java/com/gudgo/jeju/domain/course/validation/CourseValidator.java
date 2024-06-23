@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CourseValidationService {
+public class CourseValidator {
     private final CourseRepository courseRepository;
 
     public void validateOriginalWriter(Long userId, Long courseId) throws IllegalAccessException {

@@ -30,6 +30,7 @@ public class CourseQueryService {
         List<Course> courses = queryFactory
                 .selectFrom(qCourse)
                 .where(qCourse.isDeleted.isFalse()
+                        .and(qCourse.isCompleted.isTrue())
                         .and(qCourse.id.eq(qCourse.originalCourseId))
                         .and(qCourse.type.eq(CourseType.USER)))
                 .fetch();

@@ -11,7 +11,8 @@ import com.gudgo.jeju.domain.course.entity.SpotType;
 import com.gudgo.jeju.domain.course.query.SpotQueryService;
 import com.gudgo.jeju.domain.course.repository.CourseRepository;
 import com.gudgo.jeju.domain.course.repository.SpotRepository;
-import com.gudgo.jeju.domain.course.validation.SpotValidationService;
+import com.gudgo.jeju.domain.course.validation.CourseValidator;
+import com.gudgo.jeju.domain.course.validation.SpotValidator;
 import com.gudgo.jeju.domain.tourApi.entity.TourApiContent;
 import com.gudgo.jeju.domain.tourApi.repository.TourApiContentRepository;
 import com.gudgo.jeju.global.util.ValidationUtil;
@@ -31,7 +32,8 @@ import java.util.stream.Collectors;
 @Service
 public class SpotService {
     private final SpotQueryService spotQueryService;
-    private final SpotValidationService spotValidationService;
+    private final SpotValidator spotValidator;
+    private final CourseValidator courseValidator;
 
     private final ValidationUtil validationUtil;
 
@@ -84,7 +86,7 @@ public class SpotService {
         TourApiContent tourApiContent = tourApiContentRepository.findById(request.contentId())
                 .orElseThrow(EntityNotFoundException::new);
 
-        spotValidationService.validateIsCurrentData(tourApiContent);
+        spotValidator.validateIsCurrentData(tourApiContent);
 
         Spot spot = Spot.builder()
                 .course(course)
@@ -116,7 +118,9 @@ public class SpotService {
     }
 
     @Transactional
-    public void delete(Long spotId) {
+    public void delete(Long userId, Long courseId, Long spotId) throws IllegalAccessException {
+        courseValidator.validateOriginalWriter(userId, courseId);
+
         Spot spot = findSpotById(spotId);
         spot = spot.withDeleted();
 

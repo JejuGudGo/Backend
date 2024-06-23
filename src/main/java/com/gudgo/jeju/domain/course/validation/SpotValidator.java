@@ -9,7 +9,7 @@ import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
-public class SpotValidationService {
+public class SpotValidator {
     private final TourApiRequestService requestService;
 
     public void validateIsCurrentData(TourApiContent subContentType) throws IOException {

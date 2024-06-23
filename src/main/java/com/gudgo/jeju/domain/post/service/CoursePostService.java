@@ -101,6 +101,14 @@ public class CoursePostService {
             post = post.withIsFinished(request.isFinished());
         }
 
+        if (validationUtil.validateLongValue(request.courseId())) {
+            Course course = courseRepository.findById(request.courseId())
+                    .orElseThrow(EntityNotFoundException::new);
+
+            course.withPost(post);
+            courseRepository.save(course);
+        }
+
         postsRepository.save(post);
 
         return getResponse(post, request.courseId());

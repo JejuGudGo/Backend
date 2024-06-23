@@ -3,13 +3,11 @@ package com.gudgo.jeju.domain.olle.query;
 
 import com.gudgo.jeju.domain.olle.dto.response.OlleCourseDetailResponseDto;
 import com.gudgo.jeju.domain.olle.dto.response.OlleCourseResponseDto;
-import com.gudgo.jeju.domain.olle.dto.response.OlleCourseRouteResponseDto;
 import com.gudgo.jeju.domain.olle.dto.response.OlleCourseSpotResponseDto;
 import com.gudgo.jeju.domain.olle.entity.JeJuOlleCourse;
 import com.gudgo.jeju.domain.olle.entity.JeJuOlleSpot;
-import com.gudgo.jeju.domain.olle.entity.OlleType;
-import com.gudgo.jeju.global.data.olle.entity.QJeJuOlleCourse;
-import com.gudgo.jeju.global.data.olle.entity.QJeJuOlleSpot;
+import com.gudgo.jeju.domain.olle.entity.QJeJuOlleCourse;
+import com.gudgo.jeju.domain.olle.entity.QJeJuOlleSpot;
 import com.gudgo.jeju.global.util.PaginationUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
