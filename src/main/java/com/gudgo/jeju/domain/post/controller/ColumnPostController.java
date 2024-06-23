@@ -35,6 +35,7 @@ public class ColumnPostController {
     public ResponseEntity<ColumnPostResponse> createColumnPost(
             @RequestPart("request") ColumnPostCreateRequest request,
             @RequestPart("image") MultipartFile[] images) throws Exception {
+
         ColumnPostResponse response = columnPostService.create(request, images);
 
         return ResponseEntity.ok(response);

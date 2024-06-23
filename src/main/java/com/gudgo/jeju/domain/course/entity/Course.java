@@ -1,6 +1,5 @@
 package com.gudgo.jeju.domain.course.entity;
 
-import com.gudgo.jeju.domain.course.dto.request.plan.PlanUpdateStartRequestDto;
 import com.gudgo.jeju.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -42,9 +41,31 @@ public class Course {
 
     private Long olleCourseId;
 
+    private Long postId;
+
+
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
+
+
+    public Course withTitle(String title) {
+        return Course.builder()
+                .id(this.id)
+                .title(title)
+                .time(this.time)
+                .startAt(this.startAt)
+                .summary(this.summary)
+                .createdAt(this.createdAt)
+                .isCompleted(true)
+                .isDeleted(this.isDeleted)
+                .originalCourseId(this.originalCourseId)
+                .originalCreatorId(this.originalCreatorId)
+                .olleCourseId(this.olleCourseId)
+                .user(this.user)
+                .postId(this.postId)
+                .build();
+    }
 
     public Course withIsCompleted() {
         return Course.builder()
@@ -57,10 +78,13 @@ public class Course {
                 .isCompleted(true)
                 .isDeleted(this.isDeleted)
                 .originalCourseId(this.originalCourseId)
+                .olleCourseId(this.olleCourseId)
                 .originalCreatorId(this.originalCreatorId)
                 .user(this.user)
+                .postId(this.postId)
                 .build();
     }
+
     public Course withOriginalCourseId(Long courseId) {
         return Course.builder()
                 .id(this.id)
@@ -73,23 +97,27 @@ public class Course {
                 .isDeleted(this.isDeleted)
                 .originalCourseId(courseId)
                 .originalCreatorId(this.originalCreatorId)
+                .olleCourseId(this.olleCourseId)
                 .user(this.user)
+                .postId(this.postId)
                 .build();
     }
 
-    public Course withStartAt(PlanUpdateStartRequestDto requestDto) {
+    public Course withStartAt(LocalDate startAt) {
         return Course.builder()
                 .id(this.id)
                 .title(this.title)
                 .time(this.time)
-                .startAt(requestDto.getStartAt())
+                .startAt(startAt)
                 .summary(this.summary)
                 .createdAt(this.createdAt)
                 .isCompleted(this.isCompleted)
                 .isDeleted(this.isDeleted)
                 .originalCourseId(this.originalCourseId)
                 .originalCreatorId(this.originalCreatorId)
+                .olleCourseId(this.olleCourseId)
                 .user(this.user)
+                .postId(this.postId)
                 .build();
     }
 
@@ -105,7 +133,27 @@ public class Course {
                 .isDeleted(true)
                 .originalCourseId(this.originalCourseId)
                 .originalCreatorId(this.originalCreatorId)
+                .olleCourseId(this.olleCourseId)
                 .user(this.user)
+                .postId(this.postId)
+                .build();
+    }
+
+    public Course withPostId(Long postId) {
+        return Course.builder()
+                .id(this.id)
+                .title(this.title)
+                .time(this.time)
+                .startAt(this.startAt)
+                .summary(this.summary)
+                .createdAt(this.createdAt)
+                .isCompleted(this.isCompleted)
+                .isDeleted(true)
+                .originalCourseId(this.originalCourseId)
+                .originalCreatorId(this.originalCreatorId)
+                .olleCourseId(this.olleCourseId)
+                .user(this.user)
+                .postId(postId)
                 .build();
     }
 

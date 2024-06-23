@@ -1,6 +1,5 @@
 package com.gudgo.jeju.domain.course.entity;
 
-import com.gudgo.jeju.global.data.tourAPI.common.entity.TourApiCategory1;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,21 +13,12 @@ public class Spot {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "courseId")
-    private Course course;
-
-    @ManyToOne
-    @JoinColumn(name = "categoryName")
-    private TourApiCategory1 tourApiCategory1;
-
-
-    private String title;
-
     @Enumerated(value = EnumType.STRING)
-    private CourseType courseType;
+    private SpotType courseType;
 
     private Long orderNumber;
+
+    private String title;
 
     private String address;
 
@@ -40,7 +30,14 @@ public class Spot {
 
     private boolean isCompleted = false;
 
-    private long count;
+    private Long count;
+
+    private String contentId = "None";
+
+
+    @ManyToOne
+    @JoinColumn(name = "courseId")
+    private Course course;
 
 //    public void softDelete() {
 //        this.isDeleted = true;
@@ -49,11 +46,27 @@ public class Spot {
 //
 //    public void updateCount() { this.count++; }
 
+    public Spot withOrderNumber(Long orderNumber) {
+        return Spot.builder()
+                .id(this.id)
+                .course(this.course)
+                .title(this.title)
+                .courseType(this.courseType)
+                .orderNumber(orderNumber)
+                .address(this.address)
+                .latitude(this.latitude)
+                .longitude(this.longitude)
+                .isDeleted(true)
+                .isCompleted(this.isCompleted)
+                .count(this.count)
+                .contentId(this.contentId)
+                .build();
+    }
+
     public Spot withDeleted() {
         return Spot.builder()
                 .id(this.id)
                 .course(this.course)
-                .tourApiCategory1(this.tourApiCategory1)
                 .title(this.title)
                 .courseType(this.courseType)
                 .orderNumber(this.orderNumber)
@@ -63,6 +76,7 @@ public class Spot {
                 .isDeleted(true)
                 .isCompleted(this.isCompleted)
                 .count(this.count)
+                .contentId(this.contentId)
                 .build();
     }
 
@@ -70,7 +84,6 @@ public class Spot {
         return Spot.builder()
                 .id(this.id)
                 .course(this.course)
-                .tourApiCategory1(this.tourApiCategory1)
                 .title(this.title)
                 .courseType(this.courseType)
                 .orderNumber(this.orderNumber)
@@ -80,6 +93,7 @@ public class Spot {
                 .isDeleted(this.isDeleted)
                 .isCompleted(true)
                 .count(this.count)
+                .contentId(this.contentId)
                 .build();
     }
 
@@ -87,7 +101,6 @@ public class Spot {
         return Spot.builder()
                 .id(this.id)
                 .course(this.course)
-                .tourApiCategory1(this.tourApiCategory1)
                 .title(this.title)
                 .courseType(this.courseType)
                 .orderNumber(this.orderNumber)
@@ -96,7 +109,8 @@ public class Spot {
                 .longitude(this.longitude)
                 .isDeleted(this.isDeleted)
                 .isCompleted(this.isCompleted)
-                .count(this.count + 1)
+                .count(this.count + 1L)
+                .contentId(this.contentId)
                 .build();
     }
 

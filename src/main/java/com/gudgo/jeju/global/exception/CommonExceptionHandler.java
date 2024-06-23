@@ -36,7 +36,7 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(IllegalAccessException.class)
     public ResponseEntity<?> handleIllegalAccessException() {
-        ErrorResponse errorResponse = new ErrorResponse("POST_01");
+        ErrorResponse errorResponse = new ErrorResponse("NOT_ALLOWED_01");
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }

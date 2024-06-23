@@ -27,14 +27,42 @@ public class CourseMedia {
 
     private double longitude;
 
-    public CourseMedia withContentAndImageUrl(CourseMediaUpdateRequestDto requestDto) {
+    private boolean isDeleted;
+
+
+    public CourseMedia withIsDeleted() {
         return CourseMedia.builder()
                 .id(this.getId())
                 .course(this.getCourse())
-                .content(requestDto.content())
-                .imageUrl(requestDto.imageUrl())
+                .content(this.content)
+                .imageUrl(this.imageUrl)
                 .latitude(this.getLatitude())
                 .longitude(this.getLongitude())
+                .isDeleted(true)
+                .build();
+    }
+
+    public CourseMedia withContent(String content) {
+        return CourseMedia.builder()
+                .id(this.getId())
+                .course(this.getCourse())
+                .content(content)
+                .imageUrl(this.imageUrl)
+                .latitude(this.getLatitude())
+                .longitude(this.getLongitude())
+                .isDeleted(this.isDeleted)
+                .build();
+    }
+
+    public CourseMedia withImageUrl(String imageUrl) {
+        return CourseMedia.builder()
+                .id(this.getId())
+                .course(this.getCourse())
+                .content(this.content)
+                .imageUrl(imageUrl)
+                .latitude(this.getLatitude())
+                .longitude(this.getLongitude())
+                .isDeleted(this.isDeleted)
                 .build();
     }
 }

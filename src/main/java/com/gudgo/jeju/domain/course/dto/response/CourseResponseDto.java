@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public record CourseResponseDto(
-
         Long id,
         String title,
         LocalTime time,
@@ -14,7 +13,5 @@ public record CourseResponseDto(
         Long originalCreatorId,
         Long originalCourseId,
         String summary
-
-
 ) {
 }
