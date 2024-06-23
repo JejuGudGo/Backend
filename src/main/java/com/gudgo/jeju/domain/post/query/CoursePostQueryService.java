@@ -1,9 +1,9 @@
 package com.gudgo.jeju.domain.post.query;
 
+import com.gudgo.jeju.domain.course.entity.Course;
+import com.gudgo.jeju.domain.course.entity.QCourse;
 import com.gudgo.jeju.domain.course.entity.QParticipant;
 import com.gudgo.jeju.domain.post.dto.response.CoursePostResponse;
-import com.gudgo.jeju.domain.post.entity.Posts;
-import com.gudgo.jeju.domain.post.entity.QPosts;
 import com.gudgo.jeju.global.util.PaginationUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -24,25 +24,26 @@ public class CoursePostQueryService {
     }
 
     public Page<CoursePostResponse> getCoursePosts(Pageable pageable) {
-        QPosts qPosts = QPosts.posts;
-        List<Posts> posts = queryFactory
-                .selectFrom(qPosts)
-                .where(qPosts.isDeleted.isFalse()
-                        .and(qPosts.isFinished.isFalse()))
+        QCourse qCourse = QCourse.course;
+
+        List<Course> courses = queryFactory
+                .selectFrom(qCourse)
+                .where(qCourse.post.isDeleted.isFalse()
+                        .and(qCourse.post.isFinished.isFalse()))
                 .fetch();
-        List<CoursePostResponse> coursePostResponses = posts.stream()
-                .map(post ->
+
+        List<CoursePostResponse> coursePostResponses = courses.stream()
+                .map(course ->
                         new CoursePostResponse(
-                                post.getId(),
-                                post.getUser().getId(),
-                                post.getUser().getNickname(),
-                                post.getUser().getProfile().getProfileImageUrl(),
-                                post.getUser().getNumberTag(),
-                                post.getCourse().getId(),
-                                post.getTitle(),
-                                post.getCompanionsNum(),
-                                getCurrentParticipantNum(post.getCourse().getId()),
-                                post.getContent()
+                                course.getPost().getId(),
+                                course.getPost().getUser().getId(),
+                                course.getPost().getUser().getNickname(),
+                                course.getPost().getUser().getProfile().getProfileImageUrl(),
+                                course.getPost().getUser().getNumberTag(),
+                                course.getPost().getTitle(),
+                                course.getPost().getCompanionsNum(),
+                                getCurrentParticipantNum(course.getId()),
+                                course.getPost().getContent()
                         ))
                 .toList();
         return PaginationUtil.listToPage(coursePostResponses, pageable);

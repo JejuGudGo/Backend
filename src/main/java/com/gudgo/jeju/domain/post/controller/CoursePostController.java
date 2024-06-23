@@ -1,22 +1,16 @@
 package com.gudgo.jeju.domain.post.controller;
 
-import com.gudgo.jeju.domain.course.dto.request.participant.ParticipantJoinRequest;
-import com.gudgo.jeju.domain.course.dto.response.ParticipantResponse;
-import com.gudgo.jeju.domain.course.query.CourseQueryService;
 import com.gudgo.jeju.domain.post.dto.request.CoursePostCreateRequest;
 import com.gudgo.jeju.domain.post.dto.request.CoursePostUpdateRequest;
 import com.gudgo.jeju.domain.post.dto.response.CoursePostResponse;
 import com.gudgo.jeju.domain.post.query.CoursePostQueryService;
 import com.gudgo.jeju.domain.post.service.CoursePostService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import retrofit2.http.Path;
 
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/posts/courses")
