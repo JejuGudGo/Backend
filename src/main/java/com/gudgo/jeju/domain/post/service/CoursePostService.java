@@ -1,8 +1,8 @@
 package com.gudgo.jeju.domain.post.service;
 
-import com.gudgo.jeju.domain.course.entity.Course;
-import com.gudgo.jeju.domain.course.query.ParticipantQueryService;
-import com.gudgo.jeju.domain.course.repository.CourseRepository;
+import com.gudgo.jeju.domain.planner.entity.Course;
+import com.gudgo.jeju.domain.planner.query.ParticipantQueryService;
+import com.gudgo.jeju.domain.planner.repository.CourseRepository;
 import com.gudgo.jeju.domain.post.dto.request.CoursePostCreateRequest;
 import com.gudgo.jeju.domain.post.dto.request.CoursePostUpdateRequest;
 import com.gudgo.jeju.domain.post.dto.response.CoursePostResponse;

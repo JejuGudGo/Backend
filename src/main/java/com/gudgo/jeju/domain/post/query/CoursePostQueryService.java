@@ -1,8 +1,8 @@
 package com.gudgo.jeju.domain.post.query;
 
-import com.gudgo.jeju.domain.course.entity.Course;
-import com.gudgo.jeju.domain.course.entity.QCourse;
-import com.gudgo.jeju.domain.course.entity.QParticipant;
+import com.gudgo.jeju.domain.planner.entity.Course;
+import com.gudgo.jeju.domain.planner.entity.QCourse;
+import com.gudgo.jeju.domain.planner.entity.QParticipant;
 import com.gudgo.jeju.domain.post.dto.response.CoursePostResponse;
 import com.gudgo.jeju.global.util.PaginationUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
