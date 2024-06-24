@@ -1,13 +1,10 @@
 package com.gudgo.jeju.domain.course.entity;
 
-import com.gudgo.jeju.domain.planner.entity.Planner;
 import com.gudgo.jeju.domain.post.entity.Posts;
-import com.gudgo.jeju.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 
 @Entity
@@ -36,7 +33,6 @@ public class Course {
     @OneToOne
     @JoinColumn(name = "plannerId")
     private Planner planner;
-
 
     public Course withTitle(String title) {
         return Course.builder()

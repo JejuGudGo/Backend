@@ -29,6 +29,9 @@ public class CourseMedia {
 
     private boolean isDeleted;
 
+    @ManyToOne
+    @JoinColumn(name = "plannerId")
+    private Planner planner;
 
     public CourseMedia withIsDeleted() {
         return CourseMedia.builder()
