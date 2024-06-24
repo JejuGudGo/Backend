@@ -33,8 +33,10 @@ public class Planner {
     private boolean isCompleted;
 
     @ManyToOne
-    @JoinColumn(name="userId")
+    @JoinColumn(name = "userId")
     private User user;
 
-
+    @OneToOne
+    @JoinColumn(name = "courseId")
+    private Course course;
 }

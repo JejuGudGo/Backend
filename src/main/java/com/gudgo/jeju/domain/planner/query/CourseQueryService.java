@@ -40,13 +40,10 @@ public class CourseQueryService {
                     new CourseResponseDto(
                             course.getId(),
                             course.getTitle(),
-                            course.getTime(),
-                            course.getStartAt(),
                             course.getCreatedAt(),
-                            course.isDeleted(),
                             course.getOriginalCreatorId(),
                             course.getOriginalCourseId(),
-                            course.getSummary()
+                            course.s
                     ))
                 .toList();
 
@@ -68,13 +65,9 @@ public class CourseQueryService {
                         new CourseResponseDto(
                                 course.getId(),
                                 course.getTitle(),
-                                course.getTime(),
-                                course.getStartAt(),
                                 course.getCreatedAt(),
-                                course.isDeleted(),
                                 course.getOriginalCreatorId(),
                                 course.getOriginalCourseId(),
-                                course.getSummary()
                         ))
                 .toList();
 
