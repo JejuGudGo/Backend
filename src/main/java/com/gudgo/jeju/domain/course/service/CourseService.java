@@ -44,13 +44,9 @@ public class CourseService {
         return new CourseResponseDto(
                 course.getId(),
                 course.getTitle(),
-                course.getTime(),
-                course.getStartAt(),
                 course.getCreatedAt(),
-                course.isDeleted(),
                 course.getOriginalCreatorId(),
                 course.getOriginalCreatorId(),
-                course.getSummary()
         );
     }
 
@@ -87,11 +83,8 @@ public class CourseService {
                  .orElseThrow(EntityNotFoundException::new);
 
         Course newCourse = Course.builder()
-                .user(user)
-                .startAt(request.startAt())
                 .title(request.title())
                 .createdAt(LocalDate.now())
-                .originalCreatorId(originalCourse.getUser().getId())
                 .originalCourseId(originalCourse.getId())
                 .type(CourseType.USER)
                 .build();
@@ -108,8 +101,6 @@ public class CourseService {
                 .orElseThrow(EntityNotFoundException::new);
 
         Course course = Course.builder()
-                .user(user)
-                .startAt(requestDto.startAt())
                 .title(jeJuOlleCourse.getTitle())
                 .createdAt(LocalDate.now())
                 .type(CourseType.JEJU)

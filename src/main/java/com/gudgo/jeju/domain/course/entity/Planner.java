@@ -1,4 +1,4 @@
-package com.gudgo.jeju.domain.planner.entity;
+package com.gudgo.jeju.domain.course.entity;
 
 import com.gudgo.jeju.domain.user.entity.User;
 import jakarta.persistence.*;
@@ -35,4 +35,6 @@ public class Planner {
     @ManyToOne
     @JoinColumn(name="userId")
     private User user;
+
+
 }

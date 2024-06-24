@@ -1,5 +1,6 @@
 package com.gudgo.jeju.domain.course.entity;
 
+import com.gudgo.jeju.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,6 +29,14 @@ public class Participant {
     @JoinColumn(name = "courseId")
     private Course course;
 
+    @OneToOne
+    @JoinColumn(name="participantUserId")
+    private User user;
+
+
+    @ManyToOne
+    @JoinColumn(name="plannerId")
+    private Planner planner;
 
     public Participant withCountAndApplied(boolean isApplied) {
         return Participant.builder()
