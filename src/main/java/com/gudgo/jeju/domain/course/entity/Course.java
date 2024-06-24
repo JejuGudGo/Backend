@@ -97,17 +97,9 @@ public class Course {
         return Course.builder()
                 .id(this.id)
                 .title(this.title)
-                .time(this.time)
-                .startAt(this.startAt)
-                .summary(this.summary)
-                .createdAt(this.createdAt)
-                .isCompleted(this.isCompleted)
-                .isDeleted(true)
                 .originalCourseId(this.originalCourseId)
                 .originalCreatorId(this.originalCreatorId)
                 .olleCourseId(this.olleCourseId)
-                .user(this.user)
-                .post(post)
                 .build();
     }
 
