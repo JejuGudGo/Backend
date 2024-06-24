@@ -29,10 +29,6 @@ public class Course {
 
     private Long olleCourseId;
 
-    @OneToOne
-    @JoinColumn(name = "plannerId")
-    private Planner planner;
-
     public Course withTitle(String title) {
         return Course.builder()
                 .id(this.id)
@@ -42,7 +38,6 @@ public class Course {
                 .originalCourseId(this.originalCourseId)
                 .originalCreatorId(this.originalCreatorId)
                 .olleCourseId(this.olleCourseId)
-                .planner(this.planner)
                 .build();
     }
 
@@ -55,7 +50,6 @@ public class Course {
                 .originalCourseId(this.originalCourseId)
                 .originalCreatorId(this.originalCreatorId)
                 .olleCourseId(this.olleCourseId)
-                .planner(this.planner)
                 .build();
     }
 

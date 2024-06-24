@@ -1,5 +1,8 @@
 package com.gudgo.jeju.domain.planner.dto.response;
 
+import com.gudgo.jeju.domain.planner.entity.QSpot;
+import com.gudgo.jeju.domain.planner.entity.Spot;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -12,6 +15,8 @@ public record CourseResponseDto(
         boolean isDeleted,
         Long originalCreatorId,
         Long originalCourseId,
-        String summary
+        String summary,
+
+        Spot spot
 ) {
 }
