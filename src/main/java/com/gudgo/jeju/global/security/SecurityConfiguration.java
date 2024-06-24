@@ -51,7 +51,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/oauth/**").permitAll()
                                 .requestMatchers("/api/v1/oauth/**").permitAll()
                                 .requestMatchers("/api/v1/auth/token/**").permitAll()
-                                .requestMatchers("/docs/**").permitAll()
+                                .requestMatchers("/ws/**").permitAll()
                                 .requestMatchers("/favicon.ico/**").permitAll()
                                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                                 .anyRequest().authenticated()
