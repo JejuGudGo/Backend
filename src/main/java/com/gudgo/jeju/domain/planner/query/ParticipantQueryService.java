@@ -1,5 +1,6 @@
 package com.gudgo.jeju.domain.planner.query;
 
+import com.gudgo.jeju.domain.course.entity.QParticipant;
 import com.gudgo.jeju.domain.planner.dto.response.ParticipantResponse;
 import com.gudgo.jeju.domain.planner.entity.Participant;
 import com.gudgo.jeju.domain.planner.entity.QCourse;
@@ -89,6 +90,20 @@ public class ParticipantQueryService {
                 .selectFrom(qParticipant)
                 .join(qParticipant.course, qCourse)
                 .where(qCourse.id.eq(courseId)
+                        .and(qParticipant.participantUserId.eq(userId)))
+                .fetchOne();
+
+        return participant;
+    }
+
+    public Participant findParticipantIdByChatRoomIdAndUserId(Long chatRoomId, Long userId) {
+        QPlanner qPlanner = QPlanner.planner;
+        QParticipant qParticipant = QParticipant.participant;
+
+        Participant participant = queryFactory
+                .selectFrom(qParticipant)
+                .join(qParticipant.planner, qPlanner)
+                .where(qPlanner.chatRoom.id.eq(chatRoomId)
                         .and(qParticipant.participantUserId.eq(userId)))
                 .fetchOne();
 
