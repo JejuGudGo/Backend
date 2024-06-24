@@ -41,6 +41,6 @@ public class Planner {
     private Course course;
 
     @OneToOne
-    @JoinColumn(name = "chattingId")
-    private Chatting chatting;
+    @JoinColumn(name = "chatRoomId")
+    private ChatRoom chatRoom;
 }
