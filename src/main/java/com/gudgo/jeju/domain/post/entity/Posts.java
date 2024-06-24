@@ -1,6 +1,5 @@
 package com.gudgo.jeju.domain.post.entity;
 
-import com.gudgo.jeju.domain.course.entity.Course;
 import com.gudgo.jeju.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
