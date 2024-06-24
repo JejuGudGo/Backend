@@ -7,6 +7,4 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CourseMediaRepository extends JpaRepository<CourseMedia, Long> {
-
-    List<CourseMedia> findByCourseId(Long courseId);
 }

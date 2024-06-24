@@ -30,21 +30,25 @@ public class CoursePostService {
     private final ValidationUtil validationUtil;
 
 
-    public CoursePostResponse get(Long postId) {
-        Posts posts = postsRepository.findById(postId)
-                .orElseThrow(EntityNotFoundException::new);
+    public CoursePostResponse getCoursePost(Long postId) {
+        Posts post = postsRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("posts not found id=" + postId));
 
-        LocalDate courseStartDate = posts.getCourse().getStartAt();
+        Course course = courseRepository.findByPostId(post.getId());
 
-        if (courseStartDate.isAfter(LocalDate.now()) && !posts.isFinished()) {
-            posts.withIsFinished(true);
+        Long currentParticipantNum = participantQueryService.countCourseParticipant(course.getId());
 
-            CoursePostResponse coursePostResponse = getResponse(posts);
-
-            return coursePostResponse;
-        }
-
-        return null;
+        return new CoursePostResponse(
+                post.getId(),
+                post.getUser().getId(),
+                post.getUser().getNickname(),
+                post.getUser().getProfile().getProfileImageUrl(),
+                post.getUser().getNumberTag(),
+                post.getTitle(),
+                post.getCompanionsNum(),
+                currentParticipantNum,
+                post.getContent()
+        );
     }
 
     @Transactional
@@ -57,7 +61,6 @@ public class CoursePostService {
 
         Posts posts = Posts.builder()
                 .user(user)
-                .course(course)
                 .postType(PostType.COURSE)
                 .title(request.title())
                 .content(request.content())
@@ -67,77 +70,78 @@ public class CoursePostService {
                 .isDeleted(false)
                 .build();
 
+        course = course.withPost(posts);
+
         postsRepository.save(posts);
+        courseRepository.save(course);
 
-        CoursePostResponse response = getResponse(posts);
-
-        return response;
+        return getResponse(posts, request.courseId());
     }
 
     @Transactional
     public CoursePostResponse update(Long postId, CoursePostUpdateRequest request) {
-        Posts posts = postsRepository.findById(postId)
+        Posts post = postsRepository.findById(postId)
                 .orElseThrow(EntityNotFoundException::new);
 
         if (validationUtil.validateStringValue(request.title())) {
-            posts.withTitle(request.title());
+            post = post.withTitle(request.title());
 
         }
 
         if (validationUtil.validateStringValue(request.content())) {
-            posts.withContent(request.content());
+            post = post.withContent(request.content());
 
+        }
+
+        if (validationUtil.validateLongValue(request.participantNum())) {
+            post = post.withCompanionsNum(request.participantNum());
+        }
+
+        if (request.isFinished() != post.isFinished()) {
+            post = post.withIsFinished(request.isFinished());
         }
 
         if (validationUtil.validateLongValue(request.courseId())) {
             Course course = courseRepository.findById(request.courseId())
                     .orElseThrow(EntityNotFoundException::new);
 
-            posts.withCourse(course);
-
+            course.withPost(post);
+            courseRepository.save(course);
         }
 
-        if (validationUtil.validateLongValue(request.participantNum())) {
-            posts.withCompanionsNum(request.participantNum());
-        }
+        postsRepository.save(post);
 
-        if (request.isFinished() != posts.isFinished()) {
-            posts.withIsFinished(request.isFinished());
-        }
-
-        postsRepository.save(posts);
-
-        CoursePostResponse response = getResponse(posts);
-
-        return response;
+        return getResponse(post, request.courseId());
     }
+
 
     @Transactional
     public void delete(Long postId) {
         Posts posts = postsRepository.findById(postId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        posts.withIsFinished(true);
-
-        postsRepository.save(posts);
+        Posts updatedPosts = posts.withIsFinishedAndIsDeleted(true, true);
+        postsRepository.save(updatedPosts);
     }
 
-
-    private CoursePostResponse getResponse(Posts posts) {
-
+    private CoursePostResponse getResponse(Posts post, Long courseId) {
         CoursePostResponse coursePostResponse = new CoursePostResponse(
-                posts.getId(),
-                posts.getUser().getId(),
-                posts.getUser().getNickname(),
-                posts.getUser().getProfile().getProfileImageUrl(),
-                posts.getUser().getNumberTag(),
-                posts.getCourse().getId(),
-                posts.getTitle(),
-                posts.getCompanionsNum(),
-                participantQueryService.countCourseParticipant(posts.getCourse().getId()),
-                posts.getContent()
+                post.getId(),
+                post.getUser().getId(),
+                post.getUser().getNickname(),
+                post.getUser().getProfile().getProfileImageUrl(),
+                post.getUser().getNumberTag(),
+                post.getTitle(),
+                post.getCompanionsNum(),
+                participantQueryService.countCourseParticipant(courseId),
+                post.getContent()
         );
 
         return coursePostResponse;
+    }
+
+    private Posts findPostById(Long postId) {
+        return postsRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("Post not found id=" + postId));
     }
 }

@@ -1,11 +1,11 @@
 package com.gudgo.jeju.global.data.olle.service;
 
-import com.gudgo.jeju.global.data.olle.entity.JeJuOlleSpot;
-import com.gudgo.jeju.global.data.olle.entity.JeJuOlleCourse;
-import com.gudgo.jeju.global.data.olle.repository.JeJuOlleSpotRepository;
-import com.gudgo.jeju.global.data.olle.repository.JeJuOlleCourseRepository;
-import com.gudgo.jeju.global.data.tourAPI.common.entity.DataConfiguration;
-import com.gudgo.jeju.global.data.tourAPI.common.repository.DataConfigurationRepository;
+import com.gudgo.jeju.domain.olle.entity.JeJuOlleSpot;
+import com.gudgo.jeju.domain.olle.entity.JeJuOlleCourse;
+import com.gudgo.jeju.domain.olle.repository.JeJuOlleSpotRepository;
+import com.gudgo.jeju.domain.olle.repository.JeJuOlleCourseRepository;
+import com.gudgo.jeju.global.data.common.entity.DataConfiguration;
+import com.gudgo.jeju.global.data.tourAPI.repository.DataConfigurationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;

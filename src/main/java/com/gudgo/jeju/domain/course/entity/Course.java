@@ -1,6 +1,7 @@
 package com.gudgo.jeju.domain.course.entity;
 
-import com.gudgo.jeju.domain.course.dto.request.plan.PlanUpdateStartRequestDto;
+import com.gudgo.jeju.domain.planner.entity.Planner;
+import com.gudgo.jeju.domain.post.entity.Posts;
 import com.gudgo.jeju.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,17 +25,7 @@ public class Course {
 
     private String title;
 
-    private LocalTime time;
-
-    private LocalDate startAt;
-
-    private String summary;
-
     private LocalDate createdAt;
-
-    private boolean isCompleted = false;
-
-    private boolean isDeleted = false;
 
     private Long originalCreatorId;
 
@@ -42,58 +33,67 @@ public class Course {
 
     private Long olleCourseId;
 
-    @ManyToOne
-    @JoinColumn(name = "userId")
-    private User user;
+    @OneToOne
+    @JoinColumn(name = "plannerId")
+    private Planner planner;
+
+
+    public Course withTitle(String title) {
+        return Course.builder()
+                .id(this.id)
+                .title(title)
+                .createdAt(this.createdAt)
+                .originalCourseId(this.originalCourseId)
+                .originalCreatorId(this.originalCreatorId)
+                .olleCourseId(this.olleCourseId)
+                .build();
+    }
 
     public Course withIsCompleted() {
         return Course.builder()
                 .id(this.id)
                 .title(this.title)
-                .time(this.time)
-                .startAt(this.startAt)
-                .summary(this.summary)
                 .createdAt(this.createdAt)
-                .isCompleted(true)
-                .isDeleted(this.isDeleted)
                 .originalCourseId(this.originalCourseId)
+                .olleCourseId(this.olleCourseId)
                 .originalCreatorId(this.originalCreatorId)
-                .user(this.user)
                 .build();
     }
+
     public Course withOriginalCourseId(Long courseId) {
         return Course.builder()
                 .id(this.id)
                 .title(this.title)
-                .time(this.time)
-                .startAt(this.startAt)
-                .summary(this.summary)
                 .createdAt(this.createdAt)
-                .isCompleted(this.isCompleted)
-                .isDeleted(this.isDeleted)
                 .originalCourseId(courseId)
                 .originalCreatorId(this.originalCreatorId)
-                .user(this.user)
+                .olleCourseId(this.olleCourseId)
                 .build();
     }
 
-    public Course withStartAt(PlanUpdateStartRequestDto requestDto) {
+    public Course withStartAt(LocalDate startAt) {
         return Course.builder()
                 .id(this.id)
                 .title(this.title)
-                .time(this.time)
-                .startAt(requestDto.getStartAt())
-                .summary(this.summary)
                 .createdAt(this.createdAt)
-                .isCompleted(this.isCompleted)
-                .isDeleted(this.isDeleted)
                 .originalCourseId(this.originalCourseId)
                 .originalCreatorId(this.originalCreatorId)
-                .user(this.user)
+                .olleCourseId(this.olleCourseId)
                 .build();
     }
 
     public Course withDeleted() {
+        return Course.builder()
+                .id(this.id)
+                .title(this.title)
+                .createdAt(this.createdAt)
+                .originalCourseId(this.originalCourseId)
+                .originalCreatorId(this.originalCreatorId)
+                .olleCourseId(this.olleCourseId)
+                .build();
+    }
+
+    public Course withPost(Posts post) {
         return Course.builder()
                 .id(this.id)
                 .title(this.title)
@@ -105,7 +105,9 @@ public class Course {
                 .isDeleted(true)
                 .originalCourseId(this.originalCourseId)
                 .originalCreatorId(this.originalCreatorId)
+                .olleCourseId(this.olleCourseId)
                 .user(this.user)
+                .post(post)
                 .build();
     }
 

@@ -3,35 +3,37 @@ package com.gudgo.jeju.domain.post.controller;
 import com.gudgo.jeju.domain.post.dto.request.CoursePostCreateRequest;
 import com.gudgo.jeju.domain.post.dto.request.CoursePostUpdateRequest;
 import com.gudgo.jeju.domain.post.dto.response.CoursePostResponse;
+import com.gudgo.jeju.domain.post.query.CoursePostQueryService;
 import com.gudgo.jeju.domain.post.service.CoursePostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping(value = "/api/v1/posts/courses")
 @RequiredArgsConstructor
 public class CoursePostController {
     private final CoursePostService coursePostService;
+    private final CoursePostQueryService coursePostQueryService;
 
     @GetMapping(value = "" )
-    public Page<?> getCoursePosts() {
-        return null;
+    public Page<CoursePostResponse> getCoursePosts(Pageable pageable) {
+        return coursePostQueryService.getCoursePosts(pageable);
     }
 
     @GetMapping(value = "/{postId}")
     public ResponseEntity<CoursePostResponse> getCoursePost(@PathVariable("postId") Long postId) {
-        CoursePostResponse response = coursePostService.get(postId);
-
+        CoursePostResponse response = coursePostService.getCoursePost(postId);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping(value = "")
     public ResponseEntity<CoursePostResponse> createCoursePost(@RequestBody CoursePostCreateRequest request) {
-        CoursePostResponse response = coursePostService.create(request);
-
-        return ResponseEntity.ok(response);
+        coursePostService.create(request);
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping(value = "/{postId}")
@@ -47,19 +49,4 @@ public class CoursePostController {
 
         return ResponseEntity.ok().build();
     }
-
-//    @PostMapping(value = "/{postId}")
-//    public ResponseEntity<?> requestJoin(@PathVariable("postId") Long postId) {
-//
-//    }
-
-//    @PutMapping(value = "/{postId}/{userId}")
-//    public ResponseEntity<?> approveUser(@PathVariable("postId") Long postId, @PathVariable("userId") Long userId) {
-//
-//    }
-
-//    @DeleteMapping(value = "/{postId}/{userId}")
-//    public ResponseEntity<?> deleteAllCoursePosts(@PathVariable("postId") Long postId, @PathVariable("userId") Long userId) {
-//
-//    }
 }

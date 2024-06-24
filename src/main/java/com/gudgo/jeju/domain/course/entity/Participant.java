@@ -23,9 +23,11 @@ public class Participant {
 
     private boolean isApplied;
 
+
     @ManyToOne
     @JoinColumn(name = "courseId")
     private Course course;
+
 
     public Participant withCountAndApplied(boolean isApplied) {
         return Participant.builder()
@@ -62,5 +64,4 @@ public class Participant {
                 .course(course)
                 .build();
     }
-
 }

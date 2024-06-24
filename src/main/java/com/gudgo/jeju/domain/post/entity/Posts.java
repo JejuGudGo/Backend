@@ -40,25 +40,20 @@ public class Posts {
     @JoinColumn(name = "userId")
     private User user;
 
-    @OneToOne
-    @JoinColumn(name = "courseId")
-    private Course course;
 
-
-    public Posts withCourse(Course course) {
-        return Posts.builder()
-                .id(this.id)
-                .postType(this.postType)
-                .title(this.title)
-                .content(this.content)
-                .companionsNum(this.companionsNum)
-                .createdAt(this.createdAt)
-                .isFinished(this.isFinished)
-                .isDeleted(this.isDeleted)
-                .user(this.user)
-                .course(course)
-                .build();
-    }
+//    public Posts withCourse(Course course) {
+//        return Posts.builder()
+//                .id(this.id)
+//                .postType(this.postType)
+//                .title(this.title)
+//                .content(this.content)
+//                .companionsNum(this.companionsNum)
+//                .createdAt(this.createdAt)
+//                .isFinished(this.isFinished)
+//                .isDeleted(this.isDeleted)
+//                .user(this.user)
+//                .build();
+//    }
 
     public Posts withTitle(String title) {
         return Posts.builder()
@@ -71,7 +66,6 @@ public class Posts {
                 .isFinished(this.isFinished)
                 .isDeleted(this.isDeleted)
                 .user(this.user)
-                .course(this.course)
                 .build();
     }
 
@@ -86,7 +80,6 @@ public class Posts {
                 .isFinished(this.isFinished)
                 .isDeleted(this.isDeleted)
                 .user(this.user)
-                .course(this.course)
                 .build();
     }
 
@@ -101,7 +94,6 @@ public class Posts {
                 .isFinished(this.isFinished)
                 .isDeleted(this.isDeleted)
                 .user(this.user)
-                .course(this.course)
                 .build();
     }
 
@@ -116,7 +108,6 @@ public class Posts {
                 .isFinished(isFinished)
                 .isDeleted(this.isDeleted)
                 .user(this.user)
-                .course(this.course)
                 .build();
     }
 
@@ -131,7 +122,20 @@ public class Posts {
                 .isFinished(this.isFinished)
                 .isDeleted(isDeleted)
                 .user(this.user)
-                .course(this.course)
+                .build();
+    }
+
+    public Posts withIsFinishedAndIsDeleted(boolean isFinished, boolean isDeleted) {
+        return Posts.builder()
+                .id(this.id)
+                .postType(this.postType)
+                .title(this.title)
+                .content(this.content)
+                .companionsNum(this.companionsNum)
+                .createdAt(this.createdAt)
+                .isFinished(isFinished)
+                .isDeleted(isDeleted)
+                .user(this.user)
                 .build();
     }
 }
