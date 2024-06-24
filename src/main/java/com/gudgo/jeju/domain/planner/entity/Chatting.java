@@ -18,9 +18,4 @@ public class Chatting {
     private Long id;
 
     private String notice;
-
-
-    @OneToOne
-    @JoinColumn(name = "plannerId")
-    private Planner planner;
 }

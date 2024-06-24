@@ -39,4 +39,8 @@ public class Planner {
     @OneToOne
     @JoinColumn(name = "courseId")
     private Course course;
+
+    @OneToOne
+    @JoinColumn(name = "chattingId")
+    private Chatting chatting;
 }
