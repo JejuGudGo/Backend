@@ -26,7 +26,7 @@ public class CourseMediaQueryService {
 
         List<CourseMedia> courseMedias = jpaQueryFactory
                 .selectFrom(qCourseMedia)
-                .where(qCourseMedia.course.id.eq(courseId)
+                .where(qCourseMedia.planner.id.eq(courseId)
                         .and(qCourseMedia.isDeleted.isFalse()))
                 .fetch();
 
@@ -34,7 +34,7 @@ public class CourseMediaQueryService {
                 .map(courseMedia ->
                         new CourseMediaResponseDto(
                                 courseMedia.getId(),
-                                courseMedia.getCourse().getId(),
+                                courseMedia.getPlanner().getId(),
                                 courseMedia.getImageUrl(),
                                 courseMedia.getContent(),
                                 courseMedia.getLatitude(),

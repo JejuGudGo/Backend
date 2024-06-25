@@ -6,10 +6,12 @@ import com.gudgo.jeju.domain.planner.dto.request.spot.SpotCreateUsingApiRequest;
 import com.gudgo.jeju.domain.planner.dto.request.spot.SpotUpdateRequestDto;
 import com.gudgo.jeju.domain.planner.dto.response.SpotResponseDto;
 import com.gudgo.jeju.domain.planner.entity.Course;
+import com.gudgo.jeju.domain.planner.entity.Planner;
 import com.gudgo.jeju.domain.planner.entity.Spot;
 import com.gudgo.jeju.domain.planner.entity.SpotType;
 import com.gudgo.jeju.domain.planner.query.SpotQueryService;
 import com.gudgo.jeju.domain.planner.repository.CourseRepository;
+import com.gudgo.jeju.domain.planner.repository.PlannerRepository;
 import com.gudgo.jeju.domain.planner.repository.SpotRepository;
 import com.gudgo.jeju.domain.planner.validation.CourseValidator;
 import com.gudgo.jeju.domain.planner.validation.SpotValidator;
@@ -40,6 +42,7 @@ public class SpotService {
     private final SpotRepository spotRepository;
     private final CourseRepository courseRepository;
     private final TourApiContentRepository tourApiContentRepository;
+    private final PlannerRepository plannerRepository;
 
     @Transactional
     public List<SpotResponseDto> getSpots(Long courseId) {
@@ -133,12 +136,12 @@ public class SpotService {
 
         // 마지막 스팟일 경우, 걷기 계획 완료 처리
         if (lastSpotId.equals(spotId)) {
-            Course course = courseRepository.findById(courseId)
+
+            Planner planner = plannerRepository.findByCourseId(courseId)
                     .orElseThrow(EntityNotFoundException::new);
+            planner = planner.withCompleted(true);
 
-            course = course.withIsCompleted();
-
-            courseRepository.save(course);
+            plannerRepository.save(planner);
 
         }
 

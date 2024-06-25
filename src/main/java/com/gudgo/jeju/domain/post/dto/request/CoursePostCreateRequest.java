@@ -6,6 +6,8 @@ public record CoursePostCreateRequest(
         Long courseId,
         String title,
         Long companionsNum, // 유저가 지정한 숫자
-        String content
+        String content,
+
+        Long plannerId
 ) {
 }

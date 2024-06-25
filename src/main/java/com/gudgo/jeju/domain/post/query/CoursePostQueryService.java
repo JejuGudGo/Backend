@@ -4,6 +4,8 @@ import com.gudgo.jeju.domain.planner.entity.Course;
 import com.gudgo.jeju.domain.planner.entity.QCourse;
 import com.gudgo.jeju.domain.planner.entity.QParticipant;
 import com.gudgo.jeju.domain.post.dto.response.CoursePostResponse;
+import com.gudgo.jeju.domain.post.entity.Posts;
+import com.gudgo.jeju.domain.post.entity.QPosts;
 import com.gudgo.jeju.global.util.PaginationUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -25,27 +27,35 @@ public class CoursePostQueryService {
 
     public Page<CoursePostResponse> getCoursePosts(Pageable pageable) {
         QCourse qCourse = QCourse.course;
+        QPosts qPosts = QPosts.posts;
 
-        List<Course> courses = queryFactory
-                .selectFrom(qCourse)
-                .where(qCourse.post.isDeleted.isFalse()
-                        .and(qCourse.post.isFinished.isFalse()))
+//        List<Course> courses = queryFactory
+//                .selectFrom(qCourse)
+//                .where(qCourse.post.isDeleted.isFalse()
+//                        .and(qCourse.post.isFinished.isFalse()))
+//                .fetch();
+//
+        List<Posts> posts = queryFactory
+                .selectFrom(qPosts)
+                .where(qPosts.isDeleted.isFalse()
+                        .and(QPosts.posts.isFinished).isFalse())
                 .fetch();
 
-        List<CoursePostResponse> coursePostResponses = courses.stream()
-                .map(course ->
+        List<CoursePostResponse> coursePostResponses = posts.stream()
+                .map(post ->
                         new CoursePostResponse(
-                                course.getPost().getId(),
-                                course.getPost().getUser().getId(),
-                                course.getPost().getUser().getNickname(),
-                                course.getPost().getUser().getProfile().getProfileImageUrl(),
-                                course.getPost().getUser().getNumberTag(),
-                                course.getPost().getTitle(),
-                                course.getPost().getCompanionsNum(),
-                                getCurrentParticipantNum(course.getId()),
-                                course.getPost().getContent()
+                                post.getId(),
+                                post.getUser().getId(),
+                                post.getUser().getNickname(),
+                                post.getUser().getProfile().getProfileImageUrl(),
+                                post.getUser().getNumberTag(),
+                                post.getTitle(),
+                                post.getCompanionsNum(),
+                                getCurrentParticipantNum(post.getId()),
+                                post.getContent()
                         ))
                 .toList();
+
         return PaginationUtil.listToPage(coursePostResponses, pageable);
     }
 
@@ -55,7 +65,7 @@ public class CoursePostQueryService {
         Long currentParticipantNum = queryFactory
                 .select(qParticipant.count())
                 .from(qParticipant)
-                .where((qParticipant.course.id.eq(courseId)
+                .where((qParticipant.planner.id.eq(courseId)
                         .and(qParticipant.approved.isTrue())
                         .and(qParticipant.isDeleted.isFalse())))
                 .fetchOne();

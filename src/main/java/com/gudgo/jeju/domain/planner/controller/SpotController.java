@@ -56,9 +56,8 @@ public class SpotController {
 
     /* PATCH: id값으로 특정 스팟 완료 처리
      * PATCH /api/v1/spot/{id}/complete */
-    @PatchMapping(value = "/user/{userId}/courses/{courseId}/spots/{spotId}/status")
+    @PatchMapping(value = "/user/courses/{courseId}/spots/{spotId}/status")
     public ResponseEntity<?> completeSpot(
-            @PathVariable("userId") Long userId,
             @PathVariable("courseId") Long courseId,
             @PathVariable("spotId") Long spotId
     ){

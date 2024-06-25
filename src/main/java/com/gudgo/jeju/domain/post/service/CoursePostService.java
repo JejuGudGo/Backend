@@ -1,8 +1,13 @@
 package com.gudgo.jeju.domain.post.service;
 
 import com.gudgo.jeju.domain.planner.entity.Course;
+import com.gudgo.jeju.domain.planner.entity.CourseType;
+import com.gudgo.jeju.domain.planner.entity.Participant;
+import com.gudgo.jeju.domain.planner.entity.Planner;
 import com.gudgo.jeju.domain.planner.query.ParticipantQueryService;
 import com.gudgo.jeju.domain.planner.repository.CourseRepository;
+import com.gudgo.jeju.domain.planner.repository.ParticipantRepository;
+import com.gudgo.jeju.domain.planner.repository.PlannerRepository;
 import com.gudgo.jeju.domain.post.dto.request.CoursePostCreateRequest;
 import com.gudgo.jeju.domain.post.dto.request.CoursePostUpdateRequest;
 import com.gudgo.jeju.domain.post.dto.response.CoursePostResponse;
@@ -26,6 +31,8 @@ public class CoursePostService {
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
     private final ParticipantQueryService participantQueryService;
+    private final PlannerRepository plannerRepository;
+    private final ParticipantRepository participantRepository;
 
     private final ValidationUtil validationUtil;
 
@@ -34,9 +41,9 @@ public class CoursePostService {
         Posts post = postsRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("posts not found id=" + postId));
 
-        Course course = courseRepository.findByPostId(post.getId());
 
-        Long currentParticipantNum = participantQueryService.countCourseParticipant(course.getId());
+
+        Long currentParticipantNum = participantQueryService.countCourseParticipant(post.getPlanner().getId());
 
         return new CoursePostResponse(
                 post.getId(),
@@ -53,15 +60,56 @@ public class CoursePostService {
 
     @Transactional
     public CoursePostResponse create(CoursePostCreateRequest request) {
+
+        /* 1. Course 테이블에 카피 진행 */
+        // 인용한 course 인덱스
+        Long courseId = request.courseId();
+
+        Course originalCourse = courseRepository.findById(courseId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        Course copyCourse = Course.builder()
+                .type(originalCourse.getType())
+                .title(originalCourse.getTitle())
+                .createdAt(originalCourse.getCreatedAt())
+                .originalCreatorId(originalCourse.getOriginalCreatorId())
+                .originalCourseId(courseId)
+                .build();
+
+        courseRepository.save(copyCourse);
+
+        /* 2. Planner 테이블에 필드 생성 */
         User user = userRepository.findById(request.userId())
                 .orElseThrow(EntityNotFoundException::new);
 
-        Course course = courseRepository.findById(request.courseId())
-                .orElseThrow(EntityNotFoundException::new);
+        Planner planner = Planner.builder()
+                .user(user)
+                .course(copyCourse)
+                .startAt(LocalDate.now())
+                .isDeleted(false)
+                .isPrivate(true)
+//                .summary()
+//                .time()
+                .isCompleted(false)
+                .build();
 
+        plannerRepository.save(planner);
+
+        /* 3. 게시글을 올린 user를 코스 참가자로 등록 */
+        Participant participant = Participant.builder()
+                .user(user)
+                .planner(planner)
+                .approved(true)
+                .isDeleted(false)
+                .build();
+
+        participantRepository.save(participant);
+
+        /* 4. Posts 테이블에 저장*/
         Posts posts = Posts.builder()
                 .user(user)
                 .postType(PostType.COURSE)
+                .planner(planner)
                 .title(request.title())
                 .content(request.content())
                 .companionsNum(request.companionsNum())
@@ -70,10 +118,8 @@ public class CoursePostService {
                 .isDeleted(false)
                 .build();
 
-        course = course.withPost(posts);
 
         postsRepository.save(posts);
-        courseRepository.save(course);
 
         return getResponse(posts, request.courseId());
     }
@@ -101,17 +147,16 @@ public class CoursePostService {
             post = post.withIsFinished(request.isFinished());
         }
 
-        if (validationUtil.validateLongValue(request.courseId())) {
-            Course course = courseRepository.findById(request.courseId())
+        if (validationUtil.validateLongValue(request.plannerId())) {
+            Planner planner = plannerRepository.findById(request.plannerId())
                     .orElseThrow(EntityNotFoundException::new);
 
-            course.withPost(post);
-            courseRepository.save(course);
+            post = post.withPlanner(planner);
         }
 
         postsRepository.save(post);
 
-        return getResponse(post, request.courseId());
+        return getResponse(post, request.plannerId());
     }
 
 

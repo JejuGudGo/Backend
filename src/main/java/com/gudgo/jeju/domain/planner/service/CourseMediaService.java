@@ -6,9 +6,11 @@ import com.gudgo.jeju.domain.planner.dto.request.course.CourseMediaUpdateRequest
 import com.gudgo.jeju.domain.planner.dto.response.CourseMediaResponseDto;
 import com.gudgo.jeju.domain.planner.entity.Course;
 import com.gudgo.jeju.domain.planner.entity.CourseMedia;
+import com.gudgo.jeju.domain.planner.entity.Planner;
 import com.gudgo.jeju.domain.planner.query.CourseMediaQueryService;
 import com.gudgo.jeju.domain.planner.repository.CourseMediaRepository;
 import com.gudgo.jeju.domain.planner.repository.CourseRepository;
+import com.gudgo.jeju.domain.planner.repository.PlannerRepository;
 import com.gudgo.jeju.global.util.ValidationUtil;
 import com.gudgo.jeju.global.util.image.entity.Category;
 import com.gudgo.jeju.global.util.image.service.ImageDeleteService;
@@ -28,7 +30,7 @@ import java.util.List;
 @Service
 public class CourseMediaService {
     private final CourseMediaRepository courseMediaRepository;
-    private final CourseRepository courseRepository;
+    private final PlannerRepository plannerRepository;
 
     private final CourseMediaQueryService courseMediaQueryService;
     private final ImageUpdateService imageUpdateService;
@@ -46,11 +48,14 @@ public class CourseMediaService {
     public void create(Long userId, Long courseId, MultipartFile image, CourseMediaCreateRequestDto requestDto) throws Exception {
         Path path = imageUpdateService.saveImage(userId, image, Category.USERCOURSE);
 
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new EntityNotFoundException("Course not found with id: " + courseId));
+//        Course course = courseRepository.findById(courseId)
+//                .orElseThrow(() -> new EntityNotFoundException("Course not found with id: " + courseId));
+
+        Planner planner = plannerRepository.findByCourseId(courseId)
+                .orElseThrow(EntityNotFoundException::new);
 
         CourseMedia courseMedia = CourseMedia.builder()
-                .course(course)
+                .planner(planner)
                 .imageUrl(path.toString())
                 .content(requestDto.content())
                 .latitude(requestDto.latitude())
@@ -93,7 +98,7 @@ public class CourseMediaService {
         CourseMedia courseMedia = courseMediaRepository.findById(mediaId)
                 .orElseThrow(() -> new EntityNotFoundException("CourseMedia not found with id: " + mediaId));
 
-        courseMedia = courseMedia.withIsDeleted();
+        courseMedia = courseMedia.withIsDeleted(true);
 
         courseMediaRepository.save(courseMedia);
     }
@@ -101,7 +106,7 @@ public class CourseMediaService {
     private CourseMediaResponseDto convertToDto(CourseMedia courseMedia) {
         return new CourseMediaResponseDto(
                 courseMedia.getId(),
-                courseMedia.getCourse().getId(),
+                courseMedia.getPlanner().getId(),
                 courseMedia.getContent(),
                 courseMedia.getImageUrl(),
                 courseMedia.getLatitude(),

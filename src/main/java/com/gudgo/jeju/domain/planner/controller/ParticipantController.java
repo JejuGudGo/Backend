@@ -16,30 +16,30 @@ import java.util.List;
 public class ParticipantController {
     private final ParticipantService participantService;
 
-    @GetMapping(value = "/{courseId}/participants")
-    public ResponseEntity<List<ParticipantResponse>> getParticipants(@PathVariable("courseId") Long courseId, @RequestParam("status") boolean status) {
+    @GetMapping(value = "/{plannerId}/participants")
+    public ResponseEntity<List<ParticipantResponse>> getParticipants(@PathVariable("plannerId") Long courseId, @RequestParam("status") boolean status) {
         return ResponseEntity.ok(participantService.getParticipants(courseId, status));
     }
 
-    @PostMapping(value = "/{courseId}/participants/join/{userId}")
-    public ResponseEntity<?> requestJoin(@PathVariable("courseId") Long courseId, @PathVariable("userId") Long userId) {
+    @PostMapping(value = "/{plannerId}/participants/join/{userId}")
+    public ResponseEntity<?> requestJoin(@PathVariable("plannerId") Long courseId, @PathVariable("userId") Long userId) {
         participantService.requestJoin(courseId, userId);
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping(value = "/{courseId}/participants/cancel/{userId}")
-    public ResponseEntity<?> requestCancel(@PathVariable("courseId") Long courseId, @PathVariable("userId") Long userId) {
+    @PatchMapping(value = "/{plannerId}/participants/cancel/{userId}")
+    public ResponseEntity<?> requestCancel(@PathVariable("plannerId") Long courseId, @PathVariable("userId") Long userId) {
         participantService.requestCancel(courseId, userId);
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping(value = "/{courseId}/participants/approve/{userId}/{status}")
+    @PatchMapping(value = "/{plannerId}/participants/approve/{userId}/{status}")
     public ResponseEntity<?> approveUserOrNot(
-            @PathVariable("courseId") Long courseId,
+            @PathVariable("plannerId") Long plannerId,
             @PathVariable("userId") Long userId,
             @PathVariable("status") boolean status
     ) {
-        participantService.approveUserOrNot(courseId, userId, status);
+        participantService.approveUserOrNot(plannerId, userId, status);
         return ResponseEntity.ok().build();
     }
 
