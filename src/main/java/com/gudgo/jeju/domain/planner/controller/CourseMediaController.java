@@ -21,19 +21,17 @@ import java.util.List;
 public class CourseMediaController {
     private final CourseMediaService courseMediaService;
 
-    /* GET: 특정 코스의 모든 미디어 가져오기
-     * GET /api/v1/course/media?courseId={courseId} */
+    /* GET: 특정 코스의 모든 미디어 가져오기 */
     @GetMapping(value = "/{userId}/planners/{plannerId}/course/medias")
     public ResponseEntity<List<CourseMediaResponseDto>> getMedias(
             @PathVariable("userId") Long userId,
             @PathVariable("plannerId") Long plannerId
     ) {
-        List<CourseMediaResponseDto> courseMedias = courseMediaService.getMedias(CourseId);
+        List<CourseMediaResponseDto> courseMedias = courseMediaService.getMedias(plannerId);
         return ResponseEntity.ok(courseMedias);
     }
 
-    /* GET: 특정 코스 미디어 상세 정보 가져오기
-     * GET /api/v1/course/media/detail?id={id} */
+    /* GET: 특정 코스 미디어 상세 정보 가져오기 */
     @GetMapping(value = "/{userId}/planners/{plannerId}/course/medias/{mediaId}")
     public ResponseEntity<CourseMediaResponseDto> get(
             @PathVariable("userId") Long userId,
@@ -43,8 +41,7 @@ public class CourseMediaController {
         return ResponseEntity.ok(courseMediaService.getMedia(mediaId));
     }
 
-    /* POST: 스팟 기록 생성
-     * POST /api/v1/course/media */
+    /* POST: 스팟 기록 생성  */
     @PostMapping(value="/{userId}/planners/{plannerId}/course/medias")
     public ResponseEntity<?> create(
             @PathVariable("userId") Long userId,
@@ -56,8 +53,7 @@ public class CourseMediaController {
         return ResponseEntity.ok().build();
     }
 
-    /* PATCH: 특정 코스 미디어 정보 업데이트
-     * PATCH /api/v1/course/media/{id} */
+    /* PATCH: 특정 코스 미디어 정보 업데이트 */
     @PatchMapping(value = "/{userId}/planners/{plannerId}/course/medias/{mediaId}")
     public ResponseEntity<?> update(
             @PathVariable("userId") Long userId,

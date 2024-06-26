@@ -45,7 +45,7 @@ public class CoursePostService {
 
     public CoursePostResponse getCoursePost(Long postId) {
         Posts post = postsRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("posts not found id=" + postId));
+                .orElseThrow(EntityNotFoundException::new);
 
         Long currentParticipantNum = participantQueryService.countCourseParticipant(post.getPlanner().getId());
 
@@ -269,7 +269,7 @@ public class CoursePostService {
         postsRepository.save(updatedPosts);
     }
 
-    private CoursePostResponse getResponse(Posts post, Long courseId) {
+    private CoursePostResponse getResponse(Posts post, Long plannerId) {
         CoursePostResponse coursePostResponse = new CoursePostResponse(
                 post.getId(),
                 post.getUser().getId(),
@@ -278,15 +278,10 @@ public class CoursePostService {
                 post.getUser().getNumberTag(),
                 post.getTitle(),
                 post.getCompanionsNum(),
-                participantQueryService.countCourseParticipant(courseId),
+                participantQueryService.countCourseParticipant(plannerId),
                 post.getContent()
         );
 
         return coursePostResponse;
-    }
-
-    private Posts findPostById(Long postId) {
-        return postsRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("Post not found id=" + postId));
     }
 }

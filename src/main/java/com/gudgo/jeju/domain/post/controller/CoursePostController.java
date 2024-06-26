@@ -45,14 +45,12 @@ public class CoursePostController {
     @PatchMapping(value = "/{postId}")
     public ResponseEntity<CoursePostResponse> updateCoursePost(@PathVariable("postId") Long postId, @RequestBody CoursePostUpdateRequest request) {
         CoursePostResponse response = coursePostService.update(postId, request);
-
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping(value = "/{postId}")
     public ResponseEntity<?> deleteCoursePost(@PathVariable("postId") Long postId) {
         coursePostService.delete(postId);
-
         return ResponseEntity.ok().build();
     }
 }

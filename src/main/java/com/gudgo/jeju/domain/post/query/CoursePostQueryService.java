@@ -4,6 +4,7 @@ import com.gudgo.jeju.domain.planner.entity.Course;
 import com.gudgo.jeju.domain.planner.entity.QCourse;
 import com.gudgo.jeju.domain.planner.entity.QParticipant;
 import com.gudgo.jeju.domain.post.dto.response.CoursePostResponse;
+import com.gudgo.jeju.domain.post.entity.PostType;
 import com.gudgo.jeju.domain.post.entity.Posts;
 import com.gudgo.jeju.domain.post.entity.QPosts;
 import com.gudgo.jeju.global.util.PaginationUtil;
@@ -26,19 +27,13 @@ public class CoursePostQueryService {
     }
 
     public Page<CoursePostResponse> getCoursePosts(Pageable pageable) {
-        QCourse qCourse = QCourse.course;
         QPosts qPosts = QPosts.posts;
 
-//        List<Course> courses = queryFactory
-//                .selectFrom(qCourse)
-//                .where(qCourse.post.isDeleted.isFalse()
-//                        .and(qCourse.post.isFinished.isFalse()))
-//                .fetch();
-//
         List<Posts> posts = queryFactory
                 .selectFrom(qPosts)
-                .where(qPosts.isDeleted.isFalse()
-                        .and(QPosts.posts.isFinished).isFalse())
+                .where((qPosts.isDeleted.isFalse()
+                        .and(qPosts.isFinished).isFalse())
+                        .and(qPosts.postType.eq(PostType.COURSE)))
                 .fetch();
 
         List<CoursePostResponse> coursePostResponses = posts.stream()
@@ -59,13 +54,13 @@ public class CoursePostQueryService {
         return PaginationUtil.listToPage(coursePostResponses, pageable);
     }
 
-    private Long getCurrentParticipantNum(Long courseId) {
+    private Long getCurrentParticipantNum(Long plannerId) {
         QParticipant qParticipant = QParticipant.participant;
 
         Long currentParticipantNum = queryFactory
                 .select(qParticipant.count())
                 .from(qParticipant)
-                .where((qParticipant.planner.id.eq(courseId)
+                .where((qParticipant.planner.id.eq(plannerId)
                         .and(qParticipant.approved.isTrue())
                         .and(qParticipant.isDeleted.isFalse())))
                 .fetchOne();

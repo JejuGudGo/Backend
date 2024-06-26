@@ -19,8 +19,7 @@ public class CourseController {
     private final CourseService courseService;
     private final CourseQueryService courseQueryService;
 
-    /* PATCH : 코스 수정
-     * PATCH : /api/v1/course/update?courseId={courseId} */
+    /* PATCH : 코스 수정  */
     @PatchMapping(value = "/users/{userId}/planners/{plannerId}/course")
     public ResponseEntity<?> updateMyCourse(
             @PathVariable("userId") Long userId,

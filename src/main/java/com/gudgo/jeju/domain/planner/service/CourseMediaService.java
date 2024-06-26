@@ -51,9 +51,6 @@ public class CourseMediaService {
     public void create(Long userId, Long plannerId, MultipartFile image, CourseMediaCreateRequestDto requestDto) throws Exception {
         Path path = imageUpdateService.saveImage(userId, image, Category.USERCOURSE);
 
-//        Course course = courseRepository.findById(courseId)
-//                .orElseThrow(() -> new EntityNotFoundException("Course not found with id: " + courseId));
-
         Planner planner = plannerRepository.findByCourseId(plannerId)
                 .orElseThrow(EntityNotFoundException::new);
 
@@ -72,7 +69,7 @@ public class CourseMediaService {
     @Transactional(readOnly = true)
     public CourseMediaResponseDto getMedia(Long mediaId) {
         CourseMedia courseMedia = courseMediaRepository.findById(mediaId)
-                .orElseThrow(() -> new EntityNotFoundException("CourseMedia not found with id: " + mediaId));
+                .orElseThrow(EntityNotFoundException::new);
 
         return convertToDto(courseMedia);
     }
@@ -80,7 +77,7 @@ public class CourseMediaService {
     @Transactional
     public void update(Long userId, Long mediaId, MultipartFile image, CourseMediaUpdateRequestDto requestDto) throws Exception {
         CourseMedia courseMedia = courseMediaRepository.findById(mediaId)
-                .orElseThrow(() -> new EntityNotFoundException("CourseMedia not found with id: " + mediaId));
+                .orElseThrow(EntityNotFoundException::new);
 
         if (!image.isEmpty()) {
             imageDeleteService.deleteImageWithUrl(courseMedia.getImageUrl());
@@ -99,7 +96,7 @@ public class CourseMediaService {
     @Transactional
     public void delete(Long mediaId) {
         CourseMedia courseMedia = courseMediaRepository.findById(mediaId)
-                .orElseThrow(() -> new EntityNotFoundException("CourseMedia not found with id: " + mediaId));
+                .orElseThrow(EntityNotFoundException::new);
 
         courseMedia = courseMedia.withIsDeleted(true);
 
