@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping(value = "/api/v1/posts/courses")
+@RequestMapping(value = "/api/v1/posts")
 @RequiredArgsConstructor
 public class CoursePostController {
     private final CoursePostService coursePostService;
@@ -30,13 +30,13 @@ public class CoursePostController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping(value = "")
+    @PostMapping(value = "/planners")
     public ResponseEntity<CoursePostResponse> createCoursePostByUsers(@RequestBody CoursePostCreateRequest request) {
         coursePostService.createByUserCourse(request);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(value = "")
+    @PostMapping(value = "/olle")
     public ResponseEntity<CoursePostResponse> createCoursePostByOlle(@RequestBody CoursePostCreateRequest request) {
         coursePostService.createByOlle(request);
         return ResponseEntity.ok().build();
