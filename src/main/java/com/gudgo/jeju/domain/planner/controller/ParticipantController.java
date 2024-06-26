@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/api/v1/Courses")
+@RequestMapping("/api/v1/planners")
 @RequiredArgsConstructor
 @Slf4j
 @RestController

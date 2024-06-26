@@ -45,29 +45,34 @@ public class SpotService {
     private final PlannerRepository plannerRepository;
 
     @Transactional
-    public List<SpotResponseDto> getSpots(Long courseId) {
-        List<Spot> spots = spotRepository.findByCourseIdOrderByOrderNumberAsc(courseId);
+    public List<SpotResponseDto> getSpots(Long plannerId) {
+        Planner planner = plannerRepository.findById(plannerId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        List<Spot> spots = spotRepository.findByCourseIdOrderByOrderNumberAsc(planner.getCourse().getId());
+
         return spots.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
-
     }
 
     @Transactional
-    public SpotResponseDto getSpot(Long id) {
-        Spot spot = findSpotById(id);
+    public SpotResponseDto getSpot(Long spotId) {
+        Spot spot = findSpotById(spotId);
         return convertToDto(spot);
     }
 
     @Transactional
-    public void createUserSpot(Long courseId, @Valid SpotCreateRequestDto requestDto) {
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new EntityNotFoundException("Course not found with id: " + courseId));
+    public void createUserSpot(Long plannerId, @Valid SpotCreateRequestDto requestDto) {
+        Planner planner = plannerRepository.findById(plannerId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        Course course = planner.getCourse();
 
         Spot spot = Spot.builder()
                 .course(course)
-                .courseType(SpotType.USER)
-                .orderNumber(spotQueryService.getLastSpotId(courseId) + 1L)
+                .spotType(SpotType.USER)
+                .orderNumber(spotQueryService.getLastSpotId(course.getId()) + 1L)
                 .title(requestDto.title())
                 .address(requestDto.address())
                 .latitude(requestDto.latitude())
@@ -82,9 +87,11 @@ public class SpotService {
     }
 
     @Transactional
-    public void createSpotUsingTourApi(Long courseId, SpotCreateUsingApiRequest request) throws IOException {
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new EntityNotFoundException("Course not found with id: " + courseId));
+    public void createSpotUsingTourApi(Long plannerId, SpotCreateUsingApiRequest request) throws IOException {
+        Planner planner = plannerRepository.findById(plannerId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        Course course = planner.getCourse();
 
         TourApiContent tourApiContent = tourApiContentRepository.findById(request.contentId())
                 .orElseThrow(EntityNotFoundException::new);
@@ -93,8 +100,8 @@ public class SpotService {
 
         Spot spot = Spot.builder()
                 .course(course)
-                .courseType(SpotType.TOUR)
-                .orderNumber(spotQueryService.getLastSpotId(courseId) + 1L)
+                .spotType(SpotType.TOUR)
+                .orderNumber(spotQueryService.getLastSpotId(course.getId()) + 1L)
                 .title(tourApiContent.getTourApiContentInfo().getTitle())
                 .address(tourApiContent.getTourApiContentInfo().getAddress())
                 .latitude(tourApiContent.getLatitude())
@@ -103,6 +110,19 @@ public class SpotService {
                 .isCompleted(false)
                 .contentId(request.contentId())
                 .build();
+
+        spotRepository.save(spot);
+    }
+
+    @Transactional
+    public void delete(Long userId, Long plannerId, Long spotId) throws IllegalAccessException {
+        Planner planner = plannerRepository.findById(plannerId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        courseValidator.validateOriginalWriter(userId, planner.getCourse().getId());
+
+        Spot spot = findSpotById(spotId);
+        spot = spot.withDeleted();
 
         spotRepository.save(spot);
     }
@@ -118,16 +138,6 @@ public class SpotService {
                 spotRepository.save(spot);
             }
         }
-    }
-
-    @Transactional
-    public void delete(Long userId, Long courseId, Long spotId) throws IllegalAccessException {
-        courseValidator.validateOriginalWriter(userId, courseId);
-
-        Spot spot = findSpotById(spotId);
-        spot = spot.withDeleted();
-
-        spotRepository.save(spot);
     }
 
     @Transactional
@@ -178,13 +188,4 @@ public class SpotService {
                 spot.getCount()
         );
     }
-
-//    private void isLastSpotCompleted(Long courseId, Long spotId, Spot spot) {
-//        List<Spot> spots = spotRepository.findByCourseIdOrderByOrderNumberAsc(courseId);
-//
-//        int finalSpotIndex = spots.size() - 1;
-//        if (spots.get(finalSpotIndex).getId().equals(spotId) && spot.isCompleted()) {
-//            planService.updatePlanIsCompleted(courseId);
-//        }
-//    }
 }

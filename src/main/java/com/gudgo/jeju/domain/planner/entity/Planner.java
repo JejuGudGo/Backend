@@ -41,30 +41,87 @@ public class Planner {
     @JoinColumn(name = "courseId")
     private Course course;
 
-    public Planner withCompleted(boolean isCompleted) {
+
+    public Planner withStartAt(LocalDate startAt) {
         return Planner.builder()
-                .id(id)
+                .id(this.id)
                 .startAt(startAt)
-                .isDeleted(isDeleted)
-                .isPrivate(isPrivate)
-                .summary(summary)
-                .time(time)
-                .isCompleted(isCompleted)
-                .user(user)
-                .course(course)
+                .isDeleted(this.isDeleted)
+                .isPrivate(this.isPrivate)
+                .summary(this.summary)
+                .time(this.time)
+                .isCompleted(this.isCompleted)
+                .user(this.user)
+                .course(this.course)
                 .build();
     }
-    public Planner withDeleted(boolean isDeleted) {
+
+    public Planner withIsPrivate(boolean isPrivate) {
         return Planner.builder()
-                .id(id)
-                .startAt(startAt)
-                .isDeleted(isDeleted)
+                .id(this.id)
+                .startAt(this.startAt)
+                .isDeleted(this.isDeleted)
                 .isPrivate(isPrivate)
+                .summary(this.summary)
+                .time(this.time)
+                .isCompleted(this.isCompleted)
+                .user(this.user)
+                .course(this.course)
+                .build();
+    }
+
+    public Planner withSummary(String summary) {
+        return Planner.builder()
+                .id(this.id)
+                .startAt(this.startAt)
+                .isDeleted(this.isDeleted)
+                .isPrivate(this.isPrivate)
                 .summary(summary)
+                .time(this.time)
+                .isCompleted(this.isCompleted)
+                .user(this.user)
+                .course(this.course)
+                .build();
+    }
+
+    public Planner withTime(LocalTime time) {
+        return Planner.builder()
+                .id(this.id)
+                .startAt(this.startAt)
+                .isDeleted(this.isDeleted)
+                .isPrivate(this.isPrivate)
+                .summary(this.summary)
                 .time(time)
+                .isCompleted(this.isCompleted)
+                .user(this.user)
+                .course(this.course)
+                .build();
+    }
+
+    public Planner withCompleted(boolean isCompleted) {
+        return Planner.builder()
+                .id(this.id)
+                .startAt(this.startAt)
+                .isDeleted(this.isDeleted)
+                .isPrivate(this.isPrivate)
+                .summary(this.summary)
+                .time(this.time)
                 .isCompleted(isCompleted)
-                .user(user)
-                .course(course)
+                .user(this.user)
+                .course(this.course)
+                .build();
+    }
+    public Planner withIsDeleted(boolean isDeleted) {
+        return Planner.builder()
+                .id(this.id)
+                .startAt(this.startAt)
+                .isDeleted(isDeleted)
+                .isPrivate(this.isPrivate)
+                .summary(this.summary)
+                .time(this.time)
+                .isCompleted(this.isCompleted)
+                .user(this.user)
+                .course(this.course)
                 .build();
     }
 }

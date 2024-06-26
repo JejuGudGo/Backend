@@ -23,9 +23,9 @@ public class SpotController {
 
     /* GET: courseId가 동일한 것들을 리스트로 반환(코스 순서 기준으로 오름차순 정렬)
      * GET /api/v1/spots?courseId={courseId} */
-    @GetMapping(value = "/user/{userId}/courses/{courseId}/spots")
-    public ResponseEntity<List<SpotResponseDto>> getSpots(@PathVariable("userId") Long userId, @PathVariable("courseId") Long courseId) {
-        List<SpotResponseDto> spots = spotService.getSpots(courseId);
+    @GetMapping(value = "/user/{userId}/planners/{plannerId}/course/spots")
+    public ResponseEntity<List<SpotResponseDto>> getSpots(@PathVariable("userId") Long userId, @PathVariable("plannerId") Long plannerId) {
+        List<SpotResponseDto> spots = spotService.getSpots(plannerId);
 
         return ResponseEntity.ok(spots);
 
@@ -33,26 +33,42 @@ public class SpotController {
 
     /* GET: id값으로 특정 스팟 조회
      * GET /api/v1/spot?courseId={id} */
-    @GetMapping(value ="/user/{userId}/courses/{courseId}/spots/{spotId}")
-    public  ResponseEntity<SpotResponseDto> getSpot(@PathVariable("userId") Long userId, @PathVariable("courseId") Long courseId, @PathVariable("spotId") Long spotId) {
+    @GetMapping(value ="/user/{userId}/planners/{plannerId}/course/spots/{spotId}")
+    public  ResponseEntity<SpotResponseDto> getSpot(@PathVariable("userId") Long userId, @PathVariable("plannerId") Long plannerId, @PathVariable("spotId") Long spotId) {
         return ResponseEntity.ok(spotService.getSpot(spotId));
     }
 
     /* POST: 새로운 스팟 생성
      * POST /api/v1/spot */
-    @PostMapping(value = "/user/{userId}/courses/{courseId}/spots/user")
-    public ResponseEntity<?> createSpotByUser(@PathVariable("userId") Long userId, @PathVariable("courseId") Long courseId, @Valid @RequestBody SpotCreateRequestDto spotCreateRequestDto) {
-        spotService.createUserSpot(courseId, spotCreateRequestDto);
+    @PostMapping(value = "/user/{userId}/planners/{plannerId}/course/spots/{spotId}")
+    public ResponseEntity<?> createSpotByUser(@PathVariable("userId") Long userId, @PathVariable("plannerId") Long plannerId, @Valid @RequestBody SpotCreateRequestDto spotCreateRequestDto) {
+        spotService.createUserSpot(plannerId, spotCreateRequestDto);
 
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(value = "/user/{userId}/courses/{courseId}/spots/tour")
-    public ResponseEntity<?> createSpotUsingTourApi(@PathVariable("userId") Long userId, @PathVariable("courseId") Long courseId, @RequestBody SpotCreateUsingApiRequest request) throws IOException {
-        spotService.createSpotUsingTourApi(courseId, request);
+    @PostMapping(value = "/user/{userId}/planners/{plannerId}/course/spots/tour")
+    public ResponseEntity<?> createSpotUsingTourApi(@PathVariable("userId") Long userId, @PathVariable("plannerId") Long plannerId, @RequestBody SpotCreateUsingApiRequest request) throws IOException {
+        spotService.createSpotUsingTourApi(plannerId, request);
 
         return ResponseEntity.ok().build();
     }
+
+    // 삭제
+    /* DELETE: id값으로 특정 스팟 삭제
+     *  DELETE /api/vi/spot/{id}*/
+    @DeleteMapping(value = "/userId/{userId}/planners/{plannerId}/course/spots/{spotId}")
+    public ResponseEntity<?> deleteSpot(
+            @PathVariable("userId") Long userId,
+            @PathVariable("plannerId") Long plannerId,
+            @PathVariable("spotId") Long spotId
+    ) throws IllegalAccessException {
+        spotService.delete(userId, plannerId, spotId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    // TODO: 스팟 순서 변경
 
     /* PATCH: id값으로 특정 스팟 완료 처리
      * PATCH /api/v1/spot/{id}/complete */
@@ -73,20 +89,6 @@ public class SpotController {
             @PathVariable("spotId") Long spotId
     ){
         spotService.increaseCount(spotId);
-
-        return ResponseEntity.ok().build();
-    }
-
-    // 삭제
-    /* DELETE: id값으로 특정 스팟 삭제
-    *  DELETE /api/vi/spot/{id}*/
-    @DeleteMapping(value = "/userId/{userId}/courses/{courseId}/spots/{spotId}")
-    public ResponseEntity<?> deleteSpot(
-            @PathVariable("userId") Long userId,
-            @PathVariable("courseId") Long courseId,
-            @PathVariable("spotId") Long spotId
-    ) throws IllegalAccessException {
-        spotService.delete(userId, courseId, spotId);
 
         return ResponseEntity.ok().build();
     }

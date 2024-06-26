@@ -23,10 +23,10 @@ public class CourseMediaController {
 
     /* GET: 특정 코스의 모든 미디어 가져오기
      * GET /api/v1/course/media?courseId={courseId} */
-    @GetMapping(value = "/{userId}/courses/{courseId}/medias")
+    @GetMapping(value = "/{userId}/planners/{plannerId}/course/medias")
     public ResponseEntity<List<CourseMediaResponseDto>> getMedias(
             @PathVariable("userId") Long userId,
-            @PathVariable("courseId") Long CourseId
+            @PathVariable("plannerId") Long plannerId
     ) {
         List<CourseMediaResponseDto> courseMedias = courseMediaService.getMedias(CourseId);
         return ResponseEntity.ok(courseMedias);
@@ -34,10 +34,10 @@ public class CourseMediaController {
 
     /* GET: 특정 코스 미디어 상세 정보 가져오기
      * GET /api/v1/course/media/detail?id={id} */
-    @GetMapping(value = "/{userId}/courses/{courseId}/medias/{mediaId}")
+    @GetMapping(value = "/{userId}/planners/{plannerId}/course/medias/{mediaId}")
     public ResponseEntity<CourseMediaResponseDto> get(
             @PathVariable("userId") Long userId,
-            @PathVariable("courseId") Long courseId,
+            @PathVariable("plannerId") Long plannerId,
             @PathVariable("mediaId") Long mediaId
     ) {
         return ResponseEntity.ok(courseMediaService.getMedia(mediaId));
@@ -45,23 +45,23 @@ public class CourseMediaController {
 
     /* POST: 스팟 기록 생성
      * POST /api/v1/course/media */
-    @PostMapping(value="/{userId}/courses/{courseId}/medias")
+    @PostMapping(value="/{userId}/planners/{plannerId}/course/medias")
     public ResponseEntity<?> create(
             @PathVariable("userId") Long userId,
-            @PathVariable("courseId") Long courseId,
+            @PathVariable("plannerId") Long plannerId,
             @RequestPart("request") CourseMediaCreateRequestDto requestDto,
             @RequestPart("image") MultipartFile image
     ) throws Exception {
-        courseMediaService.create(userId, courseId, image, requestDto);
+        courseMediaService.create(userId, plannerId, image, requestDto);
         return ResponseEntity.ok().build();
     }
 
     /* PATCH: 특정 코스 미디어 정보 업데이트
      * PATCH /api/v1/course/media/{id} */
-    @PatchMapping(value = "/{userId}/courses/{courseId}/medias/{mediaId}")
+    @PatchMapping(value = "/{userId}/planners/{plannerId}/course/medias/{mediaId}")
     public ResponseEntity<?> update(
             @PathVariable("userId") Long userId,
-            @PathVariable("courseId") Long courseId,
+            @PathVariable("plannerId") Long plannerId,
             @PathVariable("mediaId") Long mediaId,
             @RequestPart("image") MultipartFile image,
             @RequestPart("request") @Valid @RequestBody CourseMediaUpdateRequestDto requestDto
@@ -70,10 +70,10 @@ public class CourseMediaController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping(value = "/{userId}/courses/{courseId}/medias/{mediaId}")
+    @DeleteMapping(value = "/{userId}/planners/{plannerId}/course/medias/{mediaId}")
     public ResponseEntity<?> delete(
             @PathVariable("userId") Long userId,
-            @PathVariable("courseId") Long courseId,
+            @PathVariable("plannerId") Long plannerId,
             @PathVariable("mediaId") Long mediaId
     ) {
         courseMediaService.delete(mediaId);

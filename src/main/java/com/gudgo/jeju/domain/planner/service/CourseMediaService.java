@@ -38,20 +38,23 @@ public class CourseMediaService {
     private final ValidationUtil validationUtil;
 
     @Transactional(readOnly = true)
-    public List<CourseMediaResponseDto> getMedias(Long courseId) {
-        List<CourseMediaResponseDto> courseMediaResponseDtos = courseMediaQueryService.getMedias(courseId);
+    public List<CourseMediaResponseDto> getMedias(Long plannerId) {
+        Planner planner = plannerRepository.findById(plannerId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        List<CourseMediaResponseDto> courseMediaResponseDtos = courseMediaQueryService.getMedias(planner.getCourse().getId());
 
         return courseMediaResponseDtos;
     }
 
     @Transactional
-    public void create(Long userId, Long courseId, MultipartFile image, CourseMediaCreateRequestDto requestDto) throws Exception {
+    public void create(Long userId, Long plannerId, MultipartFile image, CourseMediaCreateRequestDto requestDto) throws Exception {
         Path path = imageUpdateService.saveImage(userId, image, Category.USERCOURSE);
 
 //        Course course = courseRepository.findById(courseId)
 //                .orElseThrow(() -> new EntityNotFoundException("Course not found with id: " + courseId));
 
-        Planner planner = plannerRepository.findByCourseId(courseId)
+        Planner planner = plannerRepository.findByCourseId(plannerId)
                 .orElseThrow(EntityNotFoundException::new);
 
         CourseMedia courseMedia = CourseMedia.builder()

@@ -16,6 +16,6 @@ public record CourseResponseDto(
         Long originalCreatorId,
         Long originalCourseId,
         Long olleCourseId,
-        List<Spot> spots
+        List<SpotResponseDto> spots
 ) {
 }

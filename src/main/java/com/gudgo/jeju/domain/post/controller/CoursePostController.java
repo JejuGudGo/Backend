@@ -31,8 +31,14 @@ public class CoursePostController {
     }
 
     @PostMapping(value = "")
-    public ResponseEntity<CoursePostResponse> createCoursePost(@RequestBody CoursePostCreateRequest request) {
-        coursePostService.create(request);
+    public ResponseEntity<CoursePostResponse> createCoursePostByUsers(@RequestBody CoursePostCreateRequest request) {
+        coursePostService.createByUserCourse(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "")
+    public ResponseEntity<CoursePostResponse> createCoursePostByOlle(@RequestBody CoursePostCreateRequest request) {
+        coursePostService.createByOlle(request);
         return ResponseEntity.ok().build();
     }
 

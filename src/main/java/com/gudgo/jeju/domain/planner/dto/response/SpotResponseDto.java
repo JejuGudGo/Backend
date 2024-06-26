@@ -2,7 +2,7 @@ package com.gudgo.jeju.domain.planner.dto.response;
 
 public record SpotResponseDto(
         Long id,
-        String subContentId,
+        String categoryId,
         Long courseId,
         String title,
         Long order,
