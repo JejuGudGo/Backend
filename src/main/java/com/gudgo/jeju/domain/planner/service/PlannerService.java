@@ -6,9 +6,11 @@ import com.gudgo.jeju.domain.planner.dto.request.course.PlannerUpdateRequestDto;
 import com.gudgo.jeju.domain.planner.dto.response.CourseResponseDto;
 import com.gudgo.jeju.domain.planner.entity.Course;
 import com.gudgo.jeju.domain.planner.entity.CourseType;
+import com.gudgo.jeju.domain.planner.entity.Participant;
 import com.gudgo.jeju.domain.planner.entity.Planner;
 import com.gudgo.jeju.domain.planner.query.PlannerQueryService;
 import com.gudgo.jeju.domain.planner.repository.CourseRepository;
+import com.gudgo.jeju.domain.planner.repository.ParticipantRepository;
 import com.gudgo.jeju.domain.planner.repository.PlannerRepository;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
@@ -27,6 +29,7 @@ public class PlannerService {
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
     private final PlannerRepository plannerRepository;
+    private final ParticipantRepository participantRepository;
     private final PlannerQueryService plannerQueryService;
 
     private final ValidationUtil validationUtil;
@@ -66,6 +69,14 @@ public class PlannerService {
                 .build();
 
         plannerRepository.save(planner);
+
+        Participant participant = Participant.builder()
+                .user(user)
+                .planner(planner)
+                .isDeleted(false)
+                .build();
+
+        participantRepository.save(participant);
     }
 
     @Transactional
