@@ -42,6 +42,11 @@ public class PlannerController {
         return null;
     }
 
+    @GetMapping("/users/{userId}/planners/{plannerId}")
+    public PlannerResponse getPlanner(@PathVariable("userId") Long userId, @PathVariable("plannerId") Long plannerId) {
+        return plannerQueryService.getPlanners(userId, plannerId);
+    }
+
     // 유저 직접 생성
     @PostMapping("/users/{userId}/planners")
     public ResponseEntity<?> create(@PathVariable("userId") Long userId, @Valid @RequestBody PlannerCreateRequestDto requestDto) {

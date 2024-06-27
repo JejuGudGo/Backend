@@ -96,4 +96,25 @@ public class PlannerQueryService {
 
         return PaginationUtil.listToPage(plannerResponses, pageable);
     }
+
+    public PlannerResponse getPlanners(Long userId, Long plannerId) {
+        QPlanner qPlanner = QPlanner.planner;
+
+        Planner planner = queryFactory
+                .selectFrom(qPlanner)
+                .where(qPlanner.id.eq(plannerId)
+                        .and(qPlanner.user.id.eq(userId)))
+                .fetchOne();
+
+        PlannerResponse plannerResponse = new PlannerResponse(
+                planner.getId(),
+                planner.getStartAt(),
+                planner.getSummary(),
+                planner.getTime(),
+                planner.isCompleted(),
+                courseQueryService.getCourse(planner.getId())
+        );
+
+        return plannerResponse;
+    }
 }
