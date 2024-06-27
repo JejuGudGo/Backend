@@ -28,6 +28,7 @@ public class CourseQueryService {
     // 코스 상세
     public CourseResponseDto getCourse(Long plannerId) {
         QPlanner qPlanner = QPlanner.planner;
+        QCourse qCourse = QCourse.course;
         QSpot qSpot = QSpot.spot;
 
         Course course = queryFactory
@@ -38,9 +39,10 @@ public class CourseQueryService {
 
         List<Spot> spots = queryFactory
                 .select(qSpot)
-                .from(qPlanner.course)
-                .join(qPlanner.course, qSpot.course)
-                .where(qSpot.course.id.eq(qPlanner.course.id))
+                .from(qSpot)
+                .join(qSpot.course, qCourse)
+                .where(qCourse.id.eq(course.getId())
+                        .and(qSpot.isDeleted.isFalse()))
                 .fetch();
 
         List<SpotResponseDto> spotResponses = spots.stream()

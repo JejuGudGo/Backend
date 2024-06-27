@@ -47,10 +47,11 @@ public class PlannerService {
                 .originalCreatorId(user.getId())
                 .build();
 
-        // 저장된 course 객체의 ID값을 originalCoureseId에 설정
-        course = course.withOriginalCourseId(course.getId());
-
         // 저장하여 originalCourseId 업데이트
+        courseRepository.save(course);
+
+        // 저장된 course 객체의 ID값을 originalCourseId에 설정
+        course = course.withOriginalCourseId(course.getId());
         courseRepository.save(course);
 
         Planner planner = Planner.builder()
@@ -75,16 +76,24 @@ public class PlannerService {
         if (requestDto.startAt() != null) {
             planner = planner.withStartAt(requestDto.startAt());
 
-        } else if (requestDto.isPrivate() != planner.isPrivate()) {
+        }
+
+        if (requestDto.isPrivate() != planner.isPrivate()) {
             planner = planner.withIsPrivate(requestDto.isPrivate());
 
-        } else if (validationUtil.validateStringValue(requestDto.summary())) {
+        }
+
+        if (validationUtil.validateStringValue(requestDto.summary())) {
             planner = planner.withSummary(requestDto.summary());
 
-        } else if (requestDto.time() != null) {
+        }
+
+        if (requestDto.time() != null) {
             planner = planner.withTime(requestDto.time());
 
-        } else if (requestDto.isCompleted() != planner.isCompleted()) {
+        }
+
+        if (requestDto.isCompleted() != planner.isCompleted()) {
             planner = planner.withCompleted(requestDto.isCompleted());
         }
 
