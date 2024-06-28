@@ -36,7 +36,7 @@ public class CourseControllerTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @DisplayName("코스 수정")
-    @Disabled
+//    @Disabled
     @Test
     void updateCourse() throws Exception {
         String accessToken = "Bearer " + tokenGenerator.generateToken(TokenType.ACCESS, "1");
@@ -47,7 +47,7 @@ public class CourseControllerTest {
 
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .get("/api/v1/users/{userId}/planners/{plannerId}/course", 1L, 1L)
+                        .patch("/api/v1/users/{userId}/planners/{plannerId}/course", 1L, 1L)
                         .header("Authorization", accessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateRequestDto)))
