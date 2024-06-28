@@ -6,10 +6,7 @@ import com.gudgo.jeju.domain.olle.repository.JeJuOlleCourseRepository;
 import com.gudgo.jeju.domain.olle.repository.JeJuOlleSpotRepository;
 import com.gudgo.jeju.domain.planner.entity.*;
 import com.gudgo.jeju.domain.planner.query.ParticipantQueryService;
-import com.gudgo.jeju.domain.planner.repository.CourseRepository;
-import com.gudgo.jeju.domain.planner.repository.ParticipantRepository;
-import com.gudgo.jeju.domain.planner.repository.PlannerRepository;
-import com.gudgo.jeju.domain.planner.repository.SpotRepository;
+import com.gudgo.jeju.domain.planner.repository.*;
 import com.gudgo.jeju.domain.post.dto.request.CoursePostCreateRequest;
 import com.gudgo.jeju.domain.post.dto.request.CoursePostUpdateRequest;
 import com.gudgo.jeju.domain.post.dto.response.CoursePostResponse;
@@ -39,6 +36,7 @@ public class CoursePostService {
     private final ParticipantQueryService participantQueryService;
     private final PlannerRepository plannerRepository;
     private final ParticipantRepository participantRepository;
+    private final ChatRoomRepository chatRoomRepository;
 
     private final ValidationUtil validationUtil;
 
@@ -104,7 +102,15 @@ public class CoursePostService {
         User user = userRepository.findById(request.userId())
                 .orElseThrow(EntityNotFoundException::new);
 
+
+        /* ChatRoom 생성 */
+        ChatRoom chatRoom = ChatRoom.builder()
+                .build();
+
+        chatRoomRepository.save(chatRoom);
+
         Planner newPlanner = Planner.builder()
+                .chatRoom(chatRoom)
                 .user(user)
                 .course(copyCourse)
                 .startAt(LocalDate.now())
@@ -181,9 +187,16 @@ public class CoursePostService {
         User user = userRepository.findById(request.userId())
                 .orElseThrow(EntityNotFoundException::new);
 
+        /* ChatRoom 생성 */
+        ChatRoom chatRoom = ChatRoom.builder()
+                .build();
+
+        chatRoomRepository.save(chatRoom);
+
         Planner newPlanner = Planner.builder()
                 .user(user)
                 .course(copyCourse)
+                .chatRoom(chatRoom)
                 .startAt(LocalDate.now())
                 .isDeleted(false)
                 .isPrivate(true)

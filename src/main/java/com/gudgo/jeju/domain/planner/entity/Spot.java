@@ -41,7 +41,7 @@ public class Spot {
     private Course course;
 
     @ManyToOne
-    @JoinColumn(name = "TouApiCategory1Id")
+    @JoinColumn(name = "TourApiCategory1Id")
     private TourApiCategory1 tourApiCategory1;
 
     public Spot withOrderNumber(Long orderNumber) {
