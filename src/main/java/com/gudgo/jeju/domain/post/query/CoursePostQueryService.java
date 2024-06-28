@@ -31,8 +31,8 @@ public class CoursePostQueryService {
 
         List<Posts> posts = queryFactory
                 .selectFrom(qPosts)
-                .where((qPosts.isDeleted.isFalse()
-                        .and(qPosts.isFinished).isFalse())
+                .where(qPosts.isDeleted.isFalse()
+                        .and(qPosts.isFinished.isFalse())
                         .and(qPosts.postType.eq(PostType.COURSE)))
                 .fetch();
 

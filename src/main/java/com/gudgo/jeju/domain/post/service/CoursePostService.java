@@ -109,7 +109,7 @@ public class CoursePostService {
                 .course(copyCourse)
                 .startAt(LocalDate.now())
                 .isDeleted(false)
-                .isPrivate(true)
+                .isPrivate(false)
 //                .summary()
 //                .time()
                 .isCompleted(false)
