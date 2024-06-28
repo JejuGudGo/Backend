@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping(value = "/api/v1/posts/courses")
+@RequestMapping(value = "/api/v1/posts")
 @RequiredArgsConstructor
 public class CoursePostController {
     private final CoursePostService coursePostService;
@@ -30,23 +30,27 @@ public class CoursePostController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping(value = "")
-    public ResponseEntity<CoursePostResponse> createCoursePost(@RequestBody CoursePostCreateRequest request) {
-        coursePostService.create(request);
+    @PostMapping(value = "/planners")
+    public ResponseEntity<CoursePostResponse> createCoursePostByUsers(@RequestBody CoursePostCreateRequest request) {
+        coursePostService.createByUserCourse(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/olle")
+    public ResponseEntity<CoursePostResponse> createCoursePostByOlle(@RequestBody CoursePostCreateRequest request) {
+        coursePostService.createByOlle(request);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping(value = "/{postId}")
     public ResponseEntity<CoursePostResponse> updateCoursePost(@PathVariable("postId") Long postId, @RequestBody CoursePostUpdateRequest request) {
         CoursePostResponse response = coursePostService.update(postId, request);
-
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping(value = "/{postId}")
     public ResponseEntity<?> deleteCoursePost(@PathVariable("postId") Long postId) {
         coursePostService.delete(postId);
-
         return ResponseEntity.ok().build();
     }
 }

@@ -47,9 +47,21 @@ public class Course {
                 .title(title)
                 .type(this.type)
                 .createdAt(this.createdAt)
-                .originalCourseId(this.originalCourseId)
+                .originalCourseId(courseId)
                 .originalCreatorId(this.originalCreatorId)
                 .olleCourseId(this.olleCourseId)
+                .build();
+    }
+
+    public Course withOlleCourseId(Long olleCourseId) {
+        return Course.builder()
+                .id(this.id)
+                .title(this.title)
+                .type(this.type)
+                .createdAt(this.createdAt)
+                .originalCourseId(this.originalCourseId)
+                .originalCreatorId(this.originalCreatorId)
+                .olleCourseId(olleCourseId)
                 .build();
     }
 

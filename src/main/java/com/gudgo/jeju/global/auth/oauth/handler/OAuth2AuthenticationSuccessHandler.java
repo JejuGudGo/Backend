@@ -1,12 +1,15 @@
 package com.gudgo.jeju.global.auth.oauth.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gudgo.jeju.domain.user.dto.UserInfoResponseDto;
+import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
 import com.gudgo.jeju.global.auth.oauth.entity.CustomOAuth2User;
 import com.gudgo.jeju.global.jwt.token.TokenGenerator;
 import com.gudgo.jeju.global.jwt.token.TokenType;
 import com.gudgo.jeju.global.util.CookieUtil;
 import com.gudgo.jeju.global.util.RedisUtil;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,11 +31,25 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final TokenGenerator tokenGenerator;
     private final CookieUtil cookieUtil;
     private final RedisUtil redisUtil;
+    private final UserRepository userRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
         String provider = customOAuth2User.getUser().getProvider();
+
+        User user = userRepository.findById(customOAuth2User.getUser().getId())
+                .orElseThrow(EntityNotFoundException::new);
+
+        UserInfoResponseDto userInfoResponseDto = new UserInfoResponseDto(
+                user.getId(),
+                user.getEmail(),
+                user.getNickname(),
+                user.getName(),
+                user.getNumberTag(),
+                user.getProfile().getProfileImageUrl(),
+                user.getRole()
+        );
 
         if (response.isCommitted()) {
             log.info("============================================================================");
@@ -51,19 +68,23 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         cookieUtil.setCookie("refreshToken", refreshToken, response);
         redisUtil.setData(String.valueOf(customOAuth2User.getUser().getId()), refreshToken);
 
-        String frontendRedirectUrl = setRedirectUrl(customOAuth2User);
+        String frontendRedirectUrl = setRedirectUrl(accessToken, userInfoResponseDto);
 
         response.sendRedirect(frontendRedirectUrl);
     }
 
-    private String setRedirectUrl (CustomOAuth2User customOAuth2User) {
-        String encodedUserId = URLEncoder.encode(String.valueOf(customOAuth2User.getUser().getId()), StandardCharsets.UTF_8);
-        String encodedNickname = URLEncoder.encode(String.valueOf(customOAuth2User.getUser().getNickname()), StandardCharsets.UTF_8);
-        String encodedNumberTag = URLEncoder.encode(String.valueOf(customOAuth2User.getUser().getNumberTag()), StandardCharsets.UTF_8);
+    private String setRedirectUrl (String accessToken, UserInfoResponseDto userInfoResponseDto) {
+        String encodedUserId = URLEncoder.encode(String.valueOf(userInfoResponseDto.id()), StandardCharsets.UTF_8);
+        String encodedEmail = URLEncoder.encode(String.valueOf(userInfoResponseDto.email()), StandardCharsets.UTF_8);
+        String encodedNickname = URLEncoder.encode(String.valueOf(userInfoResponseDto.nickname()), StandardCharsets.UTF_8);
+        String encodedName = URLEncoder.encode(String.valueOf(userInfoResponseDto.name()), StandardCharsets.UTF_8);
+        String encodedNumberTag = URLEncoder.encode(String.valueOf(userInfoResponseDto.numberTag()), StandardCharsets.UTF_8);
+        String encodedProfieImageUrl = URLEncoder.encode(String.valueOf(userInfoResponseDto.profileImageUrl()), StandardCharsets.UTF_8);
+        String encodedUserRole = URLEncoder.encode(String.valueOf(userInfoResponseDto.userRole()), StandardCharsets.UTF_8);
 
         String frontendRedirectURL = String.format(
-                "%s/oauth/callback?userId=%s&nickname=%s&numberTag=%s",
-                PRE_FRONT_REDIRECT_URL, encodedUserId, encodedNickname, encodedNumberTag
+                "%s/oauth/callback?token=%s&userId=%s&email=%s&nickname=%s&name=%s&numberTag=%s&profileImageUrl=%s&userRole=%s",
+                PRE_FRONT_REDIRECT_URL, accessToken, encodedUserId, encodedEmail, encodedNickname, encodedName, encodedNumberTag, encodedProfieImageUrl, encodedUserRole
         );
 
         return frontendRedirectURL;

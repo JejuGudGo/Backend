@@ -1,5 +1,6 @@
 package com.gudgo.jeju.domain.post.entity;
 
+import com.gudgo.jeju.domain.planner.entity.Planner;
 import com.gudgo.jeju.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -39,20 +40,12 @@ public class Posts {
     @JoinColumn(name = "userId")
     private User user;
 
+    @OneToOne
+    @JoinColumn(name="plannerId")
+    private Planner planner;
 
-//    public Posts withCourse(Course course) {
-//        return Posts.builder()
-//                .id(this.id)
-//                .postType(this.postType)
-//                .title(this.title)
-//                .content(this.content)
-//                .companionsNum(this.companionsNum)
-//                .createdAt(this.createdAt)
-//                .isFinished(this.isFinished)
-//                .isDeleted(this.isDeleted)
-//                .user(this.user)
-//                .build();
-//    }
+
+
 
     public Posts withTitle(String title) {
         return Posts.builder()
@@ -65,6 +58,7 @@ public class Posts {
                 .isFinished(this.isFinished)
                 .isDeleted(this.isDeleted)
                 .user(this.user)
+                .planner(this.planner)
                 .build();
     }
 
@@ -79,6 +73,7 @@ public class Posts {
                 .isFinished(this.isFinished)
                 .isDeleted(this.isDeleted)
                 .user(this.user)
+                .planner(this.planner)
                 .build();
     }
 
@@ -93,6 +88,7 @@ public class Posts {
                 .isFinished(this.isFinished)
                 .isDeleted(this.isDeleted)
                 .user(this.user)
+                .planner(this.planner)
                 .build();
     }
 
@@ -107,6 +103,7 @@ public class Posts {
                 .isFinished(isFinished)
                 .isDeleted(this.isDeleted)
                 .user(this.user)
+                .planner(this.planner)
                 .build();
     }
 
@@ -121,6 +118,7 @@ public class Posts {
                 .isFinished(this.isFinished)
                 .isDeleted(isDeleted)
                 .user(this.user)
+                .planner(this.planner)
                 .build();
     }
 
@@ -135,6 +133,22 @@ public class Posts {
                 .isFinished(isFinished)
                 .isDeleted(isDeleted)
                 .user(this.user)
+                .planner(this.planner)
+                .build();
+    }
+
+    public Posts withPlanner(Planner planner) {
+        return Posts.builder()
+                .id(this.id)
+                .postType(this.postType)
+                .title(this.title)
+                .content(this.content)
+                .companionsNum(this.companionsNum)
+                .createdAt(this.createdAt)
+                .isFinished(this.isFinished)
+                .isDeleted(this.isDeleted)
+                .user(this.user)
+                .planner(planner)
                 .build();
     }
 }

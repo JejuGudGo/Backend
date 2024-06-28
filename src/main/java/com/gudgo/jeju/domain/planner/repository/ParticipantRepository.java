@@ -8,12 +8,6 @@ import java.util.Optional;
 
 public interface ParticipantRepository extends JpaRepository<Participant, Long> {
 
-    Optional<Participant> findByParticipantUserIdAndCourseId(Long userId, Long PostId);
-
-    List<Participant> findByCourseIdAndApprovedFalseAndIsAppliedTrue(Long courseId);
-
-    List<Participant> findByCourseIdAndApprovedTrueAndIsDeletedFalse(Long courseId);
-
-    Long countByCourseIdAndApprovedTrue(Long courseId);
+    Optional<Participant> findByUserIdAndPlannerId(Long userId, Long PostId);
 
 }

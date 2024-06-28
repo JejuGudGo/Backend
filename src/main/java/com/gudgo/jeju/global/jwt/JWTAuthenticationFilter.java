@@ -50,7 +50,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             } catch (ExpiredJwtException e) {
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
                 setResponse(response, "TOKEN_01");
-
+                return;
             }
         }
 

@@ -2,6 +2,8 @@ package com.gudgo.jeju.domain.planner.query;
 
 import com.gudgo.jeju.domain.planner.dto.response.MessageResponse;
 import com.gudgo.jeju.domain.planner.entity.Message;
+import com.gudgo.jeju.domain.planner.entity.QMessage;
+import com.gudgo.jeju.domain.planner.entity.QMessageImage;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;

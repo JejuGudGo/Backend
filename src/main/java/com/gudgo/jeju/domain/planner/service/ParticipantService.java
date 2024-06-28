@@ -3,12 +3,16 @@ package com.gudgo.jeju.domain.planner.service;
 import com.gudgo.jeju.domain.planner.dto.response.ParticipantResponse;
 import com.gudgo.jeju.domain.planner.entity.Course;
 import com.gudgo.jeju.domain.planner.entity.Participant;
+import com.gudgo.jeju.domain.planner.entity.Planner;
 import com.gudgo.jeju.domain.planner.query.ParticipantQueryService;
 import com.gudgo.jeju.domain.planner.repository.CourseRepository;
 import com.gudgo.jeju.domain.planner.repository.ParticipantRepository;
+import com.gudgo.jeju.domain.planner.repository.PlannerRepository;
 import com.gudgo.jeju.domain.planner.validation.ParticipantValidator;
 import com.gudgo.jeju.domain.post.entity.Posts;
 import com.gudgo.jeju.domain.post.repository.PostsRepository;
+import com.gudgo.jeju.domain.user.entity.User;
+import com.gudgo.jeju.domain.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +29,14 @@ public class ParticipantService {
     private final PostsRepository postsRepository;
     private final ParticipantQueryService participantQueryService;
     private final ParticipantValidator participantValidator;
+    private final PlannerRepository plannerRepository;
+    private final UserRepository userRepository;
 
-    public List<ParticipantResponse> getParticipants(Long courseId, boolean status) {
+    public List<ParticipantResponse> getParticipants(Long plannerId, boolean status) {
         if (status) {
-            return getApprovedParticipants(courseId);
+            return getApprovedParticipants(plannerId);
         } else {
-            return getNotApprovedParticipants(courseId);
+            return getNotApprovedParticipants(plannerId);
         }
     }
 
@@ -45,20 +51,27 @@ public class ParticipantService {
     }
 
     @Transactional
-    public void requestJoin(Long courseId, Long userId) {
-        Course course = courseRepository.findById(courseId)
+    public void requestJoin(Long plannerId, Long userId) {
+
+        Posts post = postsRepository.findByPlannerId(plannerId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        participantValidator.validateParticipantNumber(course.getPost().getId(), courseId);
+        participantValidator.validateParticipantNumber(post.getId(), plannerId);
 
         Optional<Participant> optionalParticipant =
-                participantRepository.findByParticipantUserIdAndCourseId(userId, courseId);
+                participantRepository.findByUserIdAndPlannerId(userId, plannerId);
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        Planner planner = plannerRepository.findById(plannerId)
+                .orElseThrow(EntityNotFoundException::new);
 
         // 신청 이력이 있는 경우
         Participant participant = optionalParticipant
                 .orElseGet(() -> Participant.builder()
-                        .participantUserId(userId)
-                        .course(course)
+                        .user(user)
+                        .planner(planner)
                         .count(0L) // 처음 생성할 때 count를 0으로 설정
                         .isApplied(false) // 처음 생성할 때 isApplied를 false로 설정
                         .build());
@@ -75,8 +88,8 @@ public class ParticipantService {
 
 
     @Transactional
-    public void requestCancel(Long courseId, Long userId) {
-        Participant participant = participantRepository.findByParticipantUserIdAndCourseId(userId, courseId)
+    public void requestCancel(Long plannerId, Long userId) {
+        Participant participant = participantRepository.findByUserIdAndPlannerId(userId, plannerId)
                 .orElseThrow(EntityNotFoundException::new);
 
         participant = participant.withApplied(false);
@@ -84,21 +97,19 @@ public class ParticipantService {
         participantRepository.save(participant);
     }
 
-    public void approveUserOrNot(Long courseId, Long userId, boolean status) {
-        Course course = courseRepository.findById(courseId)
+    public void approveUserOrNot(Long plannerId, Long userId, boolean status) {
+
+        Posts post = postsRepository.findByPlannerId(plannerId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        Posts post = postsRepository.findById(course.getPost().getId())
-                .orElseThrow(EntityNotFoundException::new);
-
-        Participant participant = participantRepository.findByParticipantUserIdAndCourseId(userId, courseId)
+        Participant participant = participantRepository.findByUserIdAndPlannerId(userId, plannerId)
                 .orElseThrow(EntityNotFoundException::new);
 
         if (status) {
-            approveUser(post, participant, courseId);
+            approveUser(post, participant, plannerId);
 
         } else {
-            notApproveUser(post, participant, courseId);
+            notApproveUser(post, participant, plannerId);
         }
     }
 

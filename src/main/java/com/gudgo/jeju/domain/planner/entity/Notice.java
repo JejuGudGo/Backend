@@ -31,7 +31,7 @@ public class Notice {
     @JoinColumn(name = "chatRoomId")
     private ChatRoom chatRoom;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "participantId")
     private Participant participant;
 

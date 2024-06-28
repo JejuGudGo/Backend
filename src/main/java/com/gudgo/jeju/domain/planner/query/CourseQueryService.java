@@ -2,9 +2,8 @@ package com.gudgo.jeju.domain.planner.query;
 
 
 import com.gudgo.jeju.domain.planner.dto.response.CourseResponseDto;
-import com.gudgo.jeju.domain.planner.entity.Course;
-import com.gudgo.jeju.domain.planner.entity.CourseType;
-import com.gudgo.jeju.domain.planner.entity.QCourse;
+import com.gudgo.jeju.domain.planner.dto.response.SpotResponseDto;
+import com.gudgo.jeju.domain.planner.entity.*;
 import com.gudgo.jeju.global.util.PaginationUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -14,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class CourseQueryService {
@@ -24,81 +25,50 @@ public class CourseQueryService {
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
-    public Page<CourseResponseDto> getUserCourses(Pageable pageable) {
+    // 코스 상세
+    public CourseResponseDto getCourse(Long plannerId) {
+        QPlanner qPlanner = QPlanner.planner;
         QCourse qCourse = QCourse.course;
+        QSpot qSpot = QSpot.spot;
 
-        List<Course> courses = queryFactory
-                .selectFrom(qCourse)
-                .where(qCourse.isDeleted.isFalse()
-                        .and(qCourse.isCompleted.isTrue())
-                        .and(qCourse.id.eq(qCourse.originalCourseId))
-                        .and(qCourse.type.eq(CourseType.USER)))
+        Course course = queryFactory
+                .select(qPlanner.course)
+                .from(qPlanner)
+                .where(qPlanner.id.eq(plannerId))
+                .fetchOne();
+
+        List<Spot> spots = queryFactory
+                .select(qSpot)
+                .from(qSpot)
+                .join(qSpot.course, qCourse)
+                .where(qCourse.id.eq(course.getId())
+                        .and(qSpot.isDeleted.isFalse()))
                 .fetch();
 
-        List<CourseResponseDto> courseResponseDtos = courses.stream()
-                .map(course ->
-                    new CourseResponseDto(
-                            course.getId(),
-                            course.getTitle(),
-                            course.getCreatedAt(),
-                            course.getOriginalCreatorId(),
-                            course.getOriginalCourseId(),
-                            course.s
-                    ))
-                .toList();
+        List<SpotResponseDto> spotResponses = spots.stream()
+                .map(spot ->
+                        new SpotResponseDto(
+                                spot.getId(),
+                                spot.getTourApiCategory1().getId(),
+                                spot.getCourse().getId(),
+                                spot.getTitle(),
+                                spot.getOrderNumber(),
+                                spot.getAddress(),
+                                spot.getLatitude(),
+                                spot.getLongitude(),
+                                spot.isCompleted(),
+                                spot.getCount()
+                        )).toList();
 
-        return PaginationUtil.listToPage(courseResponseDtos, pageable);
-    }
-
-    public Page<CourseResponseDto> getMyCourses(Long userId, Pageable pageable) {
-        QCourse qCourse = QCourse.course;
-
-        List<Course> courses = queryFactory
-                .selectFrom(qCourse)
-                .where(qCourse.isDeleted.isFalse()
-                        .and(qCourse.user.id.eq(userId))
-                        .and(qCourse.type.eq(CourseType.USER)))
-                .fetch();
-
-        List<CourseResponseDto> courseResponseDtos = courses.stream()
-                .map(course ->
-                        new CourseResponseDto(
-                                course.getId(),
-                                course.getTitle(),
-                                course.getCreatedAt(),
-                                course.getOriginalCreatorId(),
-                                course.getOriginalCourseId(),
-                        ))
-                .toList();
-
-        return PaginationUtil.listToPage(courseResponseDtos, pageable);
-    }
-
-    public Page<CourseResponseDto> getMyUnCompletedCourses(Long userId, Pageable pageable) {
-        QCourse qCourse = QCourse.course;
-
-        List<Course> courses = queryFactory
-                .selectFrom(qCourse)
-                .where(qCourse.isDeleted.isFalse()
-                        .and(qCourse.originalCreatorId.eq(userId))
-                        .and(qCourse.isCompleted.isFalse()))
-                .fetch();
-
-        List<CourseResponseDto> courseResponseDtos = courses.stream()
-                .map(course ->
-                        new CourseResponseDto(
-                                course.getId(),
-                                course.getTitle(),
-                                course.getTime(),
-                                course.getStartAt(),
-                                course.getCreatedAt(),
-                                course.isDeleted(),
-                                course.getOriginalCreatorId(),
-                                course.getOriginalCourseId(),
-                                course.getSummary()
-                        ))
-                .toList();
-
-        return PaginationUtil.listToPage(courseResponseDtos, pageable);
+        return new CourseResponseDto(
+                course.getId(),
+                course.getType(),
+                course.getTitle(),
+                course.getCreatedAt(),
+                course.getOriginalCreatorId(),
+                course.getOriginalCourseId(),
+                null,
+                spotResponses
+        );
     }
 }

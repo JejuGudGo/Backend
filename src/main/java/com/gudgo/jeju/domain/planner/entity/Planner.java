@@ -1,5 +1,6 @@
 package com.gudgo.jeju.domain.planner.entity;
 
+import com.gudgo.jeju.domain.planner.repository.PlannerRepository;
 import com.gudgo.jeju.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,7 @@ public class Planner {
 
     private boolean isPrivate;
 
-    private Long summary;
+    private String summary;
 
     private LocalTime time;
 
@@ -43,4 +44,87 @@ public class Planner {
     @OneToOne
     @JoinColumn(name = "chatRoomId")
     private ChatRoom chatRoom;
+
+    public Planner withStartAt(LocalDate startAt) {
+        return Planner.builder()
+                .id(this.id)
+                .startAt(startAt)
+                .isDeleted(this.isDeleted)
+                .isPrivate(this.isPrivate)
+                .summary(this.summary)
+                .time(this.time)
+                .isCompleted(this.isCompleted)
+                .user(this.user)
+                .course(this.course)
+                .build();
+    }
+
+    public Planner withIsPrivate(boolean isPrivate) {
+        return Planner.builder()
+                .id(this.id)
+                .startAt(this.startAt)
+                .isDeleted(this.isDeleted)
+                .isPrivate(isPrivate)
+                .summary(this.summary)
+                .time(this.time)
+                .isCompleted(this.isCompleted)
+                .user(this.user)
+                .course(this.course)
+                .build();
+    }
+
+    public Planner withSummary(String summary) {
+        return Planner.builder()
+                .id(this.id)
+                .startAt(this.startAt)
+                .isDeleted(this.isDeleted)
+                .isPrivate(this.isPrivate)
+                .summary(summary)
+                .time(this.time)
+                .isCompleted(this.isCompleted)
+                .user(this.user)
+                .course(this.course)
+                .build();
+    }
+
+    public Planner withTime(LocalTime time) {
+        return Planner.builder()
+                .id(this.id)
+                .startAt(this.startAt)
+                .isDeleted(this.isDeleted)
+                .isPrivate(this.isPrivate)
+                .summary(this.summary)
+                .time(time)
+                .isCompleted(this.isCompleted)
+                .user(this.user)
+                .course(this.course)
+                .build();
+    }
+
+    public Planner withCompleted(boolean isCompleted) {
+        return Planner.builder()
+                .id(this.id)
+                .startAt(this.startAt)
+                .isDeleted(this.isDeleted)
+                .isPrivate(this.isPrivate)
+                .summary(this.summary)
+                .time(this.time)
+                .isCompleted(isCompleted)
+                .user(this.user)
+                .course(this.course)
+                .build();
+    }
+    public Planner withIsDeleted(boolean isDeleted) {
+        return Planner.builder()
+                .id(this.id)
+                .startAt(this.startAt)
+                .isDeleted(isDeleted)
+                .isPrivate(this.isPrivate)
+                .summary(this.summary)
+                .time(this.time)
+                .isCompleted(this.isCompleted)
+                .user(this.user)
+                .course(this.course)
+                .build();
+    }
 }

@@ -22,8 +22,8 @@ public class Participant {
 
     private boolean isApplied;
 
-    @OneToOne
-    @JoinColumn(name="participantUserId")
+    @ManyToOne
+    @JoinColumn(name="user_id")
     private User user;
 
 

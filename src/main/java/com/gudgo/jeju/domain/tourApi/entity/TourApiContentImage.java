@@ -18,8 +18,7 @@ public class TourApiContentImage {
 
     private String imageUrl;
 
-
     @ManyToOne
-    @JoinColumn(name = "tourApiSpotDataId")
+    @JoinColumn(name = "tourApiContentInfoId")
     private TourApiContentInfo tourApiContentInfo;
 }

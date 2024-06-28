@@ -6,6 +6,7 @@ import com.gudgo.jeju.domain.tourApi.repository.*;
 import com.gudgo.jeju.global.data.tourAPI.cache.TourApiSpotCachingService;
 import com.gudgo.jeju.global.data.common.entity.DataConfiguration;
 import com.gudgo.jeju.global.data.tourAPI.repository.DataConfigurationRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -217,7 +218,8 @@ public class TourApiRequestService {
     @Transactional
     public void requestSpotDetail(String contentId, String contentTypeId) throws IOException {
         List<String> images = new ArrayList<>();
-        TourApiContent tourApiContent = tourApiContentRepository.findById(contentId).get();
+        TourApiContent tourApiContent = tourApiContentRepository.findById(contentId)
+                .orElseThrow(() -> new EntityNotFoundException("TourApiContent not found"));
 
         String title = "";
         String address = "";
@@ -296,9 +298,9 @@ public class TourApiRequestService {
                                     content = item.get("overview").toString();
                                 }
                             }
+                        } else {
+                            log.warn("Items is not a Map: {}", items);
                         }
-                    } else {
-                        log.warn("Items is not a Map: {}", items);
                     }
                 }
             }
@@ -373,9 +375,9 @@ public class TourApiRequestService {
                                     eventPlace = item.get("eventplace").toString();
                                 }
                             }
+                        } else {
+                            log.warn("Items is not a Map: {}", items);
                         }
-                    } else {
-                        log.warn("Items is not a Map: {}", items);
                     }
                 }
             }
@@ -424,9 +426,9 @@ public class TourApiRequestService {
                                     }
                                 }
                             }
+                        } else {
+                            log.warn("Items is not a Map: {}", items);
                         }
-                    } else {
-                        log.warn("Items is not a Map: {}", items);
                     }
                 }
             }
@@ -457,9 +459,9 @@ public class TourApiRequestService {
                                     images.add(url);
                                 }
                             }
+                        } else {
+                            log.warn("Items is not a Map: {}", items);
                         }
-                    } else {
-                        log.warn("Items is not a Map: {}", items);
                     }
                 }
             }
@@ -475,7 +477,6 @@ public class TourApiRequestService {
                 .pageUrl(pageUrl)
                 .park(park)
                 .fee(fee)
-                .park(park)
                 .toilet(toilet)
                 .closeDay(closeDay)
                 .rentStroller(rentStroller)
@@ -494,7 +495,7 @@ public class TourApiRequestService {
 
         tourApiContentInfoRepository.save(tourApiContentInfo);
 
-        tourApiContent.withTourApiSpotDate(tourApiContentInfo);
+        tourApiContent = tourApiContent.withTourApiSpotDate(tourApiContentInfo);
         tourApiContentRepository.save(tourApiContent);
 
         log.info("===============================================================================");
@@ -514,12 +515,11 @@ public class TourApiRequestService {
         log.info("All TourApiSpot Images saved!");
         log.info("===============================================================================");
 
-        tourApiSpotCachingService.setSpotData(contentId);
+//        tourApiSpotCachingService.setSpotData(contentId);
 
         log.info("===============================================================================");
         log.info("TourApiSpot info cached!");
         log.info("===============================================================================");
-
     }
 
     private Map<String, Object> sendGetRequest(String urlString) throws IOException {

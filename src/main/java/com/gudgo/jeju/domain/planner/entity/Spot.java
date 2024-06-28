@@ -15,7 +15,7 @@ public class Spot {
     private Long id;
 
     @Enumerated(value = EnumType.STRING)
-    private SpotType courseType;
+    private SpotType spotType;
 
     private Long orderNumber;
 
@@ -50,7 +50,7 @@ public class Spot {
                 .id(this.id)
                 .course(this.course)
                 .title(this.title)
-                .courseType(this.courseType)
+                .spotType(this.spotType)
                 .orderNumber(orderNumber)
                 .address(this.address)
                 .latitude(this.latitude)
@@ -68,7 +68,7 @@ public class Spot {
                 .id(this.id)
                 .course(this.course)
                 .title(this.title)
-                .courseType(this.courseType)
+                .spotType(this.spotType)
                 .orderNumber(this.orderNumber)
                 .address(this.address)
                 .latitude(this.latitude)
@@ -86,7 +86,7 @@ public class Spot {
                 .id(this.id)
                 .course(this.course)
                 .title(this.title)
-                .courseType(this.courseType)
+                .spotType(this.spotType)
                 .orderNumber(this.orderNumber)
                 .address(this.address)
                 .latitude(this.latitude)
@@ -104,7 +104,7 @@ public class Spot {
                 .id(this.id)
                 .course(this.course)
                 .title(this.title)
-                .courseType(this.courseType)
+                .spotType(this.spotType)
                 .orderNumber(this.orderNumber)
                 .address(this.address)
                 .latitude(this.latitude)

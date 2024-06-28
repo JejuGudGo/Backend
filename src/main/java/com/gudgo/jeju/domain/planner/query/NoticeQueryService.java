@@ -2,6 +2,7 @@ package com.gudgo.jeju.domain.planner.query;
 
 import com.gudgo.jeju.domain.planner.dto.response.NoticeResponse;
 import com.gudgo.jeju.domain.planner.entity.Notice;
+import com.gudgo.jeju.domain.planner.entity.QNotice;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
