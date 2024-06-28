@@ -21,41 +21,42 @@ public class TourApiSpotCachingService {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public void setSpotData(String contentId) throws JsonProcessingException {
-        TourApiContent tourApiContent = tourApiContentRepository.findById(contentId).orElse(null);
-
-        TourApiSpotDto tourApiSpotDto = new TourApiSpotDto(
-                tourApiContent.getTourApiContentInfo().getId(),
-                tourApiContent.getTourApiContentInfo().getTitle(),
-                tourApiContent.getTourApiContentInfo().getAddress(),
-                tourApiContent.getTourApiContentInfo().getContent(),
-                tourApiContent.getTourApiContentInfo().getPageUrl(),
-                tourApiContent.getTourApiContentInfo().getInfo(),
-                tourApiContent.getTourApiContentInfo().getCloseDay(),
-                tourApiContent.getTourApiContentInfo().getOrganizerInfo(),
-                tourApiContent.getTourApiContentInfo().getOrganizeNumber(),
-                tourApiContent.getTourApiContentInfo().getEventStartDate(),
-                tourApiContent.getTourApiContentInfo().getEventEndDate(),
-                tourApiContent.getTourApiContentInfo().getFee(),
-                tourApiContent.getTourApiContentInfo().getTime(),
-                tourApiContent.getTourApiContentInfo().getPark(),
-                tourApiContent.getTourApiContentInfo().getRentStroller(),
-                tourApiContent.getTourApiContentInfo().getAvailablePet(),
-                tourApiContent.getTourApiContentInfo().getEventContent(),
-                tourApiContent.getTourApiContentInfo().getEventFee(),
-                tourApiContent.getTourApiContentInfo().getEventPlace(),
-                tourApiContent.getTourApiContentInfo().getGuideService(),
-                tourApiContent.getTourApiContentInfo().getToilet(),
-                tourApiContent.getTourApiContentInfo().getReserveInfo()
-        );
-
-        TourApiContentDto tourApiContentDto = new TourApiContentDto(
-                tourApiContent.getLatitude(),
-                tourApiContent.getLongitude(),
-                tourApiContent.getUpdatedAt(),
-                tourApiSpotDto
-        );
+        TourApiContent tourApiContent = tourApiContentRepository.findById(contentId)
+                .orElse(null);
 
         if (tourApiContent != null) {
+            TourApiSpotDto tourApiSpotDto = new TourApiSpotDto(
+                    tourApiContent.getTourApiContentInfo().getId(),
+                    tourApiContent.getTourApiContentInfo().getTitle(),
+                    tourApiContent.getTourApiContentInfo().getAddress(),
+                    tourApiContent.getTourApiContentInfo().getContent(),
+                    tourApiContent.getTourApiContentInfo().getPageUrl(),
+                    tourApiContent.getTourApiContentInfo().getInfo(),
+                    tourApiContent.getTourApiContentInfo().getCloseDay(),
+                    tourApiContent.getTourApiContentInfo().getOrganizerInfo(),
+                    tourApiContent.getTourApiContentInfo().getOrganizeNumber(),
+                    tourApiContent.getTourApiContentInfo().getEventStartDate(),
+                    tourApiContent.getTourApiContentInfo().getEventEndDate(),
+                    tourApiContent.getTourApiContentInfo().getFee(),
+                    tourApiContent.getTourApiContentInfo().getTime(),
+                    tourApiContent.getTourApiContentInfo().getPark(),
+                    tourApiContent.getTourApiContentInfo().getRentStroller(),
+                    tourApiContent.getTourApiContentInfo().getAvailablePet(),
+                    tourApiContent.getTourApiContentInfo().getEventContent(),
+                    tourApiContent.getTourApiContentInfo().getEventFee(),
+                    tourApiContent.getTourApiContentInfo().getEventPlace(),
+                    tourApiContent.getTourApiContentInfo().getGuideService(),
+                    tourApiContent.getTourApiContentInfo().getToilet(),
+                    tourApiContent.getTourApiContentInfo().getReserveInfo()
+            );
+
+            TourApiContentDto tourApiContentDto = new TourApiContentDto(
+                    tourApiContent.getLatitude(),
+                    tourApiContent.getLongitude(),
+                    tourApiContent.getUpdatedAt(),
+                    tourApiSpotDto
+            );
+
             String value = objectMapper.writeValueAsString(tourApiContentDto);
             redisUtil.setData(contentId, value);
         }

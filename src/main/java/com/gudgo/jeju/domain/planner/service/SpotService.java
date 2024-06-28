@@ -15,8 +15,13 @@ import com.gudgo.jeju.domain.planner.repository.PlannerRepository;
 import com.gudgo.jeju.domain.planner.repository.SpotRepository;
 import com.gudgo.jeju.domain.planner.validation.CourseValidator;
 import com.gudgo.jeju.domain.planner.validation.SpotValidator;
+import com.gudgo.jeju.domain.tourApi.entity.TourApiCategory1;
 import com.gudgo.jeju.domain.tourApi.entity.TourApiContent;
+import com.gudgo.jeju.domain.tourApi.entity.TourApiContentInfo;
+import com.gudgo.jeju.domain.tourApi.repository.TourApiCategory1Repository;
+import com.gudgo.jeju.domain.tourApi.repository.TourApiContentInfoRepository;
 import com.gudgo.jeju.domain.tourApi.repository.TourApiContentRepository;
+import com.gudgo.jeju.global.data.tourAPI.service.TourApiRequestService;
 import com.gudgo.jeju.global.util.ValidationUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -27,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -34,6 +40,8 @@ import java.util.stream.Collectors;
 @Service
 public class SpotService {
     private final SpotQueryService spotQueryService;
+    private final TourApiRequestService requestService;
+
     private final SpotValidator spotValidator;
     private final CourseValidator courseValidator;
 
@@ -43,6 +51,8 @@ public class SpotService {
     private final CourseRepository courseRepository;
     private final TourApiContentRepository tourApiContentRepository;
     private final PlannerRepository plannerRepository;
+    private final TourApiCategory1Repository tourApiCategory1Repository;
+
 
     @Transactional
     public List<SpotResponseDto> getSpots(Long plannerId) {
@@ -69,10 +79,17 @@ public class SpotService {
 
         Course course = planner.getCourse();
 
+        TourApiCategory1 tourApiCategory1 = tourApiCategory1Repository.findById(requestDto.category())
+                .orElseThrow(EntityNotFoundException::new);
+
+        Long lastSpotId = spotQueryService.getLastSpotId(course.getId());
+        Long orderNumber = (lastSpotId != null) ? lastSpotId + 1L : 1L;
+
         Spot spot = Spot.builder()
                 .course(course)
                 .spotType(SpotType.USER)
-                .orderNumber(spotQueryService.getLastSpotId(course.getId()) + 1L)
+                .tourApiCategory1(tourApiCategory1)
+                .orderNumber(orderNumber)
                 .title(requestDto.title())
                 .address(requestDto.address())
                 .latitude(requestDto.latitude())
@@ -96,16 +113,29 @@ public class SpotService {
         TourApiContent tourApiContent = tourApiContentRepository.findById(request.contentId())
                 .orElseThrow(EntityNotFoundException::new);
 
+        if (tourApiContent.getTourApiContentInfo() == null) {
+            requestService.requestSpotDetail(
+                    tourApiContent.getId(),
+                    tourApiContent.getTourApiCategory3().getTourApiCategory2().getTourApiCategory1().getTourApiContentType().getId()
+            );
+            tourApiContent = tourApiContentRepository.findById(tourApiContent.getId()).get(); // 업데이트된 tourApiContent 가져오기
+        }
+
         spotValidator.validateIsCurrentData(tourApiContent);
+
+        Long lastSpotId = spotQueryService.getLastSpotId(course.getId());
+        Long orderNumber = (lastSpotId != null) ? lastSpotId + 1L : 1L;
 
         Spot spot = Spot.builder()
                 .course(course)
                 .spotType(SpotType.TOUR)
-                .orderNumber(spotQueryService.getLastSpotId(course.getId()) + 1L)
+                .tourApiCategory1(tourApiContent.getTourApiCategory3().getTourApiCategory2().getTourApiCategory1())
+                .orderNumber(orderNumber)
                 .title(tourApiContent.getTourApiContentInfo().getTitle())
                 .address(tourApiContent.getTourApiContentInfo().getAddress())
                 .latitude(tourApiContent.getLatitude())
                 .longitude(tourApiContent.getLongitude())
+                .count(0L)
                 .isDeleted(false)
                 .isCompleted(false)
                 .contentId(request.contentId())

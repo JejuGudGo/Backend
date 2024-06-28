@@ -31,7 +31,7 @@ public class TourApiContent {
     private TourApiCategory3 tourApiCategory3;
 
     @OneToOne
-    @JoinColumn(name = "tourApiSpotData")
+    @JoinColumn(name = "tourApicontentInfoId")
     private TourApiContentInfo tourApiContentInfo;
 
     public TourApiContent withUpdatedAt(String updatedAt) {
@@ -42,6 +42,7 @@ public class TourApiContent {
                 .updatedAt(updatedAt != null ? updatedAt : this.updatedAt)
                 .tourApiCategory3(this.tourApiCategory3)
                 .tourApiContentInfo(this.tourApiContentInfo)
+                .contentTypeId(this.contentTypeId)
                 .build();
     }
 
@@ -52,6 +53,7 @@ public class TourApiContent {
                 .longitude(this.longitude)
                 .updatedAt(this.updatedAt)
                 .tourApiCategory3(this.tourApiCategory3)
+                .contentTypeId(this.contentTypeId)
                 .tourApiContentInfo(tourApiContentInfo)
                 .build();
     }
