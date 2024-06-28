@@ -8,6 +8,7 @@ import com.gudgo.jeju.domain.planner.service.CourseMediaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,13 +55,14 @@ public class CourseMediaController {
     }
 
     /* PATCH: 특정 코스 미디어 정보 업데이트 */
-    @PatchMapping(value = "/{userId}/planners/{plannerId}/course/medias/{mediaId}")
+    @PatchMapping(
+            value = "/{userId}/planners/{plannerId}/course/medias/{mediaId}")
     public ResponseEntity<?> update(
             @PathVariable("userId") Long userId,
             @PathVariable("plannerId") Long plannerId,
             @PathVariable("mediaId") Long mediaId,
             @RequestPart("image") MultipartFile image,
-            @RequestPart("request") @Valid @RequestBody CourseMediaUpdateRequestDto requestDto
+            @RequestPart("request") @Valid CourseMediaUpdateRequestDto requestDto
     ) throws Exception {
         courseMediaService.update(userId, mediaId, image, requestDto);
         return ResponseEntity.ok().build();

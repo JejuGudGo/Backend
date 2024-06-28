@@ -45,7 +45,7 @@ public class CourseMediaControllerTest {
 
         MvcResult result = mockMvc
                 .perform(MockMvcRequestBuilders
-                        .get("/api/v1/users/{userId}/planners/{plannerId}/course/medias")
+                        .get("/api/v1/users/{userId}/planners/{plannerId}/course/medias", 1L, 11L)
                         .header("Authorization", accessToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -101,7 +101,7 @@ public class CourseMediaControllerTest {
 
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .multipart("/api/v1/users/{userId}/planners/{plannerId}/course/medias", 1L, 1L)
+                        .multipart("/api/v1/users/{userId}/planners/{plannerId}/course/medias", 1L, 11L)
                         .file(requestFile)
                         .file(imageFile)
                         .header("Authorization", accessToken)
@@ -116,7 +116,7 @@ public class CourseMediaControllerTest {
         String accessToken = "Bearer " + tokenGenerator.generateToken(TokenType.ACCESS, "1");
 
         CourseMediaUpdateRequestDto createRequestDto = new CourseMediaUpdateRequestDto(
-                "수정 내용 입니다."
+                "수정 다시 했습니당."
         );
 
         MockMultipartFile requestFile = new MockMultipartFile(
@@ -135,15 +135,19 @@ public class CourseMediaControllerTest {
 
         mockMvc
                 .perform(MockMvcRequestBuilders
-                        .multipart("/api/v1/users/{userId}/planners/{plannerId}/course/medias/{mediaId}", 1L, 1L, 1L)
+                        .multipart("/api/v1/users/{userId}/planners/{plannerId}/course/medias/{mediaId}", 1L, 11L, 1L)
                         .file(requestFile)
                         .file(imageFile)
                         .header("Authorization", accessToken)
-                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .with(request -> {
+                            request.setMethod("PATCH");
+                            return request;
+                        }))
                 .andExpect(status().isOk());
     }
 
-    @DisplayName("기록 수정")
+    @DisplayName("기록 삭제")
     @Test
     @Disabled
     void deleteMedia() throws Exception {
