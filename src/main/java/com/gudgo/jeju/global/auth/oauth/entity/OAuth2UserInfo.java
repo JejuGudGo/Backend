@@ -4,4 +4,5 @@ public interface OAuth2UserInfo {
     String getEmail();
     String getName();
     String getPassword();
+    String getProfile();
 }

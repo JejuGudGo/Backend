@@ -1,12 +1,12 @@
 package com.gudgo.jeju.global.data.olle.service;
 
-import com.gudgo.jeju.global.data.olle.entity.JeJuOlleCourse;
-import com.gudgo.jeju.global.data.olle.entity.JeJuOlleCourseData;
-import com.gudgo.jeju.global.data.olle.entity.OlleType;
-import com.gudgo.jeju.global.data.olle.repository.JeJuOlleCourseDataRepository;
-import com.gudgo.jeju.global.data.olle.repository.JeJuOlleCourseRepository;
-import com.gudgo.jeju.global.data.tourAPI.common.entity.DataConfiguration;
-import com.gudgo.jeju.global.data.tourAPI.common.repository.DataConfigurationRepository;
+import com.gudgo.jeju.domain.olle.entity.JeJuOlleCourse;
+import com.gudgo.jeju.domain.olle.entity.JeJuOlleCourseData;
+import com.gudgo.jeju.domain.olle.entity.OlleType;
+import com.gudgo.jeju.domain.olle.repository.JeJuOlleCourseDataRepository;
+import com.gudgo.jeju.domain.olle.repository.JeJuOlleCourseRepository;
+import com.gudgo.jeju.global.data.common.entity.DataConfiguration;
+import com.gudgo.jeju.global.data.tourAPI.repository.DataConfigurationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
@@ -47,6 +47,8 @@ public class HaYoungOlleDatabaseService {
                         .startLongitude(Double.parseDouble("126.5588624"))
                         .endLatitude(Double.parseDouble("33.2531475"))
                         .endLongitude(Double.parseDouble("126.5609703"))
+                        .totalTime("약 3시간30분")
+                        .totalDistance("8.9km")
                         .wheelchairAccessible(false)
                         .build();
 
@@ -109,6 +111,8 @@ public class HaYoungOlleDatabaseService {
                         .startLongitude(Double.parseDouble("126.5607624"))
                         .endLatitude(Double.parseDouble("33.2527143"))
                         .endLongitude(Double.parseDouble("126.5612169"))
+                        .totalTime("약 3시간")
+                        .totalDistance("6.4km")
                         .wheelchairAccessible(false)
                         .build();
 
@@ -171,6 +175,8 @@ public class HaYoungOlleDatabaseService {
                         .startLongitude(Double.parseDouble("126.5531553"))
                         .endLatitude(Double.parseDouble("33.2647366"))
                         .endLongitude(Double.parseDouble("126.5531553"))
+                        .totalTime("약 2시간30분")
+                        .totalDistance("7.5km")
                         .wheelchairAccessible(false)
                         .build();
 

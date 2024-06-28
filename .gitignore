@@ -394,3 +394,6 @@ docker.env
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,visualstudiocode,java,python,macos,windows
 
+.gradle
+.gradle/
+.idea/

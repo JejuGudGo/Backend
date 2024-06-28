@@ -51,5 +51,22 @@ public class User {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profileId")
     private Profile profile;
+
+
+    public User withRole(Role role) {
+        return User.builder()
+                .id(this.id)
+                .email(this.email)
+                .password(this.password)
+                .nickname(this.nickname)
+                .numberTag(this.numberTag)
+                .role(role)
+                .provider(this.provider)
+                .createdAt(this.createdAt)
+                .isDeleted(this.isDeleted)
+                .phoneNumber(this.phoneNumber)
+                .profile(this.profile)
+                .build();
+    }
 }
 

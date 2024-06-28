@@ -1,6 +1,6 @@
 package com.gudgo.jeju.domain.post.entity;
 
-import com.gudgo.jeju.domain.course.entity.Course;
+import com.gudgo.jeju.domain.planner.entity.Planner;
 import com.gudgo.jeju.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,29 +27,38 @@ public class Posts {
 
     private String content;
 
+    private Long companionsNum;
+
     private LocalDate createdAt;
 
+    private boolean isFinished;
+
     private boolean isDeleted;
+
 
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
 
     @OneToOne
-    @JoinColumn(name = "courseId")
-    private Course course;
+    @JoinColumn(name="plannerId")
+    private Planner planner;
+
+
 
 
     public Posts withTitle(String title) {
         return Posts.builder()
                 .id(this.id)
                 .postType(this.postType)
-                .title(title != null ? title : this.title)
+                .title(title)
                 .content(this.content)
+                .companionsNum(this.companionsNum)
                 .createdAt(this.createdAt)
+                .isFinished(this.isFinished)
                 .isDeleted(this.isDeleted)
                 .user(this.user)
-                .course(this.course)
+                .planner(this.planner)
                 .build();
     }
 
@@ -58,11 +67,43 @@ public class Posts {
                 .id(this.id)
                 .postType(this.postType)
                 .title(this.title)
-                .content(content != null ? content : this.content)
+                .content(content)
+                .companionsNum(this.companionsNum)
                 .createdAt(this.createdAt)
+                .isFinished(this.isFinished)
                 .isDeleted(this.isDeleted)
                 .user(this.user)
-                .course(this.course)
+                .planner(this.planner)
+                .build();
+    }
+
+    public Posts withCompanionsNum(Long companionsNum) {
+        return Posts.builder()
+                .id(this.id)
+                .postType(this.postType)
+                .title(this.title)
+                .content(this.content)
+                .companionsNum(companionsNum)
+                .createdAt(this.createdAt)
+                .isFinished(this.isFinished)
+                .isDeleted(this.isDeleted)
+                .user(this.user)
+                .planner(this.planner)
+                .build();
+    }
+
+    public Posts withIsFinished(boolean isFinished) {
+        return Posts.builder()
+                .id(this.id)
+                .postType(this.postType)
+                .title(this.title)
+                .content(this.content)
+                .companionsNum(this.companionsNum)
+                .createdAt(this.createdAt)
+                .isFinished(isFinished)
+                .isDeleted(this.isDeleted)
+                .user(this.user)
+                .planner(this.planner)
                 .build();
     }
 
@@ -72,10 +113,42 @@ public class Posts {
                 .postType(this.postType)
                 .title(this.title)
                 .content(this.content)
+                .companionsNum(this.companionsNum)
                 .createdAt(this.createdAt)
+                .isFinished(this.isFinished)
                 .isDeleted(isDeleted)
                 .user(this.user)
-                .course(this.course)
+                .planner(this.planner)
+                .build();
+    }
+
+    public Posts withIsFinishedAndIsDeleted(boolean isFinished, boolean isDeleted) {
+        return Posts.builder()
+                .id(this.id)
+                .postType(this.postType)
+                .title(this.title)
+                .content(this.content)
+                .companionsNum(this.companionsNum)
+                .createdAt(this.createdAt)
+                .isFinished(isFinished)
+                .isDeleted(isDeleted)
+                .user(this.user)
+                .planner(this.planner)
+                .build();
+    }
+
+    public Posts withPlanner(Planner planner) {
+        return Posts.builder()
+                .id(this.id)
+                .postType(this.postType)
+                .title(this.title)
+                .content(this.content)
+                .companionsNum(this.companionsNum)
+                .createdAt(this.createdAt)
+                .isFinished(this.isFinished)
+                .isDeleted(this.isDeleted)
+                .user(this.user)
+                .planner(planner)
                 .build();
     }
 }

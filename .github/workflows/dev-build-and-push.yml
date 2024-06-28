@@ -55,4 +55,8 @@ jobs:
           context: .
           build-args: |
             JAR_FILE=build/libs/jeju-0.0.1-SNAPSHOT.jar
-          platforms: linux/amd64,linux/arm64
+          platforms: |
+            linux/amd64
+            linux/arm64
+            windows/amd64
+            
