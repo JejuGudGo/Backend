@@ -2,7 +2,6 @@ package com.gudgo.jeju.domain.planner.query;
 
 import com.gudgo.jeju.domain.planner.dto.response.ParticipantResponse;
 import com.gudgo.jeju.domain.planner.entity.Participant;
-import com.gudgo.jeju.domain.planner.entity.QCourse;
 import com.gudgo.jeju.domain.planner.entity.QParticipant;
 import com.gudgo.jeju.domain.planner.entity.QPlanner;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -80,20 +79,6 @@ public class ParticipantQueryService {
                         )).toList();
 
         return participantResponses;
-    }
-
-    public Participant findParticipantByUserId(Long plannerId, Long userId) {
-        QParticipant qParticipant = QParticipant.participant;
-        QPlanner qPlanner = QPlanner.planner;
-
-        Participant participant = queryFactory
-                .selectFrom(qParticipant)
-                .join(qParticipant.planner, qPlanner)
-                .where(qPlanner.id.eq(plannerId)
-                        .and(qParticipant.user.id.eq(userId)))
-                .fetchOne();
-
-        return participant;
     }
 
     public Participant findParticipantIdByChatRoomIdAndUserId(Long chatRoomId, Long userId) {

@@ -6,10 +6,13 @@ import com.gudgo.jeju.domain.planner.dto.response.NoticeResponse;
 import com.gudgo.jeju.domain.planner.entity.ChatRoom;
 import com.gudgo.jeju.domain.planner.entity.Notice;
 import com.gudgo.jeju.domain.planner.entity.Participant;
+import com.gudgo.jeju.domain.planner.entity.Planner;
 import com.gudgo.jeju.domain.planner.query.NoticeQueryService;
 import com.gudgo.jeju.domain.planner.query.ParticipantQueryService;
 import com.gudgo.jeju.domain.planner.repository.ChatRoomRepository;
 import com.gudgo.jeju.domain.planner.repository.NoticeRepository;
+import com.gudgo.jeju.domain.planner.repository.ParticipantRepository;
+import com.gudgo.jeju.domain.planner.repository.PlannerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,8 @@ public class NoticeService {
     private final ChatRoomRepository chatRoomRepository;
     private final NoticeQueryService noticeQueryService;
     private final ParticipantQueryService participantQueryService;
+    private final PlannerRepository plannerRepository;
+    private final ParticipantRepository participantRepository;
 
     public List<NoticeResponse> getNotices(Long chatRoomId) {
         return noticeQueryService.getNotices(chatRoomId);
@@ -34,9 +39,12 @@ public class NoticeService {
     }
 
     public NoticeResponse create(Long userId, Long chatRoomId, NoticeCreateRequest request) {
-        Participant participant = participantQueryService.findParticipantIdByChatRoomIdAndUserId(chatRoomId, userId);
-
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        Planner planner = plannerRepository.findByChatRoomId(chatRoom.getId());
+
+        Participant participant = participantRepository.findByUserIdAndPlannerId(userId, planner.getId())
                 .orElseThrow(EntityNotFoundException::new);
 
         Notice notice = Notice.builder()

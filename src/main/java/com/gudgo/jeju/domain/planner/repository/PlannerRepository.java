@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface PlannerRepository extends JpaRepository<Planner, Long> {
 
     Optional<Planner> findByCourseId(Long courseId);
+
+    Planner findByChatRoomId(Long chatRoomId);
 }

@@ -42,6 +42,8 @@ public class Notice {
                 .content(content)
                 .createdAt(this.createdAt)
                 .isDeleted(this.isDeleted)
+                .chatRoom(this.chatRoom)
+                .participant(this.participant)
                 .updatedAt(LocalDateTime.now())
                 .build();
     }
@@ -52,6 +54,8 @@ public class Notice {
                 .content(this.content)
                 .isDeleted(true)
                 .createdAt(this.createdAt)
+                .chatRoom(this.chatRoom)
+                .participant(this.participant)
                 .updatedAt(LocalDateTime.now())
                 .build();
     }

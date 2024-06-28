@@ -17,14 +17,14 @@ public class NoticeController {
     private final NoticeService noticeService;
 
     @GetMapping(value = "/{userId}/chatRooms/{chatRoomId}/notices")
-    public ResponseEntity<List<NoticeResponse>> getNotices(@PathVariable Long userId, @PathVariable Long chatRoomId) {
+    public ResponseEntity<List<NoticeResponse>> getNotices(@PathVariable("userId") Long userId, @PathVariable("chatRoomId") Long chatRoomId) {
         List<NoticeResponse> responses = noticeService.getNotices(chatRoomId);
 
         return ResponseEntity.ok(responses);
     }
 
     @GetMapping(value = "/{userId}/chatRooms/{chatRoomId}/notices/latest")
-    public ResponseEntity<NoticeResponse> getLatestNotice(@PathVariable Long userId, @PathVariable Long chatRoomId) {
+    public ResponseEntity<NoticeResponse> getLatestNotice(@PathVariable("userId") Long userId, @PathVariable("chatRoomId") Long chatRoomId) {
         NoticeResponse response = noticeService.getLatestNotice(chatRoomId);
 
         return ResponseEntity.ok(response);
@@ -32,8 +32,8 @@ public class NoticeController {
 
     @PostMapping(value = "/{userId}/chatRooms/{chatRoomId}/notices")
     public ResponseEntity<NoticeResponse> create(
-            @PathVariable Long userId,
-            @PathVariable Long chatRoomId,
+            @PathVariable("userId") Long userId,
+            @PathVariable("chatRoomId") Long chatRoomId,
             @RequestBody NoticeCreateRequest request
             ) {
         NoticeResponse response = noticeService.create(userId, chatRoomId, request);
@@ -43,9 +43,9 @@ public class NoticeController {
 
     @PatchMapping(value = "/{userId}/chatRooms/{chatRoomId}/notices/{noticeId}")
     public ResponseEntity<NoticeResponse> update(
-            @PathVariable Long userId,
-            @PathVariable Long chatRoomId,
-            @PathVariable Long noticeId,
+            @PathVariable("userId") Long userId,
+            @PathVariable("chatRoomId") Long chatRoomId,
+            @PathVariable("noticeId") Long noticeId,
             @RequestBody NoticeUpdateRequest request
     ) {
         NoticeResponse response = noticeService.update(noticeId, request);
@@ -55,9 +55,9 @@ public class NoticeController {
 
     @DeleteMapping(value = "/{userId}/chatRooms/{chatRoomId}/notices/{noticeId}")
     public ResponseEntity<?> update(
-            @PathVariable Long userId,
-            @PathVariable Long chatRoomId,
-            @PathVariable Long noticeId
+            @PathVariable("userId") Long userId,
+            @PathVariable("chatRoomId") Long chatRoomId,
+            @PathVariable("noticeId") Long noticeId
     ) {
         noticeService.delete(noticeId);
 
