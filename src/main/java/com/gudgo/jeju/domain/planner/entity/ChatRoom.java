@@ -1,4 +1,4 @@
-package com.gudgo.jeju.domain.tourApi.entity;
+package com.gudgo.jeju.domain.planner.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,19 +6,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TourApiContentImage {
+public class ChatRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String imageUrl;
-
-    @ManyToOne
-    @JoinColumn(name = "tourApiContentInfoId")
-    private TourApiContentInfo tourApiContentInfo;
 }

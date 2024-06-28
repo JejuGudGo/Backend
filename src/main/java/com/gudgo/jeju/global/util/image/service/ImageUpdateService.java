@@ -29,6 +29,7 @@ public class ImageUpdateService {
         // 파일 이름, 확장자 추출
         String oriImageName = multipartFile.getOriginalFilename();
         String fileExtension = "";
+
         if (oriImageName != null && oriImageName.contains(".")) {
             fileExtension = oriImageName.substring(oriImageName.lastIndexOf("."));
         }

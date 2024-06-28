@@ -95,4 +95,18 @@ public class ParticipantQueryService {
 
         return participant;
     }
+
+    public Participant findParticipantIdByChatRoomIdAndUserId(Long chatRoomId, Long userId) {
+        QPlanner qPlanner = QPlanner.planner;
+        QParticipant qParticipant = QParticipant.participant;
+
+        Participant participant = queryFactory
+                .selectFrom(qParticipant)
+                .join(qParticipant.planner, qPlanner)
+                .where(qPlanner.chatRoom.id.eq(chatRoomId)
+                        .and(qParticipant.user.id.eq(userId)))
+                .fetchOne();
+
+        return participant;
+    }
 }

@@ -41,6 +41,9 @@ public class Planner {
     @JoinColumn(name = "courseId")
     private Course course;
 
+    @OneToOne
+    @JoinColumn(name = "chatRoomId")
+    private ChatRoom chatRoom;
 
     public Planner withStartAt(LocalDate startAt) {
         return Planner.builder()
