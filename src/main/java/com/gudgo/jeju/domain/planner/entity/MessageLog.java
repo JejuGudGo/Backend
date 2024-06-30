@@ -1,24 +1,30 @@
-package com.gudgo.jeju.domain.tourApi.entity;
+package com.gudgo.jeju.domain.planner.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TourApiContentImage {
+public class MessageLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String imageUrl;
+    private Long chatRoomId;
 
-    @ManyToOne
-    @JoinColumn(name = "tourApiContentInfoId")
-    private TourApiContentInfo tourApiContentInfo;
+    private Long userId;
+
+    @Enumerated(EnumType.STRING)
+    private LogStatus status;
+
+    private String errorMessage;
+
+    private LocalDateTime timestamp;
 }

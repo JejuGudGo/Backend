@@ -7,7 +7,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ParticipantRepository extends JpaRepository<Participant, Long> {
-
     Optional<Participant> findByUserIdAndPlannerId(Long userId, Long PostId);
-
 }
