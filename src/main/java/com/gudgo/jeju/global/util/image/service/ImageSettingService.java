@@ -11,8 +11,9 @@ import java.nio.file.Paths;
 @Component
 public class ImageSettingService {
     public Path setImagePath(Category category) throws IOException {
-        // 디렉토리 경로 설정
-        Path rootLocation = Paths.get(System.getProperty("user.home") + "/images/" + category.toString().toLowerCase());
+        // 사용자 홈 디렉토리에 images 디렉토리 생성
+        String userHome = System.getProperty("user.home");
+        Path rootLocation = Paths.get(userHome + "/images/" + category.toString().toLowerCase());
         // 해당 경로의 디렉토리가 없다면 생성
         Files.createDirectories(rootLocation);
 

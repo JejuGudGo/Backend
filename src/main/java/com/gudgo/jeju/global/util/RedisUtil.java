@@ -19,7 +19,6 @@ public class RedisUtil {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-
     public String getData(String key) {
         valueOperations = stringRedisTemplate.opsForValue();
         return valueOperations.get(key);
@@ -39,12 +38,11 @@ public class RedisUtil {
         stringRedisTemplate.delete(key);
     }
 
-
     public List<Object> getAllObjectsData(String key) {
         return redisTemplate.opsForList().range(key, 0, -1);
     }
 
     public void setObjectData(String key, Object value) {
-        redisTemplate.opsForValue().set(key, value);
+        redisTemplate.opsForList().rightPush(key, value);
     }
 }
