@@ -41,7 +41,7 @@ public class ColumnPostQueryService {
         List<ColumnPostResponse> columnPostResponses = posts.stream()
                 .map(post -> {
                     User user = findUserById(post.getUser().getId());
-                    String profileImageUrl = "";
+                    String profileImageUrl = "Default";
 
                     if (!user.getProfile().getProfileImageUrl().isEmpty()) {
                         profileImageUrl = user.getProfile().getProfileImageUrl();
