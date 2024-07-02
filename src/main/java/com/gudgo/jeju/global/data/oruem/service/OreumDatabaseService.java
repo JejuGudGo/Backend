@@ -37,13 +37,16 @@ public class OreumDatabaseService {
 
                 while ((line = br.readLine()) != null) {
                     String[] data = line.split(",");
-                    String title = data[1];
-                    String address = data[2];
-                    double latitude = Double.parseDouble(data[5]);
-                    double longitude = Double.parseDouble(data[6]);
-                    String content = data[7];
+                    String title = data[0];
+                    String address = data[1];
+                    double latitude = Double.parseDouble(data[2]);
+                    double longitude = Double.parseDouble(data[3]);
+                    String content = data[4];
+                    LocalDate updatedAt = LocalDate.parse(data[5]);
+                    String categoryId = data[6];
 
-                    TourApiCategory1 category = tourApiCategory1Repository.findByCategoryName("자연")
+
+                    TourApiCategory1 category = tourApiCategory1Repository.findByCategoryName(categoryId)
                             .orElseThrow(EntityNotFoundException::new);
 
                     OreumData oreumData = OreumData.builder()
@@ -52,7 +55,7 @@ public class OreumDatabaseService {
                             .latitude(latitude)
                             .longitude(longitude)
                             .content(content)
-                            .updatedAt(LocalDate.now())
+                            .updatedAt(updatedAt)
                             .tourApiCategory1(category)
                             .build();
 
