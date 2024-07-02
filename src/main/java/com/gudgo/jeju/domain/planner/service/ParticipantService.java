@@ -16,8 +16,10 @@ import com.gudgo.jeju.domain.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,21 +69,24 @@ public class ParticipantService {
         Planner planner = plannerRepository.findById(plannerId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        // 신청 이력이 있는 경우
+        // 신청 이력이 없는 경우
         Participant participant = optionalParticipant
                 .orElseGet(() -> Participant.builder()
                         .user(user)
                         .planner(planner)
                         .count(0L) // 처음 생성할 때 count를 0으로 설정
                         .isApplied(false) // 처음 생성할 때 isApplied를 false로 설정
+                        .appliedAt(LocalDate.now())
                         .build());
 
         if (participant.getCount() >= 3) {  // 신청 이력이 3회 이상일 경우
             throw new IllegalStateException("request count를 초과하였습니다.");
 
         } else {
-            participant = participant.withCountAndApplied(true);
+//            participant = participant.withCountAndApplied(true);
+//            participant = participant.withAppliedAt(LocalDate.now());
 
+            participant = participant.withCountAndIsAppliedAndAppliedAt(true, LocalDate.now());
             participantRepository.save(participant);
         }
     }
@@ -116,7 +121,7 @@ public class ParticipantService {
     private void approveUser(Posts post, Participant participant, Long courseId) {
         participantValidator.validateParticipantNumber(post.getId(), courseId);
 
-        participant = participant.withApproved(true);
+        participant = participant.withApprovedAndApprovedAt(true, LocalDate.now());
         participantRepository.save(participant);
 
         if (post.getCompanionsNum().equals(participantQueryService.countCourseParticipant(courseId))) {
@@ -126,7 +131,7 @@ public class ParticipantService {
     }
 
     private void notApproveUser(Posts post, Participant participant, Long courseId) {
-        participant.withApproved(false);
+        participant.withApprovedAndApprovedAt(false, LocalDate.now());
         participantRepository.save(participant);
 
         // 특정 user의 승인을 취소했을 때, 모집 마감상태라면, isFinished : false로 변경

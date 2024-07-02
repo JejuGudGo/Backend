@@ -1,5 +1,7 @@
 package com.gudgo.jeju.domain.planner.controller;
 
+import com.gudgo.jeju.domain.planner.dto.response.ParticipantApproveResponse;
+import com.gudgo.jeju.domain.planner.dto.response.ParticipantJoinResponse;
 import com.gudgo.jeju.domain.planner.dto.response.ParticipantResponse;
 import com.gudgo.jeju.domain.planner.service.ParticipantService;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +24,12 @@ public class ParticipantController {
     }
 
     @PostMapping(value = "/{plannerId}/participants/join/{userId}")
-    public ResponseEntity<?> requestJoin(@PathVariable("plannerId") Long courseId, @PathVariable("userId") Long userId) {
+    public ResponseEntity<ParticipantJoinResponse> requestJoin(
+            @PathVariable("plannerId") Long courseId,
+            @PathVariable("userId") Long userId,
+            ParticipantJoinResponse participantJoinResponse) {
         participantService.requestJoin(courseId, userId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(participantJoinResponse);
     }
 
     @PatchMapping(value = "/{plannerId}/participants/cancel/{userId}")
@@ -34,13 +39,14 @@ public class ParticipantController {
     }
 
     @PatchMapping(value = "/{plannerId}/participants/approve/{userId}")
-    public ResponseEntity<?> approveUserOrNot(
+    public ResponseEntity<ParticipantApproveResponse> approveUserOrNot(
             @PathVariable("plannerId") Long plannerId,
             @PathVariable("userId") Long userId,
-            @RequestParam("status") boolean status
+            @RequestParam("status") boolean status,
+            ParticipantApproveResponse participantApproveResponse
     ) {
         participantService.approveUserOrNot(plannerId, userId, status);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(participantApproveResponse);
     }
 
 //    @GetMapping(value="/{userId}/Courses/{courseId}/participants/approved")

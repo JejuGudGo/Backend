@@ -39,7 +39,7 @@ public class CommentQueryService {
         List<CommentResponse> commentResponses = comments.stream()
                 .map(comment -> {
                     User user = findUserById(comment.getUserId());
-                    String profileImageUrl = "";
+                    String profileImageUrl = "Default";
 
                     if (!user.getProfile().getProfileImageUrl().isEmpty()) {
                         profileImageUrl = user.getProfile().getProfileImageUrl();
@@ -71,7 +71,7 @@ public class CommentQueryService {
         List<NestedCommentResponse> nestedCommentResponses = nestedComments.stream()
                 .map(nestedComment -> {
                     User user = findUserById(nestedComment.getUserId());
-                    String profileImageUrl = "";
+                    String profileImageUrl = "Default";
 
                     if (!user.getProfile().getProfileImageUrl().isEmpty()) {
                         profileImageUrl = user.getProfile().getProfileImageUrl();

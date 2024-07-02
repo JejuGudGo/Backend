@@ -38,7 +38,7 @@ public class SignupService {
                 });
 
         Profile profile = Profile.builder()
-                .profileImageUrl("")
+                .profileImageUrl("Default")
                 .build();
 
         User user = User.builder()
