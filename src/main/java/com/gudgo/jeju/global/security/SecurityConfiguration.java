@@ -53,6 +53,9 @@ public class SecurityConfiguration {
                                 .requestMatchers("/api/v1/auth/token/**").permitAll()
                                 .requestMatchers("/ws/**").permitAll()
                                 .requestMatchers("/favicon.ico/**").permitAll()
+                                .requestMatchers("/static/**").permitAll()
+                                .requestMatchers("/index.html").permitAll()
+                                .requestMatchers("/openapi.yml").permitAll()
                                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                                 .anyRequest().authenticated()
                 )
@@ -85,7 +88,6 @@ public class SecurityConfiguration {
         return httpSecurity.build();
     }
 
-    // CORS 설정
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -101,8 +103,6 @@ public class SecurityConfiguration {
         return new CorsFilter(source);
     }
 
-
-    // Custom Bean
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();

@@ -1,0 +1,2351 @@
+openapi: "3.1.0"
+info:
+  title: "jeju API"
+  description: "jeju API"
+  version: "1.0.0"
+servers:
+  - url: "https://jeju"
+
+tags:
+  - name: "User"
+    description: "유저 기능 api 입니다."
+  - name: "Authentication"
+    description: "인증 기능 api 입니다."
+  - name: "Token"
+    description: "토큰 갱신 api 입니다."
+  - name: "Todo"
+    description: "투두 기능 api 입니다."
+  - name: "Planner"
+    description: "걷기 기능 api 입니다."
+  - name: "Tour Api"
+    description: "tour api 를 이용한 기능의 api 입니다."
+  - name: "Media"
+    description: "걷기 기록 api 입니다."
+  - name: "Post - column"
+    description: "커뮤니티(컬럼) 기능 api 입니다."
+  - name: "Comment"
+    description: "커뮤니티(컬럼) 댓글 기능 api 입니다."
+  - name: "Post - course"
+    description: "커뮤니티(코스) 기능 api 입니다."
+  - name: "Participant"
+    description: "걷기 참여 기능 api 입니다."
+  - name: "Chatting"
+    description: "채팅 공지 기능 api 입니다. 나머지는 웹소켓이기 때문에 노션에 따로 작성합니다."
+paths:
+  /api/v1/courses/olle/:
+    get:
+      tags:
+        - Post - course
+      summary: "GET api/v1/courses/olle/"
+      operationId: "getOlleCourses"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OlleCourseResponseDto"
+  /api/v1/courses/olle/{olleId}:
+    get:
+      tags:
+        - Post - course
+      summary: "GET api/v1/courses/olle/{olleId}"
+      operationId: "getOlleCourse"
+      parameters:
+        - name: "olleId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OlleCourseDetailResponseDto"
+
+  /api/v1/courses/oreum/spots/:
+    get:
+      tags:
+        - Post - course
+      summary: "GET api/v1/courses/oreum/spots/"
+      operationId: "getOreums"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OreumResponseDto"
+
+  /api/v1/courses/oreum/spots/{oreumId}:
+    get:
+      tags:
+        - Post - course
+      summary: "GET api/v1/courses/oreum/spots/{oreumId}"
+      operationId: "getOreum"
+      parameters:
+        - name: "oreumId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OreumResponseDto"
+
+  /api/v1/posts/columns/:
+    get:
+      tags:
+        - Post - column
+      summary: "GET api/v1/posts/columns/"
+      operationId: "getColumnPosts"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ColumnPostResponse"
+    post:
+      tags:
+        - Post - column
+      summary: "POST api/v1/posts/columns/"
+      operationId: "createColumnPost"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+              required:
+                - "request"
+                - "image"
+              properties:
+                request:
+                  $ref: "#/components/schemas/ColumnPostCreateRequest"
+                image:
+                  type: "array"
+                  items:
+                    $ref: "#/components/schemas/MultipartFile"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ColumnPostResponse"
+  /api/v1/posts/columns/{postId}:
+    get:
+      tags:
+        - Post - column
+      summary: "GET api/v1/posts/columns/{postId}"
+      operationId: "getColumnPost"
+      parameters:
+        - name: "postId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ColumnPostResponse"
+    patch:
+      tags:
+        - Post - column
+      summary: "PATCH api/v1/posts/columns/{postId}"
+      operationId: "updateColumnPost"
+      parameters:
+        - name: "postId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ColumnPostUpdateRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+    delete:
+      tags:
+        - Post - column
+      summary: "DELETE api/v1/posts/columns/{postId}"
+      operationId: "deleteCoursePost"
+      parameters:
+        - name: "postId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/posts/{postId}/images:
+    get:
+      tags:
+        - Post - column
+      summary: "GET api/v1/posts/{postId}/images"
+      operationId: "getPostImages"
+      parameters:
+        - name: "postId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/PostImageResponse"
+  /api/v1/posts/{postId}/images/{postImageId}:
+    patch:
+      tags:
+        - Post - column
+      summary: "PATCH api/v1/posts/{postId}/images/{postImageId}"
+      operationId: "deletePostImage"
+      parameters:
+        - name: "postId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "postImageId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/posts/:
+    get:
+      tags:
+        - Post - course
+      summary: "GET api/v1/posts/"
+      operationId: "getCoursePosts"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CoursePostResponse"
+  /api/v1/posts/olle:
+    post:
+      tags:
+        - Post - course
+      summary: "POST api/v1/posts/olle"
+      operationId: "createCoursePostByOlle"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CoursePostCreateRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CoursePostResponse"
+  /api/v1/posts/planners:
+    post:
+      tags:
+        - Post - course
+      summary: "POST api/v1/posts/planners"
+      operationId: "createCoursePostByUsers"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CoursePostCreateRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CoursePostResponse"
+  /api/v1/posts/{postId}:
+    get:
+      tags:
+        - Post - course
+      summary: "GET api/v1/posts/{postId}"
+      operationId: "getCoursePost"
+      parameters:
+        - name: "postId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CoursePostResponse"
+    patch:
+      tags:
+        - Post - course
+      summary: "PATCH api/v1/posts/{postId}"
+      operationId: "updateCoursePost"
+      parameters:
+        - name: "postId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CoursePostUpdateRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CoursePostResponse"
+    delete:
+      tags:
+        - Post - course
+      summary: "DELETE api/v1/posts/{postId}"
+      operationId: "deleteCoursePost"
+      parameters:
+        - name: "postId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/posts/{postId}/comments:
+    get:
+      tags:
+        - Comment
+      summary: "GET api/v1/posts/{postId}/comments"
+      operationId: "getComments"
+      parameters:
+        - name: "postId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CommentResponse"
+    post:
+      tags:
+        - Comment
+      summary: "POST api/v1/posts/{postId}/comments"
+      operationId: "createComment"
+      parameters:
+        - name: "postId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommentCreateRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CommentResponse"
+  /api/v1/posts/{postId}/comments/{commentId}:
+    patch:
+      tags:
+        - Comment
+      summary: "PATCH api/v1/posts/{postId}/comments/{commentId}"
+      operationId: "updateComment"
+      parameters:
+        - name: "postId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "commentId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommentUpdateRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CommentResponse"
+    delete:
+      tags:
+        - Comment
+      summary: "DELETE api/v1/posts/{postId}/comments/{commentId}"
+      operationId: "deleteComment"
+      parameters:
+        - name: "postId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "commentId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/posts/{postId}/comments/{commentId}/nested:
+    get:
+      tags:
+        - Comment
+      summary: "GET api/v1/posts/{postId}/comments/{commentId}/nested"
+      operationId: "getNestedComments"
+      parameters:
+        - name: "postId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "commentId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/NestedCommentResponse"
+    post:
+      tags:
+        - Comment
+      summary: "POST api/v1/posts/{postId}/comments/{commentId}/nested"
+      operationId: "createNestedComment"
+      parameters:
+        - name: "postId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "commentId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommentCreateRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/NestedCommentResponse"
+  /api/v1/posts/{postId}/comments/{commentId}/nested/{nestedId}:
+    patch:
+      tags:
+        - Comment
+      summary: "PATCH api/v1/posts/{postId}/comments/{commentId}/nested/{nestedId}"
+      operationId: "updateNestedComment"
+      parameters:
+        - name: "postId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "commentId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "nestedId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommentUpdateRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/NestedCommentResponse"
+    delete:
+      tags:
+        - Comment
+      summary: "DELETE api/v1/posts/{postId}/comments/{commentId}/nested/{nestedId}"
+      operationId: "deleteNestedComment"
+      parameters:
+        - name: "postId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "commentId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "nestedId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/todo/:
+    get:
+      tags:
+        - Todo
+      summary: "GET api/v1/todo/"
+      operationId: "getByType"
+      parameters:
+        - name: "type"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+            enum:
+              - "TODO"
+              - "CHECK"
+              - "MEMO"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/TodoResponseDto"
+    post:
+      tags:
+        - Todo
+      summary: "POST api/v1/todo/"
+      operationId: "create"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TodoCreateRequestDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/todo/{id}:
+    get:
+      tags:
+        - Todo
+      summary: "GET api/v1/todo/{id}"
+      operationId: "getById"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Todo"
+    patch:
+      tags:
+        - Todo
+      summary: "PATCH api/v1/todo/{id}"
+      operationId: "update"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TodoUpdateRequestDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+    delete:
+      tags:
+        - Todo
+      summary: "DELETE api/v1/todo/{id}"
+      operationId: "delete"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/todo/{id}/complete:
+    patch:
+      tags:
+        - Todo
+      summary: "PATCH api/v1/todo/{id}/complete"
+      operationId: "updateComplete"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/auth/role:
+    patch:
+      tags:
+        - Post - column
+      summary: "PATCH api/v1/auth/role"
+      operationId: "updateUserRole"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/auth/user:
+    get:
+      tags:
+        - User
+      summary: "GET api/v1/auth/user"
+      operationId: "getUserInfo"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserInfoResponseDto"
+  /api/v1/planners/course/user:
+    get:
+      tags:
+        - Post - course
+      summary: "GET api/v1/planners/course/user"
+      operationId: "getPlanners"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PlannerResponse"
+  /api/v1/users/{userId}/planners:
+    get:
+      tags:
+        - Planner
+      summary: "GET api/v1/users/{userId}/planners"
+      operationId: "getMyPlanners"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "status"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PlannerResponse"
+    post:
+      tags:
+        - Planner
+      summary: "POST api/v1/users/{userId}/planners"
+      operationId: "create"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlannerCreateRequestDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/users/{userId}/planners/{plannerId}:
+    get:
+      tags:
+        - Planner
+      summary: "GET api/v1/users/{userId}/planners/{plannerId}"
+      operationId: "getPlanner"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "plannerId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PlannerResponse"
+    patch:
+      tags:
+        - Planner
+      summary: "PATCH api/v1/users/{userId}/planners/{plannerId}"
+      operationId: "update"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "plannerId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlannerUpdateRequestDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+    delete:
+      tags:
+        - Planner
+      summary: "DELETE api/v1/users/{userId}/planners/{plannerId}"
+      operationId: "delete"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "plannerId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/users/{userId}/planners/{plannerId}/course:
+    patch:
+      tags:
+        - Planner
+      summary: "PATCH api/v1/users/{userId}/planners/{plannerId}/course"
+      operationId: "updateMyCourse"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "plannerId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CourseUpdateRequestDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/users/{userId}/planners/{plannerId}/course/medias:
+    get:
+      tags:
+        - Media
+      summary: "GET api/v1/users/{userId}/planners/{plannerId}/course/medias"
+      operationId: "getMedias"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "plannerId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/CourseMediaResponseDto"
+    post:
+      tags:
+        - Media
+      summary: "POST api/v1/users/{userId}/planners/{plannerId}/course/medias"
+      operationId: "create"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "plannerId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+              required:
+                - "request"
+                - "image"
+              properties:
+                request:
+                  $ref: "#/components/schemas/CourseMediaCreateRequestDto"
+                image:
+                  type: "string"
+                  format: "binary"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/users/{userId}/planners/{plannerId}/course/medias/{mediaId}:
+    get:
+      tags:
+        - Media
+      summary: "GET api/v1/users/{userId}/planners/{plannerId}/course/medias/{mediaId}"
+      operationId: "get"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "plannerId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "mediaId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CourseMediaResponseDto"
+    patch:
+      tags:
+        - Media
+      summary: "PATCH api/v1/users/{userId}/planners/{plannerId}/course/medias/{mediaId}"
+      operationId: "update"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "plannerId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "mediaId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+              required:
+                - "image"
+                - "request"
+              properties:
+                image:
+                  type: "string"
+                  format: "binary"
+                request:
+                  $ref: "#/components/schemas/CourseMediaUpdateRequestDto"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+    delete:
+      tags:
+        - Media
+      summary: "DELETE api/v1/users/{userId}/planners/{plannerId}/course/medias/{mediaId}"
+      operationId: "delete"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "plannerId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "mediaId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/spots/{spotId}/count:
+    patch:
+      tags:
+        - Planner
+      summary: "PATCH api/v1/spots/{spotId}/count"
+      operationId: "increaseCount"
+      parameters:
+        - name: "spotId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/user/courses/{courseId}/spots/{spotId}/status:
+    patch:
+      tags:
+        - Planner
+      summary: "PATCH api/v1/user/courses/{courseId}/spots/{spotId}/status"
+      operationId: "completeSpot"
+      parameters:
+        - name: "courseId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "spotId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/user/{userId}/planners/{plannerId}/course/spots:
+    get:
+      tags:
+        - Planner
+      summary: "GET api/v1/user/{userId}/planners/{plannerId}/course/spots"
+      operationId: "getSpots"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "plannerId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/SpotResponseDto"
+  /api/v1/user/{userId}/planners/{plannerId}/course/spots/tour:
+    post:
+      tags:
+        - Planner
+      summary: "POST api/v1/user/{userId}/planners/{plannerId}/course/spots/tour"
+      operationId: "createSpotUsingTourApi"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "plannerId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SpotCreateUsingApiRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/user/{userId}/planners/{plannerId}/course/spots/{spotId}:
+    get:
+      tags:
+        - Planner
+      summary: "GET api/v1/user/{userId}/planners/{plannerId}/course/spots/{spotId}"
+      operationId: "getSpot"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "plannerId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "spotId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SpotResponseDto"
+    post:
+      tags:
+        - Planner
+      summary: "POST api/v1/user/{userId}/planners/{plannerId}/course/spots/{spotId}"
+      operationId: "createSpotByUser"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "plannerId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "spotId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SpotCreateRequestDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/userId/{userId}/planners/{plannerId}/course/spots/{spotId}:
+    delete:
+      tags:
+        - Planner
+      summary: "DELETE api/v1/userId/{userId}/planners/{plannerId}/course/spots/{spotId}"
+      operationId: "deleteSpot"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "plannerId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "spotId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/planners/{plannerId}/participants:
+    get:
+      tags:
+        - Participant
+      summary: "GET api/v1/planners/{plannerId}/participants"
+      operationId: "getParticipants"
+      parameters:
+        - name: "plannerId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "status"
+          in: "query"
+          required: true
+          schema:
+            type: "boolean"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ParticipantResponse"
+  /api/v1/planners/{plannerId}/participants/approve/{userId}:
+    patch:
+      tags:
+        - Participant
+      summary: "PATCH api/v1/planners/{plannerId}/participants/approve/{userId}"
+      operationId: "approveUserOrNot"
+      parameters:
+        - name: "plannerId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "status"
+          in: "query"
+          required: true
+          schema:
+            type: "boolean"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/planners/{plannerId}/participants/cancel/{userId}:
+    patch:
+      tags:
+        - Participant
+      summary: "PATCH api/v1/planners/{plannerId}/participants/cancel/{userId}"
+      operationId: "requestCancel"
+      parameters:
+        - name: "plannerId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/planners/{plannerId}/participants/join/{userId}:
+    post:
+      tags:
+        - Participant
+      summary: "POST api/v1/planners/{plannerId}/participants/join/{userId}"
+      operationId: "requestJoin"
+      parameters:
+        - name: "plannerId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/courses/tour/spots:
+    get:
+      tags:
+        - Tour Api
+      summary: "GET api/v1/courses/tour/spots"
+      operationId: "searchTourApiSpot"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/auth/token/refresh:
+    post:
+      tags:
+        - Token
+      summary: "POST api/v1/auth/token/refresh"
+      operationId: "refreshAccessToken"
+      responses:
+        "200":
+          description: "OK"
+  /api/v1/auth/sms/check:
+    post:
+      tags:
+        - Authentication
+      summary: "POST api/v1/auth/sms/check"
+      operationId: "checkUserUsingVerificationCode"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SMSVerificationDTO"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/auth/sms/send:
+    post:
+      tags:
+        - Authentication
+      summary: "POST api/v1/auth/sms/send"
+      operationId: "sendSMSForVerification"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SMSMessageDTO"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/auth/login:
+    post:
+      tags:
+        - User
+      summary: "POST api/v1/auth/login"
+      operationId: "login"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/auth/logout:
+    post:
+      tags:
+        - User
+      summary: "POST api/v1/auth/logout"
+      operationId: "logout"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/auth/signup:
+    post:
+      tags:
+        - User
+      summary: "POST api/v1/auth/signup"
+      operationId: "signup"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignupRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/users/{userId}/chatRooms/{chatRoomId}/notices:
+    get:
+      tags:
+        - Chatting
+      summary: "GET api/v1/users/{userId}/chatRooms/{chatRoomId}/notices"
+      operationId: "getNotices"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "chatRoomId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/NoticeResponse"
+    post:
+      tags:
+        - Chatting
+      summary: "POST api/v1/users/{userId}/chatRooms/{chatRoomId}/notices"
+      operationId: "create"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "chatRoomId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NoticeCreateRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/NoticeResponse"
+  /api/v1/users/{userId}/chatRooms/{chatRoomId}/notices/latest:
+    get:
+      tags:
+        - Chatting
+      summary: "GET api/v1/users/{userId}/chatRooms/{chatRoomId}/notices/latest"
+      operationId: "getLatestNotice"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "chatRoomId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/NoticeResponse"
+  /api/v1/users/{userId}/chatRooms/{chatRoomId}/notices/{noticeId}:
+    patch:
+      tags:
+        - Chatting
+      summary: "PATCH api/v1/users/{userId}/chatRooms/{chatRoomId}/notices/{noticeId}"
+      operationId: "update"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "chatRoomId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "noticeId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NoticeUpdateRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/NoticeResponse"
+    delete:
+      tags:
+        - Chatting
+      summary: "DELETE api/v1/users/{userId}/chatRooms/{chatRoomId}/notices/{noticeId}"
+      operationId: "update"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "chatRoomId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "noticeId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+components:
+  schemas:
+    OlleCourseResponseDto:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        olleType:
+          type: "string"
+          enum:
+            - "JEJU"
+            - "HAYOUNG"
+        title:
+          type: "string"
+        startLatitude:
+          type: "number"
+          format: "double"
+        startLongitude:
+          type: "number"
+          format: "double"
+        endLatitude:
+          type: "number"
+          format: "double"
+        endLongitude:
+          type: "number"
+          format: "double"
+        wheelchairAccessible:
+          type: "boolean"
+        totalDistance:
+          type: "string"
+        totalTime:
+          type: "string"
+    OlleCourseSpotResponseDto:
+      type: "object"
+      properties:
+        title:
+          type: "string"
+        latitude:
+          type: "number"
+          format: "double"
+        longitude:
+          type: "number"
+          format: "double"
+        distance:
+          type: "string"
+    OlleCourseDetailResponseDto:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        olleType:
+          type: "string"
+          enum:
+            - "JEJU"
+            - "HAYOUNG"
+        courseNumber:
+          type: "string"
+        title:
+          type: "string"
+        startLatitude:
+          type: "number"
+          format: "double"
+        startLongitude:
+          type: "number"
+          format: "double"
+        endLatitude:
+          type: "number"
+          format: "double"
+        endLongitude:
+          type: "number"
+          format: "double"
+        olleSpots:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/OlleCourseSpotResponseDto"
+    PostImageResponse:
+      type: "object"
+      properties:
+        postImageId:
+          type: "integer"
+          format: "int64"
+        postImageUrl:
+          type: "string"
+    ColumnPostResponse:
+      type: "object"
+      properties:
+        postId:
+          type: "integer"
+          format: "int64"
+        userId:
+          type: "integer"
+          format: "int64"
+        nickname:
+          type: "string"
+        profileImageUrl:
+          type: "string"
+        numberTag:
+          type: "integer"
+          format: "int64"
+        title:
+          type: "string"
+        content:
+          type: "string"
+        images:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PostImageResponse"
+    ColumnPostCreateRequest:
+      type: "object"
+      properties:
+        userId:
+          type: "integer"
+          format: "int64"
+        title:
+          type: "string"
+        content:
+          type: "string"
+    MultipartFile:
+      type: "object"
+      properties: { }
+    ColumnPostUpdateRequest:
+      type: "object"
+      properties:
+        title:
+          type: "string"
+        content:
+          type: "string"
+    CoursePostResponse:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        userId:
+          type: "integer"
+          format: "int64"
+        nickname:
+          type: "string"
+        profileImageUrl:
+          type: "string"
+        numberTag:
+          type: "integer"
+          format: "int64"
+        title:
+          type: "string"
+        participantNum:
+          type: "integer"
+          format: "int64"
+        currentParticipantNum:
+          type: "integer"
+          format: "int64"
+        content:
+          type: "string"
+    CoursePostCreateRequest:
+      type: "object"
+      properties:
+        userId:
+          type: "integer"
+          format: "int64"
+        title:
+          type: "string"
+        companionsNum:
+          type: "integer"
+          format: "int64"
+        content:
+          type: "string"
+        plannerId:
+          type: "integer"
+          format: "int64"
+        olleCourseId:
+          type: "integer"
+          format: "int64"
+    CoursePostUpdateRequest:
+      type: "object"
+      properties:
+        title:
+          type: "string"
+        content:
+          type: "string"
+        plannerId:
+          type: "integer"
+          format: "int64"
+        participantNum:
+          type: "integer"
+          format: "int64"
+        isFinished:
+          type: "boolean"
+    CommentResponse:
+      type: "object"
+      properties:
+        commentId:
+          type: "integer"
+          format: "int64"
+        userId:
+          type: "integer"
+          format: "int64"
+        nickname:
+          type: "string"
+        profileImageUrl:
+          type: "string"
+        numberTag:
+          type: "integer"
+          format: "int64"
+        content:
+          type: "string"
+    CommentCreateRequest:
+      type: "object"
+      properties:
+        userId:
+          type: "integer"
+          format: "int64"
+        content:
+          type: "string"
+    CommentUpdateRequest:
+      type: "object"
+      properties:
+        content:
+          type: "string"
+    NestedCommentResponse:
+      type: "object"
+      properties:
+        commentId:
+          type: "integer"
+          format: "int64"
+        nestedId:
+          type: "integer"
+          format: "int64"
+        userId:
+          type: "integer"
+          format: "int64"
+        nickname:
+          type: "string"
+        profileImageUrl:
+          type: "string"
+        numberTag:
+          type: "integer"
+          format: "int64"
+        content:
+          type: "string"
+    TodoResponseDto:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        type:
+          type: "string"
+          enum:
+            - "TODO"
+            - "CHECK"
+            - "MEMO"
+        orderNumber:
+          type: "integer"
+          format: "int64"
+        content:
+          type: "string"
+        isFinished:
+          type: "boolean"
+    TodoCreateRequestDto:
+      type: "object"
+      properties:
+        type:
+          type: "string"
+          enum:
+            - "TODO"
+            - "CHECK"
+            - "MEMO"
+        orderNumber:
+          type: "integer"
+          format: "int64"
+        content:
+          type: "string"
+    Time:
+      type: "object"
+      properties: { }
+    Profile:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        walkingTime:
+          $ref: "#/components/schemas/Time"
+        profileImageUrl:
+          type: "string"
+        ranking:
+          type: "string"
+    User:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        email:
+          type: "string"
+        password:
+          type: "string"
+        nickname:
+          type: "string"
+        name:
+          type: "string"
+        numberTag:
+          type: "integer"
+          format: "int64"
+        role:
+          type: "string"
+          enum:
+            - "USER"
+            - "AUTHOR"
+        provider:
+          type: "string"
+        createdAt:
+          type: "string"
+          format: "date-time"
+        phoneNumber:
+          type: "string"
+        profile:
+          $ref: "#/components/schemas/Profile"
+    Todo:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        type:
+          type: "string"
+          enum:
+            - "TODO"
+            - "CHECK"
+            - "MEMO"
+        orderNumber:
+          type: "integer"
+          format: "int64"
+        content:
+          type: "string"
+        user:
+          $ref: "#/components/schemas/User"
+    TodoUpdateRequestDto:
+      type: "object"
+      properties:
+        type:
+          type: "string"
+          enum:
+            - "TODO"
+            - "CHECK"
+            - "MEMO"
+        orderNumber:
+          type: "integer"
+          format: "int64"
+        content:
+          type: "string"
+    UserInfoResponseDto:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        email:
+          type: "string"
+        nickname:
+          type: "string"
+        name:
+          type: "string"
+        numberTag:
+          type: "integer"
+          format: "int64"
+        profileImageUrl:
+          type: "string"
+        userRole:
+          type: "string"
+          enum:
+            - "USER"
+            - "AUTHOR"
+    SpotResponseDto:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        categoryId:
+          type: "string"
+        courseId:
+          type: "integer"
+          format: "int64"
+        title:
+          type: "string"
+        order:
+          type: "integer"
+          format: "int64"
+        address:
+          type: "string"
+        latitude:
+          type: "number"
+          format: "double"
+        longitude:
+          type: "number"
+          format: "double"
+        isCompleted:
+          type: "boolean"
+        count:
+          type: "integer"
+          format: "int64"
+    CourseResponseDto:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        type:
+          type: "string"
+          enum:
+            - "USER"
+            - "JEJU"
+            - "HAYOUNG"
+        title:
+          type: "string"
+        createdAt:
+          type: "string"
+          format: "date"
+        originalCreatorId:
+          type: "integer"
+          format: "int64"
+        originalCourseId:
+          type: "integer"
+          format: "int64"
+        olleCourseId:
+          type: "integer"
+          format: "int64"
+        spots:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/SpotResponseDto"
+    PlannerResponse:
+      type: "object"
+      properties:
+        plannerId:
+          type: "integer"
+          format: "int64"
+        startAt:
+          type: "string"
+          format: "date"
+        summary:
+          type: "string"
+        time:
+          type: "string"
+          format: "partial-time"
+        isCompleted:
+          type: "boolean"
+        course:
+          $ref: "#/components/schemas/CourseResponseDto"
+    PlannerCreateRequestDto:
+      type: "object"
+      properties:
+        title:
+          type: "string"
+        startAt:
+          type: "string"
+          format: "date"
+        originalCreatorId:
+          type: "integer"
+          format: "int64"
+        originalCourseId:
+          type: "integer"
+          format: "int64"
+        isPrivate:
+          type: "boolean"
+    PlannerUpdateRequestDto:
+      type: "object"
+      properties:
+        startAt:
+          type: "string"
+          format: "date"
+        isPrivate:
+          type: "boolean"
+        summary:
+          type: "string"
+        time:
+          type: "string"
+          format: "partial-time"
+        isCompleted:
+          type: "boolean"
+    CourseUpdateRequestDto:
+      type: "object"
+      properties:
+        title:
+          type: "string"
+    CourseMediaResponseDto:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        courseId:
+          type: "integer"
+          format: "int64"
+        imageUrl:
+          type: "string"
+        coutent:
+          type: "string"
+        latitude:
+          type: "number"
+          format: "double"
+        longitude:
+          type: "number"
+          format: "double"
+    CourseMediaCreateRequestDto:
+      type: "object"
+      properties:
+        content:
+          type: "string"
+        latitude:
+          type: "number"
+          format: "double"
+        longitude:
+          type: "number"
+          format: "double"
+    CourseMediaUpdateRequestDto:
+      type: "object"
+      properties:
+        content:
+          type: "string"
+    SpotCreateUsingApiRequest:
+      type: "object"
+      properties:
+        contentTypeId:
+          type: "string"
+        contentId:
+          type: "string"
+    SpotCreateRequestDto:
+      type: "object"
+      properties:
+        title:
+          type: "string"
+        address:
+          type: "string"
+        category:
+          type: "string"
+        latitude:
+          type: "number"
+          format: "double"
+        longitude:
+          type: "number"
+          format: "double"
+    ParticipantResponse:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        courseId:
+          type: "integer"
+          format: "int64"
+        participantUserId:
+          type: "integer"
+          format: "int64"
+    SMSVerificationDTO:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        phoneNumber:
+          type: "string"
+        verificationCode:
+          type: "string"
+    SMSMessageDTO:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        phoneNumber:
+          type: "string"
+    LoginRequest:
+      type: "object"
+      properties:
+        email:
+          type: "string"
+        password:
+          type: "string"
+    SignupRequest:
+      type: "object"
+      properties:
+        email:
+          type: "string"
+        password:
+          type: "string"
+        nickname:
+          type: "string"
+        name:
+          type: "string"
+        phoneNumber:
+          type: "string"
+    NoticeResponse:
+      type: "object"
+      properties:
+        noticeId:
+          type: "integer"
+          format: "int64"
+        participantId:
+          type: "integer"
+          format: "int64"
+        nickname:
+          type: "string"
+        numberTag:
+          type: "integer"
+          format: "int64"
+        profileImage:
+          type: "string"
+        content:
+          type: "string"
+        createdAt:
+          type: "string"
+          format: "date-time"
+        updatedAt:
+          type: "string"
+          format: "date-time"
+    NoticeCreateRequest:
+      type: "object"
+      properties:
+        content:
+          type: "string"
+    NoticeUpdateRequest:
+      type: "object"
+      properties:
+        chatRoomId:
+          type: "integer"
+          format: "int64"
+        content:
+          type: "string"
+    TourApiContentType:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        title:
+          type: "string"
+    TourApiCategory1:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        categoryName:
+          type: "string"
+        tourApiContentType:
+          $ref: "#/components/schemas/TourApiContentType"
+    OreumResponseDto:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        tourApiCategory1:
+          $ref: "#/components/schemas/TourApiCategory1"
+        title:
+          type: "string"
+        address:
+          type: "string"
+        latitude:
+          type: "number"
+          format: "double"
+        longitude:
+          type: "number"
+          format: "double"
+        content:
+          type: "string"
