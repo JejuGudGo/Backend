@@ -77,7 +77,7 @@ public class HaYoungOlleSpotDatabaseService {
                 dataConfigurationRepository.save(dataConfiguration);
 
             } else if (!checkDataConfig.isConfigValue()){
-                checkDataConfig.withConfigValue(true);
+                checkDataConfig = checkDataConfig.withConfigValue(true);
                 dataConfigurationRepository.save(checkDataConfig);
             }
 

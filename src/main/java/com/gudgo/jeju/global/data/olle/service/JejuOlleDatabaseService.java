@@ -216,28 +216,29 @@ public class JejuOlleDatabaseService {
                 .orElse(null);
 
         if (checkDataConfig == null || !checkDataConfig.isConfigValue()) {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new ClassPathResource("csv/olle_course.csv").getInputStream()));
-            String line;
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(new ClassPathResource("csv/olle_course.csv").getInputStream()))) {
+                String line;
 
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(",");
-                String courseNumber = data[0];
-                String totalDistance = data[1];
-                String totalTime = data[2];
+                while ((line = br.readLine()) != null) {
+                    String[] data = line.split(",");
+                    String courseNumber = data[0];
+                    String totalDistance = data[1];
+                    String totalTime = data[2];
 
-                JeJuOlleCourse jeJuOlleCourse = jeJuOlleCourseRepository.findByOlleTypeAndCourseNumberAndWheelchairAccessible(OlleType.JEJU, courseNumber, false);
+                    JeJuOlleCourse jeJuOlleCourse = jeJuOlleCourseRepository.findByOlleTypeAndCourseNumberAndWheelchairAccessible(OlleType.JEJU, courseNumber, false);
 
-                if (jeJuOlleCourse != null) {
-                    jeJuOlleCourse = jeJuOlleCourse.withTotalDistanceAndTotalTime(totalDistance, totalTime);
-                    jeJuOlleCourseRepository.save(jeJuOlleCourse);
-                } else {
-                    log.warn("Course not found for number: {}", courseNumber);
+                    if (jeJuOlleCourse != null) {
+                        jeJuOlleCourse = jeJuOlleCourse.withTotalDistanceAndTotalTime(totalDistance, totalTime);
+                        jeJuOlleCourseRepository.save(jeJuOlleCourse);
+                    } else {
+                        log.warn("Course not found for number: {}", courseNumber);
+                    }
                 }
             }
 
             if (checkDataConfig == null) {
                 DataConfiguration dataConfiguration = DataConfiguration.builder()
-                        .configKey("OlleAdditionalData")
+                        .configKey("OlleAdditionalDataLoaded")
                         .configValue(true)
                         .updatedAt(LocalDate.now())
                         .build();
@@ -245,7 +246,7 @@ public class JejuOlleDatabaseService {
                 dataConfigurationRepository.save(dataConfiguration);
 
             } else if (!checkDataConfig.isConfigValue()) {
-                checkDataConfig.withConfigValue(true);
+                checkDataConfig = checkDataConfig.withConfigValue(true);
                 dataConfigurationRepository.save(checkDataConfig);
             }
 

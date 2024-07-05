@@ -61,23 +61,25 @@ public class OreumDatabaseService {
 
                     oreumDataRepository.save(oreum);
                 }
+            }
 
-                if (checkDataConfig == null) {
-                    DataConfiguration dataConfiguration = DataConfiguration.builder()
-                            .configKey("JejuOreumData")
-                            .configValue(true)
-                            .updatedAt(LocalDate.now())
-                            .build();
+            if (checkDataConfig == null) {
+                DataConfiguration dataConfiguration = DataConfiguration.builder()
+                        .configKey("JejuOreumData")
+                        .configValue(true)
+                        .updatedAt(LocalDate.now())
+                        .build();
 
-                    dataConfigurationRepository.save(dataConfiguration);
-                } else if (!checkDataConfig.isConfigValue()) {
-                    checkDataConfig.withConfigValue(true);
-                    dataConfigurationRepository.save(checkDataConfig);
-                } else {
-                    log.info("===============================================================================");
-                    log.info("Jeju Oreum is already loaded");
-                    log.info("===============================================================================");
-                }
+                dataConfigurationRepository.save(dataConfiguration);
+
+            } else if (!checkDataConfig.isConfigValue()) {
+                checkDataConfig = checkDataConfig.withConfigValue(true);
+                dataConfigurationRepository.save(checkDataConfig);
+
+            } else {
+                log.info("===============================================================================");
+                log.info("Jeju Oreum is already loaded");
+                log.info("===============================================================================");
             }
         }
     }
