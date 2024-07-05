@@ -2,8 +2,8 @@ package com.gudgo.jeju.domain.oreum.query;
 
 
 import com.gudgo.jeju.domain.oreum.dto.OreumResponseDto;
-import com.gudgo.jeju.domain.oreum.entity.OreumData;
-import com.gudgo.jeju.global.data.oruem.entity.QOreumData;
+import com.gudgo.jeju.domain.oreum.entity.Oreum;
+import com.gudgo.jeju.domain.oreum.entity.QOreum;
 import com.gudgo.jeju.global.util.PaginationUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -24,22 +24,22 @@ public class OreumSpotQueryService {
     }
 
     public Page<OreumResponseDto> getOreums(Pageable pageable) {
-        QOreumData qOreumData = QOreumData.oreumData;
+        QOreum qOreum = QOreum.oreum;
 
-        List<OreumData> oreumDataList = queryFactory
-                .selectFrom(qOreumData)
+        List<Oreum> oreumList = queryFactory
+                .selectFrom(qOreum)
                 .fetch();
 
-        List<OreumResponseDto> oreumResponseDtos = oreumDataList.stream()
-                .map(oreumData ->
+        List<OreumResponseDto> oreumResponseDtos = oreumList.stream()
+                .map(oreum ->
                         new OreumResponseDto(
-                                oreumData.getId(),
-                                oreumData.getTourApiCategory1(),
-                                oreumData.getTitle(),
-                                oreumData.getAddress(),
-                                oreumData.getLatitude(),
-                                oreumData.getLongitude(),
-                                oreumData.getContent()
+                                oreum.getId(),
+                                oreum.getTourApiCategory1(),
+                                oreum.getTitle(),
+                                oreum.getAddress(),
+                                oreum.getLatitude(),
+                                oreum.getLongitude(),
+                                oreum.getContent()
                         ))
                 .toList();
 
@@ -47,21 +47,21 @@ public class OreumSpotQueryService {
     }
 
     public OreumResponseDto getOreum(Long id) {
-        QOreumData qOreumData = QOreumData.oreumData;
+        QOreum qOreum = QOreum.oreum;
 
-        OreumData oreumData = queryFactory
-                .selectFrom(qOreumData)
-                .where(qOreumData.id.eq(id))
+        Oreum oreum = queryFactory
+                .selectFrom(qOreum)
+                .where(qOreum.id.eq(id))
                 .fetchOne();
 
         return new OreumResponseDto(
-                oreumData.getId(),
-                oreumData.getTourApiCategory1(),
-                oreumData.getTitle(),
-                oreumData.getAddress(),
-                oreumData.getLatitude(),
-                oreumData.getLongitude(),
-                oreumData.getContent()
+                oreum.getId(),
+                oreum.getTourApiCategory1(),
+                oreum.getTitle(),
+                oreum.getAddress(),
+                oreum.getLatitude(),
+                oreum.getLongitude(),
+                oreum.getContent()
         );
     }
 }

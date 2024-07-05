@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OreumData {
+public class Oreum {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

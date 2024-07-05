@@ -3,7 +3,7 @@ package com.gudgo.jeju.global.data.oruem.service;
 import com.gudgo.jeju.domain.tourApi.entity.TourApiCategory1;
 import com.gudgo.jeju.domain.tourApi.repository.TourApiCategory1Repository;
 import com.gudgo.jeju.global.data.common.entity.DataConfiguration;
-import com.gudgo.jeju.domain.oreum.entity.OreumData;
+import com.gudgo.jeju.domain.oreum.entity.Oreum;
 import com.gudgo.jeju.domain.oreum.repository.OreumDataRepository;
 import com.gudgo.jeju.global.data.tourAPI.repository.DataConfigurationRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -49,7 +49,7 @@ public class OreumDatabaseService {
                     TourApiCategory1 category = tourApiCategory1Repository.findById(categoryId)
                             .orElseThrow(EntityNotFoundException::new);
 
-                    OreumData oreumData = OreumData.builder()
+                    Oreum oreum = Oreum.builder()
                             .title(title)
                             .address(address)
                             .latitude(latitude)
@@ -59,7 +59,7 @@ public class OreumDatabaseService {
                             .tourApiCategory1(category)
                             .build();
 
-                    oreumDataRepository.save(oreumData);
+                    oreumDataRepository.save(oreum);
                 }
 
                 if (checkDataConfig == null) {
