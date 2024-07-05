@@ -46,7 +46,7 @@ public class OreumDatabaseService {
                     String categoryId = data[6];
 
 
-                    TourApiCategory1 category = tourApiCategory1Repository.findByCategoryName(categoryId)
+                    TourApiCategory1 category = tourApiCategory1Repository.findById(categoryId)
                             .orElseThrow(EntityNotFoundException::new);
 
                     OreumData oreumData = OreumData.builder()
