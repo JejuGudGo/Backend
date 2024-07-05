@@ -72,6 +72,16 @@ tasks.withType(Test) {
     enabled = false
 }
 
+sourceSets {
+    main {
+        java {
+            srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
+        }
+    }
+}
+
+
 clean {
     delete file('src/main/generated')
 }
+
