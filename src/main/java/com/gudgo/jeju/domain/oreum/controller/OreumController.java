@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@RequestMapping(value="/api/v1/oreum")
+@RequestMapping(value="/api/v1/spots/oreum")
 @RequiredArgsConstructor
 @Slf4j
 @RestController
