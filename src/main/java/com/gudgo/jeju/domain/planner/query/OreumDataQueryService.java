@@ -1,8 +1,8 @@
 package com.gudgo.jeju.domain.planner.query;
 
 
-import com.gudgo.jeju.global.data.oruem.dto.OreumResponseDto;
-import com.gudgo.jeju.global.data.oruem.entity.OreumData;
+import com.gudgo.jeju.domain.oreum.dto.OreumResponseDto;
+import com.gudgo.jeju.domain.oreum.entity.OreumData;
 import com.gudgo.jeju.global.data.oruem.entity.QOreumData;
 import com.gudgo.jeju.global.util.PaginationUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
