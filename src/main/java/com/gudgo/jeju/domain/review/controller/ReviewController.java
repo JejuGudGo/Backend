@@ -27,7 +27,7 @@ public class ReviewController {
     private final ReviewImageQueryService reviewImageQueryService;
 
     // GET - 리뷰 목록
-    @GetMapping(value="/{plannerId}")
+    @GetMapping(value="/list/{plannerId}")
     public Page<ReviewResponseDto> getReviews(
             @PathVariable("plannerId") Long plannerId,
             Pageable pageable) {
