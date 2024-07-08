@@ -89,6 +89,7 @@ public class ReviewService {
                                 .plannerReviewCategory(plannerReviewCategory)
                                 .code(tagResponse.code())
 //                                .title(tagResponse.title())
+                                .isDeleted(false)
                                 .build();
                         plannerReviewTagRepository.save(plannerReviewTag);
 

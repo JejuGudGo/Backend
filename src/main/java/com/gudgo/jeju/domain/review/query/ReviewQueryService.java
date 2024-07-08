@@ -27,7 +27,8 @@ public class ReviewQueryService {
 
         List<PlannerReview> reviews = queryFactory
                 .selectFrom(qPlannerReview)
-                .where(qPlannerReview.planner.id.eq(plannerId))
+                .where(qPlannerReview.planner.id.eq(plannerId)
+                        .and(qPlannerReview.isDeleted.isFalse()))
                 .fetch();
 
         List<ReviewResponseDto> reviewResponses = reviews.stream()
@@ -55,7 +56,8 @@ public class ReviewQueryService {
         Long count = queryFactory
                 .select(qPlannerReview.countDistinct())
                 .from(qPlannerReview)
-                .where(qPlannerReview.planner.id.eq(plannerId))
+                .where(qPlannerReview.planner.id.eq(plannerId)
+                        .and(qPlannerReview.isDeleted.isFalse()))
                 .fetchOne();
 
         return new PlannerReviewCountResponseDto(
@@ -79,13 +81,13 @@ public class ReviewQueryService {
                         category.getId(),
                         category.getPlannerReview().getId(),
                         category.getCode(),
-                        category.getTitle(),
+//                        category.getTitle(),
                         fetchReviewTags(category.getId()).stream()
                                 .map(tag -> new ReviewTagResponseDto(
                                         tag.getId(),
                                         tag.getPlannerReviewCategory().getId(),
-                                        tag.getCode(),
-                                        tag.getTitle()
+                                        tag.getCode()
+//                                        tag.getTitle()
                                 ))
                                 .collect(Collectors.toList())
                 ))
@@ -94,7 +96,9 @@ public class ReviewQueryService {
         return new ReviewResponseDto(
                 review.getId(),
                 review.getPlanner().getId(),
+                review.getUser().getId(),
                 review.getContent(),
+                review.getCreatedAt(),
                 reviewImageResponses,
                 reviewCategoryResponses
         );
@@ -104,7 +108,8 @@ public class ReviewQueryService {
         QPlannerReviewImage qPlannerReviewImage = QPlannerReviewImage.plannerReviewImage;
         return queryFactory
                 .selectFrom(qPlannerReviewImage)
-                .where(qPlannerReviewImage.plannerReview.id.eq(reviewId))
+                .where(qPlannerReviewImage.plannerReview.id.eq(reviewId)
+                        .and(qPlannerReviewImage.isDeleted.isFalse()))
                 .fetch();
     }
 
@@ -120,7 +125,8 @@ public class ReviewQueryService {
         QPlannerReviewTag qPlannerReviewTag = QPlannerReviewTag.plannerReviewTag;
         return queryFactory
                 .selectFrom(qPlannerReviewTag)
-                .where(qPlannerReviewTag.plannerReviewCategory.id.eq(categoryId))
+                .where(qPlannerReviewTag.plannerReviewCategory.id.eq(categoryId)
+                        .and(qPlannerReviewTag.isDeleted.isFalse()))
                 .fetch();
     }
 }

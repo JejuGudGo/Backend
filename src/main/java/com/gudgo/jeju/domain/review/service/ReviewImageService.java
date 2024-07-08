@@ -35,6 +35,7 @@ public class ReviewImageService {
             PlannerReviewImage reviewImage = PlannerReviewImage.builder()
                     .plannerReview(plannerReview)
                     .imageUrl(path.toString())
+                    .isDeleted(false)
                     .build();
 
             plannerReviewImageRepository.save(reviewImage);
