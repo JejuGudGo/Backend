@@ -67,6 +67,21 @@ public class ReviewQueryService {
     }
 
 
+    public Page<ReviewResponseDto> getUserReviews(Long userId, Pageable pageable) {
+        QPlannerReview qPlannerReview = QPlannerReview.plannerReview;
+
+        List<PlannerReview> reviews = queryFactory
+                .selectFrom(qPlannerReview)
+                .where(qPlannerReview.user.id.eq(userId)
+                        .and(qPlannerReview.isDeleted).isFalse())
+                .fetch();
+        List<ReviewResponseDto> reviewResponses = reviews.stream()
+                .map(this::mapToReviewResponseDto)
+                .collect(Collectors.toList());
+        return PaginationUtil.listToPage(reviewResponses,pageable);
+    }
+
+
     private ReviewResponseDto mapToReviewResponseDto(PlannerReview review) {
         List<ReviewImageResponseDto> reviewImageResponses = fetchReviewImages(review.getId()).stream()
                 .map(image -> new ReviewImageResponseDto(

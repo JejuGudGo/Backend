@@ -123,4 +123,15 @@ public class ReviewService {
         return responseDto;
 
     }
+
+
+    @Transactional
+    public void delete(Long reviewId) {
+        PlannerReview plannerReview = plannerReviewRepository.findById(reviewId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        plannerReview = plannerReview.withIsDeleted(true);
+
+        plannerReviewRepository.save(plannerReview);
+    }
 }

@@ -36,4 +36,15 @@ public class PlannerReview {
     @JoinColumn(name = "userId")
     private User user;
 
+
+    public PlannerReview withIsDeleted(boolean isDeleted) {
+        return PlannerReview.builder()
+                .id(id)
+                .content(content)
+                .createdAt(createdAt)
+                .isDeleted(isDeleted)
+                .planner(planner)
+                .user(user)
+                .build();
+    }
 }

@@ -27,7 +27,7 @@ public class ReviewController {
     private final ReviewImageQueryService reviewImageQueryService;
 
     // GET - 리뷰 목록
-    @GetMapping(value="/list/{plannerId}")
+    @GetMapping(value = "/list/{plannerId}")
     public Page<ReviewResponseDto> getReviews(
             @PathVariable("plannerId") Long plannerId,
             Pageable pageable) {
@@ -42,9 +42,8 @@ public class ReviewController {
         return reviewImageQueryService.getImages(plannerId, pageable);
     }
 
-
     // GET - 리뷰 상세
-    @GetMapping(value = "/{reviewId}")
+    @GetMapping(value = "/detail/{reviewId}")
     public ReviewResponseDto getReview(@PathVariable("reviewId") Long reviewId) {
         return reviewQueryService.getReview(reviewId);
     }
@@ -56,9 +55,17 @@ public class ReviewController {
     }
 
     // GET - 리뷰 개수 조회
-    @GetMapping(value = "/{plannerId}/count")
+    @GetMapping(value = "/count/{plannerId}")
     public PlannerReviewCountResponseDto getReviewCount(@PathVariable("plannerId") Long plannerId) {
         return reviewQueryService.getReviewCount(plannerId);
+    }
+
+    // GET - 특정 유저 리뷰 목록 조회
+    @GetMapping(value = "/user/{userId}")
+    public Page<ReviewResponseDto> getUserReviews(
+            @PathVariable("userId") Long userId,
+            Pageable pageable) {
+        return reviewQueryService.getUserReviews(userId, pageable);
     }
 
 
@@ -76,7 +83,10 @@ public class ReviewController {
     }
 
 
-
-
-
+    // DELETE - 리뷰 삭제
+    @DeleteMapping(value = "{reviewId}")
+    public ResponseEntity<?> delete(@PathVariable("reviewId") Long reviewId) {
+        reviewService.delete(reviewId);
+        return ResponseEntity.ok().build();
+    }
 }
