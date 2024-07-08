@@ -20,7 +20,7 @@ public class PlannerReviewCategory {
 
     private String code;
 
-    private String title;
+//    private String title;
 
     @ManyToOne
     @JoinColumn(name = "plannerReviewId")

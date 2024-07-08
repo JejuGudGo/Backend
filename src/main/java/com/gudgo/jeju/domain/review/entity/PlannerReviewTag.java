@@ -18,7 +18,9 @@ public class PlannerReviewTag {
 
     private String code;
 
-    private String title;
+//    private String title;
+
+    private boolean isDeleted;
 
     @ManyToOne
     @JoinColumn(name = "reviewId")

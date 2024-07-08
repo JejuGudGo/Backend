@@ -19,6 +19,8 @@ public class PlannerReviewImage {
 
     private String imageUrl;
 
+    private boolean isDeleted;
+
     @ManyToOne
     @JoinColumn(name = "plannerReviewId")
     private PlannerReview plannerReview;
