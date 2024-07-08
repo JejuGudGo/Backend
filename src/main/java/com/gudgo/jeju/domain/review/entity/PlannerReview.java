@@ -47,4 +47,15 @@ public class PlannerReview {
                 .user(user)
                 .build();
     }
+
+    public PlannerReview withContent(String content) {
+        return PlannerReview.builder()
+                .id(id)
+                .content(content)
+                .createdAt(createdAt)
+                .isDeleted(isDeleted)
+                .planner(planner)
+                .user(user)
+                .build();
+    }
 }

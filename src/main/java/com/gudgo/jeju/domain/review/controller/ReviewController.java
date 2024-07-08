@@ -2,6 +2,7 @@ package com.gudgo.jeju.domain.review.controller;
 
 
 import com.gudgo.jeju.domain.review.dto.request.ReviewRequestDto;
+import com.gudgo.jeju.domain.review.dto.request.ReviewUpdateRequestDto;
 import com.gudgo.jeju.domain.review.dto.response.PlannerReviewCountResponseDto;
 import com.gudgo.jeju.domain.review.dto.response.ReviewImageResponseDto;
 import com.gudgo.jeju.domain.review.dto.response.ReviewPostResponseDto;
@@ -82,9 +83,20 @@ public class ReviewController {
 
     }
 
+    // PATCH - 리뷰 수정
+    @PatchMapping(value = "/{reviewId}")
+    public ResponseEntity<?> update(
+            @PathVariable("reviewId") Long reviewId,
+            @RequestPart("request") ReviewUpdateRequestDto requestDto,
+            @RequestPart("image") MultipartFile[] images) throws Exception {
+        ReviewPostResponseDto response = reviewService.update(reviewId, requestDto, images);
+        return ResponseEntity.ok(response);
+
+    }
+
 
     // DELETE - 리뷰 삭제
-    @DeleteMapping(value = "{reviewId}")
+    @DeleteMapping(value = "/{reviewId}")
     public ResponseEntity<?> delete(@PathVariable("reviewId") Long reviewId) {
         reviewService.delete(reviewId);
         return ResponseEntity.ok().build();

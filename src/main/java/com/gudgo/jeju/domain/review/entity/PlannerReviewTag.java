@@ -25,4 +25,13 @@ public class PlannerReviewTag {
     @ManyToOne
     @JoinColumn(name = "reviewId")
     private PlannerReviewCategory plannerReviewCategory;
+
+    public PlannerReviewTag withIsDeleted(boolean isDeleted) {
+        return PlannerReviewTag.builder()
+                .id(id)
+                .code(code)
+                .isDeleted(isDeleted)
+                .plannerReviewCategory(plannerReviewCategory)
+                .build();
+    }
 }

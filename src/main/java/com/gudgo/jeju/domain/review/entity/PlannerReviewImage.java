@@ -24,4 +24,13 @@ public class PlannerReviewImage {
     @ManyToOne
     @JoinColumn(name = "plannerReviewId")
     private PlannerReview plannerReview;
+
+    public PlannerReviewImage withIsDeleted(boolean isDeleted) {
+        return PlannerReviewImage.builder()
+                .id(id)
+                .imageUrl(imageUrl)
+                .isDeleted(isDeleted)
+                .plannerReview(plannerReview)
+                .build();
+    }
 }

@@ -35,13 +35,15 @@ public class ReviewImageQueryService {
         // 전체 리뷰 가져오기
         List<PlannerReview> reviews = queryFactory
                 .selectFrom(qPlannerReview)
-                .where(qPlannerReview.planner.id.eq(plannerId))
+                .where(qPlannerReview.planner.id.eq(plannerId)
+                        .and(qPlannerReview.isDeleted.isFalse()))
                 .fetch();
 
         List<ReviewImageResponseDto> imageResponses = reviews.stream()
                 .flatMap(review -> queryFactory
                         .selectFrom(qPlannerReviewImage)
-                        .where(qPlannerReviewImage.plannerReview.id.eq(review.getId()))
+                        .where(qPlannerReviewImage.plannerReview.id.eq(review.getId())
+                                .and(qPlannerReviewImage.isDeleted.isFalse()))
                         .fetch()
                         .stream().map(image -> new ReviewImageResponseDto(
                                 image.getId(),
@@ -58,7 +60,9 @@ public class ReviewImageQueryService {
 
         List<PlannerReviewImage> reviewImages = queryFactory
                 .selectFrom(qPlannerReviewImage)
-                .where(qPlannerReviewImage.plannerReview.id.eq(plannerReviewId))
+                .where(qPlannerReviewImage.plannerReview.id.eq(plannerReviewId)
+                        .and(qPlannerReviewImage.isDeleted.isFalse()))
+
                 .fetch();
 
         List<ReviewImageResponseDto> reviewImageResponses = reviewImages.stream()

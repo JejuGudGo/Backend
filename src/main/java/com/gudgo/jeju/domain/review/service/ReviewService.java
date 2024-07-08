@@ -5,13 +5,13 @@ import com.gudgo.jeju.domain.planner.repository.PlannerRepository;
 import com.gudgo.jeju.domain.review.dto.request.ReviewCategoryRequestDto;
 import com.gudgo.jeju.domain.review.dto.request.ReviewRequestDto;
 import com.gudgo.jeju.domain.review.dto.request.ReviewTagRequestDto;
-import com.gudgo.jeju.domain.review.dto.response.ReviewCategoryResponseDto;
-import com.gudgo.jeju.domain.review.dto.response.ReviewPostResponseDto;
-import com.gudgo.jeju.domain.review.dto.response.ReviewTagResponseDto;
+import com.gudgo.jeju.domain.review.dto.request.ReviewUpdateRequestDto;
+import com.gudgo.jeju.domain.review.dto.response.*;
 import com.gudgo.jeju.domain.review.entity.PlannerReview;
 import com.gudgo.jeju.domain.review.entity.PlannerReviewCategory;
 import com.gudgo.jeju.domain.review.entity.PlannerReviewImage;
 import com.gudgo.jeju.domain.review.entity.PlannerReviewTag;
+import com.gudgo.jeju.domain.review.query.ReviewCategoryQueryService;
 import com.gudgo.jeju.domain.review.query.ReviewImageQueryService;
 import com.gudgo.jeju.domain.review.repository.PlannerReviewCategoryRepository;
 import com.gudgo.jeju.domain.review.repository.PlannerReviewImageRepository;
@@ -19,25 +19,17 @@ import com.gudgo.jeju.domain.review.repository.PlannerReviewRepository;
 import com.gudgo.jeju.domain.review.repository.PlannerReviewTagRepository;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
-import com.gudgo.jeju.global.data.review.dto.ReviewDataResponseDto;
-import com.gudgo.jeju.global.data.review.entity.Review;
-import com.gudgo.jeju.global.data.review.repository.ReviewRepository;
-import com.gudgo.jeju.global.data.review.repository.ReviewTagRepository;
-import com.gudgo.jeju.global.util.image.entity.Category;
-import com.gudgo.jeju.global.util.image.service.ImageUpdateService;
+import com.gudgo.jeju.global.util.ValidationUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -49,9 +41,13 @@ public class ReviewService {
     private final PlannerReviewCategoryRepository plannerReviewCategoryRepository;
     private final PlannerReviewTagRepository plannerReviewTagRepository;
     private final UserRepository userRepository;
+    private final PlannerReviewImageRepository plannerReviewImageRepository;
 
     private final ReviewImageService reviewImageService;
     private final ReviewImageQueryService reviewImageQueryService;
+    private final ReviewCategoryQueryService reviewCategoryQueryService;
+
+    private final ValidationUtil validationUtil;
     @Transactional
     public ReviewPostResponseDto create(Long plannerId, Long userId, ReviewRequestDto requestDto, MultipartFile[] images) throws Exception {
 
@@ -74,44 +70,10 @@ public class ReviewService {
 
         reviewImageService.uploadImages(userId, plannerReview.getId(), images);
 
-        List<ReviewCategoryResponseDto> categoryResponses = new ArrayList<>();
-        for (ReviewCategoryRequestDto categoryRequest : requestDto.categoriesAndTags()) {
-            PlannerReviewCategory plannerReviewCategory = PlannerReviewCategory.builder()
-                    .plannerReview(plannerReview)
-                    .code(categoryRequest.code())
-//                    .title(categoryRequest.title())
-                    .build();
-            plannerReviewCategoryRepository.save(plannerReviewCategory);
+        // 카테고리 태그 저장, responseDto 생성
+        List<ReviewCategoryResponseDto> categoryResponses = saveCategoriesAndTags(plannerReview, requestDto.categories());
 
-            List<ReviewTagResponseDto> tagResponses = categoryRequest.tags().stream()
-                    .map(tagResponse -> {
-                        PlannerReviewTag plannerReviewTag = PlannerReviewTag.builder()
-                                .plannerReviewCategory(plannerReviewCategory)
-                                .code(tagResponse.code())
-//                                .title(tagResponse.title())
-                                .isDeleted(false)
-                                .build();
-                        plannerReviewTagRepository.save(plannerReviewTag);
-
-                        return new ReviewTagResponseDto(
-                                plannerReviewTag.getId(),
-                                plannerReviewCategory.getId(),
-                                tagResponse.code()
-//                                tagResponse.title()
-                        );
-                    })
-                    .collect(Collectors.toList());
-
-            categoryResponses.add(new ReviewCategoryResponseDto(
-                    plannerReviewCategory.getId(),
-                    plannerReview.getId(),
-                    plannerReviewCategory.getCode(),
-//                    plannerReviewCategory.getTitle(),
-                    tagResponses
-            ));
-        }
-
-        ReviewPostResponseDto responseDto = new ReviewPostResponseDto(
+        return new ReviewPostResponseDto(
                 plannerReview.getId(),
                 plannerReview.getPlanner().getId(),
                 plannerReview.getContent(),
@@ -120,10 +82,7 @@ public class ReviewService {
                 categoryResponses
         );
 
-        return responseDto;
-
     }
-
 
     @Transactional
     public void delete(Long reviewId) {
@@ -133,5 +92,123 @@ public class ReviewService {
         plannerReview = plannerReview.withIsDeleted(true);
 
         plannerReviewRepository.save(plannerReview);
+    }
+
+    @Transactional
+    public ReviewPostResponseDto update(Long reviewId, ReviewUpdateRequestDto requestDto, MultipartFile[] images) throws Exception {
+        PlannerReview review = plannerReviewRepository.findById(reviewId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        // 내용 수정
+        review = review.withContent(requestDto.content());
+        plannerReviewRepository.save(review);
+
+        // 이미지 수정
+        updateReviewImages(review, images);
+
+        // 태그 수정
+        updateReviewTags(review, requestDto);
+
+        return new ReviewPostResponseDto(
+                reviewId,
+                review.getPlanner().getId(),
+                requestDto.content(),
+                review.getCreatedAt(),
+                reviewImageQueryService.getReviewImages(reviewId),
+                reviewCategoryQueryService.getReviewCategories(reviewId));
+    }
+
+    private List<ReviewCategoryResponseDto> saveCategoriesAndTags(PlannerReview plannerReview, List<ReviewCategoryRequestDto> categoryRequests) {
+        return categoryRequests.stream()
+                .map(categoryRequest -> {
+                    // 카테고리 저장
+                    PlannerReviewCategory plannerReviewCategory = saveCategory(plannerReview, categoryRequest);
+
+                    // 태그 저장, responseDTO 생성
+                    List<ReviewTagResponseDto> tagResponses = categoryRequest.tags().stream()
+                            .map((ReviewTagRequestDto tagRequest) -> saveTag(plannerReviewCategory, tagRequest))
+                            .collect(Collectors.toList());
+
+                    // 카테고리 responseDTO 생성
+                    return new ReviewCategoryResponseDto(
+                            plannerReviewCategory.getId(),
+                            plannerReview.getId(),
+                            plannerReviewCategory.getCode(),
+                            tagResponses
+                    );
+                }).collect(Collectors.toList());
+    }
+
+    // 태그 저장 메서드
+    private ReviewTagResponseDto saveTag(PlannerReviewCategory plannerReviewCategory, ReviewTagRequestDto tagRequest) {
+        PlannerReviewTag plannerReviewTag = PlannerReviewTag.builder()
+                .plannerReviewCategory(plannerReviewCategory)
+                .code(tagRequest.code())
+                .isDeleted(false)
+                .build();
+
+        // 태그 저장
+        PlannerReviewTag savedTag = plannerReviewTagRepository.save(plannerReviewTag);
+
+        // 태그 responseDTO 생성&반환
+        return new ReviewTagResponseDto(
+                savedTag.getId(),
+                plannerReviewCategory.getId(),
+                savedTag.getCode()
+        );
+    }
+
+    // 카테고리 저장 메서드
+    private PlannerReviewCategory saveCategory(PlannerReview plannerReview, ReviewCategoryRequestDto categoryRequest) {
+        PlannerReviewCategory plannerReviewCategory = PlannerReviewCategory.builder()
+                .plannerReview(plannerReview)
+                .code(categoryRequest.code())
+                .build();
+        return plannerReviewCategoryRepository.save(plannerReviewCategory);
+    }
+
+
+    private void updateReviewImages(PlannerReview review, MultipartFile[] images) throws Exception {
+
+        // 기존 이미지들 isdeleted=true 처리
+        List<PlannerReviewImage> preImages = plannerReviewImageRepository.findByPlannerReviewId(review.getId());
+        for (PlannerReviewImage preImage : preImages) {
+            preImage = preImage.withIsDeleted(true);
+            plannerReviewImageRepository.save(preImage);
+        }
+
+        // 새로운 이미지 저장
+        reviewImageService.uploadImages(review.getUser().getId(), review.getId(), images);
+    }
+
+    private void updateReviewTags(PlannerReview review, ReviewUpdateRequestDto requestDto) {
+        // 기존 태그들 isdeleted=true 처리
+        List<PlannerReviewCategory> categories = plannerReviewCategoryRepository.findByPlannerReviewId(review.getId());
+        categories.forEach(category -> {
+            List<PlannerReviewTag> preTags = plannerReviewTagRepository.findByCategoryId(category.getId());
+            preTags.forEach(tag -> {
+                tag.withIsDeleted(true);
+                plannerReviewTagRepository.save(tag);
+            });
+        });
+
+        // 새로운 태그 저장
+        List<ReviewCategoryRequestDto> categoryRequests = requestDto.categories();
+        categoryRequests.forEach( category -> {
+            PlannerReviewCategory reviewCategory = PlannerReviewCategory.builder()
+                    .code(category.code())
+                    .plannerReview(review)
+                    .build();
+
+            List<ReviewTagRequestDto> tagRequests = category.tags();
+            tagRequests.forEach(tag -> {
+                PlannerReviewTag reviewTag = PlannerReviewTag.builder()
+                        .code(tag.code())
+                        .isDeleted(false)
+                        .plannerReviewCategory(reviewCategory)
+                        .build();
+                plannerReviewTagRepository.save(reviewTag);
+            });
+        });
     }
 }
