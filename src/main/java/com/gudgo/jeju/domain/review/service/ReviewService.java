@@ -17,6 +17,8 @@ import com.gudgo.jeju.domain.review.repository.PlannerReviewCategoryRepository;
 import com.gudgo.jeju.domain.review.repository.PlannerReviewImageRepository;
 import com.gudgo.jeju.domain.review.repository.PlannerReviewRepository;
 import com.gudgo.jeju.domain.review.repository.PlannerReviewTagRepository;
+import com.gudgo.jeju.domain.user.entity.User;
+import com.gudgo.jeju.domain.user.repository.UserRepository;
 import com.gudgo.jeju.global.data.review.dto.ReviewDataResponseDto;
 import com.gudgo.jeju.global.data.review.entity.Review;
 import com.gudgo.jeju.global.data.review.repository.ReviewRepository;
@@ -32,6 +34,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,9 +48,9 @@ public class ReviewService {
     private final PlannerRepository plannerRepository;
     private final PlannerReviewCategoryRepository plannerReviewCategoryRepository;
     private final PlannerReviewTagRepository plannerReviewTagRepository;
+    private final UserRepository userRepository;
 
     private final ReviewImageService reviewImageService;
-
     private final ReviewImageQueryService reviewImageQueryService;
     @Transactional
     public ReviewPostResponseDto create(Long plannerId, Long userId, ReviewRequestDto requestDto, MultipartFile[] images) throws Exception {
@@ -56,9 +59,15 @@ public class ReviewService {
         Planner planner = plannerRepository.findById(plannerId)
                 .orElseThrow(EntityNotFoundException::new);
 
+        User user = userRepository.findById(userId)
+                .orElseThrow(EntityNotFoundException::new);
+
         PlannerReview plannerReview = PlannerReview.builder()
                 .planner(planner)
+                .user(user)
                 .content(requestDto.content())
+                .createdAt(LocalDate.now())
+                .isDeleted(false)
                 .build();
 
         plannerReviewRepository.save(plannerReview);
@@ -86,8 +95,8 @@ public class ReviewService {
                         return new ReviewTagResponseDto(
                                 plannerReviewTag.getId(),
                                 plannerReviewCategory.getId(),
-                                tagResponse.code(),
-                                tagResponse.title()
+                                tagResponse.code()
+//                                tagResponse.title()
                         );
                     })
                     .collect(Collectors.toList());
@@ -105,6 +114,7 @@ public class ReviewService {
                 plannerReview.getId(),
                 plannerReview.getPlanner().getId(),
                 plannerReview.getContent(),
+                plannerReview.getCreatedAt(),
                 reviewImageQueryService.getReviewImages(plannerReview.getId()),
                 categoryResponses
         );
