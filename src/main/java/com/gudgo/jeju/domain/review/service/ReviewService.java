@@ -70,7 +70,7 @@ public class ReviewService {
             PlannerReviewCategory plannerReviewCategory = PlannerReviewCategory.builder()
                     .plannerReview(plannerReview)
                     .code(categoryRequest.code())
-                    .title(categoryRequest.title())
+//                    .title(categoryRequest.title())
                     .build();
             plannerReviewCategoryRepository.save(plannerReviewCategory);
 
@@ -79,7 +79,7 @@ public class ReviewService {
                         PlannerReviewTag plannerReviewTag = PlannerReviewTag.builder()
                                 .plannerReviewCategory(plannerReviewCategory)
                                 .code(tagResponse.code())
-                                .title(tagResponse.title())
+//                                .title(tagResponse.title())
                                 .build();
                         plannerReviewTagRepository.save(plannerReviewTag);
 
@@ -96,7 +96,7 @@ public class ReviewService {
                     plannerReviewCategory.getId(),
                     plannerReview.getId(),
                     plannerReviewCategory.getCode(),
-                    plannerReviewCategory.getTitle(),
+//                    plannerReviewCategory.getTitle(),
                     tagResponses
             ));
         }

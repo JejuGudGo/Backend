@@ -6,7 +6,7 @@ public record ReviewCategoryResponseDto(
         Long id,
         Long plannerReviewId,
         String code,
-        String title,
+//        String title,
         List<ReviewTagResponseDto> plannerReviewTags
 ) {
 }

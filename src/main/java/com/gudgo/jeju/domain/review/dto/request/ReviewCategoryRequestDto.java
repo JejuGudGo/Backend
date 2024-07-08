@@ -5,7 +5,7 @@ import java.util.List;
 
 public record ReviewCategoryRequestDto(
         String code,
-        String title,
+//        String title,
         List<ReviewTagRequestDto> tags
 
 ) {
