@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -96,8 +97,18 @@ public class ReviewService {
 
     @Transactional
     public ReviewPostResponseDto update(Long reviewId, ReviewUpdateRequestDto requestDto, MultipartFile[] images) throws Exception {
+
+
         PlannerReview review = plannerReviewRepository.findById(reviewId)
                 .orElseThrow(EntityNotFoundException::new);
+
+        LocalDate currentDate = LocalDate.now();    // 현재 날짜
+        LocalDate createdAt = review.getCreatedAt();
+        long daysBetween = ChronoUnit.DAYS.between(createdAt, currentDate);
+
+        if (daysBetween > 7) {
+            throw new RuntimeException("수정할 수 있는 기간이 지났습니다. 7일 이내에만 수정이 가능합니다.");
+        }
 
         // 내용 수정
         review = review.withContent(requestDto.content());
