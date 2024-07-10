@@ -63,7 +63,7 @@ public class UserReviewControllerTest {
 
     @DisplayName("리뷰 - 특정 플래너 리뷰 생성")
     @RepeatedTest(10)
-    @Disabled
+//    @Disabled
     void create() throws Exception {
         String accessToken = "Bearer " + tokenGenerator.generateToken(TokenType.ACCESS, "1");
 
@@ -98,7 +98,7 @@ public class UserReviewControllerTest {
         reviewTagRequestDtoList.add(reviewTagRequestDto6);
 
         ReviewCategoryRequestDto reviewCategoryRequestDto3 = new ReviewCategoryRequestDto(
-                "R02", reviewTagRequestDtoList
+                "R03", reviewTagRequestDtoList
         );
         reviewCategories.add(reviewCategoryRequestDto3);
         reviewTagRequestDtoList.clear();
