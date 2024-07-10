@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface PlannerReviewTagRepository extends JpaRepository<PlannerReviewTag, Long> {
 
-    List<PlannerReviewTag> findByCategoryId(Long categoryId);
+    List<PlannerReviewTag> findByPlannerReviewCategoryId(Long categoryId);
 }

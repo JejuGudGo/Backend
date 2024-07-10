@@ -19,7 +19,6 @@ import com.gudgo.jeju.domain.review.repository.PlannerReviewRepository;
 import com.gudgo.jeju.domain.review.repository.PlannerReviewTagRepository;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
-import com.gudgo.jeju.global.util.ValidationUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +47,6 @@ public class ReviewService {
     private final ReviewImageQueryService reviewImageQueryService;
     private final ReviewCategoryQueryService reviewCategoryQueryService;
 
-    private final ValidationUtil validationUtil;
     @Transactional
     public ReviewPostResponseDto create(Long plannerId, Long userId, ReviewRequestDto requestDto, MultipartFile[] images) throws Exception {
 
@@ -196,7 +194,7 @@ public class ReviewService {
         // 기존 태그들 isdeleted=true 처리
         List<PlannerReviewCategory> categories = plannerReviewCategoryRepository.findByPlannerReviewId(review.getId());
         categories.forEach(category -> {
-            List<PlannerReviewTag> preTags = plannerReviewTagRepository.findByCategoryId(category.getId());
+            List<PlannerReviewTag> preTags = plannerReviewTagRepository.findByPlannerReviewCategoryId(category.getId());
             preTags.forEach(tag -> {
                 tag.withIsDeleted(true);
                 plannerReviewTagRepository.save(tag);
@@ -221,5 +219,22 @@ public class ReviewService {
                 plannerReviewTagRepository.save(reviewTag);
             });
         });
+    }
+
+    // 태그가 얼마 안되서, 이곳에서 순회하겠습니다.
+    public List<?> getCategoryAndTags() {
+        List<PlannerReviewCategoryResponse> responses = new ArrayList<>();
+        List<PlannerReviewCategory> categories = plannerReviewCategoryRepository.findAll();
+
+        for (PlannerReviewCategory category : categories) {
+            List<PlannerReviewTag> tags = plannerReviewTagRepository.findByPlannerReviewCategoryId(category.getId());
+            PlannerReviewCategoryResponse response = new PlannerReviewCategoryResponse(
+                    category.getCode(),
+                    tags
+            );
+            responses.add(response);
+        }
+
+        return responses;
     }
 }

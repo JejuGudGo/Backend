@@ -23,7 +23,7 @@ public class PlannerReviewTag {
     private boolean isDeleted;
 
     @ManyToOne
-    @JoinColumn(name = "reviewId")
+    @JoinColumn(name = "plannerReviewCategoryId")
     private PlannerReviewCategory plannerReviewCategory;
 
     public PlannerReviewTag withIsDeleted(boolean isDeleted) {

@@ -1,9 +1,5 @@
 package com.gudgo.jeju.global.data.review.service;
 
-import com.gudgo.jeju.domain.review.entity.PlannerReviewCategory;
-import com.gudgo.jeju.domain.review.entity.PlannerReviewTag;
-import com.gudgo.jeju.domain.review.repository.PlannerReviewCategoryRepository;
-import com.gudgo.jeju.domain.review.repository.PlannerReviewTagRepository;
 import com.gudgo.jeju.global.data.common.entity.DataConfiguration;
 import com.gudgo.jeju.global.data.review.entity.Review;
 import com.gudgo.jeju.global.data.review.entity.ReviewTag;
