@@ -6,7 +6,7 @@ import com.gudgo.jeju.domain.review.dto.response.ReviewImageResponseDto;
 import com.gudgo.jeju.domain.review.dto.response.ReviewResponseDto;
 import com.gudgo.jeju.domain.review.query.ReviewImageQueryService;
 import com.gudgo.jeju.domain.review.query.ReviewQueryService;
-import com.gudgo.jeju.domain.review.service.ReviewService;
+import com.gudgo.jeju.domain.review.service.UserReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,7 +22,7 @@ import java.util.List;
 public class PlannerReviewController {
     private final ReviewQueryService reviewQueryService;
     private final ReviewImageQueryService reviewImageQueryService;
-    private final ReviewService reviewService;
+    private final UserReviewService userReviewService;
 
     // GET - 리뷰 목록
     @GetMapping(value = "/{plannerId}/reviews")
@@ -61,6 +61,6 @@ public class PlannerReviewController {
     // GET - 리뷰 카테고리 / 태그 반환
     @GetMapping(value = "/reviews/tags")
     public List<?> getReviewTags() {
-        return reviewService.getCategoryAndTags();
+        return userReviewService.getCategoryAndTags();
     }
 }

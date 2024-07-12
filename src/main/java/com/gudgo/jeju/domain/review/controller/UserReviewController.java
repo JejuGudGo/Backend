@@ -5,7 +5,7 @@ import com.gudgo.jeju.domain.review.dto.request.ReviewUpdateRequestDto;
 import com.gudgo.jeju.domain.review.dto.response.ReviewPostResponseDto;
 import com.gudgo.jeju.domain.review.dto.response.ReviewResponseDto;
 import com.gudgo.jeju.domain.review.query.ReviewQueryService;
-import com.gudgo.jeju.domain.review.service.ReviewService;
+import com.gudgo.jeju.domain.review.service.UserReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 public class UserReviewController {
     private final ReviewQueryService reviewQueryService;
-    private final ReviewService reviewService;
+    private final UserReviewService userReviewService;
 
     // GET - 특정 유저 리뷰 목록 조회
     @GetMapping(value = "/{userId}/reviews")
@@ -38,7 +38,7 @@ public class UserReviewController {
             @RequestPart("request") ReviewRequestDto requestDto,
             @RequestPart("image") MultipartFile[] images) throws Exception {
 
-        ReviewPostResponseDto response = reviewService.create(plannerId, userId, requestDto, images);
+        ReviewPostResponseDto response = userReviewService.create(plannerId, userId, requestDto, images);
         return ResponseEntity.ok(response);
 
     }
@@ -49,7 +49,7 @@ public class UserReviewController {
             @PathVariable("reviewId") Long reviewId,
             @RequestPart("request") ReviewUpdateRequestDto requestDto,
             @RequestPart("image") MultipartFile[] images) throws Exception {
-        ReviewPostResponseDto response = reviewService.update(reviewId, requestDto, images);
+        ReviewPostResponseDto response = userReviewService.update(reviewId, requestDto, images);
         return ResponseEntity.ok(response);
 
     }
@@ -57,7 +57,7 @@ public class UserReviewController {
     // DELETE - 리뷰 삭제
     @DeleteMapping(value = "/{userId}/reviews/{reviewId}")
     public ResponseEntity<?> delete(@PathVariable("reviewId") Long reviewId) {
-        reviewService.delete(reviewId);
+        userReviewService.delete(reviewId);
         return ResponseEntity.ok().build();
     }
 }

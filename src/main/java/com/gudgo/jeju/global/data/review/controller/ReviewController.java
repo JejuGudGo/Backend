@@ -1,7 +1,7 @@
 package com.gudgo.jeju.global.data.review.controller;
 
-import com.gudgo.jeju.domain.review.dto.response.ReviewCategoryResponse;
-import com.gudgo.jeju.global.data.review.service.ReviewFindService;
+import com.gudgo.jeju.global.data.review.dto.ReviewCategoryResponse;
+import com.gudgo.jeju.global.data.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,11 +14,11 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/reviews")
 public class ReviewController {
-    private final ReviewFindService reviewFindService;
+    private final ReviewService reviewService;
 
     @GetMapping("/categories/tags")
     public ResponseEntity<List<ReviewCategoryResponse>> getCategoriesTags() {
-        List<ReviewCategoryResponse> responses = reviewFindService.getCategoryAndTags();
+        List<ReviewCategoryResponse> responses = reviewService.getCategoryAndTags();
 
         return ResponseEntity.ok(responses);
     }

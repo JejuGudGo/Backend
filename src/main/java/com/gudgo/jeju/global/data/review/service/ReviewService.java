@@ -1,7 +1,8 @@
 package com.gudgo.jeju.global.data.review.service;
 
-import com.gudgo.jeju.domain.review.dto.response.ReviewCategoryResponse;
-import com.gudgo.jeju.domain.review.dto.response.ReviewTagResponse;
+
+import com.gudgo.jeju.global.data.review.dto.ReviewCategoryResponse;
+import com.gudgo.jeju.global.data.review.dto.ReviewTagResponse;
 import com.gudgo.jeju.global.data.review.entity.Review;
 import com.gudgo.jeju.global.data.review.entity.ReviewTag;
 import com.gudgo.jeju.global.data.review.repository.ReviewRepository;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ReviewFindService {
+public class ReviewService {
     private final ReviewTagRepository reviewTagRepository;
     private final ReviewRepository reviewRepository;
 
