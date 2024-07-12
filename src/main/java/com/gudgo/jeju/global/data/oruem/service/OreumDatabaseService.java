@@ -76,11 +76,12 @@ public class OreumDatabaseService {
                 checkDataConfig = checkDataConfig.withConfigValue(true);
                 dataConfigurationRepository.save(checkDataConfig);
 
-            } else {
-                log.info("===============================================================================");
-                log.info("Jeju Oreum is already loaded");
-                log.info("===============================================================================");
             }
+        }
+        else {
+            log.info("===============================================================================");
+            log.info("Jeju Oreum is already loaded");
+            log.info("===============================================================================");
         }
     }
 

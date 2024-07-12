@@ -47,5 +47,5 @@ In this file, the following services have been defined:
 * mysql: [`mysql:latest`](https://hub.docker.com/_/mysql)
 * redis: [`redis:latest`](https://hub.docker.com/_/redis)
 
-Please review the tags of the used images and set them to the same as you're running in production.
+Please plannerReviewCategory the tags of the used images and set them to the same as you're running in production.
 

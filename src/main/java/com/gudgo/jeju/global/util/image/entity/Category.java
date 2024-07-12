@@ -4,5 +4,6 @@ public enum Category {
     PROFILE,
     COLUMN,
     USERCOURSE,
-    CHAT
+    CHAT,
+    REVIEW
 }
