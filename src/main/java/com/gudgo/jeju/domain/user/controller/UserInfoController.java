@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping(value = "/api/v1/auth")
+@RequestMapping(value = "/api/v1")
 @RequiredArgsConstructor
 @Slf4j
 @RestController
