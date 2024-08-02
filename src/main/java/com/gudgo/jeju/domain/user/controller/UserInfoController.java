@@ -2,6 +2,7 @@ package com.gudgo.jeju.domain.user.controller;
 
 
 import com.gudgo.jeju.domain.user.dto.UserInfoResponseDto;
+import com.gudgo.jeju.domain.user.dto.UserInfoUpdateRequestDto;
 import com.gudgo.jeju.domain.user.service.UserInfoService;
 import com.gudgo.jeju.global.jwt.token.SubjectExtractor;
 import com.gudgo.jeju.global.jwt.token.TokenExtractor;
@@ -43,4 +44,13 @@ public class UserInfoController {
 
         return ResponseEntity.ok().build();
     }
+
+    @PatchMapping(value = "/user/{userId}")
+    public ResponseEntity<UserInfoResponseDto> updateUserInfo(
+            @PathVariable("userId") Long userId,
+            @RequestBody UserInfoUpdateRequestDto requestDto) {
+        userInfoService.update(userId, requestDto);
+        return ResponseEntity.ok().build();
+    }
+
 }

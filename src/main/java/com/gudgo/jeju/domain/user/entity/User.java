@@ -54,19 +54,29 @@ public class User {
 
 
     public User withRole(Role role) {
+        return this.toBuilder().role(role).build();
+    }
+
+    public User withPassword(String password) {
+        return this.toBuilder().password(password).build();
+    }
+
+    public User withNickname(String nickname) {
+        return this.toBuilder().nickname(nickname).build();
+    }
+
+    private User.UserBuilder toBuilder() {
         return User.builder()
-                .id(this.id)
-                .email(this.email)
-                .password(this.password)
-                .nickname(this.nickname)
-                .numberTag(this.numberTag)
+                .id(id)
+                .email(email)
+                .password(password)
+                .nickname(nickname)
+                .numberTag(numberTag)
                 .role(role)
-                .provider(this.provider)
-                .createdAt(this.createdAt)
-                .isDeleted(this.isDeleted)
-                .phoneNumber(this.phoneNumber)
-                .profile(this.profile)
-                .build();
+                .provider(provider)
+                .createdAt(createdAt)
+                .isDeleted(isDeleted)
+                .phoneNumber(phoneNumber)
+                .profile(profile);
     }
 }
-

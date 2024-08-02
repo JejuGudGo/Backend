@@ -21,4 +21,10 @@ public class RandomNumberUtil {
         }
         return randomNumber;
     }
+
+    public Long setRandomCode() {
+        Random random = new Random();
+        long randomNumber = random.nextLong(900000) + 100000;
+        return randomNumber;
+    }
 }

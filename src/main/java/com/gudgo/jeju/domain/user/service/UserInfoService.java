@@ -2,6 +2,7 @@ package com.gudgo.jeju.domain.user.service;
 
 
 import com.gudgo.jeju.domain.user.dto.UserInfoResponseDto;
+import com.gudgo.jeju.domain.user.dto.UserInfoUpdateRequestDto;
 import com.gudgo.jeju.domain.user.entity.Role;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
@@ -9,7 +10,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
 @Slf4j
@@ -40,4 +40,21 @@ public class UserInfoService {
         User updatedUser = user.withRole(Role.AUTHOR);
         userRepository.save(updatedUser);
     }
+
+    public void update(Long userId, UserInfoUpdateRequestDto requestDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        if (requestDto.password() != null) {
+            user.withPassword(requestDto.password());
+        }
+
+        if (requestDto.nickname() != null) {
+            user.withNickname(requestDto.nickname());
+        }
+
+        userRepository.save(user);;
+
+    }
+
 }

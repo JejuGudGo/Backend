@@ -1,16 +1,20 @@
 package com.gudgo.jeju.global.auth.basic.controller;
 
 
-import com.gudgo.jeju.global.auth.basic.dto.request.LoginRequest;
-import com.gudgo.jeju.global.auth.basic.dto.request.SignupRequest;
+import com.gudgo.jeju.global.auth.basic.dto.request.*;
+import com.gudgo.jeju.global.auth.basic.dto.response.FindAuthResponseDto;
+import com.gudgo.jeju.global.auth.basic.service.FindAuthService;
 import com.gudgo.jeju.global.auth.basic.service.LoginService;
 import com.gudgo.jeju.global.auth.basic.service.SignupService;
 import com.gudgo.jeju.global.util.CookieUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RequiredArgsConstructor
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final SignupService signupService;
     private final LoginService loginService;
+    private final FindAuthService findAuthService;
     private final CookieUtil cookieUtil;
 
     /* 회원가입 */
@@ -43,5 +48,25 @@ public class AuthController {
         cookieUtil.deleteCookie("refreshToken", response);
         return ResponseEntity.ok().build();
     }
+
+    /* 이메일 인증번호 확인*/
+    @PostMapping(value = "/authentication/check")
+    public ResponseEntity<?> checkAuthenticationcode(@RequestBody AuthenticationRequest request) {
+        findAuthService.validateAuthCode(request.email(), request.authCode());
+        return ResponseEntity.ok().build();
+    }
+
+    /* ID 중복 확인 */
+    @PostMapping(value = "/check/id")
+    public ResponseEntity<?> checkIdDuplicate(@RequestBody EmailRequestDto requestDto) {
+        return signupService.isIdDuplicate(requestDto);
+    }
+
+    /* 아이디 찾기 */
+    @PostMapping(value = "/find/id")
+    public ResponseEntity<List<FindAuthResponseDto>> getId(@RequestBody FindAuthByPhoneRequestDto requestDto) {
+        return findAuthService.getId(requestDto);
+    }
+
 
 }
