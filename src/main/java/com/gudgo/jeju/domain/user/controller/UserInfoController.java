@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping(value = "/api/v1")
+@RequestMapping(value = "/api/v1/auth")
 @RequiredArgsConstructor
 @Slf4j
 @RestController
@@ -45,13 +45,4 @@ public class UserInfoController {
 
         return ResponseEntity.ok().build();
     }
-
-    @PatchMapping(value = "/user/{id}")
-    public ResponseEntity<UserInfoResponseDto> updateUserInfo(
-            @PathVariable("id") Long userId,
-            @RequestBody UserInfoUpdateRequestDto requestDto) {
-        userInfoService.update(userId, requestDto);
-        return ResponseEntity.ok().build();
-    }
-
 }
