@@ -7,6 +7,7 @@ import com.gudgo.jeju.domain.user.entity.Role;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,7 @@ public class UserInfoService {
         userRepository.save(updatedUser);
     }
 
+    @Transactional
     public void update(Long userId, UserInfoUpdateRequestDto requestDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(EntityNotFoundException::new);

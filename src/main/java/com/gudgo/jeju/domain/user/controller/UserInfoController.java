@@ -7,6 +7,7 @@ import com.gudgo.jeju.domain.user.service.UserInfoService;
 import com.gudgo.jeju.global.jwt.token.SubjectExtractor;
 import com.gudgo.jeju.global.jwt.token.TokenExtractor;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -45,9 +46,9 @@ public class UserInfoController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping(value = "/user/{userId}")
+    @PatchMapping(value = "/user/{id}")
     public ResponseEntity<UserInfoResponseDto> updateUserInfo(
-            @PathVariable("userId") Long userId,
+            @PathVariable("id") Long userId,
             @RequestBody UserInfoUpdateRequestDto requestDto) {
         userInfoService.update(userId, requestDto);
         return ResponseEntity.ok().build();
