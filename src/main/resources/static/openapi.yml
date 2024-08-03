@@ -1,4 +1,4 @@
-openapi: "3.1.0"
+openapi: 3.0.0
 info:
   title: "jeju API"
   description: "jeju API"
@@ -190,7 +190,7 @@ paths:
       tags:
         - Post - column
       summary: "DELETE api/v1/posts/columns/{postId}"
-      operationId: "deleteCoursePost"
+      operationId: "deleteColumnPost"
       parameters:
         - name: "postId"
           in: "path"
@@ -791,7 +791,7 @@ paths:
       tags:
         - Planner
       summary: "POST api/v1/users/{userId}/planners"
-      operationId: "create"
+      operationId: "createPlanner"
       parameters:
         - name: "userId"
           in: "path"
@@ -873,7 +873,7 @@ paths:
       tags:
         - Planner
       summary: "DELETE api/v1/users/{userId}/planners/{plannerId}"
-      operationId: "delete"
+      operationId: "deletePlanner"
       parameters:
         - name: "userId"
           in: "path"
@@ -958,7 +958,7 @@ paths:
       tags:
         - Media
       summary: "POST api/v1/users/{userId}/planners/{plannerId}/course/medias"
-      operationId: "create"
+      operationId: "createMedias"
       parameters:
         - name: "userId"
           in: "path"
@@ -1074,7 +1074,7 @@ paths:
       tags:
         - Media
       summary: "DELETE api/v1/users/{userId}/planners/{plannerId}/course/medias/{mediaId}"
-      operationId: "delete"
+      operationId: "deleteMedias"
       parameters:
         - name: "userId"
           in: "path"
@@ -1561,7 +1561,7 @@ paths:
       tags:
         - Chatting
       summary: "POST api/v1/users/{userId}/chatRooms/{chatRoomId}/notices"
-      operationId: "create"
+      operationId: "createNotices"
       parameters:
         - name: "userId"
           in: "path"
@@ -1656,7 +1656,7 @@ paths:
       tags:
         - Chatting
       summary: "DELETE api/v1/users/{userId}/chatRooms/{chatRoomId}/notices/{noticeId}"
-      operationId: "update"
+      operationId: "deleteNotices"
       parameters:
         - name: "userId"
           in: "path"
@@ -1676,6 +1676,85 @@ paths:
           schema:
             type: "integer"
             format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/auth/check/id:
+    post:
+      tags:
+        - User
+      summary: "POST api/v1/auth/check/id"
+      operationId: "checkIdDuplicate"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmailRequestDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/auth/find/id:
+    post:
+      tags:
+        - User
+      summary: "POST api/v1/auth/find/id"
+      operationId: "getId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FindAuthByPhoneRequestDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/FindAuthResponseDto"
+
+  /api/v1/auth/authentication/check:
+    post:
+      tags:
+        - Authentication
+      summary: "POST api/v1/auth/authentication/check"
+      operationId: "checkAuthenticationcode"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthenticationRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/auth/authentication/send:
+    post:
+      tags:
+        - Authentication
+      summary: "POST api/v1/auth/authentication/send"
+      operationId: "sendAuthenticationEmail"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmailRequestDto"
+        required: true
       responses:
         "200":
           description: "OK"
@@ -2349,3 +2428,35 @@ components:
           format: "double"
         content:
           type: "string"
+    AuthenticationRequest:
+      type: "object"
+      properties:
+        email:
+          type: "string"
+        authCode:
+          type: "string"
+    EmailRequestDto:
+      type: "object"
+      properties:
+        email:
+          type: "string"
+    FindAuthByPhoneRequestDto:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        phoneNumber:
+          type: "string"
+    FindAuthResponseDto:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        email:
+          type: "string"
+        name:
+          type: "string"
+        createdAt:
+          type: "string"
+          format: "date-time"
