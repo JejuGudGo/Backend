@@ -81,7 +81,7 @@ tasks.withType(Test) {
 sourceSets {
     main {
         java {
-            srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
+            srcDirs = ["$projectDir/src/main/java"]
         }
     }
 }
@@ -91,3 +91,12 @@ clean {
     delete file('src/main/generated')
 }
 
+tasks.withType(JavaCompile) {
+    options.annotationProcessorGeneratedSourcesDirectory = file('src/main/generated')
+}
+
+tasks.named('compileJava') {
+    doLast {
+        file('src/main/generated').mkdirs()
+    }
+}
