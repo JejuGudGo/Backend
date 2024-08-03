@@ -63,7 +63,7 @@ public class AuthController {
     }
 
     /* 아이디 찾기 */
-    @PostMapping(value = "/find/id")
+    @GetMapping(value = "/find/id")
     public ResponseEntity<List<FindAuthResponseDto>> getId(@RequestBody FindAuthByPhoneRequestDto requestDto) {
         return findAuthService.getId(requestDto);
     }
