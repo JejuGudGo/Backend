@@ -24,6 +24,8 @@ public class FindAuthService {
     public ResponseEntity<List<FindAuthResponseDto>> getId(FindAuthByPhoneRequestDto requestDto) {
         List<User> users = userRepository.findByPhoneNumberAndName(requestDto.phoneNumber() , requestDto.name());
 
+        users.removeIf(user -> !user.getProvider().equals("basic")); // 소셜로그인 이메일 방지
+
         List<FindAuthResponseDto> responses = users.stream()
                 .map(user -> new FindAuthResponseDto(
                         user.getId(),
@@ -37,6 +39,7 @@ public class FindAuthService {
 
 
     }
+
     public void validateAuthCode(String email, String authCode) {
         String authCodeFromRedis = redisUtil.getData(email);
 

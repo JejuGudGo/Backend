@@ -57,7 +57,7 @@ public class AuthController {
     }
 
     /* ID 중복 확인 */
-    @PostMapping(value = "/check/id")
+    @GetMapping(value = "/check/id")
     public ResponseEntity<?> checkIdDuplicate(@RequestBody EmailRequestDto requestDto) {
         return signupService.isIdDuplicate(requestDto);
     }
