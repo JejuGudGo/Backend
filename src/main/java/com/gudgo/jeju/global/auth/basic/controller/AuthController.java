@@ -57,13 +57,13 @@ public class AuthController {
     }
 
     /* ID 중복 확인 */
-    @GetMapping(value = "/check/id")
+    @PostMapping(value = "/check/id")
     public ResponseEntity<?> checkIdDuplicate(@RequestBody EmailRequestDto requestDto) {
         return signupService.isIdDuplicate(requestDto);
     }
 
     /* 아이디 찾기 */
-    @GetMapping(value = "/find/id")
+    @PostMapping(value = "/find/id")
     public ResponseEntity<List<FindAuthResponseDto>> getId(@RequestBody FindAuthByPhoneRequestDto requestDto) {
         return findAuthService.getId(requestDto);
     }
