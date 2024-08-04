@@ -1207,6 +1207,32 @@ paths:
             '*/*':
               schema:
                 type: "object"
+  /api/v1/auth/user/{userId}:
+    patch:
+      summary: "PATCH api/v1/auth/user/{userId}"
+      tags:
+        - User
+      operationId: "updatePassword"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInfoUpdateRequestDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserInfoResponseDto"
   /api/v1/user/{userId}/planners/{plannerId}/course/spots/{spotId}:
     get:
       tags:
@@ -2460,3 +2486,10 @@ components:
         createdAt:
           type: "string"
           format: "date-time"
+    UserInfoUpdateRequestDto:
+      type: "object"
+      properties:
+        password:
+          type: "string"
+        nickname:
+          type: "string"
