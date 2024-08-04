@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserInfoService userInfoService;
 
-    @PatchMapping(value = "/{id}")
+    @PatchMapping(value = "/{userId}")
     public ResponseEntity<UserInfoResponseDto> updateUserInfo(
-            @PathVariable("id") Long userId,
+            @PathVariable("userId") Long userId,
             @RequestBody UserInfoUpdateRequestDto requestDto) {
         userInfoService.update(userId, requestDto);
         return ResponseEntity.ok().build();
