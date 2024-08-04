@@ -2,10 +2,12 @@ package com.gudgo.jeju.domain.user.controller;
 
 
 import com.gudgo.jeju.domain.user.dto.UserInfoResponseDto;
+import com.gudgo.jeju.domain.user.dto.UserInfoUpdateRequestDto;
 import com.gudgo.jeju.domain.user.service.UserInfoService;
 import com.gudgo.jeju.global.jwt.token.SubjectExtractor;
 import com.gudgo.jeju.global.jwt.token.TokenExtractor;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

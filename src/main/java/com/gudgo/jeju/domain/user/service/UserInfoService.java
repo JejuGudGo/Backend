@@ -2,14 +2,16 @@ package com.gudgo.jeju.domain.user.service;
 
 
 import com.gudgo.jeju.domain.user.dto.UserInfoResponseDto;
+import com.gudgo.jeju.domain.user.dto.UserInfoUpdateRequestDto;
 import com.gudgo.jeju.domain.user.entity.Role;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
 @Slf4j
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserInfoService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UserInfoResponseDto get(Long userId) {
         User user = userRepository.findById(userId)
@@ -39,5 +42,21 @@ public class UserInfoService {
 
         User updatedUser = user.withRole(Role.AUTHOR);
         userRepository.save(updatedUser);
+    }
+
+    @Transactional
+    public void update(Long userId, UserInfoUpdateRequestDto requestDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        if (requestDto.password() != null) {
+            user = user.withPassword(passwordEncoder.encode(requestDto.password()));
+        }
+
+        if (requestDto.nickname() != null) {
+            user = user.withNickname(requestDto.nickname());
+        }
+
+        userRepository.save(user);
     }
 }

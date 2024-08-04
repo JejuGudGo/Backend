@@ -6,13 +6,16 @@ import com.gudgo.jeju.domain.profile.repository.ProfileRepository;
 import com.gudgo.jeju.domain.user.entity.Role;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
+import com.gudgo.jeju.global.auth.basic.dto.request.EmailRequestDto;
 import com.gudgo.jeju.global.auth.basic.dto.request.SignupRequest;
 import com.gudgo.jeju.global.util.RandomNicknameUtil;
 import com.gudgo.jeju.global.util.RandomNumberUtil;
-import com.gudgo.jeju.global.util.image.service.ImageSettingService;
+import jakarta.persistence.EntityExistsException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,5 +60,11 @@ public class SignupService {
 
         userRepository.save(user);
         profileRepository.save(profile);
+    }
+
+    public ResponseEntity<?> isIdDuplicate(EmailRequestDto requestDto) {
+        boolean isDuplicate = userRepository.findByEmail(requestDto.email()).isPresent();
+        if (isDuplicate) throw new EntityExistsException("INVALID_VALUE_04"); // 중복일 경우 400 BadRequest 반환 + ErrorCode : INVALID_VALUE_04 반환
+        else return ResponseEntity.ok().build(); // 중복이 아닐 경우 200 OK 반환
     }
 }
