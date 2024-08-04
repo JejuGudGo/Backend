@@ -1,6 +1,9 @@
 package com.gudgo.jeju.global.auth.basic.controller;
 
 
+import com.gudgo.jeju.domain.user.dto.UserInfoResponseDto;
+import com.gudgo.jeju.domain.user.dto.UserInfoUpdateRequestDto;
+import com.gudgo.jeju.domain.user.service.UserInfoService;
 import com.gudgo.jeju.global.auth.basic.dto.request.*;
 import com.gudgo.jeju.global.auth.basic.dto.response.FindAuthResponseDto;
 import com.gudgo.jeju.global.auth.basic.service.FindAuthService;
@@ -25,6 +28,7 @@ public class AuthController {
     private final LoginService loginService;
     private final FindAuthService findAuthService;
     private final CookieUtil cookieUtil;
+    private final UserInfoService userInfoService;
 
     /* 회원가입 */
     @PostMapping(value = "/signup")
@@ -68,5 +72,12 @@ public class AuthController {
         return findAuthService.getId(requestDto);
     }
 
-
+    /* 비밀번호 변경 */
+    @PatchMapping(value = "/user/{userId}")
+    public ResponseEntity<UserInfoResponseDto> updateUserInfo(
+            @PathVariable("userId") Long userId,
+            @RequestBody UserInfoUpdateRequestDto requestDto) {
+        userInfoService.update(userId, requestDto);
+        return ResponseEntity.ok().build();
+    }
 }

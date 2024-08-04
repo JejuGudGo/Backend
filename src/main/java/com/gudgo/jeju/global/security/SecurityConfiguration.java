@@ -54,6 +54,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/api/v1/auth/find/id").permitAll()
                                 .requestMatchers("/api/v1/auth/authentication/send").permitAll()
                                 .requestMatchers("api/v1/auth/authentication/check").permitAll()
+                                .requestMatchers("/api/v1/auth/user/**").permitAll()
                                 .requestMatchers("/oauth/**").permitAll()
                                 .requestMatchers("/api/v1/oauth/**").permitAll()
                                 .requestMatchers("/api/v1/auth/token/**").permitAll()
