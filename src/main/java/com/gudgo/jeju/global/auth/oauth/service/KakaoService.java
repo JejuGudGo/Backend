@@ -8,7 +8,8 @@ import com.gudgo.jeju.domain.profile.repository.ProfileRepository;
 import com.gudgo.jeju.domain.user.entity.Role;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
-import com.gudgo.jeju.global.auth.oauth.dto.SocialUserInfo;
+import com.gudgo.jeju.global.auth.oauth.entity.KakaoUserInfo;
+import com.gudgo.jeju.global.auth.oauth.entity.OAuth2UserInfoFactory;
 import com.gudgo.jeju.global.jwt.token.TokenGenerator;
 import com.gudgo.jeju.global.jwt.token.TokenType;
 import com.gudgo.jeju.global.security.CustomUserDetails;
@@ -22,30 +23,27 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.UUID;
 
 
 @RequiredArgsConstructor
 @Service
 public class KakaoService {
-    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
     private final RandomNicknameUtil randomNicknameUtil;
-    private final RandomNumberUtil randomNumberUtil;
     private final TokenGenerator tokenGenerator;
     private final ProfileRepository profileRepository;
 
     private final WebClient.Builder webClientBuilder;
+    private final RandomNumberUtil randomNumberUtil;
 
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String CLIENT_ID;
@@ -62,24 +60,24 @@ public class KakaoService {
     @Value("${spring.security.oauth2.client.provider.kakao.user-info-uri}")
     private String USER_INFO_URI;
 
-    public SocialUserInfo login(String code, HttpServletResponse response) throws JsonProcessingException {
+    public KakaoUserInfo login(String code, HttpServletResponse response) throws JsonProcessingException {
 
         // 1. 인가 코드로 액세스 토큰 요청
-        String acceessToken = getAccessToken(code);
+//        String acceessToken = getAccessToken(code);
 
         // 2. 토큰으로 카카오 API 호출
-        SocialUserInfo kakaoUserInfo = getKakaoUserInfo(acceessToken);
-//        SocialUserInfo kakaoUserInfo = getKakaoUserInfo(code);
+//        KakaoUserInfo userInfo = getKakaoUserInfo(acceessToken);
+        KakaoUserInfo userInfo = getKakaoUserInfo(code);
 
         // 3. 카카오 ID로 회원가입 처리
-        User kakaoUser = registerIfNeed(kakaoUserInfo);
+        User kakaoUser = registerIfNeed(userInfo);
 
         // 4. 강제 로그인 처리
         Authentication authentication = forceLogin(kakaoUser);
 
         // 5. Response Header에 JWT 토큰 추가
         KakaoUserAuthorizationInput(kakaoUser, response);
-        return kakaoUserInfo;
+        return userInfo;
     }
 
 
@@ -104,7 +102,7 @@ public class KakaoService {
 
 
 
-    private SocialUserInfo getKakaoUserInfo(String accessToken) throws JsonProcessingException {
+    private KakaoUserInfo getKakaoUserInfo(String accessToken) throws JsonProcessingException {
 
         WebClient webClient = webClientBuilder.build();
 
@@ -116,15 +114,12 @@ public class KakaoService {
                 .bodyToMono(String.class)
                 .block(); // 동기 방식으로 결과를 기다림
 
-        // JSON 응답에서 사용자 정보를 추출
+        // JSON 응답을 Map으로 변환
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonNode = objectMapper.readTree(responseBody);
+        Map<String, Object> attributes = objectMapper.readValue(responseBody, Map.class);
 
-        String email = jsonNode.get("kakao_account").get("email").asText();
-        String nickname = jsonNode.get("properties").get("nickname").asText();
-        String profileImageUrl = jsonNode.get("properties").get("profile_image").asText();
-
-        return new SocialUserInfo(email, nickname, profileImageUrl);
+        // OAuth2UserInfoFactory를 사용하여 KakaoUserInfo 객체를 생성
+        return (KakaoUserInfo) OAuth2UserInfoFactory.getOAuthUserInfo("kakao", attributes);
     }
 
     private MultiValueMap<String, String> buildTokenRequestBody(String code) {
@@ -137,43 +132,34 @@ public class KakaoService {
         return body;
     }
 
-    private User registerIfNeed(SocialUserInfo socialUserInfo) {
-        String email = socialUserInfo.email();
-        String name = socialUserInfo.name();
-        String profileImageUrl = socialUserInfo.profileImageUrl();
-
-        User user = userRepository.findByEmailAndProvider(email, "kakao")
-                .orElse(null);
-
-        // 사용자가 존재하지 않으면 회원가입 처리
-        if (user == null) {
-            String password = UUID.randomUUID().toString();
-            String encodedPassword = passwordEncoder.encode(password);
-
-            String nickname = randomNicknameUtil.set();
-            Long numberTag = randomNumberUtil.set();
-            Profile profile = Profile.builder()
-                    .profileImageUrl(profileImageUrl)
-                    .build();
-
-            profileRepository.save(profile);
-
-            user = User.builder()
-                    .email(email)
-                    .password(encodedPassword)
-                    .nickname(nickname)
-                    .name(name)
-                    .numberTag(numberTag)
-                    .role(Role.USER)
-                    .provider("kakao")
-                    .isDeleted(false)
-                    .profile(profile)
-                    .createdAt(LocalDateTime.now())
-                    .build();
-
-            userRepository.save(user);
-        }
+    private User registerIfNeed(KakaoUserInfo kakaoUserInfo) {
+        User user = userRepository.findByEmail(kakaoUserInfo.getEmail())
+                .orElseGet(() -> createUser(kakaoUserInfo));
         return user;
+    }
+
+    private User createUser(KakaoUserInfo kakaoUserInfo) {
+
+        Profile profile = Profile.builder()
+                .profileImageUrl(kakaoUserInfo.getProfile())
+                .build();
+
+        profileRepository.save(profile);
+
+        User newUser = User.builder()
+                .email(kakaoUserInfo.getEmail())
+                .name(kakaoUserInfo.getName())
+                .nickname(randomNicknameUtil.set())
+                .numberTag(randomNumberUtil.set())
+                .createdAt(LocalDateTime.now())
+                .role(Role.USER)
+                .profile(profile)
+                .provider("kakao")
+                .build();
+
+        User savedUser = userRepository.save(newUser);
+
+        return savedUser;
     }
 
     private Authentication forceLogin(User user) {
