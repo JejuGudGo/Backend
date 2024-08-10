@@ -12,6 +12,11 @@ public class OAuth2UserInfoFactory {
             log.info("Google login Request sent");
             log.info("=============================================================");
             return new GoogleUserInfo(attributes);
+        } else if (provider.equals("kakao")) {
+            log.info("=============================================================");
+            log.info("Kakao login Request sent");
+            log.info("=============================================================");
+            return new KakaoUserInfo(attributes);
         }
         return null;
     }

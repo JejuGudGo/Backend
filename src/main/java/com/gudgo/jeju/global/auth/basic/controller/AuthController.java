@@ -10,7 +10,6 @@ import com.gudgo.jeju.global.util.CookieUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,7 +56,7 @@ public class AuthController {
     }
 
     /* ID 중복 확인 */
-    @PostMapping(value = "/check/id")
+    @PostMapping(value = "/chaeck/id")
     public ResponseEntity<?> checkIdDuplicate(@RequestBody EmailRequestDto requestDto) {
         return signupService.isIdDuplicate(requestDto);
     }
@@ -68,5 +67,17 @@ public class AuthController {
         return findAuthService.getId(requestDto);
     }
 
+//    /* 카카오 callback */
+//    @GetMapping(value = "/kakao/login")
+//    public void kakaoCallback(@RequestParam String code) {
+//        System.out.println("code=" + code);
+//    }
+//
+//    @PostMapping(value = "/kakao/login")
+//    public ResponseEntity<?> kakaoLogin(@RequestParam(value="code", required = false) String code) throws Exception {
+//        System.out.println("code=" + code);
+//        String accessToken = kakaoOAuth2Service.getAccessToken(code);
+//        return ResponseEntity.ok().build();
+//    }
 
 }
