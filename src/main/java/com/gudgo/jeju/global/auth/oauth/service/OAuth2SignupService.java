@@ -1,6 +1,7 @@
 package com.gudgo.jeju.global.auth.oauth.service;
 
 import com.gudgo.jeju.domain.profile.entity.Profile;
+import com.gudgo.jeju.domain.profile.repository.ProfileRepository;
 import com.gudgo.jeju.domain.user.entity.Role;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
@@ -15,12 +16,15 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class OAuth2SignupService {
     private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
     private final RandomNumberUtil randomNumberUtil;
 
     public User signup(String provider, OAuth2UserInfo oAuth2UserInfo) {
         Profile profile = Profile.builder()
                 .profileImageUrl(oAuth2UserInfo.getProfile())
                 .build();
+
+        profileRepository.save(profile);
 
         User user = User.builder()
                 .profile(profile)
