@@ -6,6 +6,7 @@ import com.gudgo.jeju.domain.user.entity.Role;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
 import com.gudgo.jeju.global.auth.oauth.entity.OAuth2UserInfo;
+import com.gudgo.jeju.global.util.RandomNicknameUtil;
 import com.gudgo.jeju.global.util.RandomNumberUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class OAuth2SignupService {
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
     private final RandomNumberUtil randomNumberUtil;
+    private final RandomNicknameUtil randomNicknameUtil;
 
     public User signup(String provider, OAuth2UserInfo oAuth2UserInfo) {
         Profile profile = Profile.builder()
@@ -30,7 +32,7 @@ public class OAuth2SignupService {
                 .profile(profile)
                 .email(oAuth2UserInfo.getEmail())
                 .password(oAuth2UserInfo.getPassword())
-                .nickname(oAuth2UserInfo.getName())
+                .nickname(randomNicknameUtil.set())
                 .numberTag(randomNumberUtil.set())
                 .role(Role.USER)
                 .provider(provider)
