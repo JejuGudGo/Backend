@@ -36,8 +36,10 @@ public class CustomOAuth2User implements OAuth2User {
     public String getName() {
         if (user.getProvider().equals("google")) {
             return attributes.get("name").toString();
-        }
 
+        } else if (user.getProvider().equals("kakao")) {
+            return ((Map<?, ?>) attributes.get("properties")).get("nickname").toString();
+        }
         return null;
     }
 }

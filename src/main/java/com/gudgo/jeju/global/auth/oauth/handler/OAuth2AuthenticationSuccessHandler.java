@@ -1,6 +1,8 @@
 package com.gudgo.jeju.global.auth.oauth.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gudgo.jeju.domain.profile.entity.Profile;
+import com.gudgo.jeju.domain.profile.repository.ProfileRepository;
 import com.gudgo.jeju.domain.user.dto.UserInfoResponseDto;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
@@ -27,6 +29,7 @@ import java.nio.charset.StandardCharsets;
 @Component
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+    private final ProfileRepository profileRepository;
     private String PRE_FRONT_REDIRECT_URL = "http://localhost:5173";
     private final TokenGenerator tokenGenerator;
     private final CookieUtil cookieUtil;
@@ -41,13 +44,16 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         User user = userRepository.findById(customOAuth2User.getUser().getId())
                 .orElseThrow(EntityNotFoundException::new);
 
+        Profile profile = profileRepository.findById(user.getProfile().getId())
+                .orElseThrow(EntityNotFoundException::new);
+
         UserInfoResponseDto userInfoResponseDto = new UserInfoResponseDto(
                 user.getId(),
                 user.getEmail(),
                 user.getNickname(),
                 user.getName(),
                 user.getNumberTag(),
-                user.getProfile().getProfileImageUrl(),
+                profile.getProfileImageUrl(),
                 user.getRole()
         );
 
@@ -79,12 +85,12 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String encodedNickname = URLEncoder.encode(String.valueOf(userInfoResponseDto.nickname()), StandardCharsets.UTF_8);
         String encodedName = URLEncoder.encode(String.valueOf(userInfoResponseDto.name()), StandardCharsets.UTF_8);
         String encodedNumberTag = URLEncoder.encode(String.valueOf(userInfoResponseDto.numberTag()), StandardCharsets.UTF_8);
-        String encodedProfieImageUrl = URLEncoder.encode(String.valueOf(userInfoResponseDto.profileImageUrl()), StandardCharsets.UTF_8);
+        String encodedProfiIeImageUrl = URLEncoder.encode(String.valueOf(userInfoResponseDto.profileImageUrl()), StandardCharsets.UTF_8);
         String encodedUserRole = URLEncoder.encode(String.valueOf(userInfoResponseDto.userRole()), StandardCharsets.UTF_8);
 
         String frontendRedirectURL = String.format(
                 "%s/oauth/callback?token=%s&userId=%s&email=%s&nickname=%s&name=%s&numberTag=%s&profileImageUrl=%s&userRole=%s",
-                PRE_FRONT_REDIRECT_URL, accessToken, encodedUserId, encodedEmail, encodedNickname, encodedName, encodedNumberTag, encodedProfieImageUrl, encodedUserRole
+                PRE_FRONT_REDIRECT_URL, accessToken, encodedUserId, encodedEmail, encodedNickname, encodedName, encodedNumberTag, encodedProfiIeImageUrl, encodedUserRole
         );
 
         return frontendRedirectURL;

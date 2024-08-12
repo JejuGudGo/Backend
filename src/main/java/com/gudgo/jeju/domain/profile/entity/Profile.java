@@ -18,10 +18,8 @@ public class Profile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="walking_time")
     private Time walkingTime;
 
-    @Column(name="profile_image_url")
     private String profileImageUrl;
 
     private String ranking;
