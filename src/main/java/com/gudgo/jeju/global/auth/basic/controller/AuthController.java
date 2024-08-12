@@ -1,6 +1,9 @@
 package com.gudgo.jeju.global.auth.basic.controller;
 
 
+import com.gudgo.jeju.domain.user.dto.UserInfoResponseDto;
+import com.gudgo.jeju.domain.user.dto.UserInfoUpdateRequestDto;
+import com.gudgo.jeju.domain.user.service.UserInfoService;
 import com.gudgo.jeju.global.auth.basic.dto.request.*;
 import com.gudgo.jeju.global.auth.basic.dto.response.FindAuthResponseDto;
 import com.gudgo.jeju.global.auth.basic.service.FindAuthService;
@@ -10,6 +13,7 @@ import com.gudgo.jeju.global.util.CookieUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +28,7 @@ public class AuthController {
     private final LoginService loginService;
     private final FindAuthService findAuthService;
     private final CookieUtil cookieUtil;
+    private final UserInfoService userInfoService;
 
     /* 회원가입 */
     @PostMapping(value = "/signup")
@@ -56,7 +61,7 @@ public class AuthController {
     }
 
     /* ID 중복 확인 */
-    @PostMapping(value = "/chaeck/id")
+    @PostMapping(value = "/check/id")
     public ResponseEntity<?> checkIdDuplicate(@RequestBody EmailRequestDto requestDto) {
         return signupService.isIdDuplicate(requestDto);
     }
@@ -67,17 +72,12 @@ public class AuthController {
         return findAuthService.getId(requestDto);
     }
 
-//    /* 카카오 callback */
-//    @GetMapping(value = "/kakao/login")
-//    public void kakaoCallback(@RequestParam String code) {
-//        System.out.println("code=" + code);
-//    }
-//
-//    @PostMapping(value = "/kakao/login")
-//    public ResponseEntity<?> kakaoLogin(@RequestParam(value="code", required = false) String code) throws Exception {
-//        System.out.println("code=" + code);
-//        String accessToken = kakaoOAuth2Service.getAccessToken(code);
-//        return ResponseEntity.ok().build();
-//    }
-
+    /* 비밀번호 변경 */
+    @PatchMapping(value = "/user/{userId}")
+    public ResponseEntity<UserInfoResponseDto> updateUserInfo(
+            @PathVariable("userId") Long userId,
+            @RequestBody UserInfoUpdateRequestDto requestDto) {
+        userInfoService.update(userId, requestDto);
+        return ResponseEntity.ok().build();
+    }
 }

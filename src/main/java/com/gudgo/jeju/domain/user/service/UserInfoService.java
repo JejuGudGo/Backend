@@ -10,6 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserInfoService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UserInfoResponseDto get(Long userId) {
         User user = userRepository.findById(userId)
@@ -48,15 +50,13 @@ public class UserInfoService {
                 .orElseThrow(EntityNotFoundException::new);
 
         if (requestDto.password() != null) {
-            user.withPassword(requestDto.password());
+            user = user.withPassword(passwordEncoder.encode(requestDto.password()));
         }
 
         if (requestDto.nickname() != null) {
-            user.withNickname(requestDto.nickname());
+            user = user.withNickname(requestDto.nickname());
         }
 
-        userRepository.save(user);;
-
+        userRepository.save(user);
     }
-
 }
