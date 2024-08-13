@@ -4,6 +4,7 @@ import java.util.List;
 
 public record ReviewUpdateRequestDto(
         String content,
-        List<ReviewCategoryRequestDto> categories
+        List<ReviewCategoryRequestDto> categories,
+        Long stars
 ) {
 }

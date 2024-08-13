@@ -8,6 +8,7 @@ public record ReviewPostResponseDto(
         Long reviewId,
         Long plannerId,
         String content,
+        double stars,
 
         LocalDate createdAt,
 

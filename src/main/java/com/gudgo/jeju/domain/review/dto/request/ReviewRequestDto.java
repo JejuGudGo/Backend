@@ -7,7 +7,8 @@ import java.util.Map;
 public record ReviewRequestDto(
         String content,
         LocalDate createdAt,
-        List<ReviewCategoryRequestDto> categories
+        List<ReviewCategoryRequestDto> categories,
+        Long stars
 ) {
 
 }

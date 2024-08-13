@@ -11,6 +11,7 @@ public record ReviewResponseDto(
         Long userId,
         String content,
         LocalDate createdAt,
+        Long stars,
         List<ReviewImageResponseDto> reviewImages,
         List<ReviewCategoryResponseDto> reviewCategories
 
