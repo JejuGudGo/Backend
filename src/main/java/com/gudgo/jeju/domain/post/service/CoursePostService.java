@@ -144,6 +144,9 @@ public class CoursePostService {
                 .createdAt(LocalDate.now())
                 .isFinished(false)
                 .isDeleted(false)
+                .placeName(request.placeName())
+                .placeLatitude(request.placeLatitude())
+                .placeLonggitude(request.placeLongitude())
                 .build();
 
 
@@ -228,6 +231,9 @@ public class CoursePostService {
                 .createdAt(LocalDate.now())
                 .isFinished(false)
                 .isDeleted(false)
+                .placeName(request.placeName())
+                .placeLatitude(request.placeLatitude())
+                .placeLonggitude(request.placeLongitude())
                 .build();
 
 

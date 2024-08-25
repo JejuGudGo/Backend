@@ -7,6 +7,9 @@ public record CoursePostCreateRequest(
         Long companionsNum, // 유저가 지정한 숫자
         String content,
         Long plannerId,
-        Long olleCourseId
+        Long olleCourseId,
+        String placeName,
+        double placeLatitude,
+        double placeLongitude
 ) {
 }

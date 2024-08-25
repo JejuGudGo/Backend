@@ -1,7 +1,7 @@
 package com.gudgo.jeju.domain.planner.controller;
 
 import com.gudgo.jeju.domain.planner.dto.response.ParticipantApproveResponse;
-import com.gudgo.jeju.domain.planner.dto.response.ParticipantJoinResponse;
+import com.gudgo.jeju.domain.planner.dto.request.participant.ParticipantJoinRequest;
 import com.gudgo.jeju.domain.planner.dto.response.ParticipantResponse;
 import com.gudgo.jeju.domain.planner.service.ParticipantService;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +24,12 @@ public class ParticipantController {
     }
 
     @PostMapping(value = "/{plannerId}/participants/join/{userId}")
-    public ResponseEntity<ParticipantJoinResponse> requestJoin(
+    public ResponseEntity<?> requestJoin(
             @PathVariable("plannerId") Long courseId,
             @PathVariable("userId") Long userId,
-            ParticipantJoinResponse participantJoinResponse) {
-        participantService.requestJoin(courseId, userId);
-        return ResponseEntity.ok(participantJoinResponse);
+            @RequestBody ParticipantJoinRequest request) {
+        participantService.requestJoin(courseId, userId, request);
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping(value = "/{plannerId}/participants/cancel/{userId}")

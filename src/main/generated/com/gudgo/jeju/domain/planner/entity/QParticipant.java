@@ -28,11 +28,15 @@ public class QParticipant extends EntityPathBase<Participant> {
 
     public final DatePath<java.time.LocalDate> approvedAt = createDate("approvedAt", java.time.LocalDate.class);
 
+    public final StringPath content = createString("content");
+
     public final NumberPath<Long> count = createNumber("count", Long.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final BooleanPath isApplied = createBoolean("isApplied");
+
+    public final BooleanPath isBlocked = createBoolean("isBlocked");
 
     public final BooleanPath isDeleted = createBoolean("isDeleted");
 
