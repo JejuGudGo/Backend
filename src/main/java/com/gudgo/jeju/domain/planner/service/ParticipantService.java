@@ -1,5 +1,6 @@
 package com.gudgo.jeju.domain.planner.service;
 
+import com.gudgo.jeju.domain.planner.dto.request.participant.ParticipantJoinRequest;
 import com.gudgo.jeju.domain.planner.dto.response.ParticipantResponse;
 import com.gudgo.jeju.domain.planner.entity.Course;
 import com.gudgo.jeju.domain.planner.entity.Participant;
@@ -53,7 +54,7 @@ public class ParticipantService {
     }
 
     @Transactional
-    public void requestJoin(Long plannerId, Long userId) {
+    public void requestJoin(Long plannerId, Long userId, ParticipantJoinRequest request) {
 
         Posts post = postsRepository.findByPlannerId(plannerId)
                 .orElseThrow(EntityNotFoundException::new);
@@ -77,8 +78,10 @@ public class ParticipantService {
                         .count(0L) // 처음 생성할 때 count를 0으로 설정
                         .isApplied(false) // 처음 생성할 때 isApplied를 false로 설정
                         .appliedAt(LocalDate.now())
+                        .content(request.content())
                         .build());
 
+        String content = request.content();
         if (participant.getCount() >= 3) {  // 신청 이력이 3회 이상일 경우
             throw new IllegalStateException("request count를 초과하였습니다.");
 
@@ -86,6 +89,7 @@ public class ParticipantService {
 //            participant = participant.withCountAndApplied(true);
 //            participant = participant.withAppliedAt(LocalDate.now());
 
+            participantRepository.save(participant);
             participant = participant.withCountAndIsAppliedAndAppliedAt(true, LocalDate.now());
             participantRepository.save(participant);
         }

@@ -35,6 +35,12 @@ public class Posts {
 
     private boolean isDeleted;
 
+    private String placeName;
+
+    private double placeLatitude;
+
+    private double placeLonggitude;
+
 
     @ManyToOne
     @JoinColumn(name = "userId")
@@ -49,106 +55,128 @@ public class Posts {
 
     public Posts withTitle(String title) {
         return Posts.builder()
-                .id(this.id)
-                .postType(this.postType)
+                .id(id)
+                .postType(postType)
                 .title(title)
-                .content(this.content)
-                .companionsNum(this.companionsNum)
-                .createdAt(this.createdAt)
-                .isFinished(this.isFinished)
-                .isDeleted(this.isDeleted)
-                .user(this.user)
-                .planner(this.planner)
+                .content(content)
+                .companionsNum(companionsNum)
+                .createdAt(createdAt)
+                .isFinished(isFinished)
+                .isDeleted(isDeleted)
+                .user(user)
+                .planner(planner)
+                .placeName(placeName)
+                .placeLatitude(placeLatitude)
+                .placeLonggitude(placeLonggitude)
                 .build();
     }
 
     public Posts withContent(String content) {
         return Posts.builder()
-                .id(this.id)
-                .postType(this.postType)
-                .title(this.title)
+                .id(id)
+                .postType(postType)
+                .title(title)
                 .content(content)
-                .companionsNum(this.companionsNum)
-                .createdAt(this.createdAt)
-                .isFinished(this.isFinished)
-                .isDeleted(this.isDeleted)
-                .user(this.user)
-                .planner(this.planner)
+                .companionsNum(companionsNum)
+                .createdAt(createdAt)
+                .isFinished(isFinished)
+                .isDeleted(isDeleted)
+                .user(user)
+                .planner(planner)
+                .placeName(placeName)
+                .placeLatitude(placeLatitude)
+                .placeLonggitude(placeLonggitude)
                 .build();
     }
 
     public Posts withCompanionsNum(Long companionsNum) {
         return Posts.builder()
-                .id(this.id)
-                .postType(this.postType)
-                .title(this.title)
-                .content(this.content)
+                .id(id)
+                .postType(postType)
+                .title(title)
+                .content(content)
                 .companionsNum(companionsNum)
-                .createdAt(this.createdAt)
-                .isFinished(this.isFinished)
-                .isDeleted(this.isDeleted)
-                .user(this.user)
-                .planner(this.planner)
+                .createdAt(createdAt)
+                .isFinished(isFinished)
+                .isDeleted(isDeleted)
+                .user(user)
+                .planner(planner)
+                .placeName(placeName)
+                .placeLatitude(placeLatitude)
+                .placeLonggitude(placeLonggitude)
                 .build();
     }
 
     public Posts withIsFinished(boolean isFinished) {
         return Posts.builder()
-                .id(this.id)
-                .postType(this.postType)
-                .title(this.title)
-                .content(this.content)
-                .companionsNum(this.companionsNum)
-                .createdAt(this.createdAt)
+                .id(id)
+                .postType(postType)
+                .title(title)
+                .content(content)
+                .companionsNum(companionsNum)
+                .createdAt(createdAt)
                 .isFinished(isFinished)
-                .isDeleted(this.isDeleted)
-                .user(this.user)
-                .planner(this.planner)
+                .isDeleted(isDeleted)
+                .user(user)
+                .planner(planner)
+                .placeName(placeName)
+                .placeLatitude(placeLatitude)
+                .placeLonggitude(placeLonggitude)
                 .build();
     }
 
     public Posts withIsDeleted(boolean isDeleted) {
         return Posts.builder()
-                .id(this.id)
-                .postType(this.postType)
-                .title(this.title)
-                .content(this.content)
-                .companionsNum(this.companionsNum)
-                .createdAt(this.createdAt)
-                .isFinished(this.isFinished)
+                .id(id)
+                .postType(postType)
+                .title(title)
+                .content(content)
+                .companionsNum(companionsNum)
+                .createdAt(createdAt)
+                .isFinished(isFinished)
                 .isDeleted(isDeleted)
-                .user(this.user)
-                .planner(this.planner)
+                .user(user)
+                .planner(planner)
+                .placeName(placeName)
+                .placeLatitude(placeLatitude)
+                .placeLonggitude(placeLonggitude)
                 .build();
     }
 
     public Posts withIsFinishedAndIsDeleted(boolean isFinished, boolean isDeleted) {
         return Posts.builder()
-                .id(this.id)
-                .postType(this.postType)
-                .title(this.title)
-                .content(this.content)
-                .companionsNum(this.companionsNum)
-                .createdAt(this.createdAt)
+                .id(id)
+                .postType(postType)
+                .title(title)
+                .content(content)
+                .companionsNum(companionsNum)
+                .createdAt(createdAt)
                 .isFinished(isFinished)
                 .isDeleted(isDeleted)
-                .user(this.user)
-                .planner(this.planner)
+                .user(user)
+                .planner(planner)
+                .placeName(placeName)
+                .placeLatitude(placeLatitude)
+                .placeLonggitude(placeLonggitude)
                 .build();
     }
 
     public Posts withPlanner(Planner planner) {
         return Posts.builder()
-                .id(this.id)
-                .postType(this.postType)
-                .title(this.title)
-                .content(this.content)
-                .companionsNum(this.companionsNum)
-                .createdAt(this.createdAt)
-                .isFinished(this.isFinished)
-                .isDeleted(this.isDeleted)
-                .user(this.user)
+                .id(id)
+                .postType(postType)
+                .title(title)
+                .content(content)
+                .companionsNum(companionsNum)
+                .createdAt(createdAt)
+                .isFinished(isFinished)
+                .isDeleted(isDeleted)
+                .user(user)
                 .planner(planner)
+                .placeName(placeName)
+                .placeLatitude(placeLatitude)
+                .placeLonggitude(placeLonggitude)
                 .build();
     }
+
 }

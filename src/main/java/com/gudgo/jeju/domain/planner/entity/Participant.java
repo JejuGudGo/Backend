@@ -28,6 +28,10 @@ public class Participant {
 
     private LocalDate approvedAt;
 
+    private boolean isBlocked;
+
+    private String content;
+
 
     @ManyToOne
     @JoinColumn(name="user_id")
@@ -38,87 +42,52 @@ public class Participant {
     @JoinColumn(name="plannerId")
     private Planner planner;
 
-//    public Participant withCountAndApplied(boolean isApplied) {
-//        return Participant.builder()
-//                .id(this.id)
-//                .approved(this.approved)
-//                .isDeleted(this.isDeleted)
-//                .count(this.count++)
-//                .isApplied(isApplied)
-//                .user(this.user)
-//                .planner(this.planner)
-//                .appliedAt(this.appliedAt)
-//                .approvedAt(this.approvedAt)
-//                .build();
-//    }
 
     public Participant withApplied(boolean isApplied) {
         return Participant.builder()
-                .id(this.id)
-                .approved(this.approved)
-                .isDeleted(this.isDeleted)
-                .count(this.count)
+                .id(id)
+                .approved(approved)
+                .isDeleted(isDeleted)
+                .count(count)
                 .isApplied(isApplied)
-                .user(this.user)
-                .planner(this.planner)
-                .appliedAt(this.appliedAt)
-                .approvedAt(this.approvedAt)
+                .user(user)
+                .planner(planner)
+                .appliedAt(appliedAt)
+                .approvedAt(approvedAt)
+                .isBlocked(isBlocked)
+                .content(content)
                 .build();
     }
 
-//    public Participant withApproved(boolean approved) {
-//        return Participant.builder()
-//                .id(this.id)
-//                .approved(approved)
-//                .isDeleted(this.isDeleted)
-//                .count(this.count)
-//                .isApplied(this.isApplied)
-//                .user(this.user)
-//                .planner(this.planner)
-//                .appliedAt(this.appliedAt)
-//                .approvedAt(this.approvedAt)
-//                .build();
-//    }
-
-//    public Participant withAppliedAt(LocalDate appliedAt) {
-//        return Participant.builder()
-//                .id(this.id)
-//                .approved(this.approved)
-//                .isDeleted(this.isDeleted)
-//                .count(this.count)
-//                .isApplied(this.isApplied)
-//                .user(this.user)
-//                .planner(this.planner)
-//                .appliedAt(appliedAt)
-//                .approvedAt(this.approvedAt)
-//                .build();
-//    }
-
     public Participant withCountAndIsAppliedAndAppliedAt(boolean isApplied, LocalDate appliedAt) {
         return Participant.builder()
-                .id(this.id)
-                .approved(this.approved)
-                .isDeleted(this.isDeleted)
-                .count(this.count++)
+                .id(id)
+                .approved(approved)
+                .isDeleted(isDeleted)
+                .count(count+1)
                 .isApplied(isApplied)
-                .user(this.user)
-                .planner(this.planner)
+                .user(user)
+                .planner(planner)
                 .appliedAt(appliedAt)
-                .approvedAt(this.approvedAt)
+                .approvedAt(approvedAt)
+                .isBlocked(isBlocked)
+                .content(content)
                 .build();
     }
 
     public Participant withApprovedAndApprovedAt(boolean approved, LocalDate approvedAt) {
         return Participant.builder()
-                .id(this.id)
+                .id(id)
                 .approved(approved)
-                .isDeleted(this.isDeleted)
-                .count(this.count)
-                .isApplied(this.isApplied)
-                .user(this.user)
-                .planner(this.planner)
-                .appliedAt(this.appliedAt)
+                .isDeleted(isDeleted)
+                .count(count)
+                .isApplied(isApplied)
+                .user(user)
+                .planner(planner)
+                .appliedAt(appliedAt)
                 .approvedAt(approvedAt)
+                .isBlocked(isBlocked)
+                .content(content)
                 .build();
     }
 }

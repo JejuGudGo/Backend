@@ -1,4 +1,4 @@
 package com.gudgo.jeju.domain.planner.dto.request.participant;
 
-public record ParticipantJoinRequest(Long postId) {
+public record ParticipantJoinRequest(String content) {
 }

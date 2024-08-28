@@ -34,6 +34,12 @@ public class QPosts extends EntityPathBase<Posts> {
 
     public final BooleanPath isFinished = createBoolean("isFinished");
 
+    public final NumberPath<Double> placeLatitude = createNumber("placeLatitude", Double.class);
+
+    public final NumberPath<Double> placeLonggitude = createNumber("placeLonggitude", Double.class);
+
+    public final StringPath placeName = createString("placeName");
+
     public final com.gudgo.jeju.domain.planner.entity.QPlanner planner;
 
     public final EnumPath<PostType> postType = createEnum("postType", PostType.class);
