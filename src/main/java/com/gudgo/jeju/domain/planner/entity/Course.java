@@ -29,39 +29,44 @@ public class Course {
 
     private Long olleCourseId;
 
+    private double starAvg;
+
     public Course withTitle(String title) {
         return Course.builder()
-                .id(this.id)
+                .id(id)
                 .title(title)
-                .type(this.type)
-                .createdAt(this.createdAt)
-                .originalCourseId(this.originalCourseId)
-                .originalCreatorId(this.originalCreatorId)
-                .olleCourseId(this.olleCourseId)
+                .type(type)
+                .createdAt(createdAt)
+                .originalCourseId(originalCourseId)
+                .originalCreatorId(originalCreatorId)
+                .olleCourseId(olleCourseId)
+                .starAvg(starAvg)
                 .build();
     }
 
     public Course withOriginalCourseId(Long courseId) {
         return Course.builder()
-                .id(this.id)
+                .id(id)
                 .title(title)
-                .type(this.type)
-                .createdAt(this.createdAt)
-                .originalCourseId(courseId)
-                .originalCreatorId(this.originalCreatorId)
-                .olleCourseId(this.olleCourseId)
+                .type(type)
+                .createdAt(createdAt)
+                .originalCourseId(originalCourseId)
+                .originalCreatorId(originalCreatorId)
+                .olleCourseId(olleCourseId)
+                .starAvg(starAvg)
                 .build();
     }
 
     public Course withOlleCourseId(Long olleCourseId) {
         return Course.builder()
-                .id(this.id)
-                .title(this.title)
-                .type(this.type)
-                .createdAt(this.createdAt)
-                .originalCourseId(this.originalCourseId)
-                .originalCreatorId(this.originalCreatorId)
+                .id(id)
+                .title(title)
+                .type(type)
+                .createdAt(createdAt)
+                .originalCourseId(originalCourseId)
+                .originalCreatorId(originalCreatorId)
                 .olleCourseId(olleCourseId)
+                .starAvg(starAvg)
                 .build();
     }
 

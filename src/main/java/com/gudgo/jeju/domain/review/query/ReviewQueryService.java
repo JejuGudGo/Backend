@@ -114,6 +114,7 @@ public class ReviewQueryService {
                 review.getUser().getId(),
                 review.getContent(),
                 review.getCreatedAt(),
+                review.getStars(),
                 reviewImageResponses,
                 reviewCategoryResponses
         );

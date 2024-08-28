@@ -28,6 +28,8 @@ public class PlannerReview {
 
     private boolean isDeleted;
 
+    private Long stars;
+
     @ManyToOne
     @JoinColumn(name = "plannerId")
     private Planner planner;
@@ -45,6 +47,7 @@ public class PlannerReview {
                 .isDeleted(isDeleted)
                 .planner(planner)
                 .user(user)
+                .stars(stars)
                 .build();
     }
 
@@ -56,6 +59,19 @@ public class PlannerReview {
                 .isDeleted(isDeleted)
                 .planner(planner)
                 .user(user)
+                .stars(stars)
+                .build();
+    }
+
+    public PlannerReview withStars(Long stars) {
+        return PlannerReview.builder()
+                .id(id)
+                .content(content)
+                .createdAt(createdAt)
+                .isDeleted(isDeleted)
+                .planner(planner)
+                .user(user)
+                .stars(stars)
                 .build();
     }
 }

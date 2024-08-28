@@ -63,6 +63,7 @@ public class UserReviewService {
                 .content(requestDto.content())
                 .createdAt(LocalDate.now())
                 .isDeleted(false)
+                .stars(requestDto.stars())
                 .build();
 
         plannerReviewRepository.save(plannerReview);
@@ -76,6 +77,7 @@ public class UserReviewService {
                 plannerReview.getId(),
                 plannerReview.getPlanner().getId(),
                 plannerReview.getContent(),
+                plannerReview.getStars(),
                 plannerReview.getCreatedAt(),
                 reviewImageQueryService.getReviewImages(plannerReview.getId()),
                 categoryResponses
@@ -108,8 +110,9 @@ public class UserReviewService {
             throw new RuntimeException("수정할 수 있는 기간이 지났습니다. 7일 이내에만 수정이 가능합니다.");
         }
 
-        // 내용 수정
+        // 내용, 별점 수정
         review = review.withContent(requestDto.content());
+        review = review.withStars(requestDto.stars());
         plannerReviewRepository.save(review);
 
         // 이미지 수정
@@ -122,6 +125,7 @@ public class UserReviewService {
                 reviewId,
                 review.getPlanner().getId(),
                 requestDto.content(),
+                requestDto.stars(),
                 review.getCreatedAt(),
                 reviewImageQueryService.getReviewImages(reviewId),
                 reviewCategoryQueryService.getReviewCategories(reviewId));
