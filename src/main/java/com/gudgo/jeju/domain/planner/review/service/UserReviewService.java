@@ -16,7 +16,6 @@ import com.gudgo.jeju.domain.planner.review.dto.request.ReviewCategoryRequestDto
 import com.gudgo.jeju.domain.planner.review.dto.request.ReviewRequestDto;
 import com.gudgo.jeju.domain.planner.review.dto.request.ReviewTagRequestDto;
 import com.gudgo.jeju.domain.planner.review.dto.request.ReviewUpdateRequestDto;
-import com.gudgo.jeju.domain.review.dto.response.*;
 import com.gudgo.jeju.domain.planner.review.repository.PlannerReviewCategoryRepository;
 import com.gudgo.jeju.domain.planner.review.repository.PlannerReviewImageRepository;
 import com.gudgo.jeju.domain.planner.review.repository.PlannerReviewRepository;

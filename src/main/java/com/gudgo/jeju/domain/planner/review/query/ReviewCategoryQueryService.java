@@ -4,8 +4,8 @@ import com.gudgo.jeju.domain.planner.review.dto.response.ReviewCategoryResponseD
 import com.gudgo.jeju.domain.planner.review.dto.response.ReviewTagResponseDto;
 import com.gudgo.jeju.domain.planner.review.entity.PlannerReviewCategory;
 import com.gudgo.jeju.domain.planner.review.entity.PlannerReviewTag;
-import com.gudgo.jeju.domain.review.entity.QPlannerReviewCategory;
-import com.gudgo.jeju.domain.review.entity.QPlannerReviewTag;
+import com.gudgo.jeju.domain.planner.review.entity.QPlannerReviewCategory;
+import com.gudgo.jeju.domain.planner.review.entity.QPlannerReviewTag;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;

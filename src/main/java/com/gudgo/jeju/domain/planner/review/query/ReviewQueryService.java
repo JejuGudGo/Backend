@@ -1,12 +1,7 @@
 package com.gudgo.jeju.domain.planner.review.query;
 
 import com.gudgo.jeju.domain.planner.review.dto.response.*;
-import com.gudgo.jeju.domain.planner.review.entity.PlannerReview;
-import com.gudgo.jeju.domain.planner.review.entity.PlannerReviewCategory;
-import com.gudgo.jeju.domain.planner.review.entity.PlannerReviewImage;
-import com.gudgo.jeju.domain.planner.review.entity.PlannerReviewTag;
-import com.gudgo.jeju.domain.review.dto.response.*;
-import com.gudgo.jeju.domain.review.entity.*;
+import com.gudgo.jeju.domain.planner.review.entity.*;
 import com.gudgo.jeju.global.util.PaginationUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
