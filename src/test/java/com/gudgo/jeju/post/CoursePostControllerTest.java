@@ -74,7 +74,10 @@ public class CoursePostControllerTest {
                 5L,
                 "안녕하시와요. 얼른 신청하시와요.",
                 1L,
-                null
+                null,
+                "어쩌구 저쩌구",
+                0.01,
+                0.01
         );
 
         MvcResult mvcResult = mockMvc
@@ -102,7 +105,10 @@ public class CoursePostControllerTest {
                 5L,
                 "안녕하시와요. 얼른 신청하시와요.",
                 null,
-                1L
+                1L,
+                "어쩌구 저쩌구",
+                0.01,
+                0.01
         );
 
         MvcResult mvcResult = mockMvc

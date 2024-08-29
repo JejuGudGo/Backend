@@ -106,7 +106,8 @@ public class UserReviewControllerTest {
         ReviewRequestDto reviewRequestDto = new ReviewRequestDto(
                 "리뷰 입니다.",
                 LocalDate.now(),
-                reviewCategories
+                reviewCategories,
+                1L
         );
 
         String reviewJson = objectMapper.writeValueAsString(reviewRequestDto);
@@ -172,7 +173,8 @@ public class UserReviewControllerTest {
         ReviewRequestDto reviewRequestDto = new ReviewRequestDto(
                 "리뷰 입니다.",
                 LocalDate.now(),
-                reviewCategories
+                reviewCategories,
+                1L
         );
 
         String reviewJson = objectMapper.writeValueAsString(reviewRequestDto);
