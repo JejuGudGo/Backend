@@ -1,11 +1,10 @@
 package com.gudgo.jeju.course;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gudgo.jeju.domain.planner.dto.request.course.PlannerCreateRequestDto;
-import com.gudgo.jeju.domain.planner.dto.request.course.PlannerUpdateRequestDto;
-import com.gudgo.jeju.domain.planner.query.PlannerQueryService;
-import com.gudgo.jeju.domain.planner.service.PlannerService;
+import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerCreateRequestDto;
+import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerUpdateRequestDto;
+import com.gudgo.jeju.domain.planner.planner.query.PlannerQueryService;
+import com.gudgo.jeju.domain.planner.planner.service.PlannerService;
 import com.gudgo.jeju.global.jwt.token.TokenGenerator;
 import com.gudgo.jeju.global.jwt.token.TokenType;
 import org.junit.jupiter.api.Disabled;

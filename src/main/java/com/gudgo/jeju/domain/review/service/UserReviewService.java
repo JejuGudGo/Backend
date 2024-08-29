@@ -1,7 +1,7 @@
 package com.gudgo.jeju.domain.review.service;
 
-import com.gudgo.jeju.domain.planner.entity.Planner;
-import com.gudgo.jeju.domain.planner.repository.PlannerRepository;
+import com.gudgo.jeju.domain.planner.planner.entity.Planner;
+import com.gudgo.jeju.domain.planner.planner.repository.PlannerRepository;
 import com.gudgo.jeju.domain.review.dto.request.ReviewCategoryRequestDto;
 import com.gudgo.jeju.domain.review.dto.request.ReviewRequestDto;
 import com.gudgo.jeju.domain.review.dto.request.ReviewTagRequestDto;

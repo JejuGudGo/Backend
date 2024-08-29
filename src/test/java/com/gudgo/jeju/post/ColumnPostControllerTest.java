@@ -2,10 +2,10 @@ package com.gudgo.jeju.post;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gudgo.jeju.domain.post.dto.request.ColumnPostCreateRequest;
-import com.gudgo.jeju.domain.post.dto.request.ColumnPostUpdateRequest;
-import com.gudgo.jeju.domain.post.query.ColumnPostQueryService;
-import com.gudgo.jeju.domain.post.service.ColumnPostService;
+import com.gudgo.jeju.domain.post.column.dto.request.ColumnPostCreateRequest;
+import com.gudgo.jeju.domain.post.column.dto.request.ColumnPostUpdateRequest;
+import com.gudgo.jeju.domain.post.column.query.ColumnPostQueryService;
+import com.gudgo.jeju.domain.post.column.service.ColumnPostService;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
 import com.gudgo.jeju.global.jwt.token.SubjectExtractor;
 import com.gudgo.jeju.global.jwt.token.TokenExtractor;

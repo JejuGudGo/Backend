@@ -1,10 +1,10 @@
 package com.gudgo.jeju.post;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gudgo.jeju.domain.post.dto.request.CoursePostCreateRequest;
-import com.gudgo.jeju.domain.post.dto.request.CoursePostUpdateRequest;
-import com.gudgo.jeju.domain.post.service.CoursePostService;
-import com.gudgo.jeju.domain.post.query.CoursePostQueryService;
+import com.gudgo.jeju.domain.post.walk.dto.request.CoursePostCreateRequest;
+import com.gudgo.jeju.domain.post.walk.dto.request.CoursePostUpdateRequest;
+import com.gudgo.jeju.domain.post.walk.service.CoursePostService;
+import com.gudgo.jeju.domain.post.walk.query.CoursePostQueryService;
 import com.gudgo.jeju.global.jwt.token.TokenGenerator;
 import com.gudgo.jeju.global.jwt.token.TokenType;
 import org.junit.jupiter.api.Disabled;
