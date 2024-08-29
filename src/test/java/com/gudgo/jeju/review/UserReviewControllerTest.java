@@ -2,9 +2,9 @@ package com.gudgo.jeju.review;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.gudgo.jeju.domain.review.dto.request.ReviewCategoryRequestDto;
-import com.gudgo.jeju.domain.review.dto.request.ReviewRequestDto;
-import com.gudgo.jeju.domain.review.dto.request.ReviewTagRequestDto;
+import com.gudgo.jeju.domain.planner.review.dto.request.ReviewCategoryRequestDto;
+import com.gudgo.jeju.domain.planner.review.dto.request.ReviewRequestDto;
+import com.gudgo.jeju.domain.planner.review.dto.request.ReviewTagRequestDto;
 import com.gudgo.jeju.global.jwt.token.TokenGenerator;
 import com.gudgo.jeju.global.jwt.token.TokenType;
 import org.junit.jupiter.api.Disabled;

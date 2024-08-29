@@ -2,7 +2,7 @@ package com.gudgo.jeju.domain.planner.courseMedia.query;
 
 import com.gudgo.jeju.domain.planner.courseMedia.dto.response.CourseMediaResponseDto;
 import com.gudgo.jeju.domain.planner.courseMedia.entity.CourseMedia;
-import com.gudgo.jeju.domain.planner.entity.QCourseMedia;
+import com.gudgo.jeju.domain.planner.courseMedia.entity.QCourseMedia;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;

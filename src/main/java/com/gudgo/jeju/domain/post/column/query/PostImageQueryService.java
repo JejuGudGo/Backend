@@ -2,7 +2,7 @@ package com.gudgo.jeju.domain.post.column.query;
 
 import com.gudgo.jeju.domain.post.column.dto.response.PostImageResponse;
 import com.gudgo.jeju.domain.post.common.entity.PostImage;
-import com.gudgo.jeju.domain.post.entity.QPostImage;
+import com.gudgo.jeju.domain.post.common.entity.QPostImage;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;

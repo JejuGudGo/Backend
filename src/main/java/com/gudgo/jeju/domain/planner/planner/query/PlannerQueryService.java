@@ -2,8 +2,8 @@ package com.gudgo.jeju.domain.planner.planner.query;
 
 import com.gudgo.jeju.domain.planner.course.query.CourseQueryService;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerResponse;
-import com.gudgo.jeju.domain.planner.entity.*;
 import com.gudgo.jeju.domain.planner.planner.entity.Planner;
+import com.gudgo.jeju.domain.planner.planner.entity.QPlanner;
 import com.gudgo.jeju.global.util.PaginationUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;

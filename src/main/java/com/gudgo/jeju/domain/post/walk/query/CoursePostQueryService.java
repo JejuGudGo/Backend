@@ -1,10 +1,10 @@
 package com.gudgo.jeju.domain.post.walk.query;
 
-import com.gudgo.jeju.domain.planner.entity.QParticipant;
+import com.gudgo.jeju.domain.post.common.entity.QPosts;
+import com.gudgo.jeju.domain.post.participant.entity.QParticipant;
 import com.gudgo.jeju.domain.post.walk.dto.response.CoursePostResponse;
 import com.gudgo.jeju.domain.post.common.entity.PostType;
 import com.gudgo.jeju.domain.post.common.entity.Posts;
-import com.gudgo.jeju.domain.post.entity.QPosts;
 import com.gudgo.jeju.global.util.PaginationUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;

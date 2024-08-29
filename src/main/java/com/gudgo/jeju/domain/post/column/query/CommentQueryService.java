@@ -3,7 +3,7 @@ package com.gudgo.jeju.domain.post.column.query;
 import com.gudgo.jeju.domain.post.column.dto.response.CommentResponse;
 import com.gudgo.jeju.domain.post.column.dto.response.NestedCommentResponse;
 import com.gudgo.jeju.domain.post.common.entity.Comment;
-import com.gudgo.jeju.domain.post.entity.QComment;
+import com.gudgo.jeju.domain.post.common.entity.QComment;
 import com.gudgo.jeju.domain.user.entity.QUser;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.global.util.PaginationUtil;

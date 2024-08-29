@@ -2,8 +2,8 @@ package com.gudgo.jeju.domain.post.chat.query;
 
 import com.gudgo.jeju.domain.post.chat.dto.response.MessageResponse;
 import com.gudgo.jeju.domain.post.chat.entity.Message;
-import com.gudgo.jeju.domain.planner.entity.QMessage;
-import com.gudgo.jeju.domain.planner.entity.QMessageImage;
+import com.gudgo.jeju.domain.post.chat.entity.QMessage;
+import com.gudgo.jeju.domain.post.chat.entity.QMessageImage;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;

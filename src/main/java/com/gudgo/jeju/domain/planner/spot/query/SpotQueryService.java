@@ -1,6 +1,6 @@
 package com.gudgo.jeju.domain.planner.spot.query;
 
-import com.gudgo.jeju.domain.planner.entity.QSpot;
+import com.gudgo.jeju.domain.planner.spot.entity.QSpot;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,9 +1,9 @@
 package com.gudgo.jeju.domain.post.participant.query;
 
+import com.gudgo.jeju.domain.planner.planner.entity.QPlanner;
 import com.gudgo.jeju.domain.post.participant.dto.response.ParticipantResponse;
 import com.gudgo.jeju.domain.post.participant.entity.Participant;
-import com.gudgo.jeju.domain.planner.entity.QParticipant;
-import com.gudgo.jeju.domain.planner.entity.QPlanner;
+import com.gudgo.jeju.domain.post.participant.entity.QParticipant;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;

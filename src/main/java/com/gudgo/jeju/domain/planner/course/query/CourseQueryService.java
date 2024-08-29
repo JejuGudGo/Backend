@@ -3,8 +3,10 @@ package com.gudgo.jeju.domain.planner.course.query;
 
 import com.gudgo.jeju.domain.planner.course.dto.response.CourseResponseDto;
 import com.gudgo.jeju.domain.planner.course.entity.Course;
+import com.gudgo.jeju.domain.planner.course.entity.QCourse;
+import com.gudgo.jeju.domain.planner.planner.entity.QPlanner;
 import com.gudgo.jeju.domain.planner.spot.dto.response.SpotResponseDto;
-import com.gudgo.jeju.domain.planner.entity.*;
+import com.gudgo.jeju.domain.planner.spot.entity.QSpot;
 import com.gudgo.jeju.domain.planner.spot.entity.Spot;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;

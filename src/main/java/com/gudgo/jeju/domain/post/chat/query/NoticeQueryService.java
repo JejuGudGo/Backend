@@ -2,7 +2,7 @@ package com.gudgo.jeju.domain.post.chat.query;
 
 import com.gudgo.jeju.domain.post.chat.dto.response.NoticeResponse;
 import com.gudgo.jeju.domain.post.chat.entity.Notice;
-import com.gudgo.jeju.domain.planner.entity.QNotice;
+import com.gudgo.jeju.domain.post.chat.entity.QNotice;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
