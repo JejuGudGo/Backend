@@ -1,7 +1,7 @@
 package com.gudgo.jeju.course;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gudgo.jeju.domain.planner.service.ParticipantService;
+import com.gudgo.jeju.domain.post.participant.service.ParticipantService;
 import com.gudgo.jeju.global.jwt.token.TokenGenerator;
 import com.gudgo.jeju.global.jwt.token.TokenType;
 import org.junit.jupiter.api.Disabled;

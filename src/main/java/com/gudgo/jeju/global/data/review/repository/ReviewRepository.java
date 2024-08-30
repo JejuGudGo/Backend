@@ -1,6 +1,5 @@
 package com.gudgo.jeju.global.data.review.repository;
 
-import com.gudgo.jeju.domain.review.entity.PlannerReviewCategory;
 import com.gudgo.jeju.global.data.review.entity.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 

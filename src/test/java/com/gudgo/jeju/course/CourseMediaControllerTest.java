@@ -1,9 +1,9 @@
 package com.gudgo.jeju.course;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gudgo.jeju.domain.planner.dto.request.course.CourseMediaCreateRequestDto;
-import com.gudgo.jeju.domain.planner.dto.request.course.CourseMediaUpdateRequestDto;
-import com.gudgo.jeju.domain.planner.service.CourseMediaService;
+import com.gudgo.jeju.domain.planner.courseMedia.dto.request.CourseMediaCreateRequestDto;
+import com.gudgo.jeju.domain.planner.courseMedia.dto.request.CourseMediaUpdateRequestDto;
+import com.gudgo.jeju.domain.planner.courseMedia.service.CourseMediaService;
 import com.gudgo.jeju.global.jwt.token.TokenGenerator;
 import com.gudgo.jeju.global.jwt.token.TokenType;
 import org.junit.jupiter.api.Disabled;

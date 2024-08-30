@@ -1,8 +1,8 @@
 package com.gudgo.jeju.domain.tourApi.controller;
 
-import com.gudgo.jeju.domain.planner.dto.request.spot.CurrentLocationDto;
+import com.gudgo.jeju.domain.planner.spot.dto.request.CurrentLocationDto;
 import com.gudgo.jeju.domain.tourApi.dto.TourApiSpotResponseDto;
-import com.gudgo.jeju.domain.planner.component.TourApiSpotFinder;
+import com.gudgo.jeju.domain.tourApi.component.TourApiSpotFinder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

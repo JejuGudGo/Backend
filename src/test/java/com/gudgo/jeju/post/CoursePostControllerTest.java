@@ -1,10 +1,10 @@
 package com.gudgo.jeju.post;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gudgo.jeju.domain.post.dto.request.CoursePostCreateRequest;
-import com.gudgo.jeju.domain.post.dto.request.CoursePostUpdateRequest;
-import com.gudgo.jeju.domain.post.service.CoursePostService;
-import com.gudgo.jeju.domain.post.query.CoursePostQueryService;
+import com.gudgo.jeju.domain.post.walk.dto.request.CoursePostCreateRequest;
+import com.gudgo.jeju.domain.post.walk.dto.request.CoursePostUpdateRequest;
+import com.gudgo.jeju.domain.post.walk.service.CoursePostService;
+import com.gudgo.jeju.domain.post.walk.query.CoursePostQueryService;
 import com.gudgo.jeju.global.jwt.token.TokenGenerator;
 import com.gudgo.jeju.global.jwt.token.TokenType;
 import org.junit.jupiter.api.Disabled;
@@ -74,7 +74,10 @@ public class CoursePostControllerTest {
                 5L,
                 "안녕하시와요. 얼른 신청하시와요.",
                 1L,
-                null
+                null,
+                "어쩌구 저쩌구",
+                0.01,
+                0.01
         );
 
         MvcResult mvcResult = mockMvc
@@ -102,7 +105,10 @@ public class CoursePostControllerTest {
                 5L,
                 "안녕하시와요. 얼른 신청하시와요.",
                 null,
-                1L
+                1L,
+                "어쩌구 저쩌구",
+                0.01,
+                0.01
         );
 
         MvcResult mvcResult = mockMvc

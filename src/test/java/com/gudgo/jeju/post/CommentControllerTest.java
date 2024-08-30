@@ -1,10 +1,10 @@
 package com.gudgo.jeju.post;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gudgo.jeju.domain.post.dto.request.CommentCreateRequest;
-import com.gudgo.jeju.domain.post.dto.request.CommentUpdateRequest;
-import com.gudgo.jeju.domain.post.query.CommentQueryService;
-import com.gudgo.jeju.domain.post.service.CommentService;
+import com.gudgo.jeju.domain.post.column.dto.request.CommentCreateRequest;
+import com.gudgo.jeju.domain.post.column.dto.request.CommentUpdateRequest;
+import com.gudgo.jeju.domain.post.column.query.CommentQueryService;
+import com.gudgo.jeju.domain.post.column.service.CommentService;
 import com.gudgo.jeju.global.jwt.token.TokenGenerator;
 import com.gudgo.jeju.global.jwt.token.TokenType;
 import org.junit.jupiter.api.Disabled;

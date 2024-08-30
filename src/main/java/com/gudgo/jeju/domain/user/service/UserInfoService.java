@@ -53,8 +53,8 @@ public class UserInfoService {
             user = user.withPassword(passwordEncoder.encode(requestDto.password()));
         }
 
-        if (requestDto.nickname() != null) {
-            user = user.withNickname(requestDto.nickname());
+        if (requestDto.name() != null) {
+            user = user.withName(requestDto.name());
         }
 
         userRepository.save(user);

@@ -1,12 +1,11 @@
 package com.gudgo.jeju.course;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gudgo.jeju.domain.planner.dto.request.course.CourseUpdateRequestDto;
-import com.gudgo.jeju.domain.planner.query.CourseQueryService;
-import com.gudgo.jeju.domain.planner.service.CourseService;
+import com.gudgo.jeju.domain.planner.course.dto.request.CourseUpdateRequestDto;
+import com.gudgo.jeju.domain.planner.course.query.CourseQueryService;
+import com.gudgo.jeju.domain.planner.course.service.CourseService;
 import com.gudgo.jeju.global.jwt.token.TokenGenerator;
 import com.gudgo.jeju.global.jwt.token.TokenType;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

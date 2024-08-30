@@ -1,9 +1,9 @@
 package com.gudgo.jeju.course;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gudgo.jeju.domain.planner.dto.request.spot.SpotCreateRequestDto;
-import com.gudgo.jeju.domain.planner.dto.request.spot.SpotCreateUsingApiRequest;
-import com.gudgo.jeju.domain.planner.service.SpotService;
+import com.gudgo.jeju.domain.planner.spot.dto.request.SpotCreateRequestDto;
+import com.gudgo.jeju.domain.planner.spot.dto.request.SpotCreateUsingApiRequest;
+import com.gudgo.jeju.domain.planner.spot.service.SpotService;
 import com.gudgo.jeju.global.jwt.token.TokenGenerator;
 import com.gudgo.jeju.global.jwt.token.TokenType;
 import org.junit.jupiter.api.Disabled;
