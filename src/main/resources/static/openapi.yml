@@ -1485,6 +1485,25 @@ paths:
             '*/*':
               schema:
                 type: "object"
+  /api/v1/auth/sms/check/later:
+    post:
+      tags:
+        - Authentication
+      summary: "POST api/v1/auth/sms/check/later"
+      operationId: "checkUserUsingVerificationCodeAfterSignup"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SMSVerificationDTO"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SMSVerificationResultResponse"
   /api/v1/auth/sms/send:
     post:
       tags:
@@ -2493,3 +2512,9 @@ components:
           type: "string"
         name:
           type: "string"
+    SMSVerificationResultResponse:
+      type: "object"
+      properties:
+        userId:
+          type: "integer"
+          format: "int64"
