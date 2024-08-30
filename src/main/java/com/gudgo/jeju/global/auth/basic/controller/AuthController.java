@@ -74,7 +74,7 @@ public class AuthController {
 
     /* 비밀번호 변경 */
     @PatchMapping(value = "/user/{userId}")
-    public ResponseEntity<UserInfoResponseDto> updateUserInfo(
+    public ResponseEntity<?> updateUserInfo(
             @PathVariable("userId") Long userId,
             @RequestBody UserInfoUpdateRequestDto requestDto) {
         userInfoService.update(userId, requestDto);
