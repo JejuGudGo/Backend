@@ -61,8 +61,8 @@ public class User {
         return this.toBuilder().password(password).build();
     }
 
-    public User withNickname(String nickname) {
-        return this.toBuilder().nickname(nickname).build();
+    public User withName(String name) {
+        return this.toBuilder().name(name).build();
     }
 
     private User.UserBuilder toBuilder() {
