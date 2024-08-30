@@ -2491,5 +2491,5 @@ components:
       properties:
         password:
           type: "string"
-        nickname:
+        name:
           type: "string"
