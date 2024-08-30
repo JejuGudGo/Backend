@@ -32,7 +32,7 @@ public class SMSMessageController {
 
     @PostMapping(value = "/check/later")
     public ResponseEntity<SMSVerificationResultResponse> checkUserUsingVerificationCodeAfterSignup(@RequestBody SMSVerificationDTO smsVerificationDTO) throws Exception{
-        SMSVerificationResultResponse response = smsMessageService.checkUsersUsingVerificationCode(smsVerificationDTO);
+        SMSVerificationResultResponse response = smsMessageService.checkUsersUsingVerificationCodeAfterSignup(smsVerificationDTO);
 
         return ResponseEntity.ok(response);
     }

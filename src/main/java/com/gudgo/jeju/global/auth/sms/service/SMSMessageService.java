@@ -30,7 +30,14 @@ public class SMSMessageService {
         smsMessageUtil.saveDataForCheckUser(phoneNumber, verificationCode);
     }
 
-    public SMSVerificationResultResponse checkUsersUsingVerificationCode(SMSVerificationDTO smsVerificationDTO) throws BadRequestException {
+    public void checkUsersUsingVerificationCode(SMSVerificationDTO smsVerificationDTO) throws BadRequestException {
+        String redisValue = redisUtil.getData(smsVerificationDTO.getPhoneNumber());
+        if (!redisValue.equals(smsVerificationDTO.getVerificationCode())) {
+            throw new BadRequestException();
+        }
+    }
+
+    public SMSVerificationResultResponse checkUsersUsingVerificationCodeAfterSignup(SMSVerificationDTO smsVerificationDTO) throws BadRequestException {
         String redisValue = redisUtil.getData(smsVerificationDTO.getPhoneNumber());
         if (!redisValue.equals(smsVerificationDTO.getVerificationCode())) {
             throw new BadRequestException();
