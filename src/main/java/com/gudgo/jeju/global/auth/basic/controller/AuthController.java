@@ -6,6 +6,7 @@ import com.gudgo.jeju.domain.user.dto.UserInfoUpdateRequestDto;
 import com.gudgo.jeju.domain.user.service.UserInfoService;
 import com.gudgo.jeju.global.auth.basic.dto.request.*;
 import com.gudgo.jeju.global.auth.basic.dto.response.FindAuthResponseDto;
+import com.gudgo.jeju.global.auth.basic.dto.response.SignupResponse;
 import com.gudgo.jeju.global.auth.basic.service.FindAuthService;
 import com.gudgo.jeju.global.auth.basic.service.LoginService;
 import com.gudgo.jeju.global.auth.basic.service.SignupService;
@@ -32,9 +33,9 @@ public class AuthController {
 
     /* 회원가입 */
     @PostMapping(value = "/signup")
-    public ResponseEntity<?> signup(@Valid @RequestBody SignupRequest signupRequest) {
-        signupService.signup(signupRequest);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<SignupResponse> signup(@Valid @RequestBody SignupRequest signupRequest) {
+        SignupResponse response = signupService.signup(signupRequest);
+        return ResponseEntity.ok(response);
     }
 
 

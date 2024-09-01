@@ -8,6 +8,7 @@ import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
 import com.gudgo.jeju.global.auth.basic.dto.request.EmailRequestDto;
 import com.gudgo.jeju.global.auth.basic.dto.request.SignupRequest;
+import com.gudgo.jeju.global.auth.basic.dto.response.SignupResponse;
 import com.gudgo.jeju.global.util.RandomNicknameUtil;
 import com.gudgo.jeju.global.util.RandomNumberUtil;
 import jakarta.persistence.EntityExistsException;
@@ -33,12 +34,14 @@ public class SignupService {
     private final ProfileRepository profileRepository;
 
     @Transactional
-    public void signup(@Valid SignupRequest signupRequestDto) {
+    public SignupResponse signup(@Valid SignupRequest signupRequestDto) {
         // 이메일 중복 확인
         userRepository.findByEmailAndProvider(signupRequestDto.email(), "basic")
                 .ifPresent(u -> {
                     throw new IllegalArgumentException("User with this email and provider already exists");
                 });
+
+        String nickname = (randomNicknameUtil.set());
 
         Profile profile = Profile.builder()
                 .profileImageUrl("Default")
@@ -48,7 +51,7 @@ public class SignupService {
                 .profile(profile)
                 .email(signupRequestDto.email())
                 .password(passwordEncoder.encode(signupRequestDto.password()))
-                .nickname(randomNicknameUtil.set())
+                .nickname(nickname)
                 .numberTag(randomNumberUtil.set())
                 .role(Role.USER)
                 .provider("basic")
@@ -60,6 +63,9 @@ public class SignupService {
 
         userRepository.save(user);
         profileRepository.save(profile);
+
+        SignupResponse response = new SignupResponse(nickname);
+        return response;
     }
 
     public ResponseEntity<?> isIdDuplicate(EmailRequestDto requestDto) {
