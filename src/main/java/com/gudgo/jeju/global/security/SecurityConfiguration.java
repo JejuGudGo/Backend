@@ -47,6 +47,8 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .requestMatchers("/api/v1/auth/signup").permitAll()
                                 .requestMatchers("/api/v1/auth/login").permitAll()
+                                .requestMatchers("/api/v1/auth/oauth/signup").permitAll()
+                                .requestMatchers("/api/v1/auth/oauth/login").permitAll()
                                 .requestMatchers("/api/v1/auth/logout").permitAll()
                                 .requestMatchers("/api/v1/auth/sms/**").permitAll()
                                 .requestMatchers("/api/v1/auth/check/id").permitAll()

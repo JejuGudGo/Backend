@@ -5,10 +5,12 @@ import com.gudgo.jeju.domain.profile.repository.ProfileRepository;
 import com.gudgo.jeju.domain.user.entity.Role;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
+import com.gudgo.jeju.global.auth.oauth.dto.OAuth2SignupRequest;
 import com.gudgo.jeju.global.auth.oauth.entity.OAuth2UserInfo;
 import com.gudgo.jeju.global.util.RandomNicknameUtil;
 import com.gudgo.jeju.global.util.RandomNumberUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -42,5 +44,26 @@ public class OAuth2SignupService {
         userRepository.save(user);
 
         return user;
+    }
+
+    public void androidSignup(OAuth2SignupRequest request) {
+        Profile profile = Profile.builder()
+                .profileImageUrl(request.profileImage())
+                .build();
+
+        profileRepository.save(profile);
+
+        User user = User.builder()
+                .profile(profile)
+                .email(request.email())
+                .password(null)
+                .nickname(randomNicknameUtil.set())
+                .numberTag(randomNumberUtil.set())
+                .role(Role.USER)
+                .provider("google")
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        userRepository.save(user);
     }
 }
