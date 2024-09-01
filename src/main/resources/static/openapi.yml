@@ -1557,8 +1557,6 @@ paths:
                 type: "object"
   /api/v1/auth/signup:
     post:
-      tags:
-        - User
       summary: "POST api/v1/auth/signup"
       operationId: "signup"
       requestBody:
@@ -1573,7 +1571,7 @@ paths:
           content:
             '*/*':
               schema:
-                type: "object"
+                $ref: "#/components/schemas/SignupResponse"
   /api/v1/users/{userId}/chatRooms/{chatRoomId}/notices:
     get:
       tags:
@@ -2394,11 +2392,14 @@ components:
           type: "string"
         password:
           type: "string"
-        nickname:
-          type: "string"
         name:
           type: "string"
         phoneNumber:
+          type: "string"
+    SignupResponse:
+      type: "object"
+      properties:
+        nickname:
           type: "string"
     NoticeResponse:
       type: "object"
