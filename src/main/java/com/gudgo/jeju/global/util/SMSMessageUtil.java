@@ -44,14 +44,13 @@ public class SMSMessageUtil {
                 .initialize(apikey, apiSecretkey, "https://api.coolsms.co.kr");
     }
 
-    public void verificationUser(SMSMessageDTO smsMessageDTO) {
+    public boolean verificationUser(SMSMessageDTO smsMessageDTO) {
         String phoneNumber = smsMessageDTO.phoneNumber();
         String name = smsMessageDTO.name();
 
         Optional<User> user = userRepository.findUserByPhoneNumberAndName(phoneNumber, name);
-        if (user.isPresent()) {
-            throw new EntityExistsException();
-        }
+
+        return user.isPresent();
     }
 
     public SingleMessageSentResponse sendMessage(String sendTo, String verificationCode) {

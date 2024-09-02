@@ -18,8 +18,14 @@ public class SMSMessageController {
     private final SMSMessageService smsMessageService;
 
     @PostMapping(value = "/send")
-    public ResponseEntity<?> sendSMSForVerification(@RequestBody @Valid SMSMessageDTO smsMessageDTO) throws Exception {
-        smsMessageService.getSMSVerificationBeforeSignup(smsMessageDTO);
+    public ResponseEntity<?> sendSMSForVerificationBeforeSignup(@RequestBody @Valid SMSMessageDTO smsMessageDTO) throws Exception {
+        smsMessageService.getAuthCodeBeforeSignup(smsMessageDTO);
+        return ResponseEntity.ok(smsMessageDTO);
+    }
+
+    @PostMapping(value = "/send/later")
+    public ResponseEntity<?> sendSMSForVerificationAfterSignup(@RequestBody @Valid SMSMessageDTO smsMessageDTO) throws Exception {
+        smsMessageService.getAuthCodeAfterSignup(smsMessageDTO);
         return ResponseEntity.ok(smsMessageDTO);
     }
 

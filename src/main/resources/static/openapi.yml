@@ -1509,7 +1509,26 @@ paths:
       tags:
         - Authentication
       summary: "POST api/v1/auth/sms/send"
-      operationId: "sendSMSForVerification"
+      operationId: "sendSMSForVerificationBeforeSignup"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SMSMessageDTO"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/auth/sms/send/later:
+    post:
+      tags:
+        - Authentication
+      summary: "POST api/v1/auth/sms/send/later"
+      operationId: "sendSMSForVerificationAfterSignup"
       requestBody:
         content:
           application/json:
