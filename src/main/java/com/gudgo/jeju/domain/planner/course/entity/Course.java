@@ -70,6 +70,19 @@ public class Course {
                 .build();
     }
 
+    public Course withStarAvg(double starAvg) {
+        return Course.builder()
+                .id(id)
+                .title(title)
+                .type(type)
+                .createdAt(createdAt)
+                .originalCourseId(originalCourseId)
+                .originalCreatorId(originalCreatorId)
+                .olleCourseId(olleCourseId)
+                .starAvg(starAvg)
+                .build();
+    }
+
 
 
 }

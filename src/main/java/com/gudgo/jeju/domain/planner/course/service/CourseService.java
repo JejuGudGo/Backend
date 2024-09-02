@@ -4,7 +4,10 @@ package com.gudgo.jeju.domain.planner.course.service;
 import com.gudgo.jeju.domain.planner.course.dto.request.CourseUpdateRequestDto;
 import com.gudgo.jeju.domain.planner.course.entity.Course;
 import com.gudgo.jeju.domain.planner.course.repository.CourseRepository;
+import com.gudgo.jeju.domain.planner.planner.entity.Planner;
 import com.gudgo.jeju.domain.planner.planner.repository.PlannerRepository;
+import com.gudgo.jeju.domain.planner.review.entity.PlannerReview;
+import com.gudgo.jeju.domain.planner.review.repository.PlannerReviewRepository;
 import com.gudgo.jeju.domain.planner.spot.repository.SpotRepository;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
 import com.gudgo.jeju.domain.olle.repository.JeJuOlleCourseRepository;
@@ -14,6 +17,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.OptionalDouble;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -27,6 +34,7 @@ public class CourseService {
     private final PlannerRepository plannerRepository;
 
     private final ValidationUtil validationUtil;
+    private final PlannerReviewRepository plannerReviewRepository;
 
     @Transactional
     public void update(Long courseId, CourseUpdateRequestDto requestDto) {
@@ -42,6 +50,23 @@ public class CourseService {
 //        }
 
         courseRepository.save(course);
+    }
+
+    @Transactional
+    public void updateAllOriginalCourseStarAvg() {
+
+        List<Course> originalCourses = courseRepository.findOriginalCourses();
+        for (Course course : originalCourses) {
+            List<PlannerReview> reviews = plannerReviewRepository.findByPlannerCourseOriginalCourseIdAndIsDeletedFalse(course.getId());
+            OptionalDouble avgStars = reviews.stream()
+                    .mapToLong(PlannerReview::getStars)
+                    .average();
+
+            if (avgStars.isPresent()) {
+                Course updatedCourse = course.withStarAvg(avgStars.getAsDouble());
+                courseRepository.save(updatedCourse);
+            }
+        }
     }
 
 //    public CourseResponseDto getCourse(Long courseId) {
