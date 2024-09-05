@@ -38,7 +38,6 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-
     /* 로그인 */
     @PostMapping(value = "/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
@@ -54,13 +53,6 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
-    /* 이메일 인증번호 확인*/
-    @PostMapping(value = "/authentication/check")
-    public ResponseEntity<?> checkAuthenticationcode(@RequestBody AuthenticationRequest request) {
-        findAuthService.validateAuthCode(request.email(), request.authCode());
-        return ResponseEntity.ok().build();
-    }
-
     /* ID 중복 확인 */
     @PostMapping(value = "/check/id")
     public ResponseEntity<?> checkIdDuplicate(@RequestBody EmailRequestDto requestDto) {
@@ -69,8 +61,8 @@ public class AuthController {
 
     /* 아이디 찾기 */
     @PostMapping(value = "/find/id")
-    public ResponseEntity<List<FindAuthResponseDto>> getId(@RequestBody FindAuthByPhoneRequestDto requestDto) {
-        return findAuthService.getId(requestDto);
+    public ResponseEntity<List<FindAuthResponseDto>> getEmailByPhone(@RequestBody FindAuthByPhoneRequestDto requestDto) {
+        return findAuthService.getEmailByPhone(requestDto);
     }
 
     /* 비밀번호 변경 */

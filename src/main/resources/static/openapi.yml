@@ -1791,7 +1791,7 @@ paths:
       tags:
         - Authentication
       summary: "POST api/v1/auth/authentication/check"
-      operationId: "checkAuthenticationcode"
+      operationId: "checkAuthenticationCode"
       requestBody:
         content:
           application/json:
@@ -1805,6 +1805,26 @@ paths:
             '*/*':
               schema:
                 type: "object"
+
+  /api/v1/auth/authentication/check/later:
+    post:
+      tags:
+        - Authentication
+      summary: "POST api/v1/auth/authentication/check/later"
+      operationId: "checkAuthenticationCodeAfterSignup"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthenticationRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/FindAuthResponseDto"
   /api/v1/auth/authentication/send:
     post:
       tags:
