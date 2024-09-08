@@ -60,7 +60,7 @@ public class OAuth2SignupService {
                 .nickname(randomNicknameUtil.set())
                 .numberTag(randomNumberUtil.set())
                 .role(Role.USER)
-                .provider("google")
+                .provider(request.provider())
                 .createdAt(LocalDateTime.now())
                 .build();
 

@@ -54,29 +54,53 @@ public class User {
 
 
     public User withRole(Role role) {
-        return this.toBuilder().role(role).build();
+        return User.builder()
+                .id(this.id)
+                .email(this.email)
+                .password(this.password)
+                .nickname(this.nickname)
+                .name(this.name)
+                .numberTag(this.numberTag)
+                .role(role)
+                .provider(this.provider)
+                .createdAt(this.createdAt)
+                .isDeleted(this.isDeleted)
+                .phoneNumber(this.phoneNumber)
+                .profile(this.profile)
+                .build();
     }
 
     public User withPassword(String password) {
-        return this.toBuilder().password(password).build();
+        return User.builder()
+                .id(this.id)
+                .email(this.email)
+                .password(password)
+                .nickname(this.nickname)
+                .name(this.name)
+                .numberTag(this.numberTag)
+                .role(this.role)
+                .provider(this.provider)
+                .createdAt(this.createdAt)
+                .isDeleted(this.isDeleted)
+                .phoneNumber(this.phoneNumber)
+                .profile(this.profile)
+                .build();
     }
 
     public User withName(String name) {
-        return this.toBuilder().name(name).build();
-    }
-
-    private User.UserBuilder toBuilder() {
         return User.builder()
-                .id(id)
-                .email(email)
+                .id(this.id)
+                .email(this.email)
                 .password(password)
-                .nickname(nickname)
-                .numberTag(numberTag)
-                .role(role)
-                .provider(provider)
-                .createdAt(createdAt)
-                .isDeleted(isDeleted)
-                .phoneNumber(phoneNumber)
-                .profile(profile);
+                .nickname(this.nickname)
+                .name(name)
+                .numberTag(this.numberTag)
+                .role(this.role)
+                .provider(this.provider)
+                .createdAt(this.createdAt)
+                .isDeleted(this.isDeleted)
+                .phoneNumber(this.phoneNumber)
+                .profile(this.profile)
+                .build();
     }
 }
