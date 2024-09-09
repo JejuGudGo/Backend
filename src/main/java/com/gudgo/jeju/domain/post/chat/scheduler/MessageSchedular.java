@@ -37,6 +37,7 @@ public class MessageSchedular {
     @Transactional
     public void schedule() {
         List<String> keys = messageCaching.getAllChatKeys();
+        ChatRoom chatRoom = new ChatRoom();
 
         for (String key : keys) {
             key = key.substring(5);
@@ -46,7 +47,7 @@ public class MessageSchedular {
 
             for (MessageResponse response : responses) {
                 try {
-                    ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+                    chatRoom = chatRoomRepository.findById(chatRoomId)
                             .orElseThrow(EntityNotFoundException::new);
 
                     Participant participant = participantQueryService.findParticipantIdByChatRoomIdAndUserId(chatRoomId, response.userId());
@@ -72,7 +73,7 @@ public class MessageSchedular {
 
                 } catch (Exception e) {
                     MessageLog log = MessageLog.builder()
-                            .chatRoomId(chatRoomId)
+                            .chatRoom(chatRoom)
                             .userId(response.userId())
                             .status(LogStatus.FAILURE)
                             .errorMessage(e.getMessage())
