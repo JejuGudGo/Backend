@@ -17,7 +17,9 @@ public class MessageLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long chatRoomId;
+    @ManyToOne
+    @JoinColumn(name = "chatRoomId")
+    private ChatRoom chatRoom;
 
     private Long userId;
 

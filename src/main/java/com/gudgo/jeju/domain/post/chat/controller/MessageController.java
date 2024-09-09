@@ -54,6 +54,7 @@ public class MessageController {
                 Map.of("current-chat", messageResponse));
     }
 
+    // 이전 채팅 기록 내역
     @MessageMapping(value = "/chatRooms/{chatRoomId}/before/{lastChatId}")
     public void getMessages(
             @DestinationVariable("chatRoomId") Long chatRoomId,

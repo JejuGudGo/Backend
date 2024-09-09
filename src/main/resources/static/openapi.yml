@@ -4,6 +4,9 @@ info:
   description: "jeju API"
   version: "1.0.0"
 servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/WLDSMTLDSM65/jeju-gudgo/1.0.0
   - url: "https://jeju"
 
 tags:
@@ -29,8 +32,10 @@ tags:
     description: "커뮤니티(코스) 기능 api 입니다."
   - name: "Participant"
     description: "걷기 참여 기능 api 입니다."
-  - name: "Chatting"
-    description: "채팅 공지 기능 api 입니다. 나머지는 웹소켓이기 때문에 노션에 따로 작성합니다."
+  - name: "Chatting - notice"
+    description: "채팅 공지 기능 api 입니다."
+  - name: "Chatting - chatRoom"
+    description: "채팅방 기능 api 입니다."
 paths:
   /api/v1/courses/olle/:
     get:
@@ -1576,6 +1581,8 @@ paths:
                 type: "object"
   /api/v1/auth/signup:
     post:
+      tags:
+        - User
       summary: "POST api/v1/auth/signup"
       operationId: "signup"
       requestBody:
@@ -1594,7 +1601,7 @@ paths:
   /api/v1/users/{userId}/chatRooms/{chatRoomId}/notices:
     get:
       tags:
-        - Chatting
+        - Chatting - notice
       summary: "GET api/v1/users/{userId}/chatRooms/{chatRoomId}/notices"
       operationId: "getNotices"
       parameters:
@@ -1621,7 +1628,7 @@ paths:
                   $ref: "#/components/schemas/NoticeResponse"
     post:
       tags:
-        - Chatting
+        - Chatting - notice
       summary: "POST api/v1/users/{userId}/chatRooms/{chatRoomId}/notices"
       operationId: "createNotices"
       parameters:
@@ -1653,7 +1660,7 @@ paths:
   /api/v1/users/{userId}/chatRooms/{chatRoomId}/notices/latest:
     get:
       tags:
-        - Chatting
+        - Chatting - notice
       summary: "GET api/v1/users/{userId}/chatRooms/{chatRoomId}/notices/latest"
       operationId: "getLatestNotice"
       parameters:
@@ -1679,7 +1686,7 @@ paths:
   /api/v1/users/{userId}/chatRooms/{chatRoomId}/notices/{noticeId}:
     patch:
       tags:
-        - Chatting
+        - Chatting - notice
       summary: "PATCH api/v1/users/{userId}/chatRooms/{chatRoomId}/notices/{noticeId}"
       operationId: "update"
       parameters:
@@ -1716,7 +1723,7 @@ paths:
                 $ref: "#/components/schemas/NoticeResponse"
     delete:
       tags:
-        - Chatting
+        - Chatting - notice
       summary: "DELETE api/v1/users/{userId}/chatRooms/{chatRoomId}/notices/{noticeId}"
       operationId: "deleteNotices"
       parameters:
@@ -1733,6 +1740,52 @@ paths:
             type: "integer"
             format: "int64"
         - name: "noticeId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/users/{userId}/chatRooms:
+    get:
+      tags:
+        - Chatting - chatRoom
+      summary: "GET api/v1/users/{userId}/chatRooms"
+      operationId: "getChatRooms"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ChatRoomResponse"
+  /api/v1/users/{userId}/chatRooms/{chatRoomId}:
+    patch:
+      tags:
+        - Chatting - chatRoom
+      summary: "PATCH api/v1/users/{userId}/chatRooms/{chatRoomId}"
+      operationId: "updateChatRooms"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+        - name: "chatRoomId"
           in: "path"
           required: true
           schema:
@@ -2558,3 +2611,15 @@ components:
         userId:
           type: "integer"
           format: "int64"
+    ChatRoomResponse:
+      type: "object"
+      properties:
+        chatRoomId:
+          type: "integer"
+          format: "int64"
+        title:
+          type: "string"
+        profileImages:
+          type: "array"
+          items:
+            type: "string"

@@ -16,4 +16,14 @@ public class ChatRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String title;
+
+
+    public ChatRoom withTitle(String title) {
+        return ChatRoom.builder()
+                .id(this.id)
+                .title(title)
+                .build();
+    }
 }
