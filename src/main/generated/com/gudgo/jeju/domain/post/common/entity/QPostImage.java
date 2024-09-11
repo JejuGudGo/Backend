@@ -1,4 +1,4 @@
-package com.gudgo.jeju.domain.post.entity;
+package com.gudgo.jeju.domain.post.common.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QPostImage extends EntityPathBase<PostImage> {
 
-    private static final long serialVersionUID = -1846372737L;
+    private static final long serialVersionUID = -1556961116L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 

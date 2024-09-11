@@ -5,17 +5,22 @@ import com.gudgo.jeju.domain.olle.entity.JeJuOlleCourseData;
 import com.gudgo.jeju.domain.olle.entity.OlleType;
 import com.gudgo.jeju.domain.olle.repository.JeJuOlleCourseDataRepository;
 import com.gudgo.jeju.domain.olle.repository.JeJuOlleCourseRepository;
+import com.gudgo.jeju.domain.planner.course.entity.CourseType;
+import com.gudgo.jeju.domain.planner.course.repository.CourseRepository;
+import com.gudgo.jeju.domain.planner.planner.service.PlannerService;
 import com.gudgo.jeju.global.data.common.entity.DataConfiguration;
 import com.gudgo.jeju.global.data.tourAPI.repository.DataConfigurationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -24,12 +29,92 @@ public class HaYoungOlleDatabaseService {
     private final DataConfigurationRepository dataConfigurationRepository;
     private final JeJuOlleCourseRepository jeJuOlleCourseRepository;
     private final JeJuOlleCourseDataRepository jeJuOlleCourseDataRepository;
+    private final CourseRepository courseRepository;
 
-    public void loadHaYoungData() throws Exception {
-        loadHaYoungOlle1Data();
-        loadHaYoungOlle2Data();
-        loadHaYoungOlle3Data();
+    private final PlannerService plannerService;
+
+
+    @Transactional
+    public void processHaYoungOlleData() {
+        try {
+            log.info("Starting processHaYoungOlleData");
+            if (isInitializationRequired()) {
+                boolean dataLoaded = loadHaYoungData();
+                log.info("Data loaded status: {}", dataLoaded);
+
+                if (dataLoaded) {
+                    log.info("Calling createPlannersFromHaYoungOlleData");
+                    createPlannersFromHaYoungOlleData();
+                    markInitializationComplete();
+                } else {
+                    log.info("Data loading failed, skipping planner creation");
+                }
+            } else {
+                log.info("Initialization already completed, skipping process");
+            }
+            log.info("Finished processHaYoungOlleData");
+        } catch (Exception e) {
+            log.error("Unexpected error in processHaYoungOlleData", e);
+            throw new RuntimeException("Failed to process HaYoung Olle data", e);
+        }
     }
+
+    private boolean isInitializationRequired() {
+        DataConfiguration initConfig = dataConfigurationRepository.findByConfigKey("HaYoungOlleInitializationCompleted")
+                .orElse(null);
+        return initConfig == null || !initConfig.isConfigValue();
+    }
+
+    private void markInitializationComplete() {
+        DataConfiguration initConfig = dataConfigurationRepository.findByConfigKey("HaYoungOlleInitializationCompleted")
+                .orElse(DataConfiguration.builder()
+                        .configKey("HaYoungOlleInitializationCompleted")
+                        .configValue(false)
+                        .updatedAt(LocalDate.now())
+                        .build());
+
+        initConfig = initConfig.withConfigValue(true)
+                .withUpdatedAt(LocalDate.now());
+
+        dataConfigurationRepository.save(initConfig);
+        log.info("Marked HaYoung Olle initialization as completed");
+    }
+
+    public boolean loadHaYoungData() {
+        try {
+            loadHaYoungOlle1Data();
+            loadHaYoungOlle2Data();
+            loadHaYoungOlle3Data();
+            return true;
+        } catch (Exception e) {
+            log.error("Error occurred while loading HaYoung Olle data", e);
+            return false;
+        }
+    }
+
+    private void createPlannersFromHaYoungOlleData() {
+        log.info("Starting createPlannersFromHaYoungOlleData");
+        try {
+            List<JeJuOlleCourse> olleCourses = jeJuOlleCourseRepository.findByOlleType(OlleType.HAYOUNG);
+            log.info("Found {} HaYoung Olle courses", olleCourses.size());
+            for (JeJuOlleCourse olleCourse : olleCourses) {
+                if (!isOlleCourseAlreadyProcessed(olleCourse)) {
+                    plannerService.createOllePlanner(olleCourse);
+                    log.info("Created Planner for HaYoung Olle course: {}", olleCourse.getCourseNumber());
+                } else {
+                    log.info("Planner already exists for HaYoung Olle course: {}", olleCourse.getCourseNumber());
+                }
+            }
+        } catch (Exception e) {
+            log.error("Error occurred while creating Planners from HaYoung Olle data", e);
+            throw new RuntimeException("Failed to create Planners from HaYoung Olle data", e);
+        }
+    }
+
+    private boolean isOlleCourseAlreadyProcessed(JeJuOlleCourse olleCourse) {
+        return courseRepository.existsByTypeAndOlleCourseId(CourseType.HAYOUNG, olleCourse.getId());
+    }
+
 
     private void loadHaYoungOlle1Data() throws Exception {
         DataConfiguration checkDataConfig = dataConfigurationRepository.findByConfigKey("HaYoungOlle1")
@@ -221,5 +306,10 @@ public class HaYoungOlleDatabaseService {
             log.info("HaYoungOlle3 is already loaded");
             log.info("===============================================================================");
         }
+    }
+    public boolean isHaYoungOlleDataExist() {
+        long count = jeJuOlleCourseRepository.countByOlleType(OlleType.HAYOUNG);
+        log.info("Found {} HaYoung Olle courses in the database", count);
+        return count > 0;
     }
 }

@@ -1,4 +1,4 @@
-package com.gudgo.jeju.domain.planner.entity;
+package com.gudgo.jeju.domain.post.chat.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QNotice extends EntityPathBase<Notice> {
 
-    private static final long serialVersionUID = 2093387528L;
+    private static final long serialVersionUID = 576808412L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
@@ -32,7 +32,7 @@ public class QNotice extends EntityPathBase<Notice> {
 
     public final BooleanPath isDeleted = createBoolean("isDeleted");
 
-    public final QParticipant participant;
+    public final com.gudgo.jeju.domain.post.participant.entity.QParticipant participant;
 
     public final DateTimePath<java.time.LocalDateTime> updatedAt = createDateTime("updatedAt", java.time.LocalDateTime.class);
 
@@ -55,7 +55,7 @@ public class QNotice extends EntityPathBase<Notice> {
     public QNotice(Class<? extends Notice> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.chatRoom = inits.isInitialized("chatRoom") ? new QChatRoom(forProperty("chatRoom")) : null;
-        this.participant = inits.isInitialized("participant") ? new QParticipant(forProperty("participant"), inits.get("participant")) : null;
+        this.participant = inits.isInitialized("participant") ? new com.gudgo.jeju.domain.post.participant.entity.QParticipant(forProperty("participant"), inits.get("participant")) : null;
     }
 
 }

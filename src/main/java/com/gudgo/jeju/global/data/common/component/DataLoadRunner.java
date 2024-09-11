@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -33,6 +35,9 @@ public class DataLoadRunner implements CommandLineRunner {
         loadCsvService.loadTourApiCommonCsvData();
         tourApiRequestService.prepareTourApiData();
 
+        jejuOlleDatabaseService.processJejuOlleData();
+        haYoungOlleDatabaseService.processHaYoungOlleData();
+
         jejuOlleDatabaseService.convertGpxToDatabase();
         jejuOlleDatabaseService.addAdditionalData();
         jejuOlleSpotDatabaseService.loadJeJuOlleSpotCsvData();
@@ -45,6 +50,5 @@ public class DataLoadRunner implements CommandLineRunner {
 
         reviewDatabaseService.loadReviewCategory1CsvToDatabase();
         reviewDatabaseService.loadReviewCategory2CsvToDatabase();
-
     }
 }

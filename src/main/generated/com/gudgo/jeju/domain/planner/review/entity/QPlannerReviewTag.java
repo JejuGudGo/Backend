@@ -1,4 +1,4 @@
-package com.gudgo.jeju.domain.review.entity;
+package com.gudgo.jeju.domain.planner.review.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QPlannerReviewTag extends EntityPathBase<PlannerReviewTag> {
 
-    private static final long serialVersionUID = -559903740L;
+    private static final long serialVersionUID = 1679039648L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 

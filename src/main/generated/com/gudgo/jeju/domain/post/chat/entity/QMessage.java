@@ -1,4 +1,4 @@
-package com.gudgo.jeju.domain.planner.entity;
+package com.gudgo.jeju.domain.post.chat.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QMessage extends EntityPathBase<Message> {
 
-    private static final long serialVersionUID = -703918633L;
+    private static final long serialVersionUID = -473230973L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
@@ -28,7 +28,7 @@ public class QMessage extends EntityPathBase<Message> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final QParticipant participant;
+    public final com.gudgo.jeju.domain.post.participant.entity.QParticipant participant;
 
     public QMessage(String variable) {
         this(Message.class, forVariable(variable), INITS);
@@ -49,7 +49,7 @@ public class QMessage extends EntityPathBase<Message> {
     public QMessage(Class<? extends Message> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.chatRoom = inits.isInitialized("chatRoom") ? new QChatRoom(forProperty("chatRoom")) : null;
-        this.participant = inits.isInitialized("participant") ? new QParticipant(forProperty("participant"), inits.get("participant")) : null;
+        this.participant = inits.isInitialized("participant") ? new com.gudgo.jeju.domain.post.participant.entity.QParticipant(forProperty("participant"), inits.get("participant")) : null;
     }
 
 }

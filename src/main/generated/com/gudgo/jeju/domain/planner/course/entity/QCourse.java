@@ -1,4 +1,4 @@
-package com.gudgo.jeju.domain.planner.entity;
+package com.gudgo.jeju.domain.planner.course.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -15,7 +15,7 @@ import com.querydsl.core.types.Path;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QCourse extends EntityPathBase<Course> {
 
-    private static final long serialVersionUID = 1778505803L;
+    private static final long serialVersionUID = -938707762L;
 
     public static final QCourse course = new QCourse("course");
 
@@ -28,6 +28,8 @@ public class QCourse extends EntityPathBase<Course> {
     public final NumberPath<Long> originalCourseId = createNumber("originalCourseId", Long.class);
 
     public final NumberPath<Long> originalCreatorId = createNumber("originalCreatorId", Long.class);
+
+    public final NumberPath<Double> starAvg = createNumber("starAvg", Double.class);
 
     public final StringPath title = createString("title");
 

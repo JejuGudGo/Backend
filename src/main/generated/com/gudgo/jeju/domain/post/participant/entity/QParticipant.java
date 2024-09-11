@@ -1,4 +1,4 @@
-package com.gudgo.jeju.domain.planner.entity;
+package com.gudgo.jeju.domain.post.participant.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QParticipant extends EntityPathBase<Participant> {
 
-    private static final long serialVersionUID = -41773821L;
+    private static final long serialVersionUID = 1610133554L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
@@ -40,7 +40,7 @@ public class QParticipant extends EntityPathBase<Participant> {
 
     public final BooleanPath isDeleted = createBoolean("isDeleted");
 
-    public final QPlanner planner;
+    public final com.gudgo.jeju.domain.planner.planner.entity.QPlanner planner;
 
     public final com.gudgo.jeju.domain.user.entity.QUser user;
 
@@ -62,7 +62,7 @@ public class QParticipant extends EntityPathBase<Participant> {
 
     public QParticipant(Class<? extends Participant> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.planner = inits.isInitialized("planner") ? new QPlanner(forProperty("planner"), inits.get("planner")) : null;
+        this.planner = inits.isInitialized("planner") ? new com.gudgo.jeju.domain.planner.planner.entity.QPlanner(forProperty("planner"), inits.get("planner")) : null;
         this.user = inits.isInitialized("user") ? new com.gudgo.jeju.domain.user.entity.QUser(forProperty("user"), inits.get("user")) : null;
     }
 

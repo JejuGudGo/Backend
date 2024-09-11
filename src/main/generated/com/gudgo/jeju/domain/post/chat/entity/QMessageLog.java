@@ -1,4 +1,4 @@
-package com.gudgo.jeju.domain.planner.entity;
+package com.gudgo.jeju.domain.post.chat.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -15,7 +15,7 @@ import com.querydsl.core.types.Path;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QMessageLog extends EntityPathBase<MessageLog> {
 
-    private static final long serialVersionUID = 1885387245L;
+    private static final long serialVersionUID = -1941174591L;
 
     public static final QMessageLog messageLog = new QMessageLog("messageLog");
 

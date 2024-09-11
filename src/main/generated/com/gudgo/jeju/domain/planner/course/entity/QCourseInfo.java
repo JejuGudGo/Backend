@@ -1,4 +1,4 @@
-package com.gudgo.jeju.domain.planner.entity;
+package com.gudgo.jeju.domain.planner.course.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QCourseInfo extends EntityPathBase<CourseInfo> {
 
-    private static final long serialVersionUID = 1771672473L;
+    private static final long serialVersionUID = 1345074844L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 

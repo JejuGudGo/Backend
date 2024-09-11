@@ -1,4 +1,4 @@
-package com.gudgo.jeju.domain.planner.entity;
+package com.gudgo.jeju.domain.planner.planner.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,15 +16,15 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QPlanner extends EntityPathBase<Planner> {
 
-    private static final long serialVersionUID = 2142236578L;
+    private static final long serialVersionUID = 807132222L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
     public static final QPlanner planner = new QPlanner("planner");
 
-    public final QChatRoom chatRoom;
+    public final com.gudgo.jeju.domain.post.chat.entity.QChatRoom chatRoom;
 
-    public final QCourse course;
+    public final com.gudgo.jeju.domain.planner.course.entity.QCourse course;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
@@ -60,8 +60,8 @@ public class QPlanner extends EntityPathBase<Planner> {
 
     public QPlanner(Class<? extends Planner> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.chatRoom = inits.isInitialized("chatRoom") ? new QChatRoom(forProperty("chatRoom")) : null;
-        this.course = inits.isInitialized("course") ? new QCourse(forProperty("course")) : null;
+        this.chatRoom = inits.isInitialized("chatRoom") ? new com.gudgo.jeju.domain.post.chat.entity.QChatRoom(forProperty("chatRoom")) : null;
+        this.course = inits.isInitialized("course") ? new com.gudgo.jeju.domain.planner.course.entity.QCourse(forProperty("course")) : null;
         this.user = inits.isInitialized("user") ? new com.gudgo.jeju.domain.user.entity.QUser(forProperty("user"), inits.get("user")) : null;
     }
 

@@ -1,4 +1,4 @@
-package com.gudgo.jeju.domain.post.entity;
+package com.gudgo.jeju.domain.post.common.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QPosts extends EntityPathBase<Posts> {
 
-    private static final long serialVersionUID = 119807927L;
+    private static final long serialVersionUID = 1369771100L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
@@ -40,7 +40,7 @@ public class QPosts extends EntityPathBase<Posts> {
 
     public final StringPath placeName = createString("placeName");
 
-    public final com.gudgo.jeju.domain.planner.entity.QPlanner planner;
+    public final com.gudgo.jeju.domain.planner.planner.entity.QPlanner planner;
 
     public final EnumPath<PostType> postType = createEnum("postType", PostType.class);
 
@@ -66,7 +66,7 @@ public class QPosts extends EntityPathBase<Posts> {
 
     public QPosts(Class<? extends Posts> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.planner = inits.isInitialized("planner") ? new com.gudgo.jeju.domain.planner.entity.QPlanner(forProperty("planner"), inits.get("planner")) : null;
+        this.planner = inits.isInitialized("planner") ? new com.gudgo.jeju.domain.planner.planner.entity.QPlanner(forProperty("planner"), inits.get("planner")) : null;
         this.user = inits.isInitialized("user") ? new com.gudgo.jeju.domain.user.entity.QUser(forProperty("user"), inits.get("user")) : null;
     }
 

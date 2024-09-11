@@ -1,4 +1,4 @@
-package com.gudgo.jeju.domain.planner.entity;
+package com.gudgo.jeju.domain.planner.spot.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QSpot extends EntityPathBase<Spot> {
 
-    private static final long serialVersionUID = 498416946L;
+    private static final long serialVersionUID = 665106332L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
@@ -28,7 +28,7 @@ public class QSpot extends EntityPathBase<Spot> {
 
     public final NumberPath<Long> count = createNumber("count", Long.class);
 
-    public final QCourse course;
+    public final com.gudgo.jeju.domain.planner.course.entity.QCourse course;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
@@ -66,7 +66,7 @@ public class QSpot extends EntityPathBase<Spot> {
 
     public QSpot(Class<? extends Spot> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.course = inits.isInitialized("course") ? new QCourse(forProperty("course")) : null;
+        this.course = inits.isInitialized("course") ? new com.gudgo.jeju.domain.planner.course.entity.QCourse(forProperty("course")) : null;
         this.tourApiCategory1 = inits.isInitialized("tourApiCategory1") ? new com.gudgo.jeju.domain.tourApi.entity.QTourApiCategory1(forProperty("tourApiCategory1"), inits.get("tourApiCategory1")) : null;
     }
 
