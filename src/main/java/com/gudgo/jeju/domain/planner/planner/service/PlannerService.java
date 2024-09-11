@@ -2,6 +2,7 @@ package com.gudgo.jeju.domain.planner.planner.service;
 
 
 import com.gudgo.jeju.domain.olle.entity.JeJuOlleCourse;
+import com.gudgo.jeju.domain.olle.entity.OlleType;
 import com.gudgo.jeju.domain.olle.repository.JeJuOlleCourseRepository;
 import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerCreateRequestDto;
 import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerUpdateRequestDto;
@@ -94,30 +95,20 @@ public class PlannerService {
     }
 
     @Transactional
-    public int createAllOllePlanners() {
-        List<JeJuOlleCourse> allOlleCourses = jejuOlleCourseRepository.findAll();
-        log.info("Found {} JeJuOlleCourse entries to process", allOlleCourses.size());
-
-        int createdPlanners = 0;
-        for (JeJuOlleCourse olleCourse : allOlleCourses) {
-            try {
-                createOllePlanner(olleCourse);
-                createdPlanners++;
-                log.info("Successfully created Planner for JeJuOlleCourse with id: {}", olleCourse.getId());
-            } catch (Exception e) {
-                log.error("Error creating Planner for JeJuOlleCourse with id: {}", olleCourse.getId(), e);
-            }
+    public void createOllePlanner(JeJuOlleCourse olleCourse) {
+        CourseType courseType;
+        if (olleCourse.getOlleType() == OlleType.JEJU) {
+            courseType = CourseType.JEJU;
+        } else if (olleCourse.getOlleType() == OlleType.HAYOUNG) {
+            courseType = CourseType.HAYOUNG;
+        } else {
+            throw new IllegalArgumentException("Unsupported OlleType: " + olleCourse.getOlleType());
         }
-        log.info("Finished processing all JeJuOlleCourse entries. Created {} planners", createdPlanners);
-        return createdPlanners;
-    }
 
-    @Transactional
-    public void createOllePlanner(JeJuOlleCourse jejuOlleCourse) {
         Course course = Course.builder()
-                .type(CourseType.JEJU)
-                .title(jejuOlleCourse.getTitle())
-                .olleCourseId(jejuOlleCourse.getId())
+                .type(courseType)
+                .title(olleCourse.getTitle())
+                .olleCourseId(olleCourse.getId())
                 .build();
 
         // 저장하여 originalCourseId 업데이트

@@ -39,16 +39,9 @@ public class HaYoungOlleDatabaseService {
         try {
             log.info("Starting processHaYoungOlleData");
             if (isInitializationRequired()) {
-                boolean dataLoaded = loadHaYoungData();
-                log.info("Data loaded status: {}", dataLoaded);
-
-                if (dataLoaded) {
-                    log.info("Calling createPlannersFromHaYoungOlleData");
-                    createPlannersFromHaYoungOlleData();
-                    markInitializationComplete();
-                } else {
-                    log.info("Data loading failed, skipping planner creation");
-                }
+                log.info("Creating Courses and Planners from existing HaYoung Olle data");
+                createCoursesAndPlannersFromHaYoungOlleData();
+                markInitializationComplete();
             } else {
                 log.info("Initialization already completed, skipping process");
             }
@@ -60,15 +53,15 @@ public class HaYoungOlleDatabaseService {
     }
 
     private boolean isInitializationRequired() {
-        DataConfiguration initConfig = dataConfigurationRepository.findByConfigKey("HaYoungOlleInitializationCompleted")
+        DataConfiguration initConfig = dataConfigurationRepository.findByConfigKey("HaYoungOlleCoursePlannerInitializationCompleted")
                 .orElse(null);
         return initConfig == null || !initConfig.isConfigValue();
     }
 
     private void markInitializationComplete() {
-        DataConfiguration initConfig = dataConfigurationRepository.findByConfigKey("HaYoungOlleInitializationCompleted")
+        DataConfiguration initConfig = dataConfigurationRepository.findByConfigKey("HaYoungOlleCoursePlannerInitializationCompleted")
                 .orElse(DataConfiguration.builder()
-                        .configKey("HaYoungOlleInitializationCompleted")
+                        .configKey("HaYoungOlleCoursePlannerInitializationCompleted")
                         .configValue(false)
                         .updatedAt(LocalDate.now())
                         .build());
@@ -77,7 +70,30 @@ public class HaYoungOlleDatabaseService {
                 .withUpdatedAt(LocalDate.now());
 
         dataConfigurationRepository.save(initConfig);
-        log.info("Marked HaYoung Olle initialization as completed");
+        log.info("Marked HaYoung Olle Course and Planner initialization as completed");
+    }
+
+    public void createCoursesAndPlannersFromHaYoungOlleData() {
+        log.info("Starting createCoursesAndPlannersFromHaYoungOlleData");
+        try {
+            List<JeJuOlleCourse> olleCourses = jeJuOlleCourseRepository.findByOlleType(OlleType.HAYOUNG);
+            log.info("Found {} HaYoung Olle courses", olleCourses.size());
+            for (JeJuOlleCourse olleCourse : olleCourses) {
+                if (!isOlleCourseAlreadyProcessed(olleCourse)) {
+                    plannerService.createOllePlanner(olleCourse);
+                    log.info("Created Course and Planner for HaYoung Olle course: {}", olleCourse.getCourseNumber());
+                } else {
+                    log.info("Course and Planner already exist for HaYoung Olle course: {}", olleCourse.getCourseNumber());
+                }
+            }
+        } catch (Exception e) {
+            log.error("Error occurred while creating Courses and Planners from HaYoung Olle data", e);
+            throw new RuntimeException("Failed to create Courses and Planners from HaYoung Olle data", e);
+        }
+    }
+
+    private boolean isOlleCourseAlreadyProcessed(JeJuOlleCourse olleCourse) {
+        return courseRepository.existsByTypeAndOlleCourseId(CourseType.HAYOUNG, olleCourse.getId());
     }
 
     public boolean loadHaYoungData() {
@@ -92,28 +108,6 @@ public class HaYoungOlleDatabaseService {
         }
     }
 
-    private void createPlannersFromHaYoungOlleData() {
-        log.info("Starting createPlannersFromHaYoungOlleData");
-        try {
-            List<JeJuOlleCourse> olleCourses = jeJuOlleCourseRepository.findByOlleType(OlleType.HAYOUNG);
-            log.info("Found {} HaYoung Olle courses", olleCourses.size());
-            for (JeJuOlleCourse olleCourse : olleCourses) {
-                if (!isOlleCourseAlreadyProcessed(olleCourse)) {
-                    plannerService.createOllePlanner(olleCourse);
-                    log.info("Created Planner for HaYoung Olle course: {}", olleCourse.getCourseNumber());
-                } else {
-                    log.info("Planner already exists for HaYoung Olle course: {}", olleCourse.getCourseNumber());
-                }
-            }
-        } catch (Exception e) {
-            log.error("Error occurred while creating Planners from HaYoung Olle data", e);
-            throw new RuntimeException("Failed to create Planners from HaYoung Olle data", e);
-        }
-    }
-
-    private boolean isOlleCourseAlreadyProcessed(JeJuOlleCourse olleCourse) {
-        return courseRepository.existsByTypeAndOlleCourseId(CourseType.HAYOUNG, olleCourse.getId());
-    }
 
 
     private void loadHaYoungOlle1Data() throws Exception {
@@ -306,10 +300,5 @@ public class HaYoungOlleDatabaseService {
             log.info("HaYoungOlle3 is already loaded");
             log.info("===============================================================================");
         }
-    }
-    public boolean isHaYoungOlleDataExist() {
-        long count = jeJuOlleCourseRepository.countByOlleType(OlleType.HAYOUNG);
-        log.info("Found {} HaYoung Olle courses in the database", count);
-        return count > 0;
     }
 }

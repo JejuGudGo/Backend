@@ -50,16 +50,9 @@ public class JejuOlleDatabaseService {
         try {
             log.info("Starting processJejuOlleData");
             if (isInitializationRequired()) {
-                boolean dataLoaded = loadJejuOlleData();
-                log.info("Data loaded status: {}", dataLoaded);
-
-                if (dataLoaded) {
-                    log.info("Calling createPlannersFromOlleData");
-                    createPlannersFromOlleData();
-                    markInitializationComplete();
-                } else {
-                    log.info("Data loading failed, skipping planner creation");
-                }
+                log.info("Creating Courses and Planners from existing Jeju Olle data");
+                createCoursesAndPlannersFromJejuOlleData();
+                markInitializationComplete();
             } else {
                 log.info("Initialization already completed, skipping process");
             }
@@ -71,15 +64,15 @@ public class JejuOlleDatabaseService {
     }
 
     private boolean isInitializationRequired() {
-        DataConfiguration initConfig = dataConfigurationRepository.findByConfigKey("OlleInitializationCompleted")
+        DataConfiguration initConfig = dataConfigurationRepository.findByConfigKey("JejuOlleCoursePlannerInitializationCompleted")
                 .orElse(null);
         return initConfig == null || !initConfig.isConfigValue();
     }
 
     private void markInitializationComplete() {
-        DataConfiguration initConfig = dataConfigurationRepository.findByConfigKey("OlleInitializationCompleted")
+        DataConfiguration initConfig = dataConfigurationRepository.findByConfigKey("JejuOlleCoursePlannerInitializationCompleted")
                 .orElse(DataConfiguration.builder()
-                        .configKey("OlleInitializationCompleted")
+                        .configKey("JejuOlleCoursePlannerInitializationCompleted")
                         .configValue(false)
                         .updatedAt(LocalDate.now())
                         .build());
@@ -88,7 +81,29 @@ public class JejuOlleDatabaseService {
                 .withUpdatedAt(LocalDate.now());
 
         dataConfigurationRepository.save(initConfig);
-        log.info("Marked Olle initialization as completed");
+        log.info("Marked Jeju Olle Course and Planner initialization as completed");
+    }
+
+    public void createCoursesAndPlannersFromJejuOlleData() {
+        log.info("Starting createCoursesAndPlannersFromJejuOlleData");
+        try {
+            List<JeJuOlleCourse> olleCourses = jeJuOlleCourseRepository.findByOlleType(OlleType.JEJU);
+            for (JeJuOlleCourse olleCourse : olleCourses) {
+                if (!isOlleCourseAlreadyProcessed(olleCourse)) {
+                    plannerService.createOllePlanner(olleCourse);
+                    log.info("Created Course and Planner for Jeju Olle course: {}", olleCourse.getCourseNumber());
+                } else {
+                    log.info("Course and Planner already exist for Jeju Olle course: {}", olleCourse.getCourseNumber());
+                }
+            }
+        } catch (Exception e) {
+            log.error("Error occurred while creating Courses and Planners from Jeju Olle data", e);
+            throw new RuntimeException("Failed to create Courses and Planners from Jeju Olle data", e);
+        }
+    }
+
+    private boolean isOlleCourseAlreadyProcessed(JeJuOlleCourse olleCourse) {
+        return courseRepository.existsByTypeAndOlleCourseId(CourseType.JEJU, olleCourse.getId());
     }
 
     private boolean loadJejuOlleData() {
@@ -148,7 +163,9 @@ public class JejuOlleDatabaseService {
                     if (courseNumber != null) {
                         parseAndSaveGpxFile(resource, courseNumber, courseTitle, wheelchairAccessible);
                     } else {
+                        log.warn("===============================================================================");
                         log.warn("Course number not found for file: {}", fileName);
+                        log.warn("===============================================================================");
                     }
 
                 } catch (IOException e) {
@@ -157,10 +174,13 @@ public class JejuOlleDatabaseService {
             }
 
             updateDataLoadedStatus();
+            log.info("===============================================================================");
             log.info("OlleData loaded successfully");
+            log.info("===============================================================================");
         } else {
+            log.info("===============================================================================");
             log.info("OlleData is already loaded");
-        }
+            log.info("===============================================================================");        }
     }
 
     private String extractCourseNumberFromTitle(String title) {
@@ -217,7 +237,9 @@ public class JejuOlleDatabaseService {
                 jeJuOlleCourseDataRepository.saveAll(jeJuOlleCourseDataList);
             }
         } catch (Exception e) {
+            log.error("===============================================================================");
             log.error("Error parsing GPX file: {}", resource.getFilename(), e);
+            log.error("===============================================================================");
         }
     }
 
@@ -297,9 +319,14 @@ public class JejuOlleDatabaseService {
             }
 
             updateAdditionalDataLoadedStatus();
+            log.info("===============================================================================");
             log.info("Olle additional Data loaded successfully");
+            log.info("===============================================================================");
+
         } else {
+            log.info("===============================================================================");
             log.info("Olle additional Data is already loaded");
+            log.info("===============================================================================");
         }
     }
 
@@ -316,27 +343,5 @@ public class JejuOlleDatabaseService {
                 .withUpdatedAt(LocalDate.now());
 
         dataConfigurationRepository.save(updatedConfig);
-    }
-
-    private void createPlannersFromOlleData() {
-        log.info("Starting createPlannersFromOlleData");
-        try {
-            List<JeJuOlleCourse> olleCourses = jeJuOlleCourseRepository.findAll();
-            for (JeJuOlleCourse olleCourse : olleCourses) {
-                if (!isOlleCourseAlreadyProcessed(olleCourse)) {
-                    plannerService.createOllePlanner(olleCourse);
-                    log.info("Created Planner for Jeju Olle course: {}", olleCourse.getCourseNumber());
-                } else {
-                    log.info("Planner already exists for Jeju Olle course: {}", olleCourse.getCourseNumber());
-                }
-            }
-        } catch (Exception e) {
-            log.error("Error occurred while creating Planners from Jeju Olle data", e);
-            throw new RuntimeException("Failed to create Planners from Jeju Olle data", e);
-        }
-    }
-
-    private boolean isOlleCourseAlreadyProcessed(JeJuOlleCourse olleCourse) {
-        return courseRepository.existsByTypeAndOlleCourseId(CourseType.JEJU, olleCourse.getId());
     }
 }

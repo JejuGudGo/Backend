@@ -1,5 +1,6 @@
 package com.gudgo.jeju.domain.planner.planner.repository;
 
+import com.gudgo.jeju.domain.planner.course.entity.CourseType;
 import com.gudgo.jeju.domain.planner.planner.entity.Planner;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -15,4 +16,5 @@ public interface PlannerRepository extends JpaRepository<Planner, Long> {
     List<Long> findPlannerIdsByCourseId(Long courseId);
 
     List<Planner> findAllByCourseId(Long courseId);
+
 }
