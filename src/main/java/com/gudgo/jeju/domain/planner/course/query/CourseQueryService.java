@@ -71,9 +71,14 @@ public class CourseQueryService {
                 null,
                 course.getImageUrl(),
                 course.getContent(),
+                course.getStarAvg(),
                 spotResponses
         );
     }
+    
+
+
+
 
     public CourseResponseDto getOlleCourse(Long plannerId) {
         QPlanner qPlanner = QPlanner.planner;
@@ -116,6 +121,7 @@ public class CourseQueryService {
                 course.getOlleCourseId(),
                 null,
                 null,
+                course.getStarAvg(),
                 spotResponses
         );
     }

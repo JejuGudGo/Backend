@@ -191,6 +191,7 @@ public class PlannerService {
                 null,
                 null,
                 null,
+                course.getStarAvg(),
                 null
         );
 

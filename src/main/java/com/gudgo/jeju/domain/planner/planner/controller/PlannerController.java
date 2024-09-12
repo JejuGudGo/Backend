@@ -22,8 +22,18 @@ public class PlannerController {
     private final PlannerService plannerService;
 
     @GetMapping("/planners/course/user")
-    public Page<PlannerResponse> getPlanners(Pageable pageable) {
+    public Page<PlannerResponse> getUserPlanners(Pageable pageable) {
         return plannerQueryService.getUserPlanners(pageable);
+    }
+
+    @GetMapping("/planners/course/olle")
+    public Page<PlannerResponse> getOllePlanners(Pageable pageable) {
+        return plannerQueryService.getOllePlanners(pageable);
+    }
+
+    @GetMapping("/planners/course/all")
+    public Page<PlannerResponse> getAllPlanners(Pageable pageable) {
+        return plannerQueryService.getAllPlanners(pageable);
     }
 
 

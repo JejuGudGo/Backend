@@ -16,6 +16,8 @@ public record CourseResponseDto(
         Long olleCourseId,
         String imageUrl,
         String content,
+        double starAvg,
         List<SpotResponseDto> spots
+
 ) {
 }
