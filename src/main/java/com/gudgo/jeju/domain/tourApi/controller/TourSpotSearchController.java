@@ -1,5 +1,6 @@
 package com.gudgo.jeju.domain.tourApi.controller;
 
+import com.gudgo.jeju.domain.planner.spot.dto.request.CategoryRequestDto;
 import com.gudgo.jeju.domain.planner.spot.dto.request.CurrentLocationDto;
 import com.gudgo.jeju.domain.tourApi.dto.TourApiSpotResponseDto;
 import com.gudgo.jeju.domain.tourApi.component.TourApiSpotFinder;
@@ -21,15 +22,13 @@ public class TourSpotSearchController {
     private final TourApiSpotFinder tourApiSpotFinder;
 
     @GetMapping(value = "/spots")
-    public ResponseEntity<?> searchTourApiSpot(CurrentLocationDto requestDto) {
-        double latitude = requestDto.latitude();
-        double longitude = requestDto.longitude();
+    public ResponseEntity<?> searchTourApiSpot(CurrentLocationDto currentLocationDto, CategoryRequestDto categoryRequestDto) {
+        double latitude = currentLocationDto.latitude();
+        double longitude = currentLocationDto.longitude();
+        String categoryId = categoryRequestDto.tourApiCategory1Id();
 
-        List<TourApiSpotResponseDto> tourSpots = tourApiSpotFinder.searchTourApiSpots(latitude, longitude);
+        List<TourApiSpotResponseDto> tourSpots = tourApiSpotFinder.searchTourApiSpots(latitude, longitude, categoryId);
 
-        if (tourSpots.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(tourSpots);
     }
 }

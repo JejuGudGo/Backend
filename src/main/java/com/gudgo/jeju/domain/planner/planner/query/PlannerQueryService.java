@@ -108,7 +108,39 @@ public class PlannerQueryService {
                         .and(qPlanner.user.id.eq(userId)))
                 .fetchOne();
 
-        PlannerResponse plannerResponse = new PlannerResponse(
+        return createUserPlannerResponse(planner);
+    }
+
+    public PlannerResponse getUserPlanner(Long plannerId) {
+        QPlanner qPlanner = QPlanner.planner;
+
+        Planner planner = queryFactory
+                .selectFrom(qPlanner)
+                .where(qPlanner.id.eq(plannerId))
+                .fetchOne();
+
+        return createUserPlannerResponse(planner);
+    }
+
+    public PlannerResponse getOllePlanner(Long plannerId) {
+        QPlanner qPlanner = QPlanner.planner;
+
+        Planner planner = queryFactory
+                .selectFrom(qPlanner)
+                .where(qPlanner.id.eq(plannerId))
+                .fetchOne();
+        return new PlannerResponse(
+                planner.getId(),
+                null,
+                null,
+                null,
+                planner.isCompleted(),
+                courseQueryService.getOlleCourse(planner.getId())
+        );
+    }
+
+    private PlannerResponse createUserPlannerResponse(Planner planner) {
+        return new PlannerResponse(
                 planner.getId(),
                 planner.getStartAt(),
                 planner.getSummary(),
@@ -116,7 +148,5 @@ public class PlannerQueryService {
                 planner.isCompleted(),
                 courseQueryService.getCourse(planner.getId())
         );
-
-        return plannerResponse;
     }
 }

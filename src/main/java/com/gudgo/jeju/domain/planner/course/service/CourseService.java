@@ -41,13 +41,20 @@ public class CourseService {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(EntityNotFoundException::new);
 
+        // 코스명(title) 업데이트
         if (validationUtil.validateStringValue(requestDto.title())) {
             course = course.withTitle(requestDto.title());
         }
 
-//        if (requestDto.startAt() != null && !course.isCompleted()) {
-//            course = course.withStartAt(requestDto.startAt());
-//        }
+        // 대표이미지(imageUrl) 업데이트
+        if (validationUtil.validateStringValue(requestDto.imageUrl())) {
+            course = course.withImageUrl(requestDto.imageUrl());
+        }
+
+        // 코스정보(content) 업데이트
+        if (validationUtil.validateStringValue(requestDto.content())) {
+            course = course.withContent(requestDto.content());
+        }
 
         courseRepository.save(course);
     }

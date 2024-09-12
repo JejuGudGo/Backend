@@ -21,8 +21,7 @@ import java.util.List;
 public class SpotController {
     private final SpotService spotService;
 
-    /* GET: courseId가 동일한 것들을 리스트로 반환(코스 순서 기준으로 오름차순 정렬)
-     * GET /api/v1/spots?courseId={courseId} */
+    /* GET: courseId가 동일한 것들을 리스트로 반환(코스 순서 기준으로 오름차순 정렬) */
     @GetMapping(value = "/user/{userId}/planners/{plannerId}/course/spots")
     public ResponseEntity<List<SpotResponseDto>> getSpots(@PathVariable("userId") Long userId, @PathVariable("plannerId") Long plannerId) {
         List<SpotResponseDto> spots = spotService.getSpots(plannerId);
@@ -31,16 +30,14 @@ public class SpotController {
 
     }
 
-    /* GET: id값으로 특정 스팟 조회
-     * GET /api/v1/spot?courseId={id} */
+    /* GET: id값으로 특정 스팟 조회 */
     @GetMapping(value ="/user/{userId}/planners/{plannerId}/course/spots/{spotId}")
     public  ResponseEntity<SpotResponseDto> getSpot(@PathVariable("userId") Long userId, @PathVariable("plannerId") Long plannerId, @PathVariable("spotId") Long spotId) {
         return ResponseEntity.ok(spotService.getSpot(spotId));
     }
 
-    /* POST: 새로운 스팟 생성
-     * POST /api/v1/spot */
-    @PostMapping(value = "/user/{userId}/planners/{plannerId}/course/spots/{spotId}")
+    /* POST: 새로운 스팟 생성 */
+    @PostMapping(value = "/user/{userId}/planners/{plannerId}/course/spots")
     public ResponseEntity<?> createSpotByUser(@PathVariable("userId") Long userId, @PathVariable("plannerId") Long plannerId, @Valid @RequestBody SpotCreateRequestDto spotCreateRequestDto) {
         spotService.createUserSpot(plannerId, spotCreateRequestDto);
 
@@ -55,8 +52,7 @@ public class SpotController {
     }
 
     // 삭제
-    /* DELETE: id값으로 특정 스팟 삭제
-     *  DELETE /api/vi/spot/{id}*/
+    /* DELETE: id값으로 특정 스팟 삭제 */
     @DeleteMapping(value = "/userId/{userId}/planners/{plannerId}/course/spots/{spotId}")
     public ResponseEntity<?> deleteSpot(
             @PathVariable("userId") Long userId,

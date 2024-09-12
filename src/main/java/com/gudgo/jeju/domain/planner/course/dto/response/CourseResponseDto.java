@@ -14,6 +14,8 @@ public record CourseResponseDto(
         Long originalCreatorId,
         Long originalCourseId,
         Long olleCourseId,
+        String imageUrl,
+        String content,
         List<SpotResponseDto> spots
 ) {
 }

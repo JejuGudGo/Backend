@@ -1,12 +1,10 @@
 package com.gudgo.jeju.domain.tourApi.component;
 
-
 import com.gudgo.jeju.domain.tourApi.dto.TourApiSpotResponseDto;
 import com.gudgo.jeju.domain.tourApi.entity.TourApiCategory3;
 import com.gudgo.jeju.domain.tourApi.entity.TourApiContent;
 import com.gudgo.jeju.domain.tourApi.entity.TourApiContentInfo;
 import com.gudgo.jeju.domain.tourApi.repository.TourApiCategory3Repository;
-import com.gudgo.jeju.domain.tourApi.repository.TourApiContentInfoRepository;
 import com.gudgo.jeju.domain.tourApi.repository.TourApiContentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +22,10 @@ public class TourApiSpotFinder {
 
     private final TourApiCategory3Repository tourApiCategory3Repository;
     private final TourApiContentRepository tourApiContentRepository;
-    private final TourApiContentInfoRepository tourApiContentInfoRepository;
 
     @Transactional(readOnly = true)
-    public List<TourApiSpotResponseDto> searchTourApiSpots(double latitude, double longitude) {
+    public List<TourApiSpotResponseDto> searchTourApiSpots(double latitude, double longitude, String categoryId) {
         final double radiusKm = 1.0;    // 반경 1km
-
 
         double latitudeDelta = radiusKm / 111.0;
         double longitudeDelta = radiusKm / (111.0 * Math.cos(Math.toRadians(latitudeDelta)));
@@ -44,22 +40,25 @@ public class TourApiSpotFinder {
 
         List<TourApiSpotResponseDto> tourApiSpotDtos = tourApiSpots.stream()
                 .filter(spot -> isWithinRadius(spot.getLatitude(), spot.getLongitude(), latitude, longitude, radiusKm))
+                .filter(spot -> spot.getTourApiCategory3() != null && spot.getTourApiCategory3().getId().startsWith(categoryId))
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
 
-        return tourApiSpotDtos;
+        if (tourApiSpotDtos.isEmpty()) {
+            throw new EntityNotFoundException("INVALID_VALUE_01");
+        }
 
+        log.debug("Found {} spots within radius", tourApiSpotDtos.size());
+        return tourApiSpotDtos;
     }
 
-    // 주어진 위치가 반경 내에 있는지 확인하는 메서드
     private boolean isWithinRadius(double spotLat, double spotLng, double userLat, double userLng, double radiusKm) {
         double distance = distanceBetweenCoordinates(spotLat, spotLng, userLat, userLng);
         return distance <= radiusKm;
     }
 
-    // 두 지점 사이의 거리를 계산하는 메서드(킬로미터 단위)
     private double distanceBetweenCoordinates(double lat1, double lon1, double lat2, double lon2) {
-        double earthRadiusKm = 6371.0; // 지구 반지름 (킬로미터)
+        double earthRadiusKm = 6371.0;
 
         double dLat = Math.toRadians(lat2 - lat1);
         double dLon = Math.toRadians(lon2 - lon1);
@@ -73,13 +72,27 @@ public class TourApiSpotFinder {
         return earthRadiusKm * c;
     }
 
-    // TourApiSpotEntity를 TourApiSpotResponseDto로 매핑하는 메서드
     private TourApiSpotResponseDto mapToDto(TourApiContent spot) {
+        if (spot == null) {
+            log.warn("TourApiContent is null");
+            return null;
+        }
+
+        if (spot.getTourApiCategory3() == null) {
+            log.warn("TourApiCategory3 is null for spot with id: {}", spot.getId());
+            return null;
+        }
+
         TourApiCategory3 tourApiCategory3 = tourApiCategory3Repository.findById(spot.getTourApiCategory3().getId())
                 .orElseThrow(() -> new EntityNotFoundException("TourApiCategory3 not found categoryId: " + spot.getTourApiCategory3().getId()));
 
-        TourApiContentInfo tourApiContentInfo = tourApiContentInfoRepository.findById(spot.getTourApiContentInfo().getId())
-                .orElseThrow(EntityNotFoundException::new);
+        TourApiContentInfo tourApiContentInfo = spot.getTourApiContentInfo();
+        String title = "No Title Available";
+        if (tourApiContentInfo == null) {
+            log.warn("TourApiContentInfo is null for spot with id: {}", spot.getId());
+        } else {
+            title = tourApiContentInfo.getTitle() != null ? tourApiContentInfo.getTitle() : title;
+        }
 
         return new TourApiSpotResponseDto(
                 spot.getId(),
@@ -87,8 +100,7 @@ public class TourApiSpotFinder {
                 spot.getUpdatedAt(),
                 spot.getLatitude(),
                 spot.getLongitude(),
-                tourApiContentInfo.getTitle()
+                title
         );
     }
-
 }
