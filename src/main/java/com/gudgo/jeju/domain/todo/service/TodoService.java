@@ -29,7 +29,7 @@ public class TodoService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void create(HttpServletRequest request, TodoCreateRequestDto requestDto) {
+    public TodoResponseDto create(HttpServletRequest request, TodoCreateRequestDto requestDto) {
         Todo todo = Todo.builder()
                 .user(getUser(request))
                 .type(requestDto.type())
@@ -40,6 +40,9 @@ public class TodoService {
                 .build();
 
         todoRepository.save(todo);
+
+        TodoResponseDto response = new TodoResponseDto(todo.getId(), todo.getType(), todo.getOrderNumber(), todo.getContent(), todo.isFinished());
+        return response;
     }
 
     public List<TodoResponseDto> getByType(TodoType type, HttpServletRequest request) {
@@ -71,11 +74,14 @@ public class TodoService {
     }
 
     @Transactional
-    public void finish(Long id) {
+    public void updateStatus(Long id) {
         Todo todo = todoRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
-        Todo finishTodo = todo.withIsFinished(true);
-        todoRepository.save(finishTodo);
+
+        if (todo.isFinished()) todo = todo.withIsFinished(false);
+        else todo = todo.withIsFinished(true);
+
+        todoRepository.save(todo);
     }
 
     @Transactional

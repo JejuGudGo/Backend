@@ -23,9 +23,9 @@ public class TodoController {
     private final TodoService todoService;
 
     @PostMapping(value = "")
-    public ResponseEntity<?> create(HttpServletRequest request, @RequestBody TodoCreateRequestDto requestDto) {
-        todoService.create(request, requestDto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<TodoResponseDto> create(HttpServletRequest request, @RequestBody TodoCreateRequestDto requestDto) {
+        TodoResponseDto response = todoService.create(request, requestDto);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping(value = "")
@@ -46,7 +46,7 @@ public class TodoController {
 
     @PatchMapping(value = "/{id}/complete")
     public ResponseEntity<?> updateComplete(@PathVariable("id") Long id) {
-        todoService.finish(id);
+        todoService.updateStatus(id);
         return ResponseEntity.ok().build();
     }
 
