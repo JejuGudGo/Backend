@@ -22,7 +22,7 @@ public class TourSpotSearchController {
     private final TourApiSpotFinder tourApiSpotFinder;
 
     @GetMapping(value = "/spots")
-    public ResponseEntity<?> searchTourApiSpot(CurrentLocationDto currentLocationDto, CategoryRequestDto categoryRequestDto) {
+    public ResponseEntity<?> searchTourApiSpot(CurrentLocationpDto currentLocationDto, CategoryRequestDto categoryRequestDto) {
         double latitude = currentLocationDto.latitude();
         double longitude = currentLocationDto.longitude();
         String categoryId = categoryRequestDto.tourApiCategory1Id();

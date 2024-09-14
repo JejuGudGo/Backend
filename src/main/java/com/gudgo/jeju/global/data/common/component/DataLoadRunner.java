@@ -1,5 +1,6 @@
 package com.gudgo.jeju.global.data.common.component;
 
+import com.gudgo.jeju.global.data.label.service.LabelDatabaseService;
 import com.gudgo.jeju.global.data.nickname.service.NicknameDataService;
 import com.gudgo.jeju.global.data.olle.service.HaYoungOlleDatabaseService;
 import com.gudgo.jeju.global.data.olle.service.HaYoungOlleSpotDatabaseService;
@@ -29,6 +30,7 @@ public class DataLoadRunner implements CommandLineRunner {
     private final HaYoungOlleSpotDatabaseService haYoungOlleSpotDatabaseService;
     private final OreumDatabaseService oreumDatabaseService;
     private final ReviewDatabaseService reviewDatabaseService;
+    private final LabelDatabaseService labelDatabaseService;
 
     @Override
     public void run(String... args) throws Exception {
@@ -50,5 +52,7 @@ public class DataLoadRunner implements CommandLineRunner {
 
         reviewDatabaseService.loadReviewCategory1CsvToDatabase();
         reviewDatabaseService.loadReviewCategory2CsvToDatabase();
+
+        labelDatabaseService.loadLabelCsvToDatabase();
     }
 }

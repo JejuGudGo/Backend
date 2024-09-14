@@ -1,5 +1,7 @@
 package com.gudgo.jeju.domain.planner.planner.dto.request;
 
+import com.gudgo.jeju.domain.planner.label.dto.request.LabelRequestDto;
+
 import java.time.LocalDate;
 
 public record PlannerCreateRequestDto(
@@ -8,6 +10,7 @@ public record PlannerCreateRequestDto(
         String summary,
         Long originalCreatorId,
         Long originalCourseId,
-        boolean isPrivate
+        boolean isPrivate,
+        LabelRequestDto labelRequestDto
 ) {
 }

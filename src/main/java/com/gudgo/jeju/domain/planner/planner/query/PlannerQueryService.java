@@ -5,6 +5,9 @@ import com.gudgo.jeju.domain.planner.course.entity.Course;
 import com.gudgo.jeju.domain.planner.course.entity.CourseType;
 import com.gudgo.jeju.domain.planner.course.entity.QCourse;
 import com.gudgo.jeju.domain.planner.course.query.CourseQueryService;
+import com.gudgo.jeju.domain.planner.label.dto.request.LabelRequestDto;
+import com.gudgo.jeju.domain.planner.label.entity.PlannerLabel;
+import com.gudgo.jeju.domain.planner.label.entity.QPlannerLabel;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerResponse;
 import com.gudgo.jeju.domain.planner.planner.entity.Planner;
 import com.gudgo.jeju.domain.planner.planner.entity.QPlanner;
@@ -17,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.hibernate.query.sqm.tree.SqmNode.log;
 
@@ -34,6 +39,7 @@ public class PlannerQueryService {
     public Page<PlannerResponse> getUserPlanners(Pageable pageable) {
         QCourse qCourse = QCourse.course;
         QPlanner qPlanner = QPlanner.planner;
+        QPlannerLabel qPlannerLabel = QPlannerLabel.plannerLabel;
 
         List<Long> userCourseIds = queryFactory
                 .select(qCourse.id)
@@ -42,7 +48,6 @@ public class PlannerQueryService {
                         .and(qCourse.type.eq(CourseType.USER)))
                 .fetch();
 
-        // 2. Planner 테이블에서 조건에 맞는 데이터 조회
         List<Planner> planners = queryFactory
                 .selectFrom(qPlanner)
                 .where(qPlanner.course.id.in(userCourseIds)
@@ -53,22 +58,36 @@ public class PlannerQueryService {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        // 3. PlannerResponse로 변환
+        List<Long> plannerIds = planners.stream().map(Planner::getId).collect(Collectors.toList());
+
+        Map<Long, String> plannerLabelMap = queryFactory
+                .select(qPlannerLabel.planner.id, qPlannerLabel.code)
+                .from(qPlannerLabel)
+                .where(qPlannerLabel.planner.id.in(plannerIds))
+                .fetch()
+                .stream()
+                .collect(Collectors.toMap(
+                        tuple -> tuple.get(qPlannerLabel.planner.id),
+                        tuple -> tuple.get(qPlannerLabel.code)
+                ));
+
         List<PlannerResponse> plannerResponses = planners.stream()
-                .map(planner ->
-                        new PlannerResponse(
-                                planner.getId(),
-                                planner.getStartAt(),
-                                planner.getSummary(),
-                                planner.getTime(),
-                                planner.isCompleted(),
-                                courseQueryService.getCourse(planner.getCourse().getId())
-                        ))
+                .map(planner -> {
+                    String labelCode = plannerLabelMap.get(planner.getId());
+                    return new PlannerResponse(
+                            planner.getId(),
+                            planner.getStartAt(),
+                            planner.getSummary(),
+                            planner.getTime(),
+                            planner.isCompleted(),
+                            labelCode,
+                            courseQueryService.getCourse(planner.getCourse().getId())
+                    );
+                })
                 .toList();
 
         return PaginationUtil.listToPage(plannerResponses, pageable);
     }
-
 //    public Page<PlannerResponse> getUserPlanners(Pageable pageable) {
 //        QPlanner qplanner = QPlanner.planner;
 //
@@ -125,6 +144,7 @@ public class PlannerQueryService {
                                 planner.getSummary(),
                                 planner.getTime(),
                                 planner.isCompleted(),
+                                null,
                                 courseQueryService.getOlleCourse(planner.getCourse().getId())
                         ))
                 .toList();
@@ -136,6 +156,7 @@ public class PlannerQueryService {
     public Page<PlannerResponse> getAllPlanners(Pageable pageable) {
         QCourse qCourse = QCourse.course;
         QPlanner qPlanner = QPlanner.planner;
+        QPlannerLabel qPlannerLabel = QPlannerLabel.plannerLabel;
 
         // 1. Course 테이블에서 Olle 코스와 사용자 생성 코스 ID 조회
         List<Long> courseIds = queryFactory
@@ -157,7 +178,21 @@ public class PlannerQueryService {
                 .orderBy(qPlanner.startAt.desc())  // 최신 플래너부터 정렬
                 .fetch();
 
-        // 3. PlannerResponse로 변환
+        // 3. PlannerLabel 테이블에서 labelCode 조회
+        List<Long> plannerIds = planners.stream().map(Planner::getId).collect(Collectors.toList());
+        Map<Long, String> labelCodeMap = queryFactory
+                .select(qPlannerLabel.planner.id, qPlannerLabel.code)
+                .from(qPlannerLabel)
+                .where(qPlannerLabel.planner.id.in(plannerIds))
+                .fetch()
+                .stream()
+                .collect(Collectors.toMap(
+                        tuple -> tuple.get(qPlannerLabel.planner.id),
+                        tuple -> tuple.get(qPlannerLabel.code),
+                        (existing, replacement) -> existing  // In case of duplicates, keep the existing value
+                ));
+
+        // 4. PlannerResponse로 변환
         List<PlannerResponse> plannerResponses = planners.stream()
                 .map(planner -> {
                     CourseResponseDto courseResponseDto;
@@ -176,12 +211,15 @@ public class PlannerQueryService {
                         courseResponseDto = courseQueryService.getCourse(course.getId()); // 기본적으로 getCourse 사용
                     }
 
+                    String labelCode = labelCodeMap.get(planner.getId());  // labelCode가 없으면 null을 반환
+
                     return new PlannerResponse(
                             planner.getId(),
                             planner.getStartAt(),
                             planner.getSummary(),
                             planner.getTime(),
                             planner.isCompleted(),
+                            labelCode,
                             courseResponseDto
                     );
                 })
@@ -191,26 +229,73 @@ public class PlannerQueryService {
     }
 
 
+    public Page<PlannerResponse> getPlannersByLabel(Pageable pageable, LabelRequestDto requestDto) {
+        QPlanner qPlanner = QPlanner.planner;
+        QPlannerLabel qPlannerLabel = QPlannerLabel.plannerLabel;
+
+        List<Planner> planners = queryFactory
+                .selectFrom(qPlannerLabel.planner)
+                .where(qPlannerLabel.code.eq(requestDto.code()))
+                .fetch();
+
+        List<PlannerResponse> plannerResponses = planners.stream()
+                .map(planner -> {
+                    String labelCode = requestDto.code();
+                    return new PlannerResponse(
+                            planner.getId(),
+                            planner.getStartAt(),
+                            planner.getSummary(),
+                            planner.getTime(),
+                            planner.isCompleted(),
+                            labelCode,
+                            courseQueryService.getCourse(planner.getCourse().getId())
+                    );
+                })
+                .toList();
+        return PaginationUtil.listToPage(plannerResponses, pageable);
+    }
 
     public Page<PlannerResponse> getMyPlanners(Long userId, Pageable pageable) {
         QPlanner qPlanner = QPlanner.planner;
+        QPlannerLabel qPlannerLabel = QPlannerLabel.plannerLabel;
 
         List<Planner> planners = queryFactory
                 .selectFrom(qPlanner)
                 .where(qPlanner.isDeleted.isFalse()
                         .and(qPlanner.user.id.eq(userId)))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
 
+        List<Long> plannerIds = planners.stream().map(Planner::getId).collect(Collectors.toList());
+
+        // PlannerLabel 테이블에서 labelCode 조회
+        Map<Long, String> labelCodeMap = queryFactory
+                .select(qPlannerLabel.planner.id, qPlannerLabel.code)
+                .from(qPlannerLabel)
+                .where(qPlannerLabel.planner.id.in(plannerIds))
+                .fetch()
+                .stream()
+                .collect(Collectors.toMap(
+                        tuple -> tuple.get(qPlannerLabel.planner.id),
+                        tuple -> tuple.get(qPlannerLabel.code),
+                        (existing, replacement) -> existing  // In case of duplicates, keep the existing value
+                ));
+
         List<PlannerResponse> plannerResponses = planners.stream()
-                .map(planner ->
-                        new PlannerResponse(
-                                planner.getId(),
-                                planner.getStartAt(),
-                                planner.getSummary(),
-                                planner.getTime(),
-                                planner.isCompleted(),
-                                courseQueryService.getCourse(planner.getId())
-                        ))
+                .map(planner -> {
+                    String labelCode = labelCodeMap.get(planner.getId());  // labelCode가 없으면 null을 반환
+                    return new PlannerResponse(
+                            planner.getId(),
+                            planner.getStartAt(),
+                            planner.getSummary(),
+                            planner.getTime(),
+                            planner.isCompleted(),
+                            labelCode,
+                            courseQueryService.getCourse(planner.getId())
+
+                    );
+                })
                 .toList();
 
         return PaginationUtil.listToPage(plannerResponses, pageable);
@@ -218,24 +303,45 @@ public class PlannerQueryService {
 
     public Page<PlannerResponse> getMyUncompletedPlanners(Long userId, Pageable pageable) {
         QPlanner qPlanner = QPlanner.planner;
+        QPlannerLabel qPlannerLabel = QPlannerLabel.plannerLabel;
 
         List<Planner> planners = queryFactory
                 .selectFrom(qPlanner)
                 .where(qPlanner.isDeleted.isFalse()
                         .and(qPlanner.isCompleted.isFalse())
                         .and(qPlanner.user.id.eq(userId)))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
 
+        List<Long> plannerIds = planners.stream().map(Planner::getId).collect(Collectors.toList());
+
+        // PlannerLabel 테이블에서 labelCode 조회
+        Map<Long, String> labelCodeMap = queryFactory
+                .select(qPlannerLabel.planner.id, qPlannerLabel.code)
+                .from(qPlannerLabel)
+                .where(qPlannerLabel.planner.id.in(plannerIds))
+                .fetch()
+                .stream()
+                .collect(Collectors.toMap(
+                        tuple -> tuple.get(qPlannerLabel.planner.id),
+                        tuple -> tuple.get(qPlannerLabel.code),
+                        (existing, replacement) -> existing  // In case of duplicates, keep the existing value
+                ));
+
         List<PlannerResponse> plannerResponses = planners.stream()
-                .map(planner ->
-                        new PlannerResponse(
-                                planner.getId(),
-                                planner.getStartAt(),
-                                planner.getSummary(),
-                                planner.getTime(),
-                                planner.isCompleted(),
-                                courseQueryService.getCourse(planner.getId())
-                        ))
+                .map(planner -> {
+                    String labelCode = labelCodeMap.get(planner.getId());  // labelCode가 없으면 null을 반환
+                    return new PlannerResponse(
+                            planner.getId(),
+                            planner.getStartAt(),
+                            planner.getSummary(),
+                            planner.getTime(),
+                            planner.isCompleted(),
+                            labelCode,
+                            courseQueryService.getCourse(planner.getId())
+                            );
+                })
                 .toList();
 
         return PaginationUtil.listToPage(plannerResponses, pageable);
@@ -277,17 +383,26 @@ public class PlannerQueryService {
                 null,
                 null,
                 planner.isCompleted(),
+                null,
                 courseQueryService.getOlleCourse(planner.getId())
         );
     }
 
     private PlannerResponse createUserPlannerResponse(Planner planner) {
+        QPlannerLabel qPlannerLabel = QPlannerLabel.plannerLabel;
+        String labelCode = queryFactory
+                .select(qPlannerLabel.code)
+                .from(qPlannerLabel)
+                .where(qPlannerLabel.planner.id.eq(planner.getId()))
+                .fetchOne();
+
         return new PlannerResponse(
                 planner.getId(),
                 planner.getStartAt(),
                 planner.getSummary(),
                 planner.getTime(),
                 planner.isCompleted(),
+                labelCode,
                 courseQueryService.getCourse(planner.getId())
         );
     }

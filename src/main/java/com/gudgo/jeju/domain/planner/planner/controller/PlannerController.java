@@ -1,5 +1,6 @@
 package com.gudgo.jeju.domain.planner.planner.controller;
 
+import com.gudgo.jeju.domain.planner.label.dto.request.LabelRequestDto;
 import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerCreateRequestDto;
 import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerUpdateRequestDto;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerResponse;
@@ -34,6 +35,11 @@ public class PlannerController {
     @GetMapping("/planners/course/all")
     public Page<PlannerResponse> getAllPlanners(Pageable pageable) {
         return plannerQueryService.getAllPlanners(pageable);
+    }
+
+    @GetMapping("/planners/course/label")
+    public Page<PlannerResponse> getPlannersByLabel(Pageable pageable, LabelRequestDto requestDto) {
+        return plannerQueryService.getPlannersByLabel(pageable, requestDto);
     }
 
 

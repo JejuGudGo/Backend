@@ -5,6 +5,8 @@ import com.gudgo.jeju.domain.olle.entity.JeJuOlleCourse;
 import com.gudgo.jeju.domain.olle.entity.OlleType;
 import com.gudgo.jeju.domain.olle.repository.JeJuOlleCourseRepository;
 import com.gudgo.jeju.domain.planner.course.dto.response.CourseResponseDto;
+import com.gudgo.jeju.domain.planner.label.entity.PlannerLabel;
+import com.gudgo.jeju.domain.planner.label.repository.PlannerLabelRespository;
 import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerCreateRequestDto;
 import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerUpdateRequestDto;
 import com.gudgo.jeju.domain.planner.course.entity.Course;
@@ -18,6 +20,9 @@ import com.gudgo.jeju.domain.post.participant.repository.ParticipantRepository;
 import com.gudgo.jeju.domain.planner.planner.repository.PlannerRepository;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
+import com.gudgo.jeju.global.data.label.dto.response.LabelResponseDto;
+import com.gudgo.jeju.global.data.label.entity.Label;
+import com.gudgo.jeju.global.data.label.repository.LabelRepository;
 import com.gudgo.jeju.global.util.ValidationUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -46,6 +51,8 @@ public class PlannerService {
     private final ParticipantRepository participantRepository;
 
     private final ValidationUtil validationUtil;
+    private final PlannerLabelRespository plannerLabelRespository;
+    private final LabelRepository labelRepository;
 
 
     @Transactional
@@ -53,8 +60,9 @@ public class PlannerService {
         User user = findUser(userId);
         Course course = createAndSaveCourse(user, requestDto);
         Planner planner = createAndSavePlanner(user, course, requestDto);
+        PlannerLabel plannerLabel = createAndSaveLabel(planner, requestDto.labelRequestDto().code());
         createAndSaveParticipant(user, planner);
-        return createUserPlannerResponse(planner, course);
+        return createUserPlannerResponse(planner, course, plannerLabel);
     }
 
     @Transactional
@@ -180,7 +188,7 @@ public class PlannerService {
         participantRepository.save(participant);
     }
 
-    private PlannerResponse createUserPlannerResponse(Planner planner, Course course) {
+    private PlannerResponse createUserPlannerResponse(Planner planner, Course course, PlannerLabel plannerLabel) {
         CourseResponseDto courseResponseDto = new CourseResponseDto(
                 course.getId(),
                 course.getType(),
@@ -195,13 +203,24 @@ public class PlannerService {
                 null
         );
 
+
         return new PlannerResponse(
                 planner.getId(),
                 planner.getStartAt(),
                 planner.getSummary(),
                 planner.getTime(),
                 planner.isCompleted(),
+                plannerLabel.getCode(),
                 courseResponseDto
         );
+    }
+
+    private PlannerLabel createAndSaveLabel(Planner planner, String code) {
+        PlannerLabel plannerLabel = PlannerLabel.builder()
+                .code(code)
+                .planner(planner)
+                .build();
+
+        return plannerLabelRespository.save(plannerLabel);
     }
 }
