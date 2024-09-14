@@ -11,6 +11,7 @@ public record PlannerResponse(
         String summary,
         LocalTime time,
         boolean isCompleted,
+        String labelCode,
         CourseResponseDto course
 ) {
 }

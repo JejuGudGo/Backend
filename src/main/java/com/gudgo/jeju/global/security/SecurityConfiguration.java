@@ -57,6 +57,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/api/v1/auth/authentication/send/**").permitAll()
                                 .requestMatchers("api/v1/auth/authentication/check/**").permitAll()
                                 .requestMatchers("/api/v1/auth/user/**").permitAll()
+                                .requestMatchers("/api/v1/courses/tour/spots/**").permitAll()
                                 .requestMatchers("/oauth/**").permitAll()
                                 .requestMatchers("/api/v1/oauth/**").permitAll()
                                 .requestMatchers("/api/v1/auth/token/**").permitAll()

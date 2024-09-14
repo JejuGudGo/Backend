@@ -31,6 +31,10 @@ public class Course {
 
     private double starAvg;
 
+    private String imageUrl;
+
+    private String content;
+
     public Course withTitle(String title) {
         return Course.builder()
                 .id(id)
@@ -41,10 +45,12 @@ public class Course {
                 .originalCreatorId(originalCreatorId)
                 .olleCourseId(olleCourseId)
                 .starAvg(starAvg)
+                .imageUrl(imageUrl)
+                .content(content)
                 .build();
     }
 
-    public Course withOriginalCourseId(Long courseId) {
+    public Course withOriginalCourseId(Long originalCourseId) {
         return Course.builder()
                 .id(id)
                 .title(title)
@@ -54,6 +60,8 @@ public class Course {
                 .originalCreatorId(originalCreatorId)
                 .olleCourseId(olleCourseId)
                 .starAvg(starAvg)
+                .imageUrl(imageUrl)
+                .content(content)
                 .build();
     }
 
@@ -67,6 +75,8 @@ public class Course {
                 .originalCreatorId(originalCreatorId)
                 .olleCourseId(olleCourseId)
                 .starAvg(starAvg)
+                .imageUrl(imageUrl)
+                .content(content)
                 .build();
     }
 
@@ -80,6 +90,39 @@ public class Course {
                 .originalCreatorId(originalCreatorId)
                 .olleCourseId(olleCourseId)
                 .starAvg(starAvg)
+                .imageUrl(imageUrl)
+                .content(content)
+                .build();
+    }
+
+    public Course withImageUrl(String imageUrl) {
+        return Course.builder()
+                .id(id)
+                .title(title)
+                .type(type)
+                .createdAt(createdAt)
+                .originalCourseId(originalCourseId)
+                .originalCreatorId(originalCreatorId)
+                .olleCourseId(olleCourseId)
+                .starAvg(starAvg)
+                .imageUrl(imageUrl)
+                .content(content)
+                .build();
+    }
+
+
+    public Course withContent(String content) {
+        return Course.builder()
+                .id(id)
+                .title(title)
+                .type(type)
+                .createdAt(createdAt)
+                .originalCourseId(originalCourseId)
+                .originalCreatorId(originalCreatorId)
+                .olleCourseId(olleCourseId)
+                .starAvg(starAvg)
+                .imageUrl(imageUrl)
+                .content(content)
                 .build();
     }
 

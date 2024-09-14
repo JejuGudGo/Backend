@@ -41,7 +41,7 @@ public class CourseMediaController {
         return ResponseEntity.ok(courseMediaService.getMedia(mediaId));
     }
 
-    /* POST: 스팟 기록 생성  */
+    /* POST: 코스 미디어 생성  */
     @PostMapping(value="/{userId}/planners/{plannerId}/course/medias")
     public ResponseEntity<?> create(
             @PathVariable("userId") Long userId,

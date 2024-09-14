@@ -107,19 +107,19 @@ public class ReviewDatabaseService {
                     reviewTagRepository.save(reviewTag);
                 }
 
-                    if (checkDataConfig == null) {
-                        DataConfiguration dataConfiguration = DataConfiguration.builder()
-                                .configKey("ReviewTag")
-                                .configValue(true)
-                                .updatedAt(LocalDate.now())
-                                .build();
-                        dataConfigurationRepository.save(dataConfiguration);
-                    } else if (!checkDataConfig.isConfigValue()) {
-                        checkDataConfig = checkDataConfig.withConfigValue(true);
-                        dataConfigurationRepository.save(checkDataConfig);
-                    }
+                if (checkDataConfig == null) {
+                    DataConfiguration dataConfiguration = DataConfiguration.builder()
+                            .configKey("ReviewTag")
+                            .configValue(true)
+                            .updatedAt(LocalDate.now())
+                            .build();
+                    dataConfigurationRepository.save(dataConfiguration);
+                } else if (!checkDataConfig.isConfigValue()) {
+                    checkDataConfig = checkDataConfig.withConfigValue(true);
+                    dataConfigurationRepository.save(checkDataConfig);
                 }
-            } else {
+            }
+        } else {
             log.info("===============================================================================");
             log.info("ReviewTag is already loaded");
             log.info("===============================================================================");

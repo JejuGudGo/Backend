@@ -5,6 +5,9 @@ import com.gudgo.jeju.domain.olle.entity.JeJuOlleCourseData;
 import com.gudgo.jeju.domain.olle.entity.OlleType;
 import com.gudgo.jeju.domain.olle.repository.JeJuOlleCourseDataRepository;
 import com.gudgo.jeju.domain.olle.repository.JeJuOlleCourseRepository;
+import com.gudgo.jeju.domain.planner.course.entity.CourseType;
+import com.gudgo.jeju.domain.planner.course.repository.CourseRepository;
+import com.gudgo.jeju.domain.planner.planner.service.PlannerService;
 import com.gudgo.jeju.global.data.common.entity.DataConfiguration;
 import com.gudgo.jeju.global.data.tourAPI.repository.DataConfigurationRepository;
 import jakarta.transaction.Transactional;
@@ -39,6 +42,101 @@ public class JejuOlleDatabaseService {
     private final JeJuOlleCourseRepository jeJuOlleCourseRepository;
     private final JeJuOlleCourseDataRepository jeJuOlleCourseDataRepository;
     private final DataConfigurationRepository dataConfigurationRepository;
+    private final CourseRepository courseRepository;
+    private final PlannerService plannerService;
+
+    @Transactional
+    public void processJejuOlleData() {
+        try {
+            log.info("Starting processJejuOlleData");
+            if (isInitializationRequired()) {
+                log.info("Creating Courses and Planners from existing Jeju Olle data");
+                createCoursesAndPlannersFromJejuOlleData();
+                markInitializationComplete();
+            } else {
+                log.info("Initialization already completed, skipping process");
+            }
+            log.info("Finished processJejuOlleData");
+        } catch (Exception e) {
+            log.error("Unexpected error in processJejuOlleData", e);
+            throw new RuntimeException("Failed to process Jeju Olle data", e);
+        }
+    }
+
+    private boolean isInitializationRequired() {
+        DataConfiguration initConfig = dataConfigurationRepository.findByConfigKey("JejuOlleCoursePlannerInitializationCompleted")
+                .orElse(null);
+        return initConfig == null || !initConfig.isConfigValue();
+    }
+
+    private void markInitializationComplete() {
+        DataConfiguration initConfig = dataConfigurationRepository.findByConfigKey("JejuOlleCoursePlannerInitializationCompleted")
+                .orElse(DataConfiguration.builder()
+                        .configKey("JejuOlleCoursePlannerInitializationCompleted")
+                        .configValue(false)
+                        .updatedAt(LocalDate.now())
+                        .build());
+
+        initConfig = initConfig.withConfigValue(true)
+                .withUpdatedAt(LocalDate.now());
+
+        dataConfigurationRepository.save(initConfig);
+        log.info("Marked Jeju Olle Course and Planner initialization as completed");
+    }
+
+    public void createCoursesAndPlannersFromJejuOlleData() {
+        log.info("Starting createCoursesAndPlannersFromJejuOlleData");
+        try {
+            List<JeJuOlleCourse> olleCourses = jeJuOlleCourseRepository.findByOlleType(OlleType.JEJU);
+            for (JeJuOlleCourse olleCourse : olleCourses) {
+                if (!isOlleCourseAlreadyProcessed(olleCourse)) {
+                    plannerService.createOllePlanner(olleCourse);
+                    log.info("Created Course and Planner for Jeju Olle course: {}", olleCourse.getCourseNumber());
+                } else {
+                    log.info("Course and Planner already exist for Jeju Olle course: {}", olleCourse.getCourseNumber());
+                }
+            }
+        } catch (Exception e) {
+            log.error("Error occurred while creating Courses and Planners from Jeju Olle data", e);
+            throw new RuntimeException("Failed to create Courses and Planners from Jeju Olle data", e);
+        }
+    }
+
+    private boolean isOlleCourseAlreadyProcessed(JeJuOlleCourse olleCourse) {
+        return courseRepository.existsByTypeAndOlleCourseId(CourseType.JEJU, olleCourse.getId());
+    }
+
+    private boolean loadJejuOlleData() {
+        log.info("Starting loadJejuOlleData");
+        try {
+            log.info("Starting data loading process");
+            convertGpxToDatabase();
+            addAdditionalData();
+            updateDataLoadedStatus();
+            log.info("Successfully loaded Jeju Olle courses");
+            return true;
+        } catch (IOException e) {
+            log.error("Error occurred while loading Jeju Olle data", e);
+            return false;
+        }
+    }
+
+    private void updateDataLoadedStatus() {
+        log.info("Updating data loaded status");
+        DataConfiguration dataConfig = dataConfigurationRepository.findByConfigKey("OlleDataLoaded")
+                .orElse(DataConfiguration.builder()
+                        .configKey("OlleDataLoaded")
+                        .configValue(false)
+                        .updatedAt(LocalDate.now())
+                        .build());
+
+        DataConfiguration updatedConfig = dataConfig
+                .withConfigValue(true)
+                .withUpdatedAt(LocalDate.now());
+
+        dataConfigurationRepository.save(updatedConfig);
+        log.info("Data loaded status updated successfully");
+    }
 
     @Transactional
     public void convertGpxToDatabase() throws IOException {
@@ -75,30 +173,14 @@ public class JejuOlleDatabaseService {
                 }
             }
 
-
-            if (checkDataConfig == null) {
-                DataConfiguration dataConfiguration = DataConfiguration.builder()
-                        .configKey("OlleDataLoaded")
-                        .configValue(true)
-                        .updatedAt(LocalDate.now())
-                        .build();
-
-                dataConfigurationRepository.save(dataConfiguration);
-
-            } else if (!checkDataConfig.isConfigValue()) {
-                checkDataConfig.withConfigValue(true);
-                dataConfigurationRepository.save(checkDataConfig);
-            }
-
+            updateDataLoadedStatus();
             log.info("===============================================================================");
             log.info("OlleData loaded successfully");
             log.info("===============================================================================");
-
         } else {
             log.info("===============================================================================");
             log.info("OlleData is already loaded");
-            log.info("===============================================================================");
-        }
+            log.info("===============================================================================");        }
     }
 
     private String extractCourseNumberFromTitle(String title) {
@@ -236,20 +318,7 @@ public class JejuOlleDatabaseService {
                 }
             }
 
-            if (checkDataConfig == null) {
-                DataConfiguration dataConfiguration = DataConfiguration.builder()
-                        .configKey("OlleAdditionalDataLoaded")
-                        .configValue(true)
-                        .updatedAt(LocalDate.now())
-                        .build();
-
-                dataConfigurationRepository.save(dataConfiguration);
-
-            } else if (!checkDataConfig.isConfigValue()) {
-                checkDataConfig = checkDataConfig.withConfigValue(true);
-                dataConfigurationRepository.save(checkDataConfig);
-            }
-
+            updateAdditionalDataLoadedStatus();
             log.info("===============================================================================");
             log.info("Olle additional Data loaded successfully");
             log.info("===============================================================================");
@@ -259,5 +328,20 @@ public class JejuOlleDatabaseService {
             log.info("Olle additional Data is already loaded");
             log.info("===============================================================================");
         }
+    }
+
+    private void updateAdditionalDataLoadedStatus() {
+        DataConfiguration dataConfig = dataConfigurationRepository.findByConfigKey("OlleAdditionalDataLoaded")
+                .orElse(DataConfiguration.builder()
+                        .configKey("OlleAdditionalDataLoaded")
+                        .configValue(false)
+                        .updatedAt(LocalDate.now())
+                        .build());
+
+        DataConfiguration updatedConfig = dataConfig
+                .withConfigValue(true)
+                .withUpdatedAt(LocalDate.now());
+
+        dataConfigurationRepository.save(updatedConfig);
     }
 }
