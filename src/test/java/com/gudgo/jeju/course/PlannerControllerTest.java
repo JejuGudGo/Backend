@@ -3,7 +3,7 @@ package com.gudgo.jeju.course;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerCreateRequestDto;
 import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerUpdateRequestDto;
-import com.gudgo.jeju.domain.planner.planner.query.PlannerQueryService;
+import com.gudgo.jeju.domain.planner.planner.query.PlannerSearchQueryService;
 import com.gudgo.jeju.domain.planner.planner.service.PlannerService;
 import com.gudgo.jeju.global.jwt.token.TokenGenerator;
 import com.gudgo.jeju.global.jwt.token.TokenType;
@@ -36,7 +36,7 @@ public class PlannerControllerTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private PlannerQueryService plannerQueryService;
+    private PlannerSearchQueryService plannerSearchQueryService;
 
     @Autowired
     private PlannerService plannerService;
@@ -86,30 +86,30 @@ public class PlannerControllerTest {
         System.out.println(content);
     }
 
-    @DisplayName("플래너 - 생성")
-    @Disabled
-    @RepeatedTest(10)
-//    @Test
-    void createPlanner() throws Exception {
-        String accessToken = "Bearer " + tokenGenerator.generateToken(TokenType.ACCESS, "1");
-        String title = "테스트 플래너 " + plannerCnt++;
-
-        PlannerCreateRequestDto requestDto = new PlannerCreateRequestDto(
-                title,
-                LocalDate.now(),
-                1L,
-                null,
-                false
-        );
-
-        mockMvc
-                .perform(MockMvcRequestBuilders
-                        .post("/api/v1/users/{userId}/planners", 1L)
-                        .header("Authorization", accessToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestDto)))
-                .andExpect(status().isOk());
-    }
+//    @DisplayName("플래너 - 생성")
+//    @Disabled
+//    @RepeatedTest(10)
+////    @Test
+//    void createPlanner() throws Exception {
+//        String accessToken = "Bearer " + tokenGenerator.generateToken(TokenType.ACCESS, "1");
+//        String title = "테스트 플래너 " + plannerCnt++;
+//
+//        PlannerCreateRequestDto requestDto = new PlannerCreateRequestDto(
+//                title,
+//                LocalDate.now(),
+//                1L,
+//                null,
+//                false
+//        );
+//
+//        mockMvc
+//                .perform(MockMvcRequestBuilders
+//                        .post("/api/v1/users/{userId}/planners", 1L)
+//                        .header("Authorization", accessToken)
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(requestDto)))
+//                .andExpect(status().isOk());
+//    }
 
     @DisplayName("플래너 - 수정")
     @Disabled
