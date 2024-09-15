@@ -1,17 +1,25 @@
 package com.gudgo.jeju.domain.tourApi.component;
 
+import com.gudgo.jeju.domain.tourApi.dto.SearchTourApiSpotRequest;
 import com.gudgo.jeju.domain.tourApi.dto.TourApiSpotResponseDto;
 import com.gudgo.jeju.domain.tourApi.entity.TourApiCategory3;
 import com.gudgo.jeju.domain.tourApi.entity.TourApiContent;
+import com.gudgo.jeju.domain.tourApi.entity.TourApiContentImage;
 import com.gudgo.jeju.domain.tourApi.entity.TourApiContentInfo;
+import com.gudgo.jeju.domain.tourApi.query.TourApiSearchQueryService;
 import com.gudgo.jeju.domain.tourApi.repository.TourApiCategory3Repository;
+import com.gudgo.jeju.domain.tourApi.repository.TourApiContentImageRepository;
 import com.gudgo.jeju.domain.tourApi.repository.TourApiContentRepository;
+import com.gudgo.jeju.global.data.tourAPI.service.TourApiRequestService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,29 +27,26 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Component
 public class TourApiSpotFinder {
-
-    private final TourApiCategory3Repository tourApiCategory3Repository;
+    private final TourApiSearchQueryService searchQueryService;
+    private final TourApiRequestService requestService;
     private final TourApiContentRepository tourApiContentRepository;
+    private final TourApiContentImageRepository tourApiContentImageRepository;
 
-    @Transactional(readOnly = true)
-    public List<TourApiSpotResponseDto> searchTourApiSpots(double latitude, double longitude, String categoryId) {
-        final double radiusKm = 1.0;    // 반경 1km
+    @Transactional
+    public List<TourApiSpotResponseDto> searchTourApiSpots(double latitude, double longitude, String contentTypeId) {
+        final double radiusKm = 2.0;
 
-        double latitudeDelta = radiusKm / 111.0;
-        double longitudeDelta = radiusKm / (111.0 * Math.cos(Math.toRadians(latitudeDelta)));
-
-        double minLat = latitude - latitudeDelta;
-        double maxLat = latitude + latitudeDelta;
-        double minLng = longitude - longitudeDelta;
-        double maxLng = longitude + longitudeDelta;
-
-        List<TourApiContent> tourApiSpots = tourApiContentRepository
-                .findByLatitudeBetweenAndLongitudeBetween(minLat, maxLat, minLng, maxLng);
+        List<TourApiContent> tourApiSpots = searchQueryService.searchTourApiSpots(latitude, longitude, radiusKm, contentTypeId);
 
         List<TourApiSpotResponseDto> tourApiSpotDtos = tourApiSpots.stream()
                 .filter(spot -> isWithinRadius(spot.getLatitude(), spot.getLongitude(), latitude, longitude, radiusKm))
-                .filter(spot -> spot.getTourApiCategory3() != null && spot.getTourApiCategory3().getId().startsWith(categoryId))
-                .map(this::mapToDto)
+                .map(spot -> {
+                    try {
+                        return mapToDto(spot, contentTypeId);
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                })
                 .collect(Collectors.toList());
 
         if (tourApiSpotDtos.isEmpty()) {
@@ -72,35 +77,26 @@ public class TourApiSpotFinder {
         return earthRadiusKm * c;
     }
 
-    private TourApiSpotResponseDto mapToDto(TourApiContent spot) {
-        if (spot == null) {
-            log.warn("TourApiContent is null");
-            return null;
-        }
-
-        if (spot.getTourApiCategory3() == null) {
-            log.warn("TourApiCategory3 is null for spot with id: {}", spot.getId());
-            return null;
-        }
-
-        TourApiCategory3 tourApiCategory3 = tourApiCategory3Repository.findById(spot.getTourApiCategory3().getId())
-                .orElseThrow(() -> new EntityNotFoundException("TourApiCategory3 not found categoryId: " + spot.getTourApiCategory3().getId()));
+    private TourApiSpotResponseDto mapToDto(TourApiContent spot, String contentTypeId) throws IOException {
 
         TourApiContentInfo tourApiContentInfo = spot.getTourApiContentInfo();
-        String title = "No Title Available";
         if (tourApiContentInfo == null) {
-            log.warn("TourApiContentInfo is null for spot with id: {}", spot.getId());
-        } else {
-            title = tourApiContentInfo.getTitle() != null ? tourApiContentInfo.getTitle() : title;
+            requestService.requestSpotDetail(spot.getId(), contentTypeId);
         }
+
+        List<TourApiContentImage> images = tourApiContentImageRepository.findByTourApiContentInfoId(tourApiContentInfo.getId());
+        String imgUrl = "None";
+
+        if (!images.isEmpty()) imgUrl = images.get(0).getImageUrl();
 
         return new TourApiSpotResponseDto(
                 spot.getId(),
-                tourApiCategory3.getCategoryName(),
                 spot.getUpdatedAt(),
                 spot.getLatitude(),
                 spot.getLongitude(),
-                title
+                tourApiContentInfo.getTitle(),
+                imgUrl,
+                tourApiContentInfo.getContent()
         );
     }
 }

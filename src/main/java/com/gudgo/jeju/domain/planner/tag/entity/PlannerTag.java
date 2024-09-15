@@ -1,4 +1,4 @@
-package com.gudgo.jeju.domain.planner.label.entity;
+package com.gudgo.jeju.domain.planner.tag.entity;
 
 import com.gudgo.jeju.domain.planner.planner.entity.Planner;
 import jakarta.persistence.*;
@@ -12,16 +12,15 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PlannerLabel {
+public class PlannerTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String code;
+    @Enumerated(value = EnumType.STRING)
+    private PlannerType code;
 
     @ManyToOne
     @JoinColumn(name = "plannerId")
     private Planner planner;
-
-
 }

@@ -36,13 +36,13 @@ public class SpotController {
         return ResponseEntity.ok(spotService.getSpot(spotId));
     }
 
-    /* POST: 새로운 스팟 생성 */
-    @PostMapping(value = "/user/{userId}/planners/{plannerId}/course/spots")
-    public ResponseEntity<?> createSpotByUser(@PathVariable("userId") Long userId, @PathVariable("plannerId") Long plannerId, @Valid @RequestBody SpotCreateRequestDto spotCreateRequestDto) {
-        spotService.createUserSpot(plannerId, spotCreateRequestDto);
-
-        return ResponseEntity.ok().build();
-    }
+//    /* POST: 새로운 스팟 생성 */
+//    @PostMapping(value = "/user/{userId}/planners/{plannerId}/course/spots")
+//    public ResponseEntity<?> createSpotByUser(@PathVariable("userId") Long userId, @PathVariable("plannerId") Long plannerId, @Valid @RequestBody SpotCreateRequestDto spotCreateRequestDto) {
+//        spotService.createUserSpot(plannerId, spotCreateRequestDto);
+//
+//        return ResponseEntity.ok().build();
+//    }
 
     @PostMapping(value = "/user/{userId}/planners/{plannerId}/course/spots/tour")
     public ResponseEntity<?> createSpotUsingTourApi(@PathVariable("userId") Long userId, @PathVariable("plannerId") Long plannerId, @RequestBody SpotCreateUsingApiRequest request) throws IOException {

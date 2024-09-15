@@ -1,9 +1,13 @@
 package com.gudgo.jeju.domain.planner.course.dto.request;
 
-import java.time.LocalDate;
+import com.gudgo.jeju.domain.planner.course.entity.CourseType;
+
 
 public record CourseCreateRequestDto(
+        CourseType type,
         String title,
-        LocalDate startAt
+        Long userId,
+        String imageUrl,
+        String content
 ) {
 }
