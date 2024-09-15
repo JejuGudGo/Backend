@@ -1,6 +1,7 @@
 package com.gudgo.jeju.domain.planner.course.service;
 
 
+import com.gudgo.jeju.domain.planner.course.dto.request.CourseCreateRequestDto;
 import com.gudgo.jeju.domain.planner.course.dto.request.CourseUpdateRequestDto;
 import com.gudgo.jeju.domain.planner.course.entity.Course;
 import com.gudgo.jeju.domain.planner.course.repository.CourseRepository;
@@ -9,15 +10,18 @@ import com.gudgo.jeju.domain.planner.planner.repository.PlannerRepository;
 import com.gudgo.jeju.domain.planner.review.entity.PlannerReview;
 import com.gudgo.jeju.domain.planner.review.repository.PlannerReviewRepository;
 import com.gudgo.jeju.domain.planner.spot.repository.SpotRepository;
+import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
 import com.gudgo.jeju.domain.olle.repository.JeJuOlleCourseRepository;
 import com.gudgo.jeju.global.util.ValidationUtil;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.OptionalDouble;
 import java.util.stream.Collectors;
@@ -35,6 +39,23 @@ public class CourseService {
 
     private final ValidationUtil validationUtil;
     private final PlannerReviewRepository plannerReviewRepository;
+
+    @Transactional
+    public Course createCourse(@Valid CourseCreateRequestDto requestDto) {
+        Course course = Course.builder()
+                  .type(requestDto.type())
+                  .title(requestDto.title())
+                  .createdAt(LocalDate.now())
+                  .imageUrl(requestDto.imageUrl())
+                  .originalCreatorId(requestDto.userId())
+                  .build();
+
+        courseRepository.save(course);
+
+        course = course.withOriginalCourseId(course.getId());
+
+        return course;
+    }
 
     @Transactional
     public void update(Long courseId, CourseUpdateRequestDto requestDto) {
@@ -92,41 +113,6 @@ public class CourseService {
 //                null,
 //                spots
 //        );
-//    }
-
-//    @Transactional
-//    public void create(Long userId, @Valid PlannerCreateRequestDto requestDto) {
-////        // 프론트로부터 전송받은 거리(distance) 값을 도보 시간으로 변환한다.
-////        LocalTime walkingTime = getWalkingTime(requestDto);
-//
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(EntityNotFoundException::new);
-//
-//        Course course = Course.builder()
-//                .type(CourseType.USER)
-//                .title(requestDto.title())
-//                .createdAt(LocalDate.now())
-//                .originalCreatorId(user.getId())
-//                .build();
-//
-//        // 저장된 course 객체의 ID값을 originalCoureseId에 설정
-//        course = course.withOriginalCourseId(course.getId());
-//
-//        // 저장하여 originalCourseId 업데이트
-//        courseRepository.save(course);
-//
-//        Planner planner = Planner.builder()
-//                .startAt(LocalDate.now())
-//                .isDeleted(false)
-//                .isPrivate(requestDto.isPrivate())
-////                .summary()
-////                .time()
-//                .isCompleted(false)
-//                .user(user)
-//                .course(course)
-//                .build();
-//
-//        plannerRepository.save(planner);
 //    }
 
 //    @Transactional

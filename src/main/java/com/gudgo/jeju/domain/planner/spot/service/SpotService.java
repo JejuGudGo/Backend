@@ -1,9 +1,11 @@
 package com.gudgo.jeju.domain.planner.spot.service;
 
 
+import com.gudgo.jeju.domain.planner.course.service.CourseService;
 import com.gudgo.jeju.domain.planner.spot.dto.request.SpotCreateRequestDto;
 import com.gudgo.jeju.domain.planner.spot.dto.request.SpotCreateUsingApiRequest;
 import com.gudgo.jeju.domain.planner.spot.dto.request.SpotUpdateRequestDto;
+import com.gudgo.jeju.domain.planner.spot.dto.response.SpotCreateResponse;
 import com.gudgo.jeju.domain.planner.spot.dto.response.SpotResponseDto;
 import com.gudgo.jeju.domain.planner.course.entity.Course;
 import com.gudgo.jeju.domain.planner.planner.entity.Planner;
@@ -29,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,6 +49,7 @@ public class SpotService {
 
     private final SpotRepository spotRepository;
     private final CourseRepository courseRepository;
+    private final CourseService courseService;
     private final TourApiContentRepository tourApiContentRepository;
     private final PlannerRepository plannerRepository;
     private final TourApiCategory1Repository tourApiCategory1Repository;
@@ -70,34 +74,30 @@ public class SpotService {
     }
 
     @Transactional
-    public void createUserSpot(Long plannerId, @Valid SpotCreateRequestDto requestDto) {
-        Planner planner = plannerRepository.findById(plannerId)
-                .orElseThrow(EntityNotFoundException::new);
+    public List<SpotCreateResponse> createUserSpot(Course course, @Valid List<SpotCreateRequestDto> requests) {
+        List<SpotCreateResponse> responses = new ArrayList<>();
 
-        Course course = planner.getCourse();
+        for (int i = 0; i < requests.size(); i++) {
+            Spot spot = Spot.builder()
+                    .spotType(requests.get(i).type())
+                    .orderNumber(Long.parseLong(String.valueOf(i + 1)))
+                    .title(requests.get(i).title())
+                    .address(requests.get(i).address())
+                    .latitude(requests.get(i).latitude())
+                    .longitude(requests.get(i).longitude())
+                    .isCompleted(false)
+                    .isDeleted(false)
+                    .count(0L)
+                    .contentId("None")
+                    .course(course)
+                    .build();
 
-        TourApiCategory1 tourApiCategory1 = tourApiCategory1Repository.findById(requestDto.category())
-                .orElseThrow(EntityNotFoundException::new);
+            spotRepository.save(spot);
 
-        Long lastSpotId = spotQueryService.getLastSpotId(course.getId());
-        Long orderNumber = (lastSpotId != null) ? lastSpotId + 1L : 1L;
+            responses.add(new SpotCreateResponse(spot.getId(), spot.getTitle(), spot.getLatitude(), spot.getLongitude()));
+        }
 
-        Spot spot = Spot.builder()
-                .course(course)
-                .spotType(SpotType.USER)
-                .tourApiCategory1(tourApiCategory1)
-                .orderNumber(orderNumber)
-                .title(requestDto.title())
-                .address(requestDto.address())
-                .latitude(requestDto.latitude())
-                .longitude(requestDto.longitude())
-                .isDeleted(false)
-                .isCompleted(false)
-                .count(0L)
-                .contentId("None")
-                .build();
-
-        spotRepository.save(spot);
+        return responses;
     }
 
     @Transactional

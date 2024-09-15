@@ -8,8 +8,7 @@ import java.util.List;
 
 @Repository
 public interface TourApiContentRepository extends JpaRepository<TourApiContent, String> {
-    List<TourApiContent> findByLatitudeBetweenAndLongitudeBetween(
-            double minLatitude, double maxLatitude, double minLongitude, double maxLongitude
+    List<TourApiContent> findByLatitudeBetweenAndLongitudeBetweenAndContentTypeId(
+            double minLatitude, double maxLatitude, double minLongitude, double maxLongitude, String contentTypeId
     );
-
 }

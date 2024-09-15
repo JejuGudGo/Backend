@@ -3,25 +3,24 @@ package com.gudgo.jeju.domain.planner.planner.service;
 
 import com.gudgo.jeju.domain.olle.entity.JeJuOlleCourse;
 import com.gudgo.jeju.domain.olle.entity.OlleType;
-import com.gudgo.jeju.domain.olle.repository.JeJuOlleCourseRepository;
-import com.gudgo.jeju.domain.planner.course.dto.response.CourseResponseDto;
-import com.gudgo.jeju.domain.planner.label.entity.PlannerLabel;
-import com.gudgo.jeju.domain.planner.label.repository.PlannerLabelRespository;
+import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerCreateResponse;
+import com.gudgo.jeju.domain.planner.spot.dto.request.SpotCreateRequestDto;
+import com.gudgo.jeju.domain.planner.spot.dto.response.SpotCreateResponse;
+import com.gudgo.jeju.domain.planner.tag.entity.PlannerTag;
+import com.gudgo.jeju.domain.planner.tag.entity.PlannerType;
+import com.gudgo.jeju.domain.planner.tag.repository.PlannerTagRepository;
 import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerCreateRequestDto;
 import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerUpdateRequestDto;
 import com.gudgo.jeju.domain.planner.course.entity.Course;
 import com.gudgo.jeju.domain.planner.course.entity.CourseType;
-import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerResponse;
 import com.gudgo.jeju.domain.post.participant.entity.Participant;
 import com.gudgo.jeju.domain.planner.planner.entity.Planner;
-import com.gudgo.jeju.domain.planner.planner.query.PlannerQueryService;
+//import com.gudgo.jeju.domain.planner.planner.query.PlannerQueryService;
 import com.gudgo.jeju.domain.planner.course.repository.CourseRepository;
 import com.gudgo.jeju.domain.post.participant.repository.ParticipantRepository;
 import com.gudgo.jeju.domain.planner.planner.repository.PlannerRepository;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
-import com.gudgo.jeju.global.data.label.dto.response.LabelResponseDto;
-import com.gudgo.jeju.global.data.label.entity.Label;
 import com.gudgo.jeju.global.data.label.repository.LabelRepository;
 import com.gudgo.jeju.global.util.ValidationUtil;
 import jakarta.persistence.EntityNotFoundException;
@@ -30,20 +29,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
-
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class PlannerService {
-
-    private static final Logger log = LoggerFactory.getLogger(PlannerService.class);
-
 
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
@@ -51,18 +42,18 @@ public class PlannerService {
     private final ParticipantRepository participantRepository;
 
     private final ValidationUtil validationUtil;
-    private final PlannerLabelRespository plannerLabelRespository;
+    private final PlannerTagRepository plannerTagRepository;
     private final LabelRepository labelRepository;
 
 
     @Transactional
-    public PlannerResponse create(Long userId, @Valid PlannerCreateRequestDto requestDto) {
+    public PlannerCreateResponse create(Long userId, @Valid PlannerCreateRequestDto requestDto, Course course, List<SpotCreateResponse> spots) {
         User user = findUser(userId);
-        Course course = createAndSaveCourse(user, requestDto);
         Planner planner = createAndSavePlanner(user, course, requestDto);
-        PlannerLabel plannerLabel = createAndSaveLabel(planner, requestDto.labelRequestDto().code());
+        List<PlannerType> tags = createAndSaveLabel(planner, requestDto.tags());
         createAndSaveParticipant(user, planner);
-        return createUserPlannerResponse(planner, course, plannerLabel);
+
+        return new PlannerCreateResponse(course.getTitle(), tags, spots);
     }
 
     @Transactional
@@ -148,28 +139,12 @@ public class PlannerService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
     }
 
-    private Course createAndSaveCourse(User user, PlannerCreateRequestDto requestDto) {
-        Course course = Course.builder()
-                .type(CourseType.USER)
-                .title(requestDto.title())
-                .createdAt(LocalDate.now())
-                .originalCreatorId(user.getId())
-                .build();
-
-        courseRepository.save(course);
-
-        course = course.withOriginalCourseId(course.getId());
-        courseRepository.save(course);
-
-        return courseRepository.save(course);
-    }
-
     private Planner createAndSavePlanner(User user, Course course, PlannerCreateRequestDto requestDto) {
         Planner planner = Planner.builder()
 //                .startAt(LocalDate.now())
                 .isDeleted(false)
                 .isPrivate(requestDto.isPrivate())
-                .summary(requestDto.summary())
+//                .summary(requestDto.summary())
                 .isCompleted(false)
                 .user(user)
                 .course(course)
@@ -188,39 +163,19 @@ public class PlannerService {
         participantRepository.save(participant);
     }
 
-    private PlannerResponse createUserPlannerResponse(Planner planner, Course course, PlannerLabel plannerLabel) {
-        CourseResponseDto courseResponseDto = new CourseResponseDto(
-                course.getId(),
-                course.getType(),
-                course.getTitle(),
-                course.getCreatedAt(),
-                course.getOriginalCreatorId(),
-                course.getOriginalCourseId(),
-                null,
-                null,
-                null,
-                course.getStarAvg(),
-                null
-        );
+    private List<PlannerType> createAndSaveLabel(Planner planner, List<PlannerType> tags) {
+        List<PlannerType> responses = new ArrayList<>();
 
+        for (PlannerType code :tags) {
+            PlannerTag plannerTag = PlannerTag.builder()
+                    .code(code)
+                    .planner(planner)
+                    .build();
 
-        return new PlannerResponse(
-                planner.getId(),
-                planner.getStartAt(),
-                planner.getSummary(),
-                planner.getTime(),
-                planner.isCompleted(),
-                plannerLabel.getCode(),
-                courseResponseDto
-        );
-    }
+            plannerTagRepository.save(plannerTag);
 
-    private PlannerLabel createAndSaveLabel(Planner planner, String code) {
-        PlannerLabel plannerLabel = PlannerLabel.builder()
-                .code(code)
-                .planner(planner)
-                .build();
-
-        return plannerLabelRespository.save(plannerLabel);
+            responses.add(code);
+        }
+        return responses;
     }
 }

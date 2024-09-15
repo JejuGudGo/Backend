@@ -46,7 +46,6 @@ public class Spot {
     private TourApiCategory1 tourApiCategory1;
 
     public Spot withOrderNumber(Long orderNumber) {
-
         return Spot.builder()
                 .id(this.id)
                 .course(this.course)
@@ -56,7 +55,7 @@ public class Spot {
                 .address(this.address)
                 .latitude(this.latitude)
                 .longitude(this.longitude)
-                .isDeleted(true)
+                .isDeleted(this.isDeleted)
                 .isCompleted(this.isCompleted)
                 .count(this.count)
                 .contentId(this.contentId)
@@ -74,7 +73,7 @@ public class Spot {
                 .address(this.address)
                 .latitude(this.latitude)
                 .longitude(this.longitude)
-                .isDeleted(true)
+                .isDeleted(this.isDeleted)
                 .isCompleted(this.isCompleted)
                 .count(this.count)
                 .contentId(this.contentId)
