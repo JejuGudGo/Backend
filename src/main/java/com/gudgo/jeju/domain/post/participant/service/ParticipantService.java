@@ -126,7 +126,7 @@ public class ParticipantService {
         participant = participant.withApprovedAndApprovedAt(true, LocalDate.now());
         participantRepository.save(participant);
 
-        if (post.getCompanionsNum().equals(participantQueryService.countCourseParticipant(courseId))) {
+        if (post.getParticipantNum().equals(participantQueryService.countCourseParticipant(courseId))) {
             post = post.withIsFinished(true);
             postsRepository.save(post);
         }
@@ -137,7 +137,7 @@ public class ParticipantService {
         participantRepository.save(participant);
 
         // 특정 user의 승인을 취소했을 때, 모집 마감상태라면, isFinished : false로 변경
-        if (participantQueryService.countCourseParticipant(courseId) < post.getCompanionsNum() && post.isFinished()) {
+        if (participantQueryService.countCourseParticipant(courseId) < post.getParticipantNum() && post.isFinished()) {
             post = post.withIsFinished(false);
             postsRepository.save(post);
         }

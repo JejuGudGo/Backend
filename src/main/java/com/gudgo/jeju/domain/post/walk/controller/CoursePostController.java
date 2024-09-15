@@ -1,8 +1,11 @@
 package com.gudgo.jeju.domain.post.walk.controller;
 
 import com.gudgo.jeju.domain.post.walk.dto.request.CoursePostCreateRequest;
-import com.gudgo.jeju.domain.post.walk.dto.response.CoursePostCreateResponse;
+import com.gudgo.jeju.domain.post.walk.dto.response.CoursePostDetailResponse;
 import com.gudgo.jeju.domain.post.walk.service.CoursePostService;
+import com.gudgo.jeju.global.jwt.token.SubjectExtractor;
+import com.gudgo.jeju.global.jwt.token.TokenExtractor;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 public class CoursePostController {
 
     private final CoursePostService coursePostService;
+    private final TokenExtractor tokenExtractor;
+    private final SubjectExtractor subjectExtractor;
 //    private final CoursePostQueryService coursePostQueryService;
 //
 //    @GetMapping(value = "" )
@@ -21,15 +26,17 @@ public class CoursePostController {
 //        return coursePostQueryService.getCoursePosts(pageable);
 //    }
 //
-//    @GetMapping(value = "/{postId}")
-//    public ResponseEntity<CoursePostResponse> getCoursePost(@PathVariable("postId") Long postId) {
-//        CoursePostResponse response = coursePostService.getCoursePost(postId);
-//        return ResponseEntity.ok(response);
-//    }
+    @GetMapping(value = "posts/walk/{postId}")
+    public ResponseEntity<CoursePostDetailResponse> getCoursePost(HttpServletRequest request, @PathVariable("postId") Long postId) {
+        Long userId = getUserId(request);
+        CoursePostDetailResponse response = coursePostService.getCoursePost(userId, postId);
+
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping("/users/{userId}/posts/walk")
-    public ResponseEntity<?> createCoursePost(@PathVariable Long userId, @RequestBody CoursePostCreateRequest request) {
-        CoursePostCreateResponse response = coursePostService.createCoursePost(userId, request);
+    public ResponseEntity<CoursePostDetailResponse> createCoursePost(@PathVariable Long userId, @RequestBody CoursePostCreateRequest request) {
+        CoursePostDetailResponse response = coursePostService.createCoursePost(userId, request);
         return ResponseEntity.ok(response);
     }
 
@@ -44,4 +51,10 @@ public class CoursePostController {
 //        coursePostService.delete(postId);
 //        return ResponseEntity.ok().build();
 //    }
+
+    private Long getUserId(HttpServletRequest request) {
+        String accessToken = tokenExtractor.getAccessTokenFromHeader(request);
+        Long userId = subjectExtractor.getUserIdFromToken(accessToken);
+        return userId;
+    }
 }

@@ -8,7 +8,7 @@ public record CoursePostCreateRequest(
         String title,
         LocalDate startDate, // 동생 시작 일
         LocalTime startTime, // 동행 시작 시간
-        Long companionsNum,
+        Long participantNum,
         String content,
         Long selectedPlannerId,
         String placeName,

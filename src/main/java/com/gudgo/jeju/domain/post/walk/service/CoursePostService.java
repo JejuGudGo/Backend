@@ -15,7 +15,7 @@ import com.gudgo.jeju.domain.post.walk.dto.request.CoursePostCreateRequest;
 import com.gudgo.jeju.domain.post.common.entity.PostType;
 import com.gudgo.jeju.domain.post.common.entity.Posts;
 import com.gudgo.jeju.domain.post.common.repository.PostsRepository;
-import com.gudgo.jeju.domain.post.walk.dto.response.CoursePostCreateResponse;
+import com.gudgo.jeju.domain.post.walk.dto.response.CoursePostDetailResponse;
 import com.gudgo.jeju.domain.post.walk.dto.response.CoursePostSpotResponse;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
@@ -46,10 +46,20 @@ public class CoursePostService {
 
     private final ValidationUtil validationUtil;
 
-    @Transactional
-    public CoursePostCreateResponse createCoursePost(Long userId, CoursePostCreateRequest request) {
-        User user = userRepository.findById(userId)
+    public CoursePostDetailResponse getCoursePost(Long userId, Long postId) {
+        User user = findUser(userId);
+        
+        Posts post = postsRepository.findById(postId)
                 .orElseThrow(EntityNotFoundException::new);
+
+        Long currentParticipantNum = participantQueryService.countCourseParticipant(post.getPlanner().getId());
+
+        return getCreateCoursePostResponse(user, post, currentParticipantNum);
+    }
+
+    @Transactional
+    public CoursePostDetailResponse createCoursePost(Long userId, CoursePostCreateRequest request) {
+        User user = findUser(userId);
 
         ChatRoom chatRoom = ChatRoom.builder()
                 .title(request.title())
@@ -66,18 +76,25 @@ public class CoursePostService {
                 .title(request.title())
                 .startDate(request.startDate())
                 .startAt(request.startTime())
-                .companionsNum(request.companionsNum())
+                .participantNum(request.participantNum())
                 .placeName(request.placeName())
                 .placeLatitude(request.placeLatitude())
-                .placeLonggitude(request.placeLongitude())
+                .placeLongitude(request.placeLongitude())
                 .build();
 
         postsRepository.save(posts);
 
-        return getCreateCoursePostResponse(user, posts);
+        return getCreateCoursePostResponse(user, posts, 0L);
     }
 
-    private CoursePostCreateResponse getCreateCoursePostResponse(User user, Posts posts) {
+    private User findUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(EntityNotFoundException::new);
+        
+        return user;
+    }
+    
+    private CoursePostDetailResponse getCreateCoursePostResponse(User user, Posts posts, Long currentParticipantNum) {
         List<Spot> spots = spotRepository.findByCourseIdOrderByOrderNumberAsc(posts.getPlanner().getCourse().getId());
         List<CoursePostSpotResponse> spotResponses = new ArrayList<>();
 
@@ -85,39 +102,22 @@ public class CoursePostService {
             spotResponses.add(new CoursePostSpotResponse(spot.getTitle(), spot.getOrderNumber(), spot.getLatitude(), spot.getLongitude()));
         }
 
-        return new CoursePostCreateResponse(
+        return new CoursePostDetailResponse(
                 posts.getId(),
                 user.getNickname(),
                 user.getProfile().getProfileImageUrl(),
                 posts.getCreatedAt(),
                 posts.getStartDate(),
                 posts.getStartAt(),
-                posts.getCompanionsNum(),
+                currentParticipantNum,
+                posts.getParticipantNum(),
                 posts.getPlanner().getTime(),
                 posts.getPlaceName(),
                 posts.getContent(),
                 spotResponses
         );
     }
-
-//    public CoursePostResponse getCoursePost(Long postId) {
-//        Posts post = postsRepository.findById(postId)
-//                .orElseThrow(EntityNotFoundException::new);
-//
-//        Long currentParticipantNum = participantQueryService.countCourseParticipant(post.getPlanner().getId());
-//
-//        return new CoursePostResponse(
-//                post.getId(),
-//                post.getUser().getId(),
-//                post.getUser().getNickname(),
-//                post.getUser().getProfile().getProfileImageUrl(),
-//                post.getUser().getNumberTag(),
-//                post.getTitle(),
-//                post.getCompanionsNum(),
-//                currentParticipantNum,
-//                post.getContent()
-//        );
-//    }
+    
 //
 //    @Transactional
 //    public CoursePostResponse createByUserCourse(CoursePostCreateRequest request) {
@@ -205,7 +205,7 @@ public class CoursePostService {
 //                .isDeleted(false)
 //                .placeName(request.placeName())
 //                .placeLatitude(request.placeLatitude())
-//                .placeLonggitude(request.placeLongitude())
+//                .placeLongitude(request.placeLongitude())
 //                .build();
 //
 //
@@ -292,7 +292,7 @@ public class CoursePostService {
 //                .isDeleted(false)
 //                .placeName(request.placeName())
 //                .placeLatitude(request.placeLatitude())
-//                .placeLonggitude(request.placeLongitude())
+//                .placeLongitude(request.placeLongitude())
 //                .build();
 //
 //

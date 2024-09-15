@@ -19,7 +19,7 @@ public class ParticipantValidator {
 
         Long currentNumber = participantQueryService.countCourseParticipant(courseId);
 
-        if (posts.getCompanionsNum() == currentNumber) {
+        if (posts.getParticipantNum() == currentNumber) {
             throw new IllegalStateException("The number of companions is already full for courseId=" + courseId);
         }
     }

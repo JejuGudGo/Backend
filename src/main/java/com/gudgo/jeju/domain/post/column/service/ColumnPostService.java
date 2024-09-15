@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -58,7 +59,7 @@ public class ColumnPostService {
                     .postType(PostType.COLUMN)
                     .title(request.title())
                     .content(request.content())
-                    .createdAt(LocalDate.now())
+                    .createdAt(LocalDateTime.now())
                     .isDeleted(false)
                     .build();
 
