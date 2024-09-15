@@ -58,14 +58,8 @@ public class NoticeService {
         noticeRepository.save(notice);
 
         NoticeResponse response = new NoticeResponse(
-                notice.getId(),
-                notice.getParticipant().getId(),
                 notice.getParticipant().getUser().getNickname(),
-                notice.getParticipant().getUser().getNumberTag(),
-                notice.getParticipant().getUser().getProfile().getProfileImageUrl(),
-                notice.getContent(),
-                notice.getCreatedAt(),
-                notice.getUpdatedAt()
+                notice.getContent()
         );
 
         return response;
