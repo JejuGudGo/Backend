@@ -97,6 +97,13 @@ public class SpotService {
             responses.add(new SpotCreateResponse(spot.getId(), spot.getTitle(), spot.getLatitude(), spot.getLongitude()));
         }
 
+        String startSpotTitle = responses.get(0).title();
+        String lastSpotTitle = responses.get(responses.size() - 1).title();
+        String courseContent = startSpotTitle + "부터 " + lastSpotTitle  + "까지 걷는 코스에요.";
+
+        course = course.withContent(courseContent);
+        courseRepository.save(course);
+
         return responses;
     }
 

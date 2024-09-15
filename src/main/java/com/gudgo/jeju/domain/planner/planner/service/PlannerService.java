@@ -53,7 +53,7 @@ public class PlannerService {
         List<PlannerType> tags = createAndSaveLabel(planner, requestDto.tags());
         createAndSaveParticipant(user, planner);
 
-        return new PlannerCreateResponse(course.getTitle(), tags, spots);
+        return new PlannerCreateResponse(course.getTitle(), course.getContent(), tags, spots);
     }
 
     @Transactional
