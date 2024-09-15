@@ -18,6 +18,5 @@ public record CourseResponseDto(
         String content,
         double starAvg,
         List<SpotResponseDto> spots
-
 ) {
 }

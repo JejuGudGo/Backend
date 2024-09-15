@@ -32,8 +32,7 @@ public class TodoService {
     public TodoResponseDto create(HttpServletRequest request, TodoCreateRequestDto requestDto) {
         Todo todo = Todo.builder()
                 .user(getUser(request))
-                .type(requestDto.type())
-                .orderNumber(requestDto.orderNumber())
+                .type(TodoType.TODO)
                 .content(requestDto.content())
                 .isFinished(false)
                 .isDeleted(false)

@@ -1,45 +1,85 @@
-//package com.gudgo.jeju.domain.planner.planner.query;
-//
-//import com.gudgo.jeju.domain.planner.course.dto.response.CourseResponseDto;
-//import com.gudgo.jeju.domain.planner.course.entity.Course;
-//import com.gudgo.jeju.domain.planner.course.entity.CourseType;
-//import com.gudgo.jeju.domain.planner.course.entity.QCourse;
-//import com.gudgo.jeju.domain.planner.course.query.CourseQueryService;
-//import com.gudgo.jeju.domain.planner.label.dto.request.LabelRequestDto;
-//import com.gudgo.jeju.domain.planner.label.entity.PlannerLabel;
-//import com.gudgo.jeju.domain.planner.label.entity.QPlannerLabel;
-//import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerResponse;
-//import com.gudgo.jeju.domain.planner.planner.entity.Planner;
-//import com.gudgo.jeju.domain.planner.planner.entity.QPlanner;
-//import com.gudgo.jeju.global.util.PaginationUtil;
-//import com.querydsl.jpa.impl.JPAQueryFactory;
-//import jakarta.persistence.EntityManager;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.data.domain.Page;
-//import org.springframework.data.domain.Pageable;
-//import org.springframework.stereotype.Service;
-//
-//import java.util.List;
-//import java.util.Map;
-//import java.util.stream.Collectors;
-//
-//import static org.hibernate.query.sqm.tree.SqmNode.log;
-//
-//@Service
-//public class PlannerQueryService {
-//    private final JPAQueryFactory queryFactory;
-//    private final CourseQueryService courseQueryService;
-//
-//    @Autowired
-//    public PlannerQueryService(EntityManager entityManager, CourseQueryService courseQueryService) {
-//        this.queryFactory = new JPAQueryFactory(entityManager);
-//        this.courseQueryService = courseQueryService;
-//    }
+package com.gudgo.jeju.domain.planner.planner.query;
+
+import com.gudgo.jeju.domain.planner.course.query.CourseQueryService;
+import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerSearchResponse;
+import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerTagResponse;
+import com.gudgo.jeju.domain.planner.planner.entity.Planner;
+import com.gudgo.jeju.domain.planner.planner.entity.QPlanner;
+import com.gudgo.jeju.domain.planner.review.entity.QPlannerReview;
+import com.gudgo.jeju.domain.planner.tag.entity.PlannerTag;
+import com.gudgo.jeju.domain.planner.tag.entity.QPlannerTag;
+import com.gudgo.jeju.global.util.PaginationUtil;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class PlannerSearchQueryService {
+    private final JPAQueryFactory queryFactory;
+    private final CourseQueryService courseQueryService;
+
+    @Autowired
+    public PlannerSearchQueryService(EntityManager entityManager, CourseQueryService courseQueryService) {
+        this.queryFactory = new JPAQueryFactory(entityManager);
+        this.courseQueryService = courseQueryService;
+    }
+
+    public Page<PlannerSearchResponse> searchPlannersByTitle(Pageable pageable, String title) {
+        QPlanner qPlanner = QPlanner.planner;
+        QPlannerTag qPlannerTag = QPlannerTag.plannerTag;
+
+        List<Planner> planners = queryFactory
+                .selectFrom(qPlanner)
+                .where(qPlanner.course.title.like("%" + title + "%"))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        List<PlannerSearchResponse> plannerResponses = planners.stream()
+                .map(planner -> {
+                    List<PlannerTag> plannerTags = queryFactory
+                            .selectFrom(qPlannerTag)
+                            .where(qPlannerTag.planner.id.in(planner.getId()))
+                            .fetch();
+
+                    List<PlannerTagResponse> plannerTagResponses = plannerTags.stream()
+                            .map(plannerTag -> new PlannerTagResponse(plannerTag.getId(), plannerTag.getCode()))
+                            .toList();
+
+                    QPlannerReview qPlannerReview = QPlannerReview.plannerReview;
+
+                    Long reviewCount = queryFactory
+                            .select(qPlannerReview.count())
+                            .from(qPlannerReview)
+                            .where(qPlannerReview.planner.id.eq(planner.getId()))
+                            .fetchOne();
+
+                    return new PlannerSearchResponse(
+                            planner.getId(),
+                            planner.getCourse().getTitle(),
+                            planner.getCourse().getContent(),
+                            "None",
+                            planner.getTime(),
+                            reviewCount,
+                            planner.getCourse().getStarAvg(),
+                            plannerTagResponses
+                    );
+                })
+                .toList();
+
+        return PaginationUtil.listToPage(plannerResponses, pageable);
+    }
+
 //
 //    public Page<PlannerResponse> getPlannerdetail(Pageable pageable) {
 //        QCourse qCourse = QCourse.course;
 //        QPlanner qPlanner = QPlanner.planner;
-//        QPlannerLabel qPlannerLabel = QPlannerLabel.plannerLabel;
+//        QPlannerTag qPlannerTa = QPlannerTag.plannerTag;
 //
 //        List<Long> userCourseIds = queryFactory
 //                .select(qCourse.id)
@@ -407,4 +447,4 @@
 //                courseQueryService.getCourse(planner.getId())
 //        );
 //    }
-//}
+}

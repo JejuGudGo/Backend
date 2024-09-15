@@ -17,6 +17,8 @@ public class Participant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private boolean isHost;
+
     private boolean approved;
 
     private boolean isDeleted;
@@ -35,7 +37,7 @@ public class Participant {
 
 
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name="userId")
     private User user;
 
 

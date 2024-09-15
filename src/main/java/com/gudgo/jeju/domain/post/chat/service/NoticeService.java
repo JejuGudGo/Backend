@@ -2,6 +2,7 @@ package com.gudgo.jeju.domain.post.chat.service;
 
 import com.gudgo.jeju.domain.post.chat.dto.request.NoticeCreateRequest;
 import com.gudgo.jeju.domain.post.chat.dto.request.NoticeUpdateRequest;
+import com.gudgo.jeju.domain.post.chat.dto.response.NoticeCreateResponse;
 import com.gudgo.jeju.domain.post.chat.dto.response.NoticeResponse;
 import com.gudgo.jeju.domain.post.chat.entity.ChatRoom;
 import com.gudgo.jeju.domain.post.chat.entity.Notice;
@@ -38,14 +39,13 @@ public class NoticeService {
         return noticeQueryService.getLatestNotice(chatRoomId);
     }
 
-    public NoticeResponse create(Long userId, Long chatRoomId, NoticeCreateRequest request) {
+    public NoticeCreateResponse create(Long userId, Long chatRoomId, NoticeCreateRequest request) {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(EntityNotFoundException::new);
 
         Planner planner = plannerRepository.findByChatRoomId(chatRoom.getId());
 
-        Participant participant = participantRepository.findByUserIdAndPlannerId(userId, planner.getId())
-                .orElseThrow(EntityNotFoundException::new);
+        Participant participant = participantRepository.findByUserIdAndPlannerId(userId, planner.getId());
 
         Notice notice = Notice.builder()
                 .chatRoom(chatRoom)
@@ -58,15 +58,9 @@ public class NoticeService {
 
         noticeRepository.save(notice);
 
-        NoticeResponse response = new NoticeResponse(
-                notice.getId(),
-                notice.getParticipant().getId(),
+        NoticeCreateResponse response = new NoticeCreateResponse(
                 notice.getParticipant().getUser().getNickname(),
-                notice.getParticipant().getUser().getNumberTag(),
-                notice.getParticipant().getUser().getProfile().getProfileImageUrl(),
-                notice.getContent(),
-                notice.getCreatedAt(),
-                notice.getUpdatedAt()
+                notice.getContent()
         );
 
         return response;

@@ -26,7 +26,7 @@ public class ChatRoomController {
 
     @PatchMapping(value = "{userId}/chatRooms/{chatRoomId}")
     public ResponseEntity<?> updateChatRooms(
-            @PathVariable("userId") Long userId, @PathVariable("chatRoomId") Long chatRoomId, ChatRoomUpdateRequest request) {
+            @PathVariable("userId") Long userId, @PathVariable("chatRoomId") Long chatRoomId, @RequestBody ChatRoomUpdateRequest request) {
         chatRoomService.updateMessageRoomTitle(chatRoomId, request);
 
         return ResponseEntity.ok().build();

@@ -1,6 +1,8 @@
 package com.gudgo.jeju.domain.planner.planner.dto.response;
 
 import com.gudgo.jeju.domain.planner.course.dto.response.CourseResponseDto;
+import com.gudgo.jeju.domain.planner.tag.entity.PlannerTag;
+import com.gudgo.jeju.domain.planner.tag.entity.PlannerType;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -12,7 +14,7 @@ public record PlannerResponse(
         String summary,
         LocalTime time,
         boolean isCompleted,
-        List<PlannerTagResponse> labelCode,
+        List<PlannerTagResponse> tags,
         CourseResponseDto course
 ) {
 }

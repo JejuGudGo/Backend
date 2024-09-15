@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -27,9 +29,15 @@ public class Posts {
 
     private String content;
 
-    private Long companionsNum;
+    private String courseSummary;
 
-    private LocalDate createdAt;
+    private LocalDate startDate;
+
+    private LocalTime startAt;
+
+    private Long participantNum;
+
+    private LocalDateTime createdAt;
 
     private boolean isFinished;
 
@@ -39,7 +47,7 @@ public class Posts {
 
     private double placeLatitude;
 
-    private double placeLonggitude;
+    private double placeLongitude;
 
 
     @ManyToOne
@@ -59,7 +67,7 @@ public class Posts {
                 .postType(postType)
                 .title(title)
                 .content(content)
-                .companionsNum(companionsNum)
+                .participantNum(participantNum)
                 .createdAt(createdAt)
                 .isFinished(isFinished)
                 .isDeleted(isDeleted)
@@ -67,7 +75,7 @@ public class Posts {
                 .planner(planner)
                 .placeName(placeName)
                 .placeLatitude(placeLatitude)
-                .placeLonggitude(placeLonggitude)
+                .placeLongitude(placeLongitude)
                 .build();
     }
 
@@ -77,7 +85,7 @@ public class Posts {
                 .postType(postType)
                 .title(title)
                 .content(content)
-                .companionsNum(companionsNum)
+                .participantNum(participantNum)
                 .createdAt(createdAt)
                 .isFinished(isFinished)
                 .isDeleted(isDeleted)
@@ -85,17 +93,17 @@ public class Posts {
                 .planner(planner)
                 .placeName(placeName)
                 .placeLatitude(placeLatitude)
-                .placeLonggitude(placeLonggitude)
+                .placeLongitude(placeLongitude)
                 .build();
     }
 
-    public Posts withCompanionsNum(Long companionsNum) {
+    public Posts withParticipantNum(Long participantNum) {
         return Posts.builder()
                 .id(id)
                 .postType(postType)
                 .title(title)
                 .content(content)
-                .companionsNum(companionsNum)
+                .participantNum(participantNum)
                 .createdAt(createdAt)
                 .isFinished(isFinished)
                 .isDeleted(isDeleted)
@@ -103,7 +111,7 @@ public class Posts {
                 .planner(planner)
                 .placeName(placeName)
                 .placeLatitude(placeLatitude)
-                .placeLonggitude(placeLonggitude)
+                .placeLongitude(placeLongitude)
                 .build();
     }
 
@@ -113,7 +121,7 @@ public class Posts {
                 .postType(postType)
                 .title(title)
                 .content(content)
-                .companionsNum(companionsNum)
+                .participantNum(participantNum)
                 .createdAt(createdAt)
                 .isFinished(isFinished)
                 .isDeleted(isDeleted)
@@ -121,7 +129,7 @@ public class Posts {
                 .planner(planner)
                 .placeName(placeName)
                 .placeLatitude(placeLatitude)
-                .placeLonggitude(placeLonggitude)
+                .placeLongitude(placeLongitude)
                 .build();
     }
 
@@ -131,7 +139,7 @@ public class Posts {
                 .postType(postType)
                 .title(title)
                 .content(content)
-                .companionsNum(companionsNum)
+                .participantNum(participantNum)
                 .createdAt(createdAt)
                 .isFinished(isFinished)
                 .isDeleted(isDeleted)
@@ -139,7 +147,7 @@ public class Posts {
                 .planner(planner)
                 .placeName(placeName)
                 .placeLatitude(placeLatitude)
-                .placeLonggitude(placeLonggitude)
+                .placeLongitude(placeLongitude)
                 .build();
     }
 
@@ -149,7 +157,7 @@ public class Posts {
                 .postType(postType)
                 .title(title)
                 .content(content)
-                .companionsNum(companionsNum)
+                .participantNum(participantNum)
                 .createdAt(createdAt)
                 .isFinished(isFinished)
                 .isDeleted(isDeleted)
@@ -157,7 +165,7 @@ public class Posts {
                 .planner(planner)
                 .placeName(placeName)
                 .placeLatitude(placeLatitude)
-                .placeLonggitude(placeLonggitude)
+                .placeLongitude(placeLongitude)
                 .build();
     }
 
@@ -167,7 +175,7 @@ public class Posts {
                 .postType(postType)
                 .title(title)
                 .content(content)
-                .companionsNum(companionsNum)
+                .participantNum(participantNum)
                 .createdAt(createdAt)
                 .isFinished(isFinished)
                 .isDeleted(isDeleted)
@@ -175,7 +183,7 @@ public class Posts {
                 .planner(planner)
                 .placeName(placeName)
                 .placeLatitude(placeLatitude)
-                .placeLonggitude(placeLonggitude)
+                .placeLongitude(placeLongitude)
                 .build();
     }
 
