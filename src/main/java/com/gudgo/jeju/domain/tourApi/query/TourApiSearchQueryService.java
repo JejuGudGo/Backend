@@ -36,11 +36,6 @@ public class TourApiSearchQueryService {
         double finalMinLng = Math.min(minLng, maxLng);
         double finalMaxLng = Math.max(minLng, maxLng);
 
-        log.debug("Final MinLat: {}, Final MaxLat: {}", finalMinLat, finalMaxLat);
-        log.debug("Final MinLng: {}, Final MaxLng: {}", finalMinLng, finalMaxLng);
-
-        log.info("minLat: " +  minLat + "maxLat: " + maxLat +  "minLng: " + minLng +  "maxLng: " + maxLng);
-
         return queryFactory.selectFrom(tourApiContent)
                 .where(tourApiContent.latitude.between(finalMinLat, finalMaxLat)
                         .and(tourApiContent.longitude.between(finalMinLng, finalMaxLng))

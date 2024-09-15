@@ -5,6 +5,7 @@ import com.gudgo.jeju.domain.planner.course.service.CourseService;
 import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerCreateRequestDto;
 import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerUpdateRequestDto;
 //import com.gudgo.jeju.domain.planner.planner.query.PlannerQueryService;
+import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerCreateResponse;
 import com.gudgo.jeju.domain.planner.planner.service.PlannerService;
 import com.gudgo.jeju.domain.planner.spot.dto.request.SpotCreateRequestDto;
 import com.gudgo.jeju.domain.planner.spot.dto.response.SpotCreateResponse;
@@ -83,11 +84,12 @@ public class PlannerController {
 
     // 유저 직접 생성
     @PostMapping("/users/{userId}/planners")
-    public ResponseEntity<?> create(@PathVariable("userId") Long userId, @Valid @RequestBody PlannerCreateRequestDto requestDto) {
+    public ResponseEntity<PlannerCreateResponse> create(@PathVariable("userId") Long userId, @Valid @RequestBody PlannerCreateRequestDto requestDto) {
         Course course = courseService.createCourse(requestDto.courseCreateRequestDto());
         List<SpotCreateResponse> spots = spotService.createUserSpot(course, requestDto.spotCreateRequestDto());
+        PlannerCreateResponse response = plannerService.create(userId, requestDto, course, spots);
 
-        return ResponseEntity.ok(plannerService.create(userId, requestDto, course, spots));
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/users/{userId}/planners/{plannerId}")
