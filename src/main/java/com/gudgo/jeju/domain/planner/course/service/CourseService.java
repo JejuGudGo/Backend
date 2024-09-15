@@ -55,10 +55,19 @@ public class CourseService {
                 .build();
 
         courseRepository.save(course);
+        updateOrgCourseId(course.getId());
+
+        return course;
+    }
+
+    @Transactional
+    protected void updateOrgCourseId(Long courseId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(EntityNotFoundException::new);
 
         course = course.withOriginalCourseId(course.getId());
 
-        return course;
+        courseRepository.save(course);
     }
 
     @Transactional
