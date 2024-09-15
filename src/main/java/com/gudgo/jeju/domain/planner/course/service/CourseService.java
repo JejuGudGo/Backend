@@ -14,13 +14,17 @@ import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
 import com.gudgo.jeju.domain.olle.repository.JeJuOlleCourseRepository;
 import com.gudgo.jeju.global.util.ValidationUtil;
+import com.gudgo.jeju.global.util.image.entity.Category;
+import com.gudgo.jeju.global.util.image.service.ImageUpdateService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.OptionalDouble;
@@ -36,6 +40,7 @@ public class CourseService {
     private final JeJuOlleCourseRepository jeJuOlleCourseRepository;
     private final SpotRepository spotRepository;
     private final PlannerRepository plannerRepository;
+    private final ImageUpdateService imageUpdateService;
 
     private final ValidationUtil validationUtil;
     private final PlannerReviewRepository plannerReviewRepository;
@@ -43,12 +48,11 @@ public class CourseService {
     @Transactional
     public Course createCourse(@Valid CourseCreateRequestDto requestDto) {
         Course course = Course.builder()
-                  .type(requestDto.type())
-                  .title(requestDto.title())
-                  .createdAt(LocalDate.now())
-                  .imageUrl(requestDto.imageUrl())
-                  .originalCreatorId(requestDto.userId())
-                  .build();
+                .type(requestDto.type())
+                .title(requestDto.title())
+                .createdAt(LocalDate.now())
+                .originalCreatorId(requestDto.userId())
+                .build();
 
         courseRepository.save(course);
 
@@ -58,21 +62,21 @@ public class CourseService {
     }
 
     @Transactional
-    public void update(Long courseId, CourseUpdateRequestDto requestDto) {
-        Course course = courseRepository.findById(courseId)
+    public void updateCourse(Long userId, Long plannerId, MultipartFile file, CourseUpdateRequestDto requestDto) throws Exception {
+        Planner planner = plannerRepository.findById(plannerId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        // 코스명(title) 업데이트
+        Course course = planner.getCourse();
+
         if (validationUtil.validateStringValue(requestDto.title())) {
             course = course.withTitle(requestDto.title());
         }
 
-        // 대표이미지(imageUrl) 업데이트
-        if (validationUtil.validateStringValue(requestDto.imageUrl())) {
-            course = course.withImageUrl(requestDto.imageUrl());
+        if (file != null && !file.isEmpty()) {
+            Path imagePath = imageUpdateService.saveImage(userId, file, Category.COURSE);
+            course = course.withImageUrl(imagePath.toString());
         }
 
-        // 코스정보(content) 업데이트
         if (validationUtil.validateStringValue(requestDto.content())) {
             course = course.withContent(requestDto.content());
         }
