@@ -74,6 +74,7 @@ public class CoursePostService {
                 .planner(copiedPlanner)
                 .postType(PostType.COURSE)
                 .title(request.title())
+                .courseSummary(copiedPlanner.getCourse().getContent())
                 .startDate(request.startDate())
                 .startAt(request.startTime())
                 .participantNum(request.participantNum())
@@ -106,6 +107,7 @@ public class CoursePostService {
                 posts.getId(),
                 user.getNickname(),
                 user.getProfile().getProfileImageUrl(),
+                posts.getPlanner().getCourse().getContent(),
                 posts.getCreatedAt(),
                 posts.getStartDate(),
                 posts.getStartAt(),

@@ -29,6 +29,8 @@ public class Posts {
 
     private String content;
 
+    private String courseSummary;
+
     private LocalDate startDate;
 
     private LocalTime startAt;

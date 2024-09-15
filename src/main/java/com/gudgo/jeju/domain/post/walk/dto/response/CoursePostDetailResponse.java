@@ -10,6 +10,7 @@ public record CoursePostDetailResponse(
         Long postId,
         String nickName,
         String profileImgUrl,
+        String courseSummary,
         LocalDateTime createAt,
         LocalDate startDate,
         LocalTime startAt,

@@ -112,7 +112,7 @@ public class PlannerCopyService {
 
         String startSpotTitle = selectedSpots.get(0).getTitle();
         String lastSpotTitle = selectedSpots.get(selectedSpots.size() - 1).getTitle();
-        String courseContent = startSpotTitle + "부터 " + lastSpotTitle  + "까지 걷는 코스에요.";
+        String courseContent = startSpotTitle + "부터 " + lastSpotTitle  + "까지";
 
         course = course.withContent(courseContent);
         courseRepository.save(course);

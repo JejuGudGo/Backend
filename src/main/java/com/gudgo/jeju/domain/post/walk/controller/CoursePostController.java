@@ -2,11 +2,15 @@ package com.gudgo.jeju.domain.post.walk.controller;
 
 import com.gudgo.jeju.domain.post.walk.dto.request.CoursePostCreateRequest;
 import com.gudgo.jeju.domain.post.walk.dto.response.CoursePostDetailResponse;
+import com.gudgo.jeju.domain.post.walk.dto.response.CoursePostListResponse;
+import com.gudgo.jeju.domain.post.walk.query.CoursePostQueryService;
 import com.gudgo.jeju.domain.post.walk.service.CoursePostService;
 import com.gudgo.jeju.global.jwt.token.SubjectExtractor;
 import com.gudgo.jeju.global.jwt.token.TokenExtractor;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,13 +23,13 @@ public class CoursePostController {
     private final CoursePostService coursePostService;
     private final TokenExtractor tokenExtractor;
     private final SubjectExtractor subjectExtractor;
-//    private final CoursePostQueryService coursePostQueryService;
-//
-//    @GetMapping(value = "" )
-//    public Page<CoursePostResponse> getCoursePosts(Pageable pageable) {
-//        return coursePostQueryService.getCoursePosts(pageable);
-//    }
-//
+    private final CoursePostQueryService coursePostQueryService;
+
+    @GetMapping(value = "posts" )
+    public Page<CoursePostListResponse> getCoursePosts(@RequestParam("query") String query, Pageable pageable) {
+        return coursePostQueryService.getAllCoursePosts(query, pageable);
+    }
+
     @GetMapping(value = "posts/walk/{postId}")
     public ResponseEntity<CoursePostDetailResponse> getCoursePost(HttpServletRequest request, @PathVariable("postId") Long postId) {
         Long userId = getUserId(request);
