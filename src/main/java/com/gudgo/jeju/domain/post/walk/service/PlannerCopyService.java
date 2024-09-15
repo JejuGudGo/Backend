@@ -95,6 +95,11 @@ public class PlannerCopyService {
         List<Spot> selectedSpots = spotRepository.findByCourseIdOrderByOrderNumberAsc(course.getId());
 
         for (Spot selectedSpot : selectedSpots) {
+
+            selectedSpot = selectedSpot.withIncreasedCount();
+
+            spotRepository.save(selectedSpot);
+
             Spot spot = Spot.builder()
                     .spotType(selectedSpot.getSpotType())
                     .orderNumber(selectedSpot.getOrderNumber())

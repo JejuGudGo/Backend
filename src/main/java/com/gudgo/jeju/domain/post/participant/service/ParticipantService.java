@@ -52,65 +52,68 @@ public class ParticipantService {
     }
 
     @Transactional
-    public void requestJoin(Long plannerId, Long userId, ParticipantJoinRequest request) {
+    public void requestJoin(Long postId, Long userId, ParticipantJoinRequest request) {
 
-        Posts post = postsRepository.findByPlannerId(plannerId)
+        Posts post = postsRepository.findById(postId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        participantValidator.validateParticipantNumber(post.getId(), plannerId);
+        Long plannerId = post.getPlanner().getId();
 
-        Optional<Participant> optionalParticipant =
-                participantRepository.findByUserIdAndPlannerId(userId, plannerId);
+        participantValidator.validateParticipantNumber(post.getId(), plannerId);
 
         User user = userRepository.findById(userId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        Planner planner = plannerRepository.findById(plannerId)
-                .orElseThrow(EntityNotFoundException::new);
+        Participant optionalParticipant =
+                participantRepository.findByUserIdAndPlannerId(userId, plannerId);
 
-        // 신청 이력이 없는 경우
-        Participant participant = optionalParticipant
-                .orElseGet(() -> Participant.builder()
-                        .user(user)
-                        .planner(planner)
-                        .count(0L) // 처음 생성할 때 count를 0으로 설정
-                        .isApplied(false) // 처음 생성할 때 isApplied를 false로 설정
-                        .appliedAt(LocalDate.now())
-                        .content(request.content())
-                        .build());
+        if (optionalParticipant != null) {
+            if (optionalParticipant.getCount() >= 3) { // 신청 이력이 3회 이상일 경우
+                throw new IllegalStateException("request count 를 초과하였습니다.");
 
-        String content = request.content();
-        if (participant.getCount() >= 3) {  // 신청 이력이 3회 이상일 경우
-            throw new IllegalStateException("request count를 초과하였습니다.");
+            } else {
+                optionalParticipant = optionalParticipant.withCountAndIsAppliedAndAppliedAt(true, LocalDate.now());
+                participantRepository.save(optionalParticipant);
+            }
 
         } else {
-//            participant = participant.withCountAndApplied(true);
-//            participant = participant.withAppliedAt(LocalDate.now());
-
-            participantRepository.save(participant);
-            participant = participant.withCountAndIsAppliedAndAppliedAt(true, LocalDate.now());
+            Participant participant = Participant.builder()
+                    .user(user)
+                    .planner(post.getPlanner())
+                    .isHost(false)
+                    .approved(false)
+                    .isApplied(true)
+                    .appliedAt(LocalDate.now())
+                    .isDeleted(false)
+                    .isBlocked(false)
+                    .content(request.content())
+                    .count(0L)
+                    .build();
             participantRepository.save(participant);
         }
     }
 
 
     @Transactional
-    public void requestCancel(Long plannerId, Long userId) {
-        Participant participant = participantRepository.findByUserIdAndPlannerId(userId, plannerId)
+    public void requestCancel(Long postId, Long userId) {
+        Posts post = postsRepository.findById(postId)
                 .orElseThrow(EntityNotFoundException::new);
+
+        Participant participant = participantRepository.findByUserIdAndPlannerId(userId, post.getPlanner().getId());
 
         participant = participant.withApplied(false);
 
         participantRepository.save(participant);
     }
 
-    public void approveUserOrNot(Long plannerId, Long userId, boolean status) {
+    public void approveUserOrNot(Long postId, Long userId, boolean status) {
 
-        Posts post = postsRepository.findByPlannerId(plannerId)
+        Posts post = postsRepository.findByPlannerId(postId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        Participant participant = participantRepository.findByUserIdAndPlannerId(userId, plannerId)
-                .orElseThrow(EntityNotFoundException::new);
+        Long plannerId = post.getPlanner().getId();
+
+        Participant participant = participantRepository.findByUserIdAndPlannerId(userId, plannerId);
 
         if (status) {
             approveUser(post, participant, plannerId);
@@ -120,24 +123,24 @@ public class ParticipantService {
         }
     }
 
-    private void approveUser(Posts post, Participant participant, Long courseId) {
-        participantValidator.validateParticipantNumber(post.getId(), courseId);
+    private void approveUser(Posts post, Participant participant, Long plannerId) {
+        participantValidator.validateParticipantNumber(post.getId(), plannerId);
 
         participant = participant.withApprovedAndApprovedAt(true, LocalDate.now());
         participantRepository.save(participant);
 
-        if (post.getParticipantNum().equals(participantQueryService.countCourseParticipant(courseId))) {
+        if (post.getParticipantNum().equals(participantQueryService.countCourseParticipant(plannerId))) {
             post = post.withIsFinished(true);
             postsRepository.save(post);
         }
     }
 
-    private void notApproveUser(Posts post, Participant participant, Long courseId) {
+    private void notApproveUser(Posts post, Participant participant, Long plannerId) {
         participant.withApprovedAndApprovedAt(false, LocalDate.now());
         participantRepository.save(participant);
 
         // 특정 user의 승인을 취소했을 때, 모집 마감상태라면, isFinished : false로 변경
-        if (participantQueryService.countCourseParticipant(courseId) < post.getParticipantNum() && post.isFinished()) {
+        if (participantQueryService.countCourseParticipant(plannerId) < post.getParticipantNum() && post.isFinished()) {
             post = post.withIsFinished(false);
             postsRepository.save(post);
         }

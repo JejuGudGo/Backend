@@ -37,6 +37,7 @@ public class CoursePostQueryService {
             posts = queryFactory
                     .selectFrom(qPosts)
                     .where(qPosts.isDeleted.isFalse())
+                    .orderBy(qPosts.createdAt.desc())
                     .fetch();
 
         } else if (query.equals("OLLE")) {
@@ -44,6 +45,7 @@ public class CoursePostQueryService {
                     .selectFrom(qPosts)
                     .where(qPosts.isDeleted.isFalse()
                             .and(qPosts.planner.course.olleCourseId.isNotNull()))
+                    .orderBy(qPosts.createdAt.desc())
                     .fetch();
 
         } else if (query.equals("USER")) {
@@ -51,6 +53,7 @@ public class CoursePostQueryService {
                     .selectFrom(qPosts)
                     .where(qPosts.isDeleted.isFalse()
                             .and(qPosts.planner.course.olleCourseId.isNull()))
+                    .orderBy(qPosts.createdAt.desc())
                     .fetch();
         }
 

@@ -44,8 +44,7 @@ public class NoticeService {
 
         Planner planner = plannerRepository.findByChatRoomId(chatRoom.getId());
 
-        Participant participant = participantRepository.findByUserIdAndPlannerId(userId, planner.getId())
-                .orElseThrow(EntityNotFoundException::new);
+        Participant participant = participantRepository.findByUserIdAndPlannerId(userId, planner.getId());
 
         Notice notice = Notice.builder()
                 .chatRoom(chatRoom)
