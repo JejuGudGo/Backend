@@ -2,6 +2,7 @@ package com.gudgo.jeju.domain.post.chat.service;
 
 import com.gudgo.jeju.domain.post.chat.dto.request.NoticeCreateRequest;
 import com.gudgo.jeju.domain.post.chat.dto.request.NoticeUpdateRequest;
+import com.gudgo.jeju.domain.post.chat.dto.response.NoticeCreateResponse;
 import com.gudgo.jeju.domain.post.chat.dto.response.NoticeResponse;
 import com.gudgo.jeju.domain.post.chat.entity.ChatRoom;
 import com.gudgo.jeju.domain.post.chat.entity.Notice;
@@ -38,7 +39,7 @@ public class NoticeService {
         return noticeQueryService.getLatestNotice(chatRoomId);
     }
 
-    public NoticeResponse create(Long userId, Long chatRoomId, NoticeCreateRequest request) {
+    public NoticeCreateResponse create(Long userId, Long chatRoomId, NoticeCreateRequest request) {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(EntityNotFoundException::new);
 
@@ -57,7 +58,7 @@ public class NoticeService {
 
         noticeRepository.save(notice);
 
-        NoticeResponse response = new NoticeResponse(
+        NoticeCreateResponse response = new NoticeCreateResponse(
                 notice.getParticipant().getUser().getNickname(),
                 notice.getContent()
         );

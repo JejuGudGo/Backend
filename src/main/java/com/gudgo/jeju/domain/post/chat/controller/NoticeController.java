@@ -2,6 +2,7 @@ package com.gudgo.jeju.domain.post.chat.controller;
 
 import com.gudgo.jeju.domain.post.chat.dto.request.NoticeCreateRequest;
 import com.gudgo.jeju.domain.post.chat.dto.request.NoticeUpdateRequest;
+import com.gudgo.jeju.domain.post.chat.dto.response.NoticeCreateResponse;
 import com.gudgo.jeju.domain.post.chat.dto.response.NoticeResponse;
 import com.gudgo.jeju.domain.post.chat.service.NoticeService;
 import lombok.RequiredArgsConstructor;
@@ -31,12 +32,12 @@ public class NoticeController {
     }
 
     @PostMapping(value = "/{userId}/chatRooms/{chatRoomId}/notices")
-    public ResponseEntity<NoticeResponse> create(
+    public ResponseEntity<NoticeCreateResponse> create(
             @PathVariable("userId") Long userId,
             @PathVariable("chatRoomId") Long chatRoomId,
             @RequestBody NoticeCreateRequest request
             ) {
-        NoticeResponse response = noticeService.create(userId, chatRoomId, request);
+        NoticeCreateResponse response = noticeService.create(userId, chatRoomId, request);
 
         return ResponseEntity.ok(response);
     }
