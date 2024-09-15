@@ -7,6 +7,7 @@ public record SpotCreateRequestDto(
         String address,
         String category,
         SpotType type,
+        String contentTypeId,
         double latitude,
         double longitude
 ) {

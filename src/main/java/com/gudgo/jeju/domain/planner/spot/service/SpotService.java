@@ -78,17 +78,21 @@ public class SpotService {
         List<SpotCreateResponse> responses = new ArrayList<>();
 
         for (int i = 0; i < requests.size(); i++) {
+            String contentType = "None";
+
+            if (requests.get(i).type().equals(SpotType.TOUR)) contentType = requests.get(i).contentTypeId();
+
             Spot spot = Spot.builder()
                     .spotType(requests.get(i).type())
-                    .orderNumber(Long.parseLong(String.valueOf(i + 1)))
+                    .orderNumber(Long.parseLong(String.valueOf(i)))
                     .title(requests.get(i).title())
                     .address(requests.get(i).address())
                     .latitude(requests.get(i).latitude())
                     .longitude(requests.get(i).longitude())
                     .isCompleted(false)
                     .isDeleted(false)
+                    .contentId(contentType)
                     .count(0L)
-                    .contentId("None")
                     .course(course)
                     .build();
 

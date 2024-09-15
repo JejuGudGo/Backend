@@ -2,7 +2,7 @@ package com.gudgo.jeju.domain.post.walk.query;
 
 import com.gudgo.jeju.domain.post.common.entity.QPosts;
 import com.gudgo.jeju.domain.post.participant.entity.QParticipant;
-import com.gudgo.jeju.domain.post.walk.dto.response.CoursePostResponse;
+import com.gudgo.jeju.domain.post.walk.dto.response.CoursePostCreateResponse;
 import com.gudgo.jeju.domain.post.common.entity.PostType;
 import com.gudgo.jeju.domain.post.common.entity.Posts;
 import com.gudgo.jeju.global.util.PaginationUtil;
@@ -24,7 +24,7 @@ public class CoursePostQueryService {
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
-    public Page<CoursePostResponse> getCoursePosts(Pageable pageable) {
+    public Page<CoursePostCreateResponse> getCoursePosts(Pageable pageable) {
         QPosts qPosts = QPosts.posts;
 
         List<Posts> posts = queryFactory
@@ -34,9 +34,9 @@ public class CoursePostQueryService {
                         .and(qPosts.postType.eq(PostType.COURSE)))
                 .fetch();
 
-        List<CoursePostResponse> coursePostResponses = posts.stream()
+        List<CoursePostCreateResponse> coursePostCreateRespons = posts.stream()
                 .map(post ->
-                        new CoursePostResponse(
+                        new CoursePostCreateResponse(
                                 post.getId(),
                                 post.getUser().getId(),
                                 post.getUser().getNickname(),
@@ -49,7 +49,7 @@ public class CoursePostQueryService {
                         ))
                 .toList();
 
-        return PaginationUtil.listToPage(coursePostResponses, pageable);
+        return PaginationUtil.listToPage(coursePostCreateRespons, pageable);
     }
 
     private Long getCurrentParticipantNum(Long plannerId) {

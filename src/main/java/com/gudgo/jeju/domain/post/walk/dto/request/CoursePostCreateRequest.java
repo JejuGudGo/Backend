@@ -1,13 +1,16 @@
 package com.gudgo.jeju.domain.post.walk.dto.request;
 
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public record CoursePostCreateRequest(
-        Long userId,
         String title,
-        Long companionsNum, // 유저가 지정한 숫자
+        LocalDate startDate, // 동생 시작 일
+        LocalTime startTime, // 동행 시작 시간
+        Long companionsNum,
         String content,
-        Long plannerId,
-        Long olleCourseId,
+        Long selectedPlannerId,
         String placeName,
         double placeLatitude,
         double placeLongitude

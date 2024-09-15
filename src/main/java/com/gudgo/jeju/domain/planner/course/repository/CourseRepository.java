@@ -10,7 +10,8 @@ import java.util.List;
 public interface CourseRepository extends JpaRepository<Course, Long> {
     @Query("SELECT c FROM Course c WHERE c.id = c.originalCourseId")
     List<Course> findOriginalCourses();
-    boolean existsByTypeAndOlleCourseId(CourseType type, Long olleCourseId);
-    long countByType(CourseType type);
 
+    boolean existsByTypeAndOlleCourseId(CourseType type, Long olleCourseId);
+
+    long countByType(CourseType type);
 }

@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -27,9 +29,13 @@ public class Posts {
 
     private String content;
 
+    private LocalDate startDate;
+
+    private LocalTime startAt;
+
     private Long companionsNum;
 
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     private boolean isFinished;
 
