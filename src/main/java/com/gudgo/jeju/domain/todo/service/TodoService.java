@@ -32,7 +32,7 @@ public class TodoService {
     public TodoResponseDto create(HttpServletRequest request, TodoCreateRequestDto requestDto) {
         Todo todo = Todo.builder()
                 .user(getUser(request))
-                .type(TodoType.TODO)
+//                .type(TodoType.TODO)
                 .content(requestDto.content())
                 .isFinished(false)
                 .isDeleted(false)
@@ -40,13 +40,18 @@ public class TodoService {
 
         todoRepository.save(todo);
 
-        TodoResponseDto response = new TodoResponseDto(todo.getId(), todo.getType(), todo.getOrderNumber(), todo.getContent(), todo.isFinished());
+        TodoResponseDto response = new TodoResponseDto(
+                todo.getId(),
+//                todo.getType(),
+//                todo.getOrderNumber(),
+                todo.getContent(),
+                todo.isFinished());
         return response;
     }
 
     public List<TodoResponseDto> getByType(TodoType type, HttpServletRequest request) {
         Long userId = getUser(request).getId();
-        List<TodoResponseDto> todoList = todoRepository.findByTypeAndUserIdAndIsDeletedFalseOrderByOrderNumber(type, userId);
+        List<TodoResponseDto> todoList = todoRepository.findByUserIdAndIsDeletedFalse(userId);
         return todoList;
     }
 
@@ -59,12 +64,12 @@ public class TodoService {
     public void update(Long id, TodoUpdateRequestDto requestDto) {
         Todo todo = todoRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
-        if (requestDto.type() != null) {
-            todo = todo.withType(requestDto.type());
-        }
-        if (requestDto.orderNumber() != null) {
-            todo = todo.withOrderNumber(requestDto.orderNumber());
-        }
+//        if (requestDto.type() != null) {
+//            todo = todo.withType(requestDto.type());
+//        }
+//        if (requestDto.orderNumber() != null) {
+//            todo = todo.withOrderNumber(requestDto.orderNumber());
+//        }
         if (requestDto.content() != null) {
             todo = todo.withContent(requestDto.content());
         }
