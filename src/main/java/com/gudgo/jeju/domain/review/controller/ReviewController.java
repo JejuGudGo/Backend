@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @Slf4j
 @RestController
-public class UserReviewController {
+public class ReviewController {
     private final ReviewQueryService reviewQueryService;
     private final ReviewService reviewService;
 

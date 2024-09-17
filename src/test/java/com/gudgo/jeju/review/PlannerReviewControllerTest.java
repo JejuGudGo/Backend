@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class PlannerUserReviewControllerTest {
+public class PlannerReviewControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
