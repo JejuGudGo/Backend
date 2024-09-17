@@ -75,7 +75,7 @@ public class PlannerController {
 //    }
 //
 //
-//    @GetMapping("/users/{userId}/planners/{plannerId}")
+//    @GetMapping("/planners/{plannerId}")
 //    public PlannerResponse getPlanner(@PathVariable("userId") Long userId, @PathVariable("plannerId") Long plannerId) {
 //        return plannerQueryService.getPlanners(userId, plannerId);
 //    }

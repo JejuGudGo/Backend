@@ -6,7 +6,7 @@ import com.gudgo.jeju.domain.bookmark.entity.BookMark;
 import com.gudgo.jeju.domain.bookmark.repository.BookMarkRepository;
 import com.gudgo.jeju.domain.planner.course.dto.response.CourseResponseDto;
 import com.gudgo.jeju.domain.planner.course.entity.Course;
-import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerResponse;
+import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerListResponse;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerTagResponse;
 import com.gudgo.jeju.domain.planner.planner.entity.Planner;
 import com.gudgo.jeju.domain.planner.planner.repository.PlannerRepository;
@@ -23,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -90,7 +89,7 @@ public class BookMarkService {
                 .map(tag -> new PlannerTagResponse(tag.getId(), tag.getCode()))
                 .collect(Collectors.toList());
 
-        PlannerResponse plannerResponse = new PlannerResponse(
+        PlannerListResponse plannerListResponse = new PlannerListResponse(
                 planner.getId(),
                 planner.getStartAt(),
                 planner.getSummary(),
@@ -103,7 +102,7 @@ public class BookMarkService {
         return new BookMarkResponseDto(
                 bookMark.getId(),
                 userInfoDto,
-                plannerResponse
+                plannerListResponse
         );
     }
 
