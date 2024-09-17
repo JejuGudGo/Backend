@@ -7,10 +7,9 @@ import com.gudgo.jeju.domain.planner.course.entity.Course;
 import com.gudgo.jeju.domain.planner.course.repository.CourseRepository;
 import com.gudgo.jeju.domain.planner.planner.entity.Planner;
 import com.gudgo.jeju.domain.planner.planner.repository.PlannerRepository;
-import com.gudgo.jeju.domain.planner.review.entity.PlannerReview;
-import com.gudgo.jeju.domain.planner.review.repository.PlannerReviewRepository;
+import com.gudgo.jeju.domain.review.entity.Review;
+import com.gudgo.jeju.domain.review.repository.ReviewRepository;
 import com.gudgo.jeju.domain.planner.spot.repository.SpotRepository;
-import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
 import com.gudgo.jeju.domain.olle.repository.JeJuOlleCourseRepository;
 import com.gudgo.jeju.global.util.ValidationUtil;
@@ -28,7 +27,6 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.OptionalDouble;
-import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -43,7 +41,7 @@ public class CourseService {
     private final ImageUpdateService imageUpdateService;
 
     private final ValidationUtil validationUtil;
-    private final PlannerReviewRepository plannerReviewRepository;
+    private final ReviewRepository reviewRepository;
 
     @Transactional
     public Course createCourse(@Valid CourseCreateRequestDto requestDto) {
@@ -98,9 +96,9 @@ public class CourseService {
 
         List<Course> originalCourses = courseRepository.findOriginalCourses();
         for (Course course : originalCourses) {
-            List<PlannerReview> reviews = plannerReviewRepository.findByPlannerCourseOriginalCourseIdAndIsDeletedFalse(course.getId());
+            List<Review> reviews = reviewRepository.findByPlannerCourseOriginalCourseIdAndIsDeletedFalse(course.getId());
             OptionalDouble avgStars = reviews.stream()
-                    .mapToLong(PlannerReview::getStars)
+                    .mapToDouble(Review::getStars)
                     .average();
 
             if (avgStars.isPresent()) {

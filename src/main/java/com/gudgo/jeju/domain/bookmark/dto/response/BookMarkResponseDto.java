@@ -6,7 +6,6 @@ import com.gudgo.jeju.domain.user.dto.UserInfoResponseDto;
 public record BookMarkResponseDto(
         Long id,
         UserInfoResponseDto userInfoResponseDto,
-        Long plannerId
-//        PlannerResponse plannerResponse
+        PlannerResponse plannerResponse
 ) {
 }

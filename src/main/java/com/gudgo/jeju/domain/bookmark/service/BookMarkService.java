@@ -4,9 +4,13 @@ import com.gudgo.jeju.domain.bookmark.dto.request.BookmarkCreateRequestDto;
 import com.gudgo.jeju.domain.bookmark.dto.response.BookMarkResponseDto;
 import com.gudgo.jeju.domain.bookmark.entity.BookMark;
 import com.gudgo.jeju.domain.bookmark.repository.BookMarkRepository;
+import com.gudgo.jeju.domain.planner.course.dto.response.CourseResponseDto;
+import com.gudgo.jeju.domain.planner.course.entity.Course;
+import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerResponse;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerTagResponse;
 import com.gudgo.jeju.domain.planner.planner.entity.Planner;
 import com.gudgo.jeju.domain.planner.planner.repository.PlannerRepository;
+import com.gudgo.jeju.domain.planner.tag.repository.PlannerTagRepository;
 import com.gudgo.jeju.domain.user.dto.UserInfoResponseDto;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
@@ -21,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -32,6 +37,8 @@ public class BookMarkService {
     private final UserRepository userRepository;
     private final PlannerRepository plannerRepository;
     private final BookMarkRepository bookMarkRepository;
+
+    private final PlannerTagRepository plannerTagRepository;
 
 
     @Transactional
@@ -62,12 +69,9 @@ public class BookMarkService {
         Long userId = getUser(request).getId();
         List<BookMark> bookMarks = bookMarkRepository.findByUserIdAndIsDeletedFalse(userId);
 
-        List<BookMarkResponseDto> result = new ArrayList<>();
-        for (BookMark bookMark : bookMarks) {
-            result.add(convertToDto(bookMark));
-        }
-
-        return result;
+        return bookMarks.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
     private BookMarkResponseDto convertToDto(BookMark bookMark) {
@@ -81,12 +85,44 @@ public class BookMarkService {
                 bookMark.getUser().getRole()
         );
 
+        Planner planner = bookMark.getPlanner();
+        List<PlannerTagResponse> tagResponses = plannerTagRepository.findByPlannerId(planner.getId()).stream()
+                .map(tag -> new PlannerTagResponse(tag.getId(), tag.getCode()))
+                .collect(Collectors.toList());
+
+        PlannerResponse plannerResponse = new PlannerResponse(
+                planner.getId(),
+                planner.getStartAt(),
+                planner.getSummary(),
+                planner.getTime(),
+                planner.isCompleted(),
+                tagResponses,
+                convertToCourseResponseDto(planner.getCourse())
+        );
+
         return new BookMarkResponseDto(
                 bookMark.getId(),
                 userInfoDto,
-                bookMark.getPlanner().getId()
+                plannerResponse
         );
     }
+
+    private CourseResponseDto convertToCourseResponseDto(Course course) {
+        return new CourseResponseDto(
+                course.getId(),
+                course.getType(),
+                course.getTitle(),
+                course.getCreatedAt(),
+                course.getOriginalCreatorId(),
+                course.getOriginalCourseId(),
+                course.getOlleCourseId(),
+                course.getImageUrl(),
+                course.getContent(),
+                course.getStarAvg(),
+                null
+                );
+    }
+
 
     public void delete(Long bookMarkId) {
         BookMark bookMark = bookMarkRepository.findById(bookMarkId)

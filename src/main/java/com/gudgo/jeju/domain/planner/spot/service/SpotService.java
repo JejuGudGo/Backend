@@ -262,15 +262,15 @@ public class SpotService {
         int ollePlannerCount = plannerSearchQueryService.getOllePlannersCount(planner.getUser().getId());
         Long userId = planner.getUser().getId();
 
-        if (ollePlannerCount == 1 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B02)) {
+        if (ollePlannerCount == 1 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B02)) {
             eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B02));
-        } else if (ollePlannerCount == 3 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B03)) {
+        } else if (ollePlannerCount == 3 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B03)) {
             eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B03));
-        } else if (ollePlannerCount == 5 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B04)) {
+        } else if (ollePlannerCount == 5 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B04)) {
             eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B04));
-        } else if (ollePlannerCount == 7 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B05)) {
+        } else if (ollePlannerCount == 7 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B05)) {
             eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B05));
-        } else if (ollePlannerCount == 10 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B06)) {
+        } else if (ollePlannerCount == 10 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B06)) {
             eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B06));
         }
     }
@@ -279,15 +279,15 @@ public class SpotService {
         int userPlannerCount = plannerSearchQueryService.getUserPlannersCount(planner.getUser().getId());
         Long userId = planner.getUser().getId();
 
-        if (userPlannerCount == 1 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B07)) {
+        if (userPlannerCount == 1 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B07)) {
             eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B07));
-        } else if (userPlannerCount == 3 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B08)) {
+        } else if (userPlannerCount == 3 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B08)) {
             eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B08));
-        } else if (userPlannerCount == 5 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B09)) {
+        } else if (userPlannerCount == 5 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B09)) {
             eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B09));
-        } else if (userPlannerCount == 7 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B10)) {
+        } else if (userPlannerCount == 7 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B10)) {
             eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B10));
-        } else if (userPlannerCount == 10 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B11)) {
+        } else if (userPlannerCount == 10 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B11)) {
             eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B11));
         }
     }
@@ -295,15 +295,15 @@ public class SpotService {
     private void participantBadge(Long userId) {
         int participantCount = plannerSearchQueryService.getParticipateCount(userId);
 
-        if (participantCount == 1 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B17)) {
+        if (participantCount == 1 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B17)) {
             eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B17));
-        } else if (participantCount == 3 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B18)) {
+        } else if (participantCount == 3 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B18)) {
             eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B18));
-        } else if (participantCount == 5 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B19)) {
+        } else if (participantCount == 5 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B19)) {
             eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B19));
-        } else if (participantCount == 7 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B20)) {
+        } else if (participantCount == 7 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B20)) {
             eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B20));
-        } else if (participantCount == 10 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B21)) {
+        } else if (participantCount == 10 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B21)) {
             eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B21));
         }
     }
@@ -326,13 +326,13 @@ public class SpotService {
         }
 
 
-        if (consecutiveDays == 2 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B22)) {
+        if (consecutiveDays == 2 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B22)) {
             eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B22));
-        } else if (consecutiveDays == 4 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B23)) {
+        } else if (consecutiveDays == 4 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B23)) {
             eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B23));
-        } else if (consecutiveDays == 7 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B24)) {
+        } else if (consecutiveDays == 7 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B24)) {
             eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B24));
-        } else if (consecutiveDays == 14 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B25)) {
+        } else if (consecutiveDays == 14 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B25)) {
             eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B25));
         }
     }

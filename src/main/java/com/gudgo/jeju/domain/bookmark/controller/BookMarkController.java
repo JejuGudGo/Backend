@@ -26,7 +26,6 @@ public class BookMarkController {
     }
 
     // 생성
-
     @PostMapping(value = "")
     public ResponseEntity<BookMarkResponseDto> create(HttpServletRequest request, @RequestBody BookmarkCreateRequestDto requestDto) {
         bookMarkService.create(request, requestDto);

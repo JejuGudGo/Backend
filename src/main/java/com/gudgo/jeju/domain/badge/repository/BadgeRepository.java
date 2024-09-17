@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface BadgeRepository extends JpaRepository<Badge, Long> {
     List<Badge> findByUserId(Long userId);
-    boolean existsByUserIdAndBadgeCode(Long userId, BadgeCode badgeCode);
+    boolean existsByUserIdAndCode(Long userId, BadgeCode badgeCode);
 }
