@@ -19,6 +19,7 @@ import com.gudgo.jeju.domain.planner.spot.query.SpotQueryService;
 import com.gudgo.jeju.domain.planner.course.repository.CourseRepository;
 import com.gudgo.jeju.domain.planner.planner.repository.PlannerRepository;
 import com.gudgo.jeju.domain.planner.spot.repository.SpotRepository;
+import com.gudgo.jeju.domain.post.participant.query.ParticipantQueryService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ import java.util.stream.Collectors;
 public class SpotService {
     private final SpotQueryService spotQueryService;
     private final PlannerSearchQueryService plannerSearchQueryService;
+    private final ParticipantQueryService participantQueryService;
     private final CourseService courseService;
 
     private final SpotRepository spotRepository;
@@ -60,8 +62,10 @@ public class SpotService {
         return spots.stream()
                 .map(spot -> new SpotPositionResponse(
                         spot.getOrderNumber(),
+                        spot.getTitle(),
                         spot.getLatitude(),
-                        spot.getLongitude()
+                        spot.getLongitude(),
+                        spot.getDistance()
                 ))
                 .collect(Collectors.toList());
     }
@@ -82,6 +86,7 @@ public class SpotService {
                     .address(requests.get(i).address())
                     .latitude(requests.get(i).latitude())
                     .longitude(requests.get(i).longitude())
+                    .distance("None")
                     .isCompleted(false)
                     .isDeleted(false)
                     .contentId(contentType)
@@ -185,7 +190,7 @@ public class SpotService {
     }
 
     private void participantBadge(Long userId) {
-        int participantCount = plannerSearchQueryService.getParticipateCount(userId);
+        int participantCount = participantQueryService.getParticipateCount(userId);
 
         if (participantCount == 1 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B17)) {
             eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B17));

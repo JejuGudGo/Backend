@@ -1,6 +1,7 @@
 package com.gudgo.jeju.domain.post.walk.service;
 
 import com.gudgo.jeju.domain.olle.entity.JeJuOlleSpot;
+import com.gudgo.jeju.domain.olle.entity.OlleType;
 import com.gudgo.jeju.domain.olle.repository.JeJuOlleSpotRepository;
 import com.gudgo.jeju.domain.planner.course.entity.Course;
 import com.gudgo.jeju.domain.planner.course.entity.CourseType;
@@ -65,7 +66,7 @@ public class PlannerCopyService {
     public Course copyUserCourse(Course selectedCourse) {
         Course course = Course.builder()
                 .type(selectedCourse.getType())
-                .title("임의 생성") // TODO: 아이디어 받기
+                .title(selectedCourse.getTitle()) // TODO: 아이디어 받기
                 .createdAt(LocalDate.now())
                 .originalCreatorId(selectedCourse.getOriginalCreatorId())
                 .originalCourseId(selectedCourse.getOriginalCourseId())
@@ -83,6 +84,7 @@ public class PlannerCopyService {
                 .createdAt(LocalDate.now())
                 .olleCourseId(selectedCourse.getOlleCourseId())
                 .imageUrl(selectedCourse.getImageUrl())
+                .totalDistance(selectedCourse.getTotalDistance())
                 .content(selectedCourse.getContent())
                 .build();
 
@@ -126,11 +128,16 @@ public class PlannerCopyService {
     @Transactional
     public void copyOlleCourseSpot(Course course) {
         List<JeJuOlleSpot> selectedSpots = juOlleSpotRepository.findAllByJeJuOlleCourseId(course.getOlleCourseId());
+        SpotType spotType = SpotType.JEJU;
 
         for (JeJuOlleSpot selectedSpot : selectedSpots) {
+            if (selectedSpot.getJeJuOlleCourse().getOlleType().equals(OlleType.JEJU)) spotType = SpotType.JEJU;
+            else spotType = SpotType.HAYOUNG;
+
             Spot spot = Spot.builder()
-                    .spotType(SpotType.JEJU)
+                    .spotType(spotType)
                     .orderNumber(selectedSpot.getOrderNumber())
+                    .distance(selectedSpot.getDistance())
                     .title(selectedSpot.getTitle())
                     .latitude(selectedSpot.getLatitude())
                     .longitude(selectedSpot.getLongitude())

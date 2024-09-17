@@ -1,6 +1,5 @@
-package com.gudgo.jeju.domain.planner.tag.entity;
+package com.gudgo.jeju.domain.planner.planner.entity;
 
-import com.gudgo.jeju.domain.planner.planner.entity.Planner;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

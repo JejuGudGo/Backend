@@ -6,7 +6,11 @@ import com.gudgo.jeju.domain.badge.repository.BadgeRepository;
 import com.gudgo.jeju.domain.planner.course.validation.PlannerValidator;
 import com.gudgo.jeju.domain.planner.planner.entity.Planner;
 import com.gudgo.jeju.domain.review.dto.request.UserCourseReviewRequest;
+import com.gudgo.jeju.domain.review.dto.response.PlannerReviewResponse;
+import com.gudgo.jeju.domain.review.dto.response.ReviewResponse;
+import com.gudgo.jeju.domain.review.dto.response.TopRatingTagResponseDto;
 import com.gudgo.jeju.domain.review.entity.*;
+import com.gudgo.jeju.domain.review.query.ReviewQueryService;
 import com.gudgo.jeju.domain.review.repository.*;
 import com.gudgo.jeju.domain.trail.entity.Trail;
 import com.gudgo.jeju.domain.trail.repository.TrailRepository;
@@ -17,6 +21,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,6 +46,7 @@ public class ReviewService {
     private final BadgeRepository badgeRepository;
 
     private final ApplicationEventPublisher eventPublisher;
+    private final ReviewQueryService reviewQueryService;
 
 
     @Transactional
@@ -224,5 +230,13 @@ public class ReviewService {
         } else if (reviewCount == 20 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B16)) {
             eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B16));
         }
+    }
+
+    public PlannerReviewResponse getPlannerReview(Long plannerId) {
+        List<TopRatingTagResponseDto> topRatingTags = reviewQueryService.findUserPlannerTop5ReviewTags(plannerId);
+        List<ReviewResponse> reviews = reviewQueryService.getPlannerReview(plannerId);
+
+        PlannerReviewResponse response = new PlannerReviewResponse(topRatingTags, reviews);
+        return response;
     }
 }

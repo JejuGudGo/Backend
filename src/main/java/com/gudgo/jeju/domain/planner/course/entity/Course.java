@@ -22,6 +22,8 @@ public class Course {
 
     private String title;
 
+    private String totalDistance;
+
     private LocalDate createdAt;
 
     private Long originalCreatorId;

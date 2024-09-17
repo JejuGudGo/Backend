@@ -1,6 +1,7 @@
 package com.gudgo.jeju.domain.review.controller;
 
 import com.gudgo.jeju.domain.review.dto.request.UserCourseReviewRequest;
+import com.gudgo.jeju.domain.review.dto.response.PlannerReviewResponse;
 import com.gudgo.jeju.domain.review.dto.response.ReviewResponse;
 import com.gudgo.jeju.domain.review.service.ReviewService;
 import com.gudgo.jeju.domain.review.query.ReviewQueryService;
@@ -29,6 +30,13 @@ public class ReviewController {
         return reviewQueryService.getUserReviews(userId, pageable);
     }
 
+    @GetMapping(value = "/planners/{plannerId}/reviews")
+    public ResponseEntity<PlannerReviewResponse> getPlannerReviews(@PathVariable("plannerId") Long plannerId) {
+        PlannerReviewResponse response = reviewService.getPlannerReview(plannerId);
+
+        return ResponseEntity.ok(response);
+    }
+
     // 산책로 달성하고 작성하는 리뷰
     @PostMapping(value = "/users/{userId}/tails/{trailId}/reviews")
     public ResponseEntity<?> createTrailReview(
@@ -40,7 +48,6 @@ public class ReviewController {
         reviewService.createTrailReview(trailId, userId, requestDto, images);
 
         return ResponseEntity.ok().build();
-
     }
 
     // 코스 달성하고 작성하는 리뷰
@@ -54,7 +61,6 @@ public class ReviewController {
         reviewService.createUserCourseReview(plannerId, userId, requestDto, images);
 
         return ResponseEntity.ok().build();
-
     }
 
     // PATCH - 리뷰 수정
@@ -67,7 +73,6 @@ public class ReviewController {
         reviewService.updateCourseReview(reviewId, requestDto, images);
 
         return ResponseEntity.ok().build();
-
     }
 
     // DELETE - 리뷰 삭제

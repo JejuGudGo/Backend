@@ -1,4 +1,4 @@
-package com.gudgo.jeju.domain.olle.dto.response;
+package com.gudgo.jeju.domain.review.dto.response;
 
 public record OlleCourseSpotResponseDto(
         String title,

@@ -1,13 +1,11 @@
 package com.gudgo.jeju.domain.planner.planner.query;
 import com.gudgo.jeju.domain.planner.course.entity.CourseType;
-import com.gudgo.jeju.domain.planner.course.query.CourseQueryService;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerSearchResponse;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerTagResponse;
 import com.gudgo.jeju.domain.planner.planner.entity.Planner;
 import com.gudgo.jeju.domain.planner.planner.entity.QPlanner;
-import com.gudgo.jeju.domain.planner.tag.entity.PlannerTag;
-import com.gudgo.jeju.domain.planner.tag.entity.QPlannerTag;
-import com.gudgo.jeju.domain.post.participant.entity.QParticipant;
+import com.gudgo.jeju.domain.planner.planner.entity.PlannerTag;
+import com.gudgo.jeju.domain.planner.planner.entity.QPlannerTag;
 import com.gudgo.jeju.domain.review.entity.QReview;
 import com.gudgo.jeju.global.util.PaginationUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -23,12 +21,10 @@ import java.util.List;
 @Service
 public class PlannerSearchQueryService {
     private final JPAQueryFactory queryFactory;
-    private final CourseQueryService courseQueryService;
 
     @Autowired
-    public PlannerSearchQueryService(EntityManager entityManager, CourseQueryService courseQueryService) {
+    public PlannerSearchQueryService(EntityManager entityManager) {
         this.queryFactory = new JPAQueryFactory(entityManager);
-        this.courseQueryService = courseQueryService;
     }
 
     public Page<PlannerSearchResponse> searchPlannersByTitle(Pageable pageable, String title) {
@@ -105,23 +101,6 @@ public class PlannerSearchQueryService {
                 .intValue();
     }
 
-    public int getParticipateCount(Long userId) {
-        QParticipant qParticipant = QParticipant.participant;
-        QPlanner qPlanner = QPlanner.planner;
-
-        return queryFactory
-                .select(qPlanner.countDistinct())
-                .from(qParticipant)
-                .join(qParticipant.planner, qPlanner)
-                .where(qParticipant.user.id.eq(userId)
-                        .and(qParticipant.approved.isTrue())
-                        .and(qParticipant.isDeleted.isFalse())
-                        .and(qPlanner.isCompleted.isTrue())
-                )
-                .fetchOne().intValue();
-
-    }
-
     public List<LocalDate> getStartAt(Long userId) {
         QPlanner qPlanner = QPlanner.planner;
 
@@ -134,61 +113,7 @@ public class PlannerSearchQueryService {
                 .orderBy(qPlanner.startAt.asc())
                 .fetch();
     }
-    }
 
-//
-//    public Page<PlannerResponse> getPlannerdetail(Pageable pageable) {
-//        QCourse qCourse = QCourse.course;
-//        QPlanner qPlanner = QPlanner.planner;
-//        QPlannerTag qPlannerTa = QPlannerTag.plannerTag;
-//
-//        List<Long> userCourseIds = queryFactory
-//                .select(qCourse.id)
-//                .from(qCourse)
-//                .where(qCourse.originalCourseId.eq(qCourse.id)
-//                        .and(qCourse.type.eq(CourseType.USER)))
-//                .fetch();
-//
-//        List<Planner> planners = queryFactory
-//                .selectFrom(qPlanner)
-//                .where(qPlanner.course.id.in(userCourseIds)
-//                        .and(qPlanner.isPrivate.isFalse())
-//                        .and(qPlanner.isDeleted.isFalse())
-//                        .and(qPlanner.isCompleted.isTrue()))
-//                .offset(pageable.getOffset())
-//                .limit(pageable.getPageSize())
-//                .fetch();
-//
-//        List<Long> plannerIds = planners.stream().map(Planner::getId).collect(Collectors.toList());
-//
-//        Map<Long, String> plannerLabelMap = queryFactory
-//                .select(qPlannerLabel.planner.id, qPlannerLabel.code)
-//                .from(qPlannerLabel)
-//                .where(qPlannerLabel.planner.id.in(plannerIds))
-//                .fetch()
-//                .stream()
-//                .collect(Collectors.toMap(
-//                        tuple -> tuple.get(qPlannerLabel.planner.id),
-//                        tuple -> tuple.get(qPlannerLabel.code)
-//                ));
-//
-//        List<PlannerResponse> plannerResponses = planners.stream()
-//                .map(planner -> {
-//                    String labelCode = plannerLabelMap.get(planner.getId());
-//                    return new PlannerResponse(
-//                            planner.getId(),
-//                            planner.getStartAt(),
-//                            planner.getSummary(),
-//                            planner.getTime(),
-//                            planner.isCompleted(),
-//                            labelCode,
-//                            courseQueryService.getCourse(planner.getCourse().getId())
-//                    );
-//                })
-//                .toList();
-//
-//        return PaginationUtil.listToPage(plannerResponses, pageable);
-//    }
 //
 //    public Page<PlannerResponse> getUserPlanners(Pageable pageable) {
 //        QPlanner qplanner = QPlanner.planner;
@@ -509,3 +434,4 @@ public class PlannerSearchQueryService {
 //        );
 //    }
 //}
+}

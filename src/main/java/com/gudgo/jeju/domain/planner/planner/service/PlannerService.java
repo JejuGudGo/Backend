@@ -4,10 +4,9 @@ package com.gudgo.jeju.domain.planner.planner.service;
 import com.gudgo.jeju.domain.olle.entity.JeJuOlleCourse;
 import com.gudgo.jeju.domain.olle.entity.OlleType;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerCreateResponse;
-import com.gudgo.jeju.domain.planner.spot.dto.request.SpotCreateRequestDto;
 import com.gudgo.jeju.domain.planner.spot.dto.response.SpotCreateResponse;
-import com.gudgo.jeju.domain.planner.tag.entity.PlannerTag;
-import com.gudgo.jeju.domain.planner.tag.entity.PlannerType;
+import com.gudgo.jeju.domain.planner.planner.entity.PlannerTag;
+import com.gudgo.jeju.domain.planner.planner.entity.PlannerType;
 import com.gudgo.jeju.domain.planner.tag.repository.PlannerTagRepository;
 import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerCreateRequestDto;
 import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerUpdateRequestDto;
@@ -61,8 +60,10 @@ public class PlannerService {
         CourseType courseType;
         if (olleCourse.getOlleType() == OlleType.JEJU) {
             courseType = CourseType.JEJU;
+
         } else if (olleCourse.getOlleType() == OlleType.HAYOUNG) {
             courseType = CourseType.HAYOUNG;
+
         } else {
             throw new IllegalArgumentException("Unsupported OlleType: " + olleCourse.getOlleType());
         }

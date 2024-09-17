@@ -49,6 +49,7 @@ public class CourseService {
                 .title(requestDto.title())
                 .createdAt(LocalDate.now())
                 .originalCreatorId(requestDto.userId())
+                .totalDistance("None")
                 .build();
 
         courseRepository.save(course);

@@ -1,7 +1,7 @@
 package com.gudgo.jeju.domain.review.query;
 
 import com.gudgo.jeju.domain.review.dto.response.ReviewResponse;
-import com.gudgo.jeju.domain.review.dto.response.TopReviewTagResponseDto;
+import com.gudgo.jeju.domain.review.dto.response.TopRatingTagResponseDto;
 import com.gudgo.jeju.domain.review.entity.*;
 import com.gudgo.jeju.domain.user.entity.QUser;
 import com.gudgo.jeju.domain.user.entity.User;
@@ -127,11 +127,11 @@ public class ReviewQueryService {
         return count;
     }
 
-    public List<TopReviewTagResponseDto> findTrailTop5ReviewTags(Long trailId) {
+    public List<TopRatingTagResponseDto> findTrailTop5ReviewTags(Long trailId) {
         QReviewTag reviewTag = QReviewTag.reviewTag;
 
         return queryFactory
-                .select(Projections.constructor(TopReviewTagResponseDto.class,
+                .select(Projections.constructor(TopRatingTagResponseDto.class,
                         reviewTag.filterTag,
                         reviewTag.count()))
                 .from(reviewTag)
@@ -144,11 +144,11 @@ public class ReviewQueryService {
                 .fetch();
     }
 
-    public List<TopReviewTagResponseDto> findUserPlannerTop5ReviewTags(Long plannerId) {
+    public List<TopRatingTagResponseDto> findUserPlannerTop5ReviewTags(Long plannerId) {
         QReviewTag reviewTag = QReviewTag.reviewTag;
 
         return queryFactory
-                .select(Projections.constructor(TopReviewTagResponseDto.class,
+                .select(Projections.constructor(TopRatingTagResponseDto.class,
                         reviewTag.filterTag,
                         reviewTag.count()))
                 .from(reviewTag)

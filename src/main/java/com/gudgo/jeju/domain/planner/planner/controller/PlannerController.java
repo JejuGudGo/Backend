@@ -5,6 +5,8 @@ import com.gudgo.jeju.domain.planner.course.service.CourseService;
 import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerCreateRequestDto;
 import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerUpdateRequestDto;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerCreateResponse;
+import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerDetailResponse;
+import com.gudgo.jeju.domain.planner.planner.query.PlannerQueryService;
 import com.gudgo.jeju.domain.planner.planner.service.PlannerService;
 import com.gudgo.jeju.domain.planner.spot.dto.response.SpotCreateResponse;
 import com.gudgo.jeju.domain.planner.spot.service.SpotService;
@@ -25,9 +27,10 @@ public class PlannerController {
     private final PlannerService plannerService;
     private final CourseService courseService;
     private final SpotService spotService;
+    private final PlannerQueryService plannerQueryService;
 
-//    @GetMapping("/planners/course/user")
-//    public Page<PlannerResponse> getUserPlanners(Pageable pageable) {
+    //    @GetMapping("/planners/{plannerId}/info")
+//    public Page<UserPlannerDetailResponse> getUserPlanners(Pageable pageable) {
 //        return plannerQueryService.getUserPlanners(pageable);
 //    }
 //
@@ -75,10 +78,12 @@ public class PlannerController {
 //    }
 //
 //
-//    @GetMapping("/planners/{plannerId}")
-//    public PlannerResponse getPlanner(@PathVariable("userId") Long userId, @PathVariable("plannerId") Long plannerId) {
-//        return plannerQueryService.getPlanners(userId, plannerId);
-//    }
+    @GetMapping("/planners/{plannerId}")
+    public ResponseEntity<PlannerDetailResponse> getPlanner(@PathVariable("plannerId") Long plannerId) {
+        PlannerDetailResponse response = plannerQueryService.getUserPlannerDetail(plannerId);
+
+        return ResponseEntity.ok(response);
+    }
 
     // 유저 직접 생성
     @PostMapping("/users/{userId}/planners")

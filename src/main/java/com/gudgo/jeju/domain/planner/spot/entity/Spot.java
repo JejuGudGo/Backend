@@ -27,6 +27,8 @@ public class Spot {
 
     private String address;
 
+    private String distance;
+
     private double latitude;
 
     private double longitude;

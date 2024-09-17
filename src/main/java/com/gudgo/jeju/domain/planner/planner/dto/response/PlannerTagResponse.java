@@ -1,6 +1,6 @@
 package com.gudgo.jeju.domain.planner.planner.dto.response;
 
-import com.gudgo.jeju.domain.planner.tag.entity.PlannerType;
+import com.gudgo.jeju.domain.planner.planner.entity.PlannerType;
 
 public record PlannerTagResponse(
         Long id,
