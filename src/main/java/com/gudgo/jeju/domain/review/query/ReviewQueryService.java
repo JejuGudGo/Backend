@@ -2,12 +2,9 @@ package com.gudgo.jeju.domain.review.query;
 
 import com.gudgo.jeju.domain.review.dto.response.ReviewResponse;
 import com.gudgo.jeju.domain.review.dto.response.TopReviewTagResponseDto;
-import com.gudgo.jeju.domain.review.entity.Review;
-import com.gudgo.jeju.domain.review.entity.ReviewFilterTag;
+import com.gudgo.jeju.domain.review.entity.*;
 import com.gudgo.jeju.domain.user.entity.QUser;
 import com.gudgo.jeju.domain.user.entity.User;
-import com.gudgo.jeju.global.data.review.dto.response.*;
-import com.gudgo.jeju.global.data.review.entity.*;
 import com.gudgo.jeju.global.util.PaginationUtil;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;

@@ -7,7 +7,7 @@ import com.gudgo.jeju.domain.planner.planner.entity.Planner;
 import com.gudgo.jeju.domain.planner.planner.entity.QPlanner;
 import com.gudgo.jeju.domain.planner.tag.entity.PlannerTag;
 import com.gudgo.jeju.domain.planner.tag.entity.QPlannerTag;
-import com.gudgo.jeju.global.data.review.entity.QReview;
+import com.gudgo.jeju.domain.review.entity.QReview;
 import com.gudgo.jeju.global.util.PaginationUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;

@@ -1,8 +1,8 @@
 package com.gudgo.jeju.domain.review.query;
 
 import com.gudgo.jeju.domain.review.dto.response.ReviewImageResponseDto;
-import com.gudgo.jeju.global.data.review.entity.QReview;
-import com.gudgo.jeju.global.data.review.entity.QReviewImage;
+import com.gudgo.jeju.domain.review.entity.QReview;
+import com.gudgo.jeju.domain.review.entity.QReviewImage;
 import com.gudgo.jeju.domain.review.entity.Review;
 import com.gudgo.jeju.global.util.PaginationUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
