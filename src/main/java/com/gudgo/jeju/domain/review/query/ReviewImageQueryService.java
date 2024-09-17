@@ -29,7 +29,6 @@ public class ReviewImageQueryService {
         QReview qReview = QReview.review;
         QReviewImage qReviewImage = QReviewImage.reviewImage;
 
-        // 전체 리뷰 가져오기
         List<Review> reviews = queryFactory
                 .selectFrom(qReview)
                 .where(qReview.planner.id.eq(plannerId)

@@ -11,27 +11,15 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Trail {
+public class TrailImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
+    private String imageUrl;
 
-    private String summary;
-
-    private String address;
-
-    private String time;
-
-    private String content;
-
-    private double avgStar;
-
-    private String tel;
-
-    private double latitude;
-
-    private double longitude;
+    @ManyToOne
+    @JoinColumn(name = "trailId")
+    private Trail trail;
 }
