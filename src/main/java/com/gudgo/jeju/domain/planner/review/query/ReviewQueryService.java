@@ -3,6 +3,7 @@ package com.gudgo.jeju.domain.planner.review.query;
 import com.gudgo.jeju.domain.planner.review.dto.response.*;
 import com.gudgo.jeju.domain.planner.review.entity.*;
 import com.gudgo.jeju.global.util.PaginationUtil;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,16 +74,39 @@ public class ReviewQueryService {
         List<PlannerReview> reviews = queryFactory
                 .selectFrom(qPlannerReview)
                 .where(qPlannerReview.user.id.eq(userId)
-                        .and(qPlannerReview.isDeleted).isFalse())
+                        .and(qPlannerReview.isDeleted.isFalse()))
                 .fetch();
         List<ReviewResponseDto> reviewResponses = reviews.stream()
                 .map(this::mapToReviewResponseDto)
                 .collect(Collectors.toList());
-        return PaginationUtil.listToPage(reviewResponses,pageable);
+        return PaginationUtil.listToPage(reviewResponses, pageable);
     }
 
+    public List<TopReviewTagResponseDto> getTopReviewTags(Long plannerId, int limit) {
+        QPlannerReview qPlannerReview = QPlannerReview.plannerReview;
+        QPlannerReviewCategory qPlannerReviewCategory = QPlannerReviewCategory.plannerReviewCategory;
+        QPlannerReviewTag qPlannerReviewTag = QPlannerReviewTag.plannerReviewTag;
 
-    private ReviewResponseDto mapToReviewResponseDto(PlannerReview review) {
+        List<Tuple> results = queryFactory
+                .select(qPlannerReviewTag.code, qPlannerReviewTag.count())
+                .from(qPlannerReview)
+                .join(qPlannerReviewCategory).on(qPlannerReview.id.eq(qPlannerReviewCategory.plannerReview.id))
+                .join(qPlannerReviewTag).on(qPlannerReviewCategory.id.eq(qPlannerReviewTag.plannerReviewCategory.id))
+                .where(qPlannerReview.planner.id.eq(plannerId)
+                        .and(qPlannerReview.isDeleted.isFalse())
+                        .and(qPlannerReviewCategory.code.eq("RT03"))
+                        .and(qPlannerReviewTag.isDeleted.isFalse()))
+                .groupBy(qPlannerReviewTag.code)
+                .orderBy(qPlannerReviewTag.count().desc())
+                .limit(limit)
+                .fetch();
+
+        return results.stream()
+                .map(tuple -> new TopReviewTagResponseDto(tuple.get(qPlannerReviewTag.code), tuple.get(1, Long.class)))
+                .collect(Collectors.toList());
+
+    }
+        private ReviewResponseDto mapToReviewResponseDto(PlannerReview review) {
         List<ReviewImageResponseDto> reviewImageResponses = fetchReviewImages(review.getId()).stream()
                 .map(image -> new ReviewImageResponseDto(
                         image.getId(),
@@ -145,4 +169,6 @@ public class ReviewQueryService {
                         .and(qPlannerReviewTag.isDeleted.isFalse()))
                 .fetch();
     }
+
+
 }

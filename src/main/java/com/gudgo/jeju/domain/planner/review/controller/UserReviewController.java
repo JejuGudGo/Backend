@@ -36,8 +36,7 @@ public class UserReviewController {
             @PathVariable("plannerId") Long plannerId,
             @PathVariable("userId") Long userId,
             @RequestPart("request") ReviewRequestDto requestDto,
-            @RequestPart("image") MultipartFile[] images) throws Exception {
-
+            @RequestPart(value = "image", required = false) MultipartFile[] images) throws Exception {
         ReviewPostResponseDto response = userReviewService.create(plannerId, userId, requestDto, images);
         return ResponseEntity.ok(response);
 
@@ -48,7 +47,7 @@ public class UserReviewController {
     public ResponseEntity<?> update(
             @PathVariable("reviewId") Long reviewId,
             @RequestPart("request") ReviewUpdateRequestDto requestDto,
-            @RequestPart("image") MultipartFile[] images) throws Exception {
+            @RequestPart(value="image", required = false) MultipartFile[] images) throws Exception {
         ReviewPostResponseDto response = userReviewService.update(reviewId, requestDto, images);
         return ResponseEntity.ok(response);
 

@@ -4,6 +4,7 @@ package com.gudgo.jeju.domain.planner.review.controller;
 import com.gudgo.jeju.domain.planner.review.dto.response.PlannerReviewCountResponseDto;
 import com.gudgo.jeju.domain.planner.review.dto.response.ReviewImageResponseDto;
 import com.gudgo.jeju.domain.planner.review.dto.response.ReviewResponseDto;
+import com.gudgo.jeju.domain.planner.review.dto.response.TopReviewTagResponseDto;
 import com.gudgo.jeju.domain.planner.review.query.ReviewImageQueryService;
 import com.gudgo.jeju.domain.planner.review.query.ReviewQueryService;
 import com.gudgo.jeju.domain.planner.review.service.UserReviewService;
@@ -62,5 +63,12 @@ public class PlannerReviewController {
     @GetMapping(value = "/reviews/tags")
     public List<?> getReviewTags() {
         return userReviewService.getCategoryAndTags();
+    }
+
+    @GetMapping(value = "/{plannerId}/reviews/top")
+    public List<TopReviewTagResponseDto> getTopReviewTags(
+            @PathVariable("plannerId") Long plannerId,
+            @RequestParam(value = "limit", defaultValue = "5") int limit) {
+        return reviewQueryService.getTopReviewTags(plannerId, limit);
     }
 }

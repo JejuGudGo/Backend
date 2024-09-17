@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,6 +48,10 @@ public class ReviewCategoryQueryService {
                                     tag.getCode()
                             )).collect(Collectors.toList());
 
+                    // 태그가 없는 카테고리는 응답에서 제외
+                    if (reviewTagResponses.isEmpty()) {
+                        return null;
+                    }
 
                     return new ReviewCategoryResponseDto(
                             reviewCategory.getId(),
@@ -54,7 +59,9 @@ public class ReviewCategoryQueryService {
                             reviewCategory.getCode(),
                             reviewTagResponses
                     );
-                }).collect(Collectors.toList());
+                })
+                .filter(Objects::nonNull)  // null인 항목(태그가 없는 카테고리) 제거
+                .collect(Collectors.toList());
 
         return reviewCategoryResponses;
     }

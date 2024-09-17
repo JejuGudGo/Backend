@@ -64,6 +64,9 @@ public class ReviewImageQueryService {
 
                 .fetch();
 
+        if (reviewImages.isEmpty()) {
+            return null;  // 이미지가 없으면 null 반환
+        }
         List<ReviewImageResponseDto> reviewImageResponses = reviewImages.stream()
                 .map(reviewImage -> new ReviewImageResponseDto(
                         reviewImage.getId(),
