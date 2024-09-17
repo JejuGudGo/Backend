@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 @Slf4j
 @RestController
@@ -21,7 +21,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     // GET - 특정 유저 리뷰 목록 조회
-    @GetMapping(value = "/{userId}/reviews")
+    @GetMapping(value = "/users/{userId}/reviews")
     public Page<ReviewResponse> getUserReviews(
             @PathVariable("userId") Long userId,
             Pageable pageable) {
@@ -30,7 +30,7 @@ public class ReviewController {
     }
 
     // 산책로 달성하고 작성하는 리뷰
-    @PostMapping(value = "/{userId}/tails/{trailId}/reviews")
+    @PostMapping(value = "/users/{userId}/tails/{trailId}/reviews")
     public ResponseEntity<?> createTrailReview(
             @PathVariable("trailId") Long trailId,
             @PathVariable("userId") Long userId,
@@ -44,7 +44,7 @@ public class ReviewController {
     }
 
     // 코스 달성하고 작성하는 리뷰
-    @PostMapping(value = "/{userId}/planners/{plannerId}/reviews")
+    @PostMapping(value = "/users/{userId}/planners/{plannerId}/reviews")
     public ResponseEntity<?> createUserCourseReview(
             @PathVariable("plannerId") Long plannerId,
             @PathVariable("userId") Long userId,
