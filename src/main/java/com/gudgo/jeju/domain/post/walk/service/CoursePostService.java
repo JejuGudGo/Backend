@@ -97,7 +97,7 @@ public class CoursePostService {
     }
     
     private CoursePostDetailResponse getCreateCoursePostResponse(User user, Posts posts, Long currentParticipantNum) {
-        List<Spot> spots = spotRepository.findByCourseIdOrderByOrderNumberAsc(posts.getPlanner().getCourse().getId());
+        List<Spot> spots = spotRepository.findByCourseOrderByOrderNumberAsc(posts.getPlanner().getCourse());
         List<CoursePostSpotResponse> spotResponses = new ArrayList<>();
 
         for (Spot spot : spots) {

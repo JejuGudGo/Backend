@@ -92,7 +92,7 @@ public class PlannerCopyService {
 
     @Transactional
     public void copyUserCourseSpot(Course course) {
-        List<Spot> selectedSpots = spotRepository.findByCourseIdOrderByOrderNumberAsc(course.getId());
+        List<Spot> selectedSpots = spotRepository.findByCourseOrderByOrderNumberAsc(course);
 
         for (Spot selectedSpot : selectedSpots) {
 

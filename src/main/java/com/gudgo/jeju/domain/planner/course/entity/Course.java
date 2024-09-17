@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 
 @Entity
@@ -31,6 +32,8 @@ public class Course {
 
     private double starAvg;
 
+    private LocalTime timeLabs;
+
     private String imageUrl;
 
     private String content;
@@ -45,6 +48,7 @@ public class Course {
                 .originalCreatorId(originalCreatorId)
                 .olleCourseId(olleCourseId)
                 .starAvg(starAvg)
+                .timeLabs(timeLabs)
                 .imageUrl(imageUrl)
                 .content(content)
                 .build();
@@ -126,6 +130,19 @@ public class Course {
                 .build();
     }
 
-
-
+    public Course withTimeLabs(LocalTime timeLabs) {
+        return Course.builder()
+                .id(id)
+                .title(title)
+                .type(type)
+                .createdAt(createdAt)
+                .originalCourseId(originalCourseId)
+                .originalCreatorId(originalCreatorId)
+                .olleCourseId(olleCourseId)
+                .starAvg(starAvg)
+                .imageUrl(imageUrl)
+                .content(content)
+                .timeLabs(timeLabs)
+                .build();
+    }
 }
