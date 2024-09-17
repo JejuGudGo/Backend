@@ -4,13 +4,18 @@ import com.gudgo.jeju.domain.bookmark.dto.request.BookmarkCreateRequestDto;
 import com.gudgo.jeju.domain.bookmark.dto.response.BookMarkResponseDto;
 import com.gudgo.jeju.domain.bookmark.entity.BookMark;
 import com.gudgo.jeju.domain.bookmark.repository.BookMarkRepository;
+import com.gudgo.jeju.domain.olle.entity.JeJuOlleCourse;
+import com.gudgo.jeju.domain.olle.repository.JeJuOlleCourseRepository;
 import com.gudgo.jeju.domain.planner.course.dto.response.CourseResponseDto;
 import com.gudgo.jeju.domain.planner.course.entity.Course;
+import com.gudgo.jeju.domain.planner.course.entity.CourseType;
+import com.gudgo.jeju.domain.planner.course.repository.CourseRepository;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerListResponse;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerTagResponse;
 import com.gudgo.jeju.domain.planner.planner.entity.Planner;
 import com.gudgo.jeju.domain.planner.planner.repository.PlannerRepository;
 import com.gudgo.jeju.domain.planner.tag.repository.PlannerTagRepository;
+import com.gudgo.jeju.domain.review.query.ReviewQueryService;
 import com.gudgo.jeju.domain.user.dto.UserInfoResponseDto;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
@@ -38,6 +43,9 @@ public class BookMarkService {
     private final BookMarkRepository bookMarkRepository;
 
     private final PlannerTagRepository plannerTagRepository;
+    private final CourseRepository courseRepository;
+    private final JeJuOlleCourseRepository jeJuOlleCourseRepository;
+    private final ReviewQueryService reviewQueryService;
 
 
     @Transactional
@@ -61,7 +69,7 @@ public class BookMarkService {
         Long userid = subjectExtractor.getUserIdFromToken(token);           // 토큰에서 userid 추출
 
         return userRepository.findById(userid)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userid));
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     public List<BookMarkResponseDto> get(HttpServletRequest request) {
@@ -89,14 +97,30 @@ public class BookMarkService {
                 .map(tag -> new PlannerTagResponse(tag.getId(), tag.getCode()))
                 .collect(Collectors.toList());
 
+        Course course = courseRepository.findById(planner.getCourse().getId())
+                .orElseThrow(EntityNotFoundException::new);
+
+
+        String distance = null;
+        if (course.getType().equals(CourseType.JEJU) || course.getType().equals(CourseType.HAYOUNG)) {
+            JeJuOlleCourse jeJuOlleCourse = jeJuOlleCourseRepository.findById(course.getId())
+                    .orElseThrow(EntityNotFoundException::new);
+            distance = jeJuOlleCourse.getTotalDistance();
+
+        }
+
+        Long reviewCount = reviewQueryService.getUserCourseReviewCount(course.getId());
+
         PlannerListResponse plannerListResponse = new PlannerListResponse(
                 planner.getId(),
-                planner.getStartAt(),
                 planner.getSummary(),
+                distance,
                 planner.getTime(),
+                planner.getCourse().getStarAvg(),
+                reviewCount,
                 planner.isCompleted(),
-                tagResponses,
-                convertToCourseResponseDto(planner.getCourse())
+                planner.isPrivate(),
+                tagResponses
         );
 
         return new BookMarkResponseDto(
@@ -104,22 +128,6 @@ public class BookMarkService {
                 userInfoDto,
                 plannerListResponse
         );
-    }
-
-    private CourseResponseDto convertToCourseResponseDto(Course course) {
-        return new CourseResponseDto(
-                course.getId(),
-                course.getType(),
-                course.getTitle(),
-                course.getCreatedAt(),
-                course.getOriginalCreatorId(),
-                course.getOriginalCourseId(),
-                course.getOlleCourseId(),
-                course.getImageUrl(),
-                course.getContent(),
-                course.getStarAvg(),
-                null
-                );
     }
 
 
