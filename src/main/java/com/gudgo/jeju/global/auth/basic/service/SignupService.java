@@ -1,6 +1,8 @@
 package com.gudgo.jeju.global.auth.basic.service;
 
 
+import com.gudgo.jeju.domain.badge.entity.BadgeCode;
+import com.gudgo.jeju.domain.badge.event.BadgeEvent;
 import com.gudgo.jeju.domain.profile.entity.Profile;
 import com.gudgo.jeju.domain.profile.repository.ProfileRepository;
 import com.gudgo.jeju.domain.user.entity.Role;
@@ -15,6 +17,7 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +35,8 @@ public class SignupService {
     private final RandomNumberUtil randomNumberUtil;
     private final RandomNicknameUtil randomNicknameUtil;
     private final ProfileRepository profileRepository;
+
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public SignupResponse signup(@Valid SignupRequest signupRequestDto) {
@@ -63,6 +68,9 @@ public class SignupService {
 
         userRepository.save(user);
         profileRepository.save(profile);
+
+        // 회원가입 시 뱃지 이벤트 발생
+        eventPublisher.publishEvent(new BadgeEvent(user.getId(), BadgeCode.B01));
 
         SignupResponse response = new SignupResponse(nickname);
         return response;

@@ -1,7 +1,12 @@
 package com.gudgo.jeju.domain.planner.spot.service;
 
 
+import com.gudgo.jeju.domain.badge.entity.BadgeCode;
+import com.gudgo.jeju.domain.badge.event.BadgeEvent;
+import com.gudgo.jeju.domain.badge.repository.BadgeRepository;
+import com.gudgo.jeju.domain.planner.course.entity.CourseType;
 import com.gudgo.jeju.domain.planner.course.service.CourseService;
+import com.gudgo.jeju.domain.planner.planner.query.PlannerSearchQueryService;
 import com.gudgo.jeju.domain.planner.spot.dto.request.SpotCreateRequestDto;
 import com.gudgo.jeju.domain.planner.spot.dto.request.SpotCreateUsingApiRequest;
 import com.gudgo.jeju.domain.planner.spot.dto.request.SpotUpdateRequestDto;
@@ -17,6 +22,8 @@ import com.gudgo.jeju.domain.planner.planner.repository.PlannerRepository;
 import com.gudgo.jeju.domain.planner.spot.repository.SpotRepository;
 import com.gudgo.jeju.domain.planner.course.validation.CourseValidator;
 import com.gudgo.jeju.domain.planner.spot.validator.SpotValidator;
+import com.gudgo.jeju.domain.post.participant.entity.Participant;
+import com.gudgo.jeju.domain.post.participant.repository.ParticipantRepository;
 import com.gudgo.jeju.domain.tourApi.entity.TourApiCategory1;
 import com.gudgo.jeju.domain.tourApi.entity.TourApiContent;
 import com.gudgo.jeju.domain.tourApi.repository.TourApiCategory1Repository;
@@ -27,11 +34,14 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,10 +59,13 @@ public class SpotService {
 
     private final SpotRepository spotRepository;
     private final CourseRepository courseRepository;
-    private final CourseService courseService;
     private final TourApiContentRepository tourApiContentRepository;
     private final PlannerRepository plannerRepository;
-    private final TourApiCategory1Repository tourApiCategory1Repository;
+
+    private final ApplicationEventPublisher eventPublisher;
+
+    private final PlannerSearchQueryService plannerSearchQueryService;
+    private final BadgeRepository badgeRepository;
 
 
     @Transactional
@@ -191,6 +204,24 @@ public class SpotService {
 
             plannerRepository.save(planner);
 
+            // 걷기 계획 완료 시, 뱃지 이벤트 발생
+
+
+            // 1) 올레 코스 or 유저 코스 이용 시 뱃지 부여
+            CourseType type = planner.getCourse().getType();
+            if (type == CourseType.JEJU || type == CourseType.HAYOUNG) {
+                // 올레 코스 이용
+                olleCourseBadge(planner);
+            } else {
+                // 유저 생성 코스 이용
+                jejuCourseBadge(planner);
+            }
+
+            // 2) 동행자와 걷기 시 뱃지 부여
+            participantBadge(planner.getUser().getId());
+
+            // 3) 연속 걷기 뱃지 부여
+            consecutiveWalkingBadge(planner.getUser().getId());
         }
 
         Spot spot = findSpotById(spotId);
@@ -225,5 +256,84 @@ public class SpotService {
                 spot.isCompleted(),
                 spot.getCount()
         );
+    }
+
+    private void olleCourseBadge(Planner planner) {
+        int ollePlannerCount = plannerSearchQueryService.getOllePlannersCount(planner.getUser().getId());
+        Long userId = planner.getUser().getId();
+
+        if (ollePlannerCount == 1 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B02)) {
+            eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B02));
+        } else if (ollePlannerCount == 3 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B03)) {
+            eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B03));
+        } else if (ollePlannerCount == 5 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B04)) {
+            eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B04));
+        } else if (ollePlannerCount == 7 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B05)) {
+            eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B05));
+        } else if (ollePlannerCount == 10 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B06)) {
+            eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B06));
+        }
+    }
+
+    private void jejuCourseBadge(Planner planner) {
+        int userPlannerCount = plannerSearchQueryService.getUserPlannersCount(planner.getUser().getId());
+        Long userId = planner.getUser().getId();
+
+        if (userPlannerCount == 1 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B07)) {
+            eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B07));
+        } else if (userPlannerCount == 3 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B08)) {
+            eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B08));
+        } else if (userPlannerCount == 5 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B09)) {
+            eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B09));
+        } else if (userPlannerCount == 7 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B10)) {
+            eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B10));
+        } else if (userPlannerCount == 10 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B11)) {
+            eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B11));
+        }
+    }
+
+    private void participantBadge(Long userId) {
+        int participantCount = plannerSearchQueryService.getParticipateCount(userId);
+
+        if (participantCount == 1 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B17)) {
+            eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B17));
+        } else if (participantCount == 3 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B18)) {
+            eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B18));
+        } else if (participantCount == 5 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B19)) {
+            eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B19));
+        } else if (participantCount == 7 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B20)) {
+            eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B20));
+        } else if (participantCount == 10 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B21)) {
+            eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B21));
+        }
+    }
+
+
+    private void consecutiveWalkingBadge(Long userId) {
+        List<LocalDate> completedWalkDates = plannerSearchQueryService.getStartAt(userId);
+
+        int consecutiveDays = 1;
+        LocalDate previousDate = completedWalkDates.get(completedWalkDates.size() - 1);
+
+        for (int i = completedWalkDates.size() - 2; i >= 0; i--) {
+            LocalDate currentDate = completedWalkDates.get(i);
+            if (currentDate.plusDays(1).equals(previousDate)) {
+                consecutiveDays++;
+                previousDate = currentDate;
+            } else {
+                break; // 연속되지 않으면 반복 중단
+            }
+        }
+
+
+        if (consecutiveDays == 2 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B22)) {
+            eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B22));
+        } else if (consecutiveDays == 4 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B23)) {
+            eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B23));
+        } else if (consecutiveDays == 7 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B24)) {
+            eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B24));
+        } else if (consecutiveDays == 14 && !badgeRepository.existsByUserIdAndBadgeCode(userId, BadgeCode.B25)) {
+            eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B25));
+        }
     }
 }

@@ -1,6 +1,9 @@
 package com.gudgo.jeju.domain.planner.planner.query;
 
+import com.gudgo.jeju.domain.planner.course.entity.CourseType;
+import com.gudgo.jeju.domain.planner.course.entity.QCourse;
 import com.gudgo.jeju.domain.planner.course.query.CourseQueryService;
+import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerCountResponse;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerSearchResponse;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerTagResponse;
 import com.gudgo.jeju.domain.planner.planner.entity.Planner;
@@ -8,6 +11,8 @@ import com.gudgo.jeju.domain.planner.planner.entity.QPlanner;
 import com.gudgo.jeju.domain.planner.review.entity.QPlannerReview;
 import com.gudgo.jeju.domain.planner.tag.entity.PlannerTag;
 import com.gudgo.jeju.domain.planner.tag.entity.QPlannerTag;
+import com.gudgo.jeju.domain.post.participant.entity.Participant;
+import com.gudgo.jeju.domain.post.participant.entity.QParticipant;
 import com.gudgo.jeju.global.util.PaginationUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -16,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -73,6 +79,65 @@ public class PlannerSearchQueryService {
                 .toList();
 
         return PaginationUtil.listToPage(plannerResponses, pageable);
+    }
+
+    public int getUserPlannersCount(Long userId) {
+        QPlanner qplanner = QPlanner.planner;
+
+        return queryFactory
+                .select(qplanner.count())
+                .from(qplanner)
+                .where(qplanner.user.id.eq(userId)
+                        .and(qplanner.course.type.eq(CourseType.USER))
+                        .and(qplanner.isDeleted.isFalse())
+                        .and(qplanner.isCompleted.isTrue()))
+                .fetchOne()
+                .intValue();
+    }
+
+    public int getOllePlannersCount(Long userId) {
+        QPlanner qplanner = QPlanner.planner;
+
+        return queryFactory
+                .select(qplanner.count())
+                .from(qplanner)
+                .where(qplanner.user.id.eq(userId)
+                        .and(qplanner.course.type.in(CourseType.JEJU, CourseType.HAYOUNG))
+                        .and(qplanner.isDeleted.isFalse())
+                        .and(qplanner.isCompleted.isTrue()))
+                .fetchOne()
+                .intValue();
+    }
+
+    public int getParticipateCount(Long userId) {
+        QParticipant qParticipant = QParticipant.participant;
+        QPlanner qPlanner = QPlanner.planner;
+
+        return queryFactory
+                .select(qPlanner.countDistinct())
+                .from(qParticipant)
+                .join(qParticipant.planner, qPlanner)
+                .where(qParticipant.user.id.eq(userId)
+                        .and(qParticipant.approved.isTrue())
+                        .and(qParticipant.isDeleted.isFalse())
+                        .and(qPlanner.isCompleted.isTrue())
+                )
+                .fetchOne().intValue();
+
+    }
+
+    public List<LocalDate> getStartAt(Long userId) {
+        QPlanner qPlanner = QPlanner.planner;
+
+        return queryFactory
+                .select(qPlanner.startAt)
+                .from(qPlanner)
+                .where(qPlanner.user.id.eq(userId)
+                        .and(qPlanner.isCompleted.isTrue())
+                        .and(qPlanner.isDeleted.isFalse()))
+                .orderBy(qPlanner.startAt.asc())
+                .fetch();
+    }
     }
 
 //
@@ -447,4 +512,4 @@ public class PlannerSearchQueryService {
 //                courseQueryService.getCourse(planner.getId())
 //        );
 //    }
-}
+//}
