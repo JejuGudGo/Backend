@@ -1,4 +1,4 @@
-package com.gudgo.jeju.domain.planner.review.entity;
+package com.gudgo.jeju.domain.trail.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,18 +11,21 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-
-public class PlannerReviewCategory {
+public class Trail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String code;
+    private String title;
 
-//    private String title;
+    private String summary;
 
-    @ManyToOne
-    @JoinColumn(name = "plannerReviewId")
-    private PlannerReview plannerReview;
+    private String address;
+
+    private String time;
+
+    private String content;
+
+    private String tel;
 }
