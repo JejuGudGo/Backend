@@ -1,6 +1,9 @@
 package com.gudgo.jeju.domain.planner.spot.service;
 
 
+import com.gudgo.jeju.domain.badge.entity.BadgeCode;
+import com.gudgo.jeju.domain.badge.event.BadgeEvent;
+import com.gudgo.jeju.domain.badge.repository.BadgeRepository;
 import com.gudgo.jeju.domain.planner.course.entity.CourseType;
 import com.gudgo.jeju.domain.planner.course.service.CourseService;
 import com.gudgo.jeju.domain.planner.planner.query.PlannerSearchQueryService;
@@ -8,7 +11,6 @@ import com.gudgo.jeju.domain.planner.spot.dto.request.SpotCreateRequestDto;
 import com.gudgo.jeju.domain.planner.spot.dto.response.LastSpotResponse;
 import com.gudgo.jeju.domain.planner.spot.dto.response.SpotCreateResponse;
 import com.gudgo.jeju.domain.planner.spot.dto.response.SpotPositionResponse;
-import com.gudgo.jeju.domain.planner.spot.dto.response.SpotResponseDto;
 import com.gudgo.jeju.domain.planner.course.entity.Course;
 import com.gudgo.jeju.domain.planner.planner.entity.Planner;
 import com.gudgo.jeju.domain.planner.spot.entity.Spot;
@@ -25,7 +27,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
