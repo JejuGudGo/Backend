@@ -1,10 +1,10 @@
-package com.gudgo.jeju.domain.planner.review.service;
+package com.gudgo.jeju.global.data.review.service;
 
 
-import com.gudgo.jeju.domain.planner.review.entity.PlannerReview;
-import com.gudgo.jeju.domain.planner.review.entity.PlannerReviewImage;
-import com.gudgo.jeju.domain.planner.review.repository.PlannerReviewImageRepository;
-import com.gudgo.jeju.domain.planner.review.repository.PlannerReviewRepository;
+import com.gudgo.jeju.global.data.review.entity.Review;
+import com.gudgo.jeju.global.data.review.entity.ReviewImage;
+import com.gudgo.jeju.global.data.review.repository.ReviewImageRepository;
+import com.gudgo.jeju.global.data.review.repository.ReviewRepository;
 import com.gudgo.jeju.global.util.image.entity.Category;
 import com.gudgo.jeju.global.util.image.service.ImageUpdateService;
 import jakarta.persistence.EntityNotFoundException;
@@ -19,26 +19,26 @@ import java.nio.file.Path;
 @RequiredArgsConstructor
 public class ReviewImageService {
     private final ImageUpdateService imageUpdateService;
-    private final PlannerReviewRepository plannerReviewRepository;
-    private final PlannerReviewImageRepository plannerReviewImageRepository;
+    private final ReviewRepository reviewRepository;
+    private final ReviewImageRepository reviewImageRepository;
 
     @Transactional
     public void uploadImages (Long userId, Long plannerReviewId, MultipartFile[] images) throws Exception {
 
-        PlannerReview plannerReview = plannerReviewRepository.findById(plannerReviewId)
+        Review review = reviewRepository.findById(plannerReviewId)
                 .orElseThrow(EntityNotFoundException::new);
 
 
         for (MultipartFile image : images) {
             Path path = imageUpdateService.saveImage(userId, image, Category.REVIEW);
 
-            PlannerReviewImage reviewImage = PlannerReviewImage.builder()
-                    .plannerReview(plannerReview)
+            ReviewImage reviewImage = ReviewImage.builder()
+                    .review(review)
                     .imageUrl(path.toString())
                     .isDeleted(false)
                     .build();
 
-            plannerReviewImageRepository.save(reviewImage);
+            reviewImageRepository.save(reviewImage);
         }
     }
 }

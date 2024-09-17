@@ -1,4 +1,4 @@
-package com.gudgo.jeju.domain.planner.review.entity;
+package com.gudgo.jeju.global.data.review.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PlannerReviewImage {
+public class ReviewImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,15 +22,15 @@ public class PlannerReviewImage {
     private boolean isDeleted;
 
     @ManyToOne
-    @JoinColumn(name = "plannerReviewId")
-    private PlannerReview plannerReview;
+    @JoinColumn(name = "reviewId")
+    private Review review;
 
-    public PlannerReviewImage withIsDeleted(boolean isDeleted) {
-        return PlannerReviewImage.builder()
+    public ReviewImage withIsDeleted(boolean isDeleted) {
+        return ReviewImage.builder()
                 .id(id)
                 .imageUrl(imageUrl)
                 .isDeleted(isDeleted)
-                .plannerReview(plannerReview)
+                .review(review)
                 .build();
     }
 }

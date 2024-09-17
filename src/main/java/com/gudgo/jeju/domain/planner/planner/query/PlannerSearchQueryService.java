@@ -5,9 +5,9 @@ import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerSearchResponse;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerTagResponse;
 import com.gudgo.jeju.domain.planner.planner.entity.Planner;
 import com.gudgo.jeju.domain.planner.planner.entity.QPlanner;
-import com.gudgo.jeju.domain.planner.review.entity.QPlannerReview;
 import com.gudgo.jeju.domain.planner.tag.entity.PlannerTag;
 import com.gudgo.jeju.domain.planner.tag.entity.QPlannerTag;
+import com.gudgo.jeju.global.data.review.entity.QReview;
 import com.gudgo.jeju.global.util.PaginationUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -51,12 +51,12 @@ public class PlannerSearchQueryService {
                             .map(plannerTag -> new PlannerTagResponse(plannerTag.getId(), plannerTag.getCode()))
                             .toList();
 
-                    QPlannerReview qPlannerReview = QPlannerReview.plannerReview;
+                    QReview qReview = QReview.review;
 
                     Long reviewCount = queryFactory
-                            .select(qPlannerReview.count())
-                            .from(qPlannerReview)
-                            .where(qPlannerReview.planner.id.eq(planner.getId()))
+                            .select(qReview.count())
+                            .from(qReview)
+                            .where(qReview.planner.id.eq(planner.getId()))
                             .fetchOne();
 
                     return new PlannerSearchResponse(

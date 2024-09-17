@@ -3,9 +3,10 @@ package com.gudgo.jeju.global.data.review.repository;
 import com.gudgo.jeju.global.data.review.entity.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-    Optional<Review> findByCode(String code);
+
+    List<Review> findByPlannerCourseOriginalCourseIdAndIsDeletedFalse(Long originalCourseId);
 
 }

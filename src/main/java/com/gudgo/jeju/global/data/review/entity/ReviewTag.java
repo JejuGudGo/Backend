@@ -12,16 +12,26 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewTag {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String code;
+    @Enumerated(EnumType.STRING)
+    private ReviewFilterTag filterTag;
 
-    private String title;
+    private boolean isDeleted;
 
     @ManyToOne
     @JoinColumn(name = "reviewId")
     private Review review;
+
+
+    public ReviewTag withIsDeleted() {
+        return ReviewTag.builder()
+                .id(this.id)
+                .filterTag(this.filterTag)
+                .isDeleted(true)
+                .review(this.review)
+                .build();
+    }
 }
