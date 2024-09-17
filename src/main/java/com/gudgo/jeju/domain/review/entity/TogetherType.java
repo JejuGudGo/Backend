@@ -1,11 +1,11 @@
 package com.gudgo.jeju.domain.review.entity;
 
 public enum TogetherType {
-    LOVER, // 연인
-    FRIEND,
-    ALONE,
-    FAMILY,
-    PET,
-    COWORKER,
-    USER, // 제주걷고 동행
+    R2V01,
+    R2V02,
+    R2V03,
+    R2V04,
+    R2V05,
+    R2V06,
+    R2V07,
 }
