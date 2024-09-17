@@ -95,18 +95,7 @@ public class PlannerController {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/users/{userId}/planners/{plannerId}")
-    public ResponseEntity<?> update(
-            @PathVariable("userId") Long userId,
-            @PathVariable("plannerId") Long plannerId,
-            @RequestBody PlannerUpdateRequestDto requestDto
-    ) {
-        plannerService.update(plannerId, requestDto);
-
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/users/{userId}/planners/{plannerId}")
+    @DeleteMapping("/planners/{plannerId}")
     public ResponseEntity<?> delete(@PathVariable("userId") Long userId, @PathVariable("plannerId") Long plannerId) {
         plannerService.delete(plannerId);
 

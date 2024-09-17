@@ -1,4 +1,4 @@
-package com.gudgo.jeju.domain.planner.tag.repository;
+package com.gudgo.jeju.domain.planner.planner.repository;
 
 import com.gudgo.jeju.domain.planner.planner.entity.PlannerTag;
 import org.springframework.data.jpa.repository.JpaRepository;

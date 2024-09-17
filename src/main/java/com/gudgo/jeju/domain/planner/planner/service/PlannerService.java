@@ -7,9 +7,8 @@ import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerCreateResponse;
 import com.gudgo.jeju.domain.planner.spot.dto.response.SpotCreateResponse;
 import com.gudgo.jeju.domain.planner.planner.entity.PlannerTag;
 import com.gudgo.jeju.domain.planner.planner.entity.PlannerType;
-import com.gudgo.jeju.domain.planner.tag.repository.PlannerTagRepository;
+import com.gudgo.jeju.domain.planner.planner.repository.PlannerTagRepository;
 import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerCreateRequestDto;
-import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerUpdateRequestDto;
 import com.gudgo.jeju.domain.planner.course.entity.Course;
 import com.gudgo.jeju.domain.planner.course.entity.CourseType;
 import com.gudgo.jeju.domain.post.participant.entity.Participant;
@@ -93,37 +92,6 @@ public class PlannerService {
         plannerRepository.save(planner);
     }
 
-    @Transactional
-    public void update(Long plannerId, PlannerUpdateRequestDto requestDto) {
-        Planner planner = plannerRepository.findById(plannerId)
-                .orElseThrow(EntityNotFoundException::new);
-
-        if (requestDto.startAt() != null) {
-            planner = planner.withStartAt(requestDto.startAt());
-
-        }
-
-        if (requestDto.isPrivate() != planner.isPrivate()) {
-            planner = planner.withIsPrivate(requestDto.isPrivate());
-
-        }
-
-        if (validationUtil.validateStringValue(requestDto.summary())) {
-            planner = planner.withSummary(requestDto.summary());
-
-        }
-
-        if (requestDto.time() != null) {
-            planner = planner.withTime(requestDto.time());
-
-        }
-
-        if (requestDto.isCompleted() != planner.isCompleted()) {
-            planner = planner.withCompleted(requestDto.isCompleted());
-        }
-
-        plannerRepository.save(planner);
-    }
 
     @Transactional
     public void delete(Long plannerId) {
