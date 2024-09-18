@@ -1,6 +1,7 @@
 package com.gudgo.jeju.domain.post.chat.controller;
 
 import com.gudgo.jeju.domain.post.chat.dto.request.ChatRoomUpdateRequest;
+import com.gudgo.jeju.domain.post.chat.dto.response.ChatRoomListResponse;
 import com.gudgo.jeju.domain.post.chat.dto.response.ChatRoomResponse;
 import com.gudgo.jeju.domain.post.chat.query.ChatRoomQueryService;
 import com.gudgo.jeju.domain.post.chat.service.ChatRoomService;
@@ -18,15 +19,22 @@ public class ChatRoomController {
     private ChatRoomQueryService queryService;
 
     @GetMapping(value = "{userId}/chatRooms")
-    public Page<ChatRoomResponse> getChatRooms(@PathVariable("userId") Long userId, Pageable pageable) {
-        Page<ChatRoomResponse> responses = queryService.findChatRoomsByUserId(userId, pageable);
+    public Page<ChatRoomListResponse> getChatRooms(@PathVariable("userId") Long userId, Pageable pageable) {
+        Page<ChatRoomListResponse> responses = queryService.getChatRooms(userId, pageable);
 
         return responses;
     }
 
-    @PatchMapping(value = "{userId}/chatRooms/{chatRoomId}")
+    @GetMapping(value = "/chatRooms/{chatRoomId}")
+    public ResponseEntity<ChatRoomResponse> getChatRoom(@PathVariable("chatRoomId") Long chatRoomId) {
+        ChatRoomResponse response = queryService.getChatRoom(chatRoomId);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping(value = "/chatRooms/{chatRoomId}")
     public ResponseEntity<?> updateChatRooms(
-            @PathVariable("userId") Long userId, @PathVariable("chatRoomId") Long chatRoomId, @RequestBody ChatRoomUpdateRequest request) {
+            @PathVariable("chatRoomId") Long chatRoomId, @RequestBody ChatRoomUpdateRequest request) {
         chatRoomService.updateMessageRoomTitle(chatRoomId, request);
 
         return ResponseEntity.ok().build();

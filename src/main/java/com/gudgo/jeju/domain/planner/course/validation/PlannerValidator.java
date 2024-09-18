@@ -16,7 +16,7 @@ public class PlannerValidator {
                 .orElseThrow(EntityNotFoundException::new);
 
         if (planner.getCourse().getOriginalCreatorId() != userId) { // 원작자가 아닌경우
-            planner = plannerRepository.findByCourseId(planner.getCourse().getId()).get();
+            planner = plannerRepository.findByCourse(planner.getCourse()).get();
             return planner;
         }
 

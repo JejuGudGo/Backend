@@ -53,6 +53,7 @@ public class MessageQueryService {
                             message.getParticipant().getUser().getNumberTag(),
                             message.getParticipant().getUser().getProfile().getProfileImageUrl(),
                             message.getContent(),
+                            message.getCreatedAt(),
                             images.isEmpty() ? null : images
                     );
                 })

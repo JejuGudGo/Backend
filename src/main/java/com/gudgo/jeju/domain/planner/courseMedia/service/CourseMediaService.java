@@ -49,7 +49,7 @@ public class CourseMediaService {
     public void create(Long userId, Long plannerId, MultipartFile image, CourseMediaCreateRequestDto requestDto) throws Exception {
         Path path = imageUpdateService.saveImage(userId, image, Category.USERCOURSE);
 
-        Planner planner = plannerRepository.findByCourseId(plannerId)
+        Planner planner = plannerRepository.findById(plannerId)
                 .orElseThrow(EntityNotFoundException::new);
 
         CourseMedia courseMedia = CourseMedia.builder()

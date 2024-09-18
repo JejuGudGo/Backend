@@ -111,11 +111,16 @@ public class CourseService {
     @Transactional
     public void updateCourseStartAt(Long courseId) {
         Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new EntityNotFoundException("plan not found with id: " + courseId));
+                .orElseThrow(EntityNotFoundException::new);
+
+        Planner planner = plannerRepository.findByCourse(course)
+                .orElseThrow(EntityNotFoundException::new);
 
         course = course.withTimeLabs(LocalTime.now());
+        planner = planner.withStartAt(LocalDate.now());
 
         courseRepository.save(course);
+        plannerRepository.save(planner);
     }
 
     public void calculateTimeLabs(Long courseId, LocalTime endTime) {

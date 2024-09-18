@@ -6,7 +6,8 @@ import java.util.List;
 public record ChatRoomResponse(
         Long chatRoomId,
         String title,
-//        LocalDate createdAt,
-        List<String> profileImages
-) {
-}
+        long participantCount,
+        LocalDate createdAt, // 채팅방 개설일자 = planner 생성 일자
+        List<ChattingUserResponse> responses,
+        List<String> messages // 최근 메세지 100개
+) { }

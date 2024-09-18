@@ -116,8 +116,10 @@ public class SpotService {
 
         // 마지막 스팟일 경우, 걷기 계획 완료 처리
         if (lastSpotId.equals(spotId)) {
+            Course course = courseRepository.findById(courseId)
+                    .orElseThrow(EntityNotFoundException::new);
 
-            Planner planner = plannerRepository.findByCourseId(courseId)
+            Planner planner = plannerRepository.findByCourse(course)
                     .orElseThrow(EntityNotFoundException::new);
 
             planner = planner.withCompleted(true);
