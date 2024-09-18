@@ -1,6 +1,7 @@
 package com.gudgo.jeju.domain.bookmark.entity;
 
 import com.gudgo.jeju.domain.planner.planner.entity.Planner;
+import com.gudgo.jeju.domain.trail.entity.Trail;
 import com.gudgo.jeju.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,9 @@ public class BookMark {
     @JoinColumn(name = "plannerId")
     private Planner planner;
 
+    @OneToOne
+    @JoinColumn(name = "trailId")
+    private Trail trail;
 
     public BookMark withDeleted(Long id, boolean isDeleted) {
         return BookMark.builder()
@@ -35,6 +39,7 @@ public class BookMark {
                 .isDeleted(isDeleted)
                 .user(user)
                 .planner(planner)
+                .trail(trail)
                 .build();
     }
 

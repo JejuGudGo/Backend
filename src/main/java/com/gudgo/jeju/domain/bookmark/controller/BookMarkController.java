@@ -1,11 +1,14 @@
 package com.gudgo.jeju.domain.bookmark.controller;
 
 import com.gudgo.jeju.domain.bookmark.dto.request.BookmarkCreateRequestDto;
+import com.gudgo.jeju.domain.bookmark.dto.request.FilterDto;
 import com.gudgo.jeju.domain.bookmark.dto.response.BookMarkResponseDto;
 import com.gudgo.jeju.domain.bookmark.service.BookMarkService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +24,8 @@ public class BookMarkController {
 
     // 조회
     @GetMapping(value = "")
-    public ResponseEntity<List<BookMarkResponseDto>> get(HttpServletRequest request) {
-        return ResponseEntity.ok(bookMarkService.get(request));
+    public Page<?> get(@ModelAttribute FilterDto filter, HttpServletRequest request, Pageable pageable) {
+        return bookMarkService.get(request, filter, pageable);
     }
 
     // 생성
