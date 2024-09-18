@@ -24,11 +24,22 @@ import java.util.List;
 @Slf4j
 @RestController
 public class PlannerController {
-//    private final PlannerQueryService plannerQueryService;
     private final PlannerService plannerService;
     private final CourseService courseService;
     private final SpotService spotService;
     private final PlannerQueryService plannerQueryService;
+
+    // 특정 유저 생성 코스
+    @GetMapping("/users/{userId}/planners/created-planners")
+    public ResponseEntity<List<PlannerListResponse>> getUserCreatedPlanners(@PathVariable("usreId") Long usreId) {
+        return ResponseEntity.ok(plannerQueryService.getUserCreatedPlanners(usreId));
+    }
+
+    // 특정 유저 이용 코스
+    @GetMapping("/users/{userId}/planners/completed-planners")
+    public ResponseEntity<List<PlannerListResponse>> getUserCompletedPlanners(@PathVariable("usreId") Long usreId) {
+        return ResponseEntity.ok(plannerQueryService.getUserCompletedPlanners(usreId));
+    }
 
     @GetMapping("/planners/{plannerId}")
     public ResponseEntity<PlannerDetailResponse> getPlanner(@PathVariable("plannerId") Long plannerId) {

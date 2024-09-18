@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 public class CourseController {
     private final CourseService courseService;
-    private final CourseQueryService courseQueryService;
 
     @PatchMapping(value = "/users/{userId}/planners/{plannerId}/course", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> updateMyCourse(
