@@ -6,6 +6,7 @@ import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerCreateRequestDto
 import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerUpdateRequestDto;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerCreateResponse;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerDetailResponse;
+import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerListResponse;
 import com.gudgo.jeju.domain.planner.planner.query.PlannerQueryService;
 import com.gudgo.jeju.domain.planner.planner.service.PlannerService;
 import com.gudgo.jeju.domain.planner.spot.dto.response.SpotCreateResponse;
@@ -29,55 +30,6 @@ public class PlannerController {
     private final SpotService spotService;
     private final PlannerQueryService plannerQueryService;
 
-    //    @GetMapping("/planners/{plannerId}/info")
-//    public Page<UserPlannerDetailResponse> getUserPlanners(Pageable pageable) {
-//        return plannerQueryService.getUserPlanners(pageable);
-//    }
-//
-//    @GetMapping("/planners/course/olle")
-//    public Page<PlannerResponse> getOllePlanners(Pageable pageable) {
-//        return plannerQueryService.getOllePlanners(pageable);
-//    }
-//
-//    @GetMapping("/planners/course/all")
-//    public Page<PlannerResponse> getAllPlanners(Pageable pageable) {
-//        return plannerQueryService.getAllPlanners(pageable);
-//    }
-//
-//    @GetMapping("/planners/course/label")
-//    public Page<PlannerResponse> getPlannersByLabel(Pageable pageable, LabelRequestDto requestDto) {
-//        return plannerQueryService.getPlannersByLabel(pageable, requestDto);
-//    }
-//
-//
-//    @GetMapping("/planners/users/{plannerId}")
-//    public ResponseEntity<PlannerResponse> getUserCourse(@PathVariable("plannerId") Long plannerId) {
-//        return ResponseEntity.ok(plannerQueryService.getUserPlanner(plannerId));
-//    }
-//
-//    @GetMapping("/planners/olle/{plannerId}")
-//    public ResponseEntity<PlannerResponse> getOlleCourse(@PathVariable("plannerId") Long plannerId) {
-//        return ResponseEntity.ok(plannerQueryService.getOllePlanner(plannerId));
-//    }
-//
-//
-//    @GetMapping("/users/{userId}/planners")
-//    public Page<PlannerResponse> getMyPlanners(
-//            @PathVariable("userId") Long userId,
-//            @RequestParam("status") String status,
-//            Pageable pageable
-//    ) {
-//        if (status.equals("all")) {
-//            return plannerQueryService.getMyPlanners(userId, pageable);
-//
-//        } else if (status.equals("false")) {
-//            return plannerQueryService.getMyUncompletedPlanners(userId, pageable);
-//        }
-//
-//        return null;
-//    }
-//
-//
     @GetMapping("/planners/{plannerId}")
     public ResponseEntity<PlannerDetailResponse> getPlanner(@PathVariable("plannerId") Long plannerId) {
         PlannerDetailResponse response = plannerQueryService.getUserPlannerDetail(plannerId);

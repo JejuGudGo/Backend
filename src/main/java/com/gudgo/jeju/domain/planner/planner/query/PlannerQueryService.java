@@ -1,10 +1,12 @@
 package com.gudgo.jeju.domain.planner.planner.query;
 
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerDetailResponse;
+import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerListResponse;
 import com.gudgo.jeju.domain.planner.planner.entity.Planner;
 import com.gudgo.jeju.domain.planner.planner.entity.PlannerType;
 import com.gudgo.jeju.domain.planner.planner.entity.QPlanner;
 import com.gudgo.jeju.domain.planner.planner.entity.QPlannerTag;
+import com.gudgo.jeju.domain.planner.planner.repository.PlannerRepository;
 import com.gudgo.jeju.domain.planner.spot.dto.response.SpotPositionResponse;
 import com.gudgo.jeju.domain.planner.spot.entity.QSpot;
 import com.gudgo.jeju.domain.planner.spot.entity.Spot;
@@ -22,7 +24,7 @@ public class PlannerQueryService {
     private final ReviewQueryService reviewQueryService;
 
     @Autowired
-    public PlannerQueryService(EntityManager entityManager, ReviewQueryService reviewQueryService) {
+    public PlannerQueryService(EntityManager entityManager, ReviewQueryService reviewQueryService, PlannerRepository plannerRepository) {
         this.queryFactory = new JPAQueryFactory(entityManager);
         this.reviewQueryService = reviewQueryService;
     }

@@ -1,8 +1,6 @@
 package com.gudgo.jeju.domain.planner.course.query;
 
 
-import com.gudgo.jeju.domain.olle.entity.JeJuOlleSpot;
-import com.gudgo.jeju.domain.olle.entity.QJeJuOlleSpot;
 import com.gudgo.jeju.domain.planner.course.dto.response.CourseResponseDto;
 import com.gudgo.jeju.domain.planner.course.entity.Course;
 import com.gudgo.jeju.domain.planner.course.entity.QCourse;
@@ -71,56 +69,6 @@ public class CourseQueryService {
                 null,
                 course.getImageUrl(),
                 course.getContent(),
-                course.getStarAvg(),
-                spotResponses
-        );
-    }
-    
-
-
-
-
-    public CourseResponseDto getOlleCourse(Long plannerId) {
-        QPlanner qPlanner = QPlanner.planner;
-        QCourse qCourse = QCourse.course;
-        QJeJuOlleSpot qJeJuOlleSpot = QJeJuOlleSpot.jeJuOlleSpot;
-
-        Course course = queryFactory
-                .select(qPlanner.course)
-                .from(qPlanner)
-                .where(qPlanner.id.eq(plannerId))
-                .fetchOne();
-
-        List<JeJuOlleSpot> spots = queryFactory
-                .selectFrom(qJeJuOlleSpot)
-                .where(qJeJuOlleSpot.jeJuOlleCourse.id.eq(course.getOlleCourseId())) // JeJuOlleCourse의 ID로 필터링
-                .fetch();
-
-        List<SpotResponseDto> spotResponses = spots.stream()
-                .map(spot ->
-                        new SpotResponseDto(
-                                spot.getId(),
-                                null,
-                                spot.getJeJuOlleCourse().getId(),
-                                spot.getTitle(),
-                                spot.getOrderNumber(),
-                                null,
-                                spot.getLatitude(),
-                                spot.getLongitude(),
-                                true,
-                                null
-                        )).toList();
-
-        return new CourseResponseDto(
-                course.getId(),
-                course.getType(),
-                course.getTitle(),
-                course.getCreatedAt(),
-                course.getOriginalCreatorId(),
-                course.getOriginalCourseId(),
-                course.getOlleCourseId(),
-                null,
-                null,
                 course.getStarAvg(),
                 spotResponses
         );

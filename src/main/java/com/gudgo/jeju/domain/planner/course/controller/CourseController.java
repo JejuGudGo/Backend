@@ -4,15 +4,12 @@ package com.gudgo.jeju.domain.planner.course.controller;
 import com.gudgo.jeju.domain.planner.course.dto.request.CourseUpdateRequestDto;
 import com.gudgo.jeju.domain.planner.course.query.CourseQueryService;
 import com.gudgo.jeju.domain.planner.course.service.CourseService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import retrofit2.http.Multipart;
-import retrofit2.http.POST;
 
 
 @RequestMapping("/api/v1")

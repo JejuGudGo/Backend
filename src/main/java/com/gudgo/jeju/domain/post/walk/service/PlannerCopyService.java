@@ -37,7 +37,6 @@ public class PlannerCopyService {
                 .orElseThrow(EntityExistsException::new);
 
         Course course = new Course();
-        List<CoursePostSpotResponse> response = new ArrayList<>();
 
         if (selectedPlanner.getCourse().getType().equals(CourseType.USER)) {
             course = copyUserCourse(selectedPlanner.getCourse());

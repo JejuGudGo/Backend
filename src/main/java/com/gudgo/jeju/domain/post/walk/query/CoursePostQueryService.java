@@ -44,7 +44,8 @@ public class CoursePostQueryService {
             posts = queryFactory
                     .selectFrom(qPosts)
                     .where(qPosts.isDeleted.isFalse()
-                            .and(qPosts.planner.course.olleCourseId.isNotNull()))
+                            .and(qPosts.planner.course.olleCourseId.isNotNull())
+                            .and(qPosts.planner.course.originalCreatorId.isNotNull()))
                     .orderBy(qPosts.createdAt.desc())
                     .fetch();
 

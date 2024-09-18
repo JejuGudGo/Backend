@@ -92,8 +92,8 @@ public class BookMarkService {
         );
 
         Planner planner = bookMark.getPlanner();
-        List<PlannerTagResponse> tagResponses = plannerTagRepository.findByPlannerId(planner.getId()).stream()
-                .map(tag -> new PlannerTagResponse(tag.getId(), tag.getCode()))
+        List<String> tagResponses = plannerTagRepository.findByPlanner(planner).stream()
+                .map(tag -> tag.getCode().toString())
                 .collect(Collectors.toList());
 
         Course course = courseRepository.findById(planner.getCourse().getId())
@@ -112,7 +112,7 @@ public class BookMarkService {
 
         PlannerListResponse plannerListResponse = new PlannerListResponse(
                 planner.getId(),
-                planner.getSummary(),
+                planner.getCourse().getContent(),
                 distance,
                 planner.getTime(),
                 planner.getCourse().getStarAvg(),

@@ -12,6 +12,6 @@ public record PlannerListResponse(
         Long reviewCount,
         boolean isCompleted,
         boolean isPrivate,
-        List<PlannerTagResponse> tags
+        List<String> tags
 ) {
 }
