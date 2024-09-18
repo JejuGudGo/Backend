@@ -12,13 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class ChatRoomController {
     private ChatRoomService chatRoomService;
     private ChatRoomQueryService queryService;
 
-    @GetMapping(value = "{userId}/chatRooms")
+    @GetMapping(value = "/users{userId}/chatRooms")
     public Page<ChatRoomListResponse> getChatRooms(@PathVariable("userId") Long userId, Pageable pageable) {
         Page<ChatRoomListResponse> responses = queryService.getChatRooms(userId, pageable);
 
