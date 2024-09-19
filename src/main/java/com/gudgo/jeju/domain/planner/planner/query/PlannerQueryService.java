@@ -1,11 +1,9 @@
 package com.gudgo.jeju.domain.planner.planner.query;
 
 import com.gudgo.jeju.domain.olle.entity.JeJuOlleCourse;
-import com.gudgo.jeju.domain.olle.entity.QJeJuOlleCourse;
 import com.gudgo.jeju.domain.olle.repository.JeJuOlleCourseRepository;
 import com.gudgo.jeju.domain.planner.course.entity.Course;
 import com.gudgo.jeju.domain.planner.course.entity.CourseType;
-import com.gudgo.jeju.domain.planner.course.entity.QCourse;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerDetailResponse;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerListResponse;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerUserResponse;
@@ -134,6 +132,7 @@ public class PlannerQueryService {
 
         );
     }
+
 
     public List<PlannerListResponse> getUserCreatedPlanners(Long userId) {
         QPlanner qPlanner = QPlanner.planner;

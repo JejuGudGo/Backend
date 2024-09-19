@@ -34,6 +34,10 @@ public class Course {
 
     private double starAvg;
 
+    private double startLatitude;
+
+    private double startLongitude;
+
     private LocalTime timeLabs;
 
     private String imageUrl;
@@ -51,6 +55,8 @@ public class Course {
                 .olleCourseId(olleCourseId)
                 .starAvg(starAvg)
                 .timeLabs(timeLabs)
+                .startLatitude(startLatitude)
+                .startLongitude(startLongitude)
                 .imageUrl(imageUrl)
                 .content(content)
                 .build();
@@ -66,6 +72,8 @@ public class Course {
                 .originalCreatorId(originalCreatorId)
                 .olleCourseId(olleCourseId)
                 .starAvg(starAvg)
+                .startLatitude(startLatitude)
+                .startLongitude(startLongitude)
                 .imageUrl(imageUrl)
                 .content(content)
                 .build();
@@ -82,6 +90,8 @@ public class Course {
                 .olleCourseId(olleCourseId)
                 .starAvg(starAvg)
                 .imageUrl(imageUrl)
+                .startLatitude(startLatitude)
+                .startLongitude(startLongitude)
                 .content(content)
                 .build();
     }
@@ -95,6 +105,8 @@ public class Course {
                 .originalCourseId(originalCourseId)
                 .originalCreatorId(originalCreatorId)
                 .olleCourseId(olleCourseId)
+                .startLatitude(startLatitude)
+                .startLongitude(startLongitude)
                 .starAvg(starAvg)
                 .imageUrl(imageUrl)
                 .content(content)
@@ -110,6 +122,8 @@ public class Course {
                 .originalCourseId(originalCourseId)
                 .originalCreatorId(originalCreatorId)
                 .olleCourseId(olleCourseId)
+                .startLatitude(startLatitude)
+                .startLongitude(startLongitude)
                 .starAvg(starAvg)
                 .imageUrl(imageUrl)
                 .content(content)
@@ -126,6 +140,8 @@ public class Course {
                 .originalCourseId(originalCourseId)
                 .originalCreatorId(originalCreatorId)
                 .olleCourseId(olleCourseId)
+                .startLatitude(startLatitude)
+                .startLongitude(startLongitude)
                 .starAvg(starAvg)
                 .imageUrl(imageUrl)
                 .content(content)
@@ -142,6 +158,26 @@ public class Course {
                 .originalCreatorId(originalCreatorId)
                 .olleCourseId(olleCourseId)
                 .starAvg(starAvg)
+                .startLatitude(startLatitude)
+                .startLongitude(startLongitude)
+                .imageUrl(imageUrl)
+                .content(content)
+                .timeLabs(timeLabs)
+                .build();
+    }
+
+    public Course withStartPoint(double startLatitude, double startLongitude) {
+        return Course.builder()
+                .id(id)
+                .title(title)
+                .type(type)
+                .createdAt(createdAt)
+                .originalCourseId(originalCourseId)
+                .originalCreatorId(originalCreatorId)
+                .olleCourseId(olleCourseId)
+                .starAvg(starAvg)
+                .startLatitude(startLatitude)
+                .startLongitude(startLongitude)
                 .imageUrl(imageUrl)
                 .content(content)
                 .timeLabs(timeLabs)

@@ -1,19 +1,15 @@
 package com.gudgo.jeju.domain.tourApi.component;
 
-import com.gudgo.jeju.domain.tourApi.dto.SearchTourApiSpotRequest;
 import com.gudgo.jeju.domain.tourApi.dto.TourApiSpotResponseDto;
-import com.gudgo.jeju.domain.tourApi.entity.TourApiCategory3;
 import com.gudgo.jeju.domain.tourApi.entity.TourApiContent;
 import com.gudgo.jeju.domain.tourApi.entity.TourApiContentImage;
 import com.gudgo.jeju.domain.tourApi.entity.TourApiContentInfo;
 import com.gudgo.jeju.domain.tourApi.query.TourApiSearchQueryService;
-import com.gudgo.jeju.domain.tourApi.repository.TourApiCategory3Repository;
 import com.gudgo.jeju.domain.tourApi.repository.TourApiContentImageRepository;
 import com.gudgo.jeju.domain.tourApi.repository.TourApiContentRepository;
 import com.gudgo.jeju.global.data.tourAPI.service.TourApiRequestService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
