@@ -5,6 +5,9 @@ import com.gudgo.jeju.domain.planner.course.service.CourseService;
 import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerCreateRequestDto;
 import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerUpdateRequestDto;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerCreateResponse;
+import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerDetailResponse;
+import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerListResponse;
+import com.gudgo.jeju.domain.planner.planner.query.PlannerQueryService;
 import com.gudgo.jeju.domain.planner.planner.service.PlannerService;
 import com.gudgo.jeju.domain.planner.spot.dto.response.SpotCreateResponse;
 import com.gudgo.jeju.domain.planner.spot.service.SpotService;
@@ -21,64 +24,29 @@ import java.util.List;
 @Slf4j
 @RestController
 public class PlannerController {
-//    private final PlannerQueryService plannerQueryService;
     private final PlannerService plannerService;
     private final CourseService courseService;
     private final SpotService spotService;
+    private final PlannerQueryService plannerQueryService;
 
-//    @GetMapping("/planners/course/user")
-//    public Page<PlannerResponse> getUserPlanners(Pageable pageable) {
-//        return plannerQueryService.getUserPlanners(pageable);
-//    }
-//
-//    @GetMapping("/planners/course/olle")
-//    public Page<PlannerResponse> getOllePlanners(Pageable pageable) {
-//        return plannerQueryService.getOllePlanners(pageable);
-//    }
-//
-//    @GetMapping("/planners/course/all")
-//    public Page<PlannerResponse> getAllPlanners(Pageable pageable) {
-//        return plannerQueryService.getAllPlanners(pageable);
-//    }
-//
-//    @GetMapping("/planners/course/label")
-//    public Page<PlannerResponse> getPlannersByLabel(Pageable pageable, LabelRequestDto requestDto) {
-//        return plannerQueryService.getPlannersByLabel(pageable, requestDto);
-//    }
-//
-//
-//    @GetMapping("/planners/users/{plannerId}")
-//    public ResponseEntity<PlannerResponse> getUserCourse(@PathVariable("plannerId") Long plannerId) {
-//        return ResponseEntity.ok(plannerQueryService.getUserPlanner(plannerId));
-//    }
-//
-//    @GetMapping("/planners/olle/{plannerId}")
-//    public ResponseEntity<PlannerResponse> getOlleCourse(@PathVariable("plannerId") Long plannerId) {
-//        return ResponseEntity.ok(plannerQueryService.getOllePlanner(plannerId));
-//    }
-//
-//
-//    @GetMapping("/users/{userId}/planners")
-//    public Page<PlannerResponse> getMyPlanners(
-//            @PathVariable("userId") Long userId,
-//            @RequestParam("status") String status,
-//            Pageable pageable
-//    ) {
-//        if (status.equals("all")) {
-//            return plannerQueryService.getMyPlanners(userId, pageable);
-//
-//        } else if (status.equals("false")) {
-//            return plannerQueryService.getMyUncompletedPlanners(userId, pageable);
-//        }
-//
-//        return null;
-//    }
-//
-//
-//    @GetMapping("/users/{userId}/planners/{plannerId}")
-//    public PlannerResponse getPlanner(@PathVariable("userId") Long userId, @PathVariable("plannerId") Long plannerId) {
-//        return plannerQueryService.getPlanners(userId, plannerId);
-//    }
+    // 특정 유저 생성 코스
+    @GetMapping("/users/{userId}/planners/created-planners")
+    public ResponseEntity<List<PlannerListResponse>> getUserCreatedPlanners(@PathVariable("usreId") Long usreId) {
+        return ResponseEntity.ok(plannerQueryService.getUserCreatedPlanners(usreId));
+    }
+
+    // 특정 유저 이용 코스
+    @GetMapping("/users/{userId}/planners/completed-planners")
+    public ResponseEntity<List<PlannerListResponse>> getUserCompletedPlanners(@PathVariable("usreId") Long usreId) {
+        return ResponseEntity.ok(plannerQueryService.getUserCompletedPlanners(usreId));
+    }
+
+    @GetMapping("/planners/{plannerId}")
+    public ResponseEntity<PlannerDetailResponse> getPlanner(@PathVariable("plannerId") Long plannerId) {
+        PlannerDetailResponse response = plannerQueryService.getUserPlannerDetail(plannerId);
+
+        return ResponseEntity.ok(response);
+    }
 
     // 유저 직접 생성
     @PostMapping("/users/{userId}/planners")
@@ -90,18 +58,7 @@ public class PlannerController {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/users/{userId}/planners/{plannerId}")
-    public ResponseEntity<?> update(
-            @PathVariable("userId") Long userId,
-            @PathVariable("plannerId") Long plannerId,
-            @RequestBody PlannerUpdateRequestDto requestDto
-    ) {
-        plannerService.update(plannerId, requestDto);
-
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/users/{userId}/planners/{plannerId}")
+    @DeleteMapping("/planners/{plannerId}")
     public ResponseEntity<?> delete(@PathVariable("userId") Long userId, @PathVariable("plannerId") Long plannerId) {
         plannerService.delete(plannerId);
 

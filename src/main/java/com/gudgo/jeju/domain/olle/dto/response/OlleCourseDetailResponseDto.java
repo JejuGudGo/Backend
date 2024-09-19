@@ -1,6 +1,7 @@
 package com.gudgo.jeju.domain.olle.dto.response;
 
 import com.gudgo.jeju.domain.olle.entity.OlleType;
+import com.gudgo.jeju.domain.review.dto.response.OlleCourseSpotResponseDto;
 
 import java.util.List;
 

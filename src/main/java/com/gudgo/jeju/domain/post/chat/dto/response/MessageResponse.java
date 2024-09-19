@@ -1,5 +1,6 @@
 package com.gudgo.jeju.domain.post.chat.dto.response;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public record MessageResponse (
@@ -8,6 +9,7 @@ public record MessageResponse (
         Long numberTag,
         String profileImageUrl,
         String message,
+        LocalDateTime createdAt,
         List<String> images
 ){
 }

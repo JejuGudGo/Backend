@@ -37,6 +37,23 @@ public class ParticipantQueryService {
         return count;
     }
 
+    public int getParticipateCount(Long userId) {
+        QParticipant qParticipant = QParticipant.participant;
+        QPlanner qPlanner = QPlanner.planner;
+
+        return queryFactory
+                .select(qPlanner.countDistinct())
+                .from(qParticipant)
+                .join(qParticipant.planner, qPlanner)
+                .where(qParticipant.user.id.eq(userId)
+                        .and(qParticipant.approved.isTrue())
+                        .and(qParticipant.isDeleted.isFalse())
+                        .and(qPlanner.isCompleted.isTrue())
+                )
+                .fetchOne().intValue();
+
+    }
+
     public List<ParticipantResponse> getApprovedParticipants(Long plannerId) {
         QParticipant qParticipant = QParticipant.participant;
 

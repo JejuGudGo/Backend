@@ -18,23 +18,12 @@ import java.util.List;
 public class ParticipantController {
     private final ParticipantService participantService;
 
-//    @GetMapping(value = "/{plannerId}/participants")
-//    public ResponseEntity<List<ParticipantResponse>> getParticipants(@PathVariable("plannerId") Long plannerId, @RequestParam("status") boolean status) {
-//        return ResponseEntity.ok(participantService.getParticipants(plannerId, status));
-//    }
-
     @PostMapping(value = "/{postId}/participants/join/{userId}")
     public ResponseEntity<?> requestJoin(
             @PathVariable("postId") Long postId,
             @PathVariable("userId") Long userId,
             @RequestBody ParticipantJoinRequest request) {
         participantService.requestJoin(postId, userId, request);
-        return ResponseEntity.ok().build();
-    }
-
-    @PatchMapping(value = "/{postId}/participants/cancel/{userId}")
-    public ResponseEntity<?> requestCancel(@PathVariable("postId") Long postId, @PathVariable("userId") Long userId) {
-        participantService.requestCancel(postId, userId);
         return ResponseEntity.ok().build();
     }
 
@@ -49,15 +38,10 @@ public class ParticipantController {
         return ResponseEntity.ok(participantApproveResponse);
     }
 
-//    @GetMapping(value="/{userId}/Courses/{courseId}/participants/approved")
-//    public ResponseEntity<List<ParticipantResponse>> getApprovedParticipants(@PathVariable("postId") Long courseId) {
-//        return ResponseEntity.ok(participantService.getApprovedParticipants(courseId));
-//
-//    }
-
-//    @PatchMapping(value = "/{postId}/{userId}/participants/not-approve")
-//    public ResponseEntity<?> notApproveUser(@PathVariable("postId") Long postId, @PathVariable("userId") Long userId) {
-//        participantService.notApproveUser(postId, userId);
+    //    @PatchMapping(value = "/{postId}/participants/cancel/{userId}")
+//    public ResponseEntity<?> requestCancel(@PathVariable("postId") Long postId, @PathVariable("userId") Long userId) {
+//        participantService.requestCancel(postId, userId);
 //        return ResponseEntity.ok().build();
 //    }
+
 }

@@ -3,6 +3,7 @@ package com.gudgo.jeju.domain.planner.courseMedia.service;
 
 import com.gudgo.jeju.domain.planner.courseMedia.dto.request.CourseMediaCreateRequestDto;
 import com.gudgo.jeju.domain.planner.courseMedia.dto.request.CourseMediaUpdateRequestDto;
+import com.gudgo.jeju.domain.planner.courseMedia.dto.response.CourseMediaBackImagesResponseDto;
 import com.gudgo.jeju.domain.planner.courseMedia.dto.response.CourseMediaResponseDto;
 import com.gudgo.jeju.domain.planner.courseMedia.entity.CourseMedia;
 import com.gudgo.jeju.domain.planner.planner.entity.Planner;
@@ -35,26 +36,29 @@ public class CourseMediaService {
     private final ImageDeleteService imageDeleteService;
     private final ValidationUtil validationUtil;
 
-    @Transactional(readOnly = true)
-    public List<CourseMediaResponseDto> getMedias(Long plannerId) {
-        Planner planner = plannerRepository.findById(plannerId)
-                .orElseThrow(EntityNotFoundException::new);
 
-        List<CourseMediaResponseDto> courseMediaResponseDtos = courseMediaQueryService.getMedias(planner.getCourse().getId());
-
+    public List<CourseMediaResponseDto> getAllMedias(Long userId) {
+        List<CourseMediaResponseDto> courseMediaResponseDtos = courseMediaQueryService.getAllMedias(userId);
         return courseMediaResponseDtos;
     }
 
-    @Transactional
-    public void create(Long userId, Long plannerId, MultipartFile image, CourseMediaCreateRequestDto requestDto) throws Exception {
-        Path path = imageUpdateService.saveImage(userId, image, Category.USERCOURSE);
+    public List<CourseMediaBackImagesResponseDto> getAllBackImages(Long userId) {
+        List<CourseMediaBackImagesResponseDto> courseMediaBackImagesResponseDtos = courseMediaQueryService.getAllBackImages(userId);
+        return courseMediaBackImagesResponseDtos;
+    }
 
-        Planner planner = plannerRepository.findByCourseId(plannerId)
+    @Transactional
+    public void create(Long userId, Long plannerId, MultipartFile selfieImage, MultipartFile backImage, CourseMediaCreateRequestDto requestDto) throws Exception {
+        Path path1 = imageUpdateService.saveImage(userId, selfieImage, Category.USERCOURSE);
+        Path path2 = imageUpdateService.saveImage(userId, backImage, Category.USERCOURSE);
+
+        Planner planner = plannerRepository.findById(plannerId)
                 .orElseThrow(EntityNotFoundException::new);
 
         CourseMedia courseMedia = CourseMedia.builder()
                 .planner(planner)
-                .imageUrl(path.toString())
+                .selfieImageUrl(path1.toString())
+                .backImageUrl(path2.toString())
                 .content(requestDto.content())
                 .latitude(requestDto.latitude())
                 .longitude(requestDto.longitude())
@@ -64,8 +68,9 @@ public class CourseMediaService {
         courseMediaRepository.save(courseMedia);
     }
 
+
     @Transactional(readOnly = true)
-    public CourseMediaResponseDto getMedia(Long mediaId) {
+    public CourseMediaResponseDto getMedia(Long userId,Long mediaId) {
         CourseMedia courseMedia = courseMediaRepository.findById(mediaId)
                 .orElseThrow(EntityNotFoundException::new);
 
@@ -73,15 +78,21 @@ public class CourseMediaService {
     }
 
     @Transactional
-    public void update(Long userId, Long mediaId, MultipartFile image, CourseMediaUpdateRequestDto requestDto) throws Exception {
+    public void update(Long userId, Long plannerId, Long mediaId, MultipartFile selfImage, MultipartFile backImage, CourseMediaUpdateRequestDto requestDto) throws Exception {
         CourseMedia courseMedia = courseMediaRepository.findById(mediaId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        if (!image.isEmpty()) {
-            imageDeleteService.deleteImageWithUrl(courseMedia.getImageUrl());
-            Path path = imageUpdateService.saveImage(userId, image, Category.USERCOURSE);
+        if (!selfImage.isEmpty()) {
+            imageDeleteService.deleteImageWithUrl(courseMedia.getSelfieImageUrl());
+            Path path = imageUpdateService.saveImage(userId, selfImage, Category.USERCOURSE);
 
-            courseMedia = courseMedia.withImageUrl(path.toString());
+            courseMedia = courseMedia.withSelfieImageUrl(path.toString());
+        }
+        if (!backImage.isEmpty()) {
+            imageDeleteService.deleteImageWithUrl(courseMedia.getBackImageUrl());
+            Path path = imageUpdateService.saveImage(userId, backImage, Category.USERCOURSE);
+
+            courseMedia = courseMedia.withBackImageUrl(path.toString());
         }
 
         if (validationUtil.validateStringValue(requestDto.content())) {
@@ -92,7 +103,7 @@ public class CourseMediaService {
     }
 
     @Transactional
-    public void delete(Long mediaId) {
+    public void delete(Long userId, Long plannerId, Long mediaId) {
         CourseMedia courseMedia = courseMediaRepository.findById(mediaId)
                 .orElseThrow(EntityNotFoundException::new);
 
@@ -100,16 +111,15 @@ public class CourseMediaService {
 
         courseMediaRepository.save(courseMedia);
     }
+private CourseMediaResponseDto convertToDto(CourseMedia courseMedia) {
+    return new CourseMediaResponseDto(
+            courseMedia.getId(),
+            courseMedia.getContent(),
+            courseMedia.getSelfieImageUrl(),
+            courseMedia.getBackImageUrl(),
+            courseMedia.getLatitude(),
+            courseMedia.getLongitude()
 
-    private CourseMediaResponseDto convertToDto(CourseMedia courseMedia) {
-        return new CourseMediaResponseDto(
-                courseMedia.getId(),
-                courseMedia.getPlanner().getId(),
-                courseMedia.getContent(),
-                courseMedia.getImageUrl(),
-                courseMedia.getLatitude(),
-                courseMedia.getLongitude()
-
-        );
-    }
+    );
+}
 }

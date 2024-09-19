@@ -15,7 +15,11 @@ public class CourseMedia {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String imageUrl;
+//   private String imageUrl;
+
+    private String selfieImageUrl;
+
+    private String backImageUrl;
 
     private String content;
 
@@ -33,7 +37,9 @@ public class CourseMedia {
         return CourseMedia.builder()
                 .id(this.getId())
                 .content(this.content)
-                .imageUrl(this.imageUrl)
+//                .imageUrl(this.imageUrl)
+                .selfieImageUrl(selfieImageUrl)
+                .backImageUrl(backImageUrl)
                 .latitude(this.getLatitude())
                 .longitude(this.getLongitude())
                 .isDeleted(deleted)
@@ -45,7 +51,9 @@ public class CourseMedia {
         return CourseMedia.builder()
                 .id(this.getId())
                 .content(content)
-                .imageUrl(this.imageUrl)
+//                .imageUrl(this.imageUrl)
+                .selfieImageUrl(selfieImageUrl)
+                .backImageUrl(backImageUrl)
                 .latitude(this.getLatitude())
                 .longitude(this.getLongitude())
                 .isDeleted(this.isDeleted)
@@ -53,15 +61,41 @@ public class CourseMedia {
                 .build();
     }
 
-    public CourseMedia withImageUrl(String imageUrl) {
+//    public CourseMedia withImageUrl(String imageUrl) {
+//        return CourseMedia.builder()
+//                .id(this.getId())
+//                .content(this.content)
+//                .imageUrl(imageUrl)
+//                .latitude(this.getLatitude())
+//                .longitude(this.getLongitude())
+//                .isDeleted(this.isDeleted)
+//                .planner(this.planner)
+//                .build();
+//    }
+
+    public CourseMedia withSelfieImageUrl(String selfieImageUrl) {
         return CourseMedia.builder()
-                .id(this.getId())
-                .content(this.content)
-                .imageUrl(imageUrl)
-                .latitude(this.getLatitude())
-                .longitude(this.getLongitude())
-                .isDeleted(this.isDeleted)
-                .planner(this.planner)
+                .id(getId())
+                .content(content)
+                .selfieImageUrl(selfieImageUrl)
+                .backImageUrl(backImageUrl)
+                .latitude(getLatitude())
+                .longitude(getLongitude())
+                .isDeleted(isDeleted)
+                .planner(planner)
+                .build();
+    }
+
+    public CourseMedia withBackImageUrl(String backImageUrl) {
+        return CourseMedia.builder()
+                .id(getId())
+                .content(content)
+                .selfieImageUrl(selfieImageUrl)
+                .backImageUrl(backImageUrl)
+                .latitude(getLatitude())
+                .longitude(getLongitude())
+                .isDeleted(isDeleted)
+                .planner(planner)
                 .build();
     }
 }

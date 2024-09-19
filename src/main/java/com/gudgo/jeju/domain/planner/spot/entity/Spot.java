@@ -4,6 +4,9 @@ import com.gudgo.jeju.domain.planner.course.entity.Course;
 import com.gudgo.jeju.domain.tourApi.entity.TourApiCategory1;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.cglib.core.Local;
+
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -23,6 +26,8 @@ public class Spot {
     private String title;
 
     private String address;
+
+    private String distance;
 
     private double latitude;
 
@@ -52,24 +57,6 @@ public class Spot {
                 .title(this.title)
                 .spotType(this.spotType)
                 .orderNumber(orderNumber)
-                .address(this.address)
-                .latitude(this.latitude)
-                .longitude(this.longitude)
-                .isDeleted(this.isDeleted)
-                .isCompleted(this.isCompleted)
-                .count(this.count)
-                .contentId(this.contentId)
-                .tourApiCategory1(this.tourApiCategory1)
-                .build();
-    }
-
-    public Spot withDeleted() {
-        return Spot.builder()
-                .id(this.id)
-                .course(this.course)
-                .title(this.title)
-                .spotType(this.spotType)
-                .orderNumber(this.orderNumber)
                 .address(this.address)
                 .latitude(this.latitude)
                 .longitude(this.longitude)
@@ -116,5 +103,4 @@ public class Spot {
                 .tourApiCategory1(this.tourApiCategory1)
                 .build();
     }
-
 }

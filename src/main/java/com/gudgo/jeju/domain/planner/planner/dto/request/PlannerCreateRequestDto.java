@@ -2,7 +2,7 @@ package com.gudgo.jeju.domain.planner.planner.dto.request;
 
 import com.gudgo.jeju.domain.planner.course.dto.request.CourseCreateRequestDto;
 import com.gudgo.jeju.domain.planner.spot.dto.request.SpotCreateRequestDto;
-import com.gudgo.jeju.domain.planner.tag.entity.PlannerType;
+import com.gudgo.jeju.domain.planner.planner.entity.PlannerType;
 
 import java.util.List;
 

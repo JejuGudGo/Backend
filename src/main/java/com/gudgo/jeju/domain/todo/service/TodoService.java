@@ -32,7 +32,6 @@ public class TodoService {
     public TodoResponseDto create(HttpServletRequest request, TodoCreateRequestDto requestDto) {
         Todo todo = Todo.builder()
                 .user(getUser(request))
-                .type(TodoType.TODO)
                 .content(requestDto.content())
                 .isFinished(false)
                 .isDeleted(false)
@@ -40,13 +39,16 @@ public class TodoService {
 
         todoRepository.save(todo);
 
-        TodoResponseDto response = new TodoResponseDto(todo.getId(), todo.getType(), todo.getOrderNumber(), todo.getContent(), todo.isFinished());
+        TodoResponseDto response = new TodoResponseDto(
+                todo.getId(),
+                todo.getContent(),
+                todo.isFinished());
         return response;
     }
 
     public List<TodoResponseDto> getByType(TodoType type, HttpServletRequest request) {
         Long userId = getUser(request).getId();
-        List<TodoResponseDto> todoList = todoRepository.findByTypeAndUserIdAndIsDeletedFalseOrderByOrderNumber(type, userId);
+        List<TodoResponseDto> todoList = todoRepository.findByUserIdAndIsDeletedFalse(userId);
         return todoList;
     }
 
@@ -59,12 +61,7 @@ public class TodoService {
     public void update(Long id, TodoUpdateRequestDto requestDto) {
         Todo todo = todoRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
-        if (requestDto.type() != null) {
-            todo = todo.withType(requestDto.type());
-        }
-        if (requestDto.orderNumber() != null) {
-            todo = todo.withOrderNumber(requestDto.orderNumber());
-        }
+
         if (requestDto.content() != null) {
             todo = todo.withContent(requestDto.content());
         }
@@ -93,8 +90,8 @@ public class TodoService {
 
 
     private User getUser(HttpServletRequest request) {
-        String token = tokenExtractor.getAccessTokenFromHeader(request);    // 요청 헤더에서 AccessToken 추출
-        Long userid = subjectExtractor.getUserIdFromToken(token);           // 토큰에서 userid 추출
+        String token = tokenExtractor.getAccessTokenFromHeader(request);
+        Long userid = subjectExtractor.getUserIdFromToken(token);
 
         return userRepository.findById(userid)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userid));

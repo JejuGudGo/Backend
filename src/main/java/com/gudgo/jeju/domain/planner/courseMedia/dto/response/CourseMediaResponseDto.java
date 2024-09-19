@@ -1,10 +1,11 @@
 package com.gudgo.jeju.domain.planner.courseMedia.dto.response;
 
 public record CourseMediaResponseDto(
-        Long id,
-        Long courseId,
-        String imageUrl,
-        String coutent,
+        Long mediaId,
+//        String imageUrl,
+        String selfImageUrl,
+        String backImageUrl,
+        String content,
         double latitude,
         double longitude
 ) {

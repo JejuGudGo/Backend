@@ -1,8 +1,8 @@
 package com.gudgo.jeju.domain.planner.courseMedia.controller;
 
-
 import com.gudgo.jeju.domain.planner.courseMedia.dto.request.CourseMediaCreateRequestDto;
 import com.gudgo.jeju.domain.planner.courseMedia.dto.request.CourseMediaUpdateRequestDto;
+import com.gudgo.jeju.domain.planner.courseMedia.dto.response.CourseMediaBackImagesResponseDto;
 import com.gudgo.jeju.domain.planner.courseMedia.dto.response.CourseMediaResponseDto;
 import com.gudgo.jeju.domain.planner.courseMedia.service.CourseMediaService;
 import jakarta.validation.Valid;
@@ -21,59 +21,61 @@ import java.util.List;
 public class CourseMediaController {
     private final CourseMediaService courseMediaService;
 
-    /* GET: 특정 코스의 모든 미디어 가져오기 */
-    @GetMapping(value = "/{userId}/planners/{plannerId}/course/medias")
-    public ResponseEntity<List<CourseMediaResponseDto>> getMedias(
+    @GetMapping("/{userId}/media")
+    public ResponseEntity<List<CourseMediaResponseDto>> getMediaList(
+            @PathVariable("userId") Long userId
+    ) {
+        return ResponseEntity.ok(courseMediaService.getAllMedias(userId));
+    }
+
+    @GetMapping("/{userId}/media/backImage")
+    public ResponseEntity<List<CourseMediaBackImagesResponseDto>> getBackImagesList(
             @PathVariable("userId") Long userId,
             @PathVariable("plannerId") Long plannerId
     ) {
-        List<CourseMediaResponseDto> courseMedias = courseMediaService.getMedias(plannerId);
-        return ResponseEntity.ok(courseMedias);
+        return ResponseEntity.ok(courseMediaService.getAllBackImages(userId));
     }
 
-    /* GET: 특정 코스 미디어 상세 정보 가져오기 */
-    @GetMapping(value = "/{userId}/planners/{plannerId}/course/medias/{mediaId}")
-    public ResponseEntity<CourseMediaResponseDto> get(
+    @GetMapping("/{userId}/media/{mediaId}")
+    public ResponseEntity<CourseMediaResponseDto> getMedia(
             @PathVariable("userId") Long userId,
-            @PathVariable("plannerId") Long plannerId,
             @PathVariable("mediaId") Long mediaId
     ) {
-        return ResponseEntity.ok(courseMediaService.getMedia(mediaId));
+        return ResponseEntity.ok(courseMediaService.getMedia(userId, mediaId));
     }
 
-    /* POST: 코스 미디어 생성  */
-    @PostMapping(value="/{userId}/planners/{plannerId}/course/medias")
-    public ResponseEntity<?> create(
+    @PostMapping("/{userId}/planners/{plannerId}/media")
+    public ResponseEntity<?> createMedia(
             @PathVariable("userId") Long userId,
             @PathVariable("plannerId") Long plannerId,
-            @RequestPart("request") CourseMediaCreateRequestDto requestDto,
-            @RequestPart("image") MultipartFile image
+            @RequestPart("request") @Valid CourseMediaCreateRequestDto requestDto,
+            @RequestPart("selfieImage") MultipartFile selfieImage,
+            @RequestPart("backImage") MultipartFile backImage
     ) throws Exception {
-        courseMediaService.create(userId, plannerId, image, requestDto);
+        courseMediaService.create(userId, plannerId, selfieImage, backImage, requestDto);
         return ResponseEntity.ok().build();
     }
 
-    /* PATCH: 특정 코스 미디어 정보 업데이트 */
-    @PatchMapping(
-            value = "/{userId}/planners/{plannerId}/course/medias/{mediaId}")
-    public ResponseEntity<?> update(
+    @PatchMapping("/{userId}/planners/{plannerId}/media/{mediaId}")
+    public ResponseEntity<?> updateMedia(
             @PathVariable("userId") Long userId,
             @PathVariable("plannerId") Long plannerId,
             @PathVariable("mediaId") Long mediaId,
-            @RequestPart("image") MultipartFile image,
-            @RequestPart("request") @Valid CourseMediaUpdateRequestDto requestDto
+            @RequestPart("request") @Valid CourseMediaUpdateRequestDto requestDto,
+            @RequestPart("selfieImage") MultipartFile selfieImage,
+            @RequestPart("backImage") MultipartFile backImage
     ) throws Exception {
-        courseMediaService.update(userId, mediaId, image, requestDto);
+        courseMediaService.update(userId, plannerId, mediaId, selfieImage, backImage, requestDto);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping(value = "/{userId}/planners/{plannerId}/course/medias/{mediaId}")
-    public ResponseEntity<?> delete(
+    @DeleteMapping("/{userId}/planners/{plannerId}/media/{mediaId}")
+    public ResponseEntity<?> deleteMedia(
             @PathVariable("userId") Long userId,
             @PathVariable("plannerId") Long plannerId,
             @PathVariable("mediaId") Long mediaId
     ) {
-        courseMediaService.delete(mediaId);
+        courseMediaService.delete(userId, plannerId, mediaId);
         return ResponseEntity.ok().build();
     }
 }
