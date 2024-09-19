@@ -81,7 +81,7 @@ public class SpotService {
 
             Spot spot = Spot.builder()
                     .spotType(requests.get(i).type())
-                    .orderNumber(Long.parseLong(String.valueOf(i + 1)))
+                    .orderNumber(Long.parseLong(String.valueOf(i)))
                     .title(requests.get(i).title())
                     .address(requests.get(i).address())
                     .latitude(requests.get(i).latitude())
