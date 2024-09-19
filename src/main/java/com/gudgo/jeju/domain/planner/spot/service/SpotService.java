@@ -81,7 +81,7 @@ public class SpotService {
 
             Spot spot = Spot.builder()
                     .spotType(requests.get(i).type())
-                    .orderNumber(Long.parseLong(String.valueOf(i)))
+                    .orderNumber(Long.parseLong(String.valueOf(i + 1)))
                     .title(requests.get(i).title())
                     .address(requests.get(i).address())
                     .latitude(requests.get(i).latitude())
@@ -95,7 +95,6 @@ public class SpotService {
                     .build();
 
             spotRepository.save(spot);
-
             responses.add(new SpotCreateResponse(spot.getId(), spot.getTitle(), spot.getLatitude(), spot.getLongitude()));
         }
 
@@ -103,7 +102,9 @@ public class SpotService {
         String lastSpotTitle = responses.get(responses.size() - 1).title();
         String courseContent = startSpotTitle + "부터 " + lastSpotTitle  + "까지 걷는 코스에요.";
 
+        course = course.withStartPoint(requests.get(0).latitude(), requests.get(0).longitude());
         course = course.withContent(courseContent);
+
         courseRepository.save(course);
 
         return responses;

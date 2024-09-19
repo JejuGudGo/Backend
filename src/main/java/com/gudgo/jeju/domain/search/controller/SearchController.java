@@ -18,13 +18,15 @@ public class SearchController {
 
     @GetMapping("")
     public Page<SearchListResponse> search(
-            @RequestParam("query") String titile,
+            @RequestParam("latitude") double latitude,
+            @RequestParam("longitude") double longitude,
+            @RequestParam("query") String title,
             @RequestParam("category1") String category1,
             @RequestParam("category2") String category2,
             @RequestParam("category3") List<String> category3,
             Pageable pageable
     ) {
-        return searchQueryService.search(titile, category1, category2, category3, pageable);
+        return searchQueryService.search(title, category1, category2, category3, latitude, longitude, pageable);
     }
 
     @GetMapping(value = "/planners/{plannerId}")

@@ -11,6 +11,8 @@ public record SearchListResponse(
         String summary,
         String distance,
         LocalTime timeLabs,
+        double startLatitude,
+        double startLongitude,
         double avgStars,
         Long reviewCount,
         List<String> tags
