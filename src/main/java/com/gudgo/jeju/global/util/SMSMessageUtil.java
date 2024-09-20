@@ -24,13 +24,13 @@ import java.util.Random;
 @RequiredArgsConstructor
 @Component
 public class SMSMessageUtil {
-    @Value("${cool.sms.key}")
+    @Value("${coolsms.key}")
     private String apikey;
 
-    @Value("${cool.sms.secret.key}")
+    @Value("${coolsms.secret.key}")
     private String apiSecretkey;
 
-    @Value("${send.number}")
+    @Value("${sendNumber}")
     private String sender;
 
     private final RedisUtil redisUtil;
