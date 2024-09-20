@@ -103,4 +103,21 @@ public class User {
                 .profile(this.profile)
                 .build();
     }
+
+    public User withIsDeleted() {
+        return User.builder()
+                .id(id)
+                .email(email)
+                .password(password)
+                .nickname(nickname)
+                .name(name)
+                .numberTag(numberTag)
+                .role(role)
+                .provider(provider)
+                .createdAt(createdAt)
+                .isDeleted(true)
+                .phoneNumber(phoneNumber)
+                .profile(profile)
+                .build();
+    }
 }
