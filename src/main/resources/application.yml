@@ -102,3 +102,8 @@ tour:
   api:
     key:
       ${TOUR_API_KEY}
+
+public-data:
+  api:
+    key: ${PUBLIC_DATA_API_KEY}
+    base-url: https://api.odcloud.kr/api/15096996/v1/uddi:6738a90c-ec96-4245-a187-9528cea62904
