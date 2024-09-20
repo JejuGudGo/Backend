@@ -27,14 +27,13 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class OreumRequestService {
 
-    @Value("${public-data.api.key}")
+    @Value("${tour.api.key}")
     private String KEY;
-
-    @Value("${public-data.api.base-url}")
-    private String BASE_URL;
 
     private final DataConfigurationRepository dataConfigurationRepository;
     private final OreumDataRepository oreumDataRepository;
+
+    private final String BASE_URL = "https://api.odcloud.kr/api/15096996/v1/uddi:6738a90c-ec96-4245-a187-9528cea62904";
 
     public void prepareOreumData() throws IOException {
         log.info("===============================================================================");
