@@ -4,10 +4,8 @@ import com.gudgo.jeju.domain.olle.entity.JeJuOlleCourse;
 import com.gudgo.jeju.domain.olle.repository.JeJuOlleCourseRepository;
 import com.gudgo.jeju.domain.planner.course.entity.Course;
 import com.gudgo.jeju.domain.planner.course.entity.CourseType;
-import com.gudgo.jeju.domain.planner.course.entity.QCourse;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerDetailResponse;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerListResponse;
-import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerUserResponse;
 import com.gudgo.jeju.domain.planner.planner.entity.Planner;
 import com.gudgo.jeju.domain.planner.planner.entity.PlannerType;
 import com.gudgo.jeju.domain.planner.planner.entity.QPlanner;
@@ -16,19 +14,12 @@ import com.gudgo.jeju.domain.planner.planner.repository.PlannerRepository;
 import com.gudgo.jeju.domain.planner.spot.dto.response.SpotPositionResponse;
 import com.gudgo.jeju.domain.planner.spot.entity.QSpot;
 import com.gudgo.jeju.domain.planner.spot.entity.Spot;
-import com.gudgo.jeju.domain.profile.entity.Profile;
-import com.gudgo.jeju.domain.profile.entity.QProfile;
-import com.gudgo.jeju.domain.review.entity.QReview;
 import com.gudgo.jeju.domain.review.query.ReviewQueryService;
-import com.gudgo.jeju.domain.user.dto.UserInfoResponseDto;
-import com.gudgo.jeju.domain.user.entity.QUser;
-import com.gudgo.jeju.domain.user.entity.User;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -93,47 +84,6 @@ public class PlannerQueryService {
         );
     }
 
-    public PlannerUserResponse getPlannerUserInfo(Long userId) {
-        QPlanner qPlanner = QPlanner.planner;
-        QUser qUser = QUser.user;
-        QProfile qProfile = QProfile.profile;
-
-        List<Planner> planners = queryFactory
-                .selectFrom(qPlanner)
-                .where(qPlanner.user.id.eq(userId)
-                        .and(qPlanner.isDeleted.isFalse())
-                        .and(qPlanner.isCompleted.isTrue()))
-                .fetch();
-
-        User user = queryFactory
-                .selectFrom(qUser)
-                .where(qUser.id.eq(userId))
-                .fetchOne();
-
-        Profile profile = queryFactory
-                .selectFrom(qProfile)
-                .where(qProfile.id.eq(user.getProfile().getId()))
-                .fetchOne();
-
-        UserInfoResponseDto userInfoResponseDto = new UserInfoResponseDto(
-                userId,
-                user.getEmail(),
-                user.getNickname(),
-                user.getName(),
-                user.getNumberTag(),
-                profile.getProfileImageUrl(),
-                user.getRole()
-        );
-
-        return new PlannerUserResponse(
-                userInfoResponseDto,
-                profile.getWalkingTime(),
-                profile.getWalkingCount(),
-                profile.getBadgeCount()
-
-        );
-    }
-
 
     public List<PlannerListResponse> getUserCreatedPlanners(Long userId) {
         QPlanner qPlanner = QPlanner.planner;
@@ -166,29 +116,13 @@ public class PlannerQueryService {
         return convertPlannersToResponses(planners);
     }
 
-    public List<PlannerListResponse> getTopRatedPlanners() {
-        QPlanner qPlanner = QPlanner.planner;
-        QCourse qCourse = QCourse.course;
-
-        List<Planner> topPlanners = queryFactory
-                .selectFrom(qPlanner)
-                .join(qPlanner.course, qCourse)
-                .orderBy(qCourse.starAvg.desc())
-                .limit(10)
-                .fetch();
-
-        return convertPlannersToResponses(topPlanners);
-    }
-
-
     private List<PlannerListResponse> convertPlannersToResponses(List<Planner> planners) {
         return planners.stream()
-                .map(this::convertUserPlannerToResponse)
+                .map(this::convertPlannerToResponse)
                 .collect(Collectors.toList());
     }
 
-
-    private PlannerListResponse convertUserPlannerToResponse(Planner planner) {
+    private PlannerListResponse convertPlannerToResponse(Planner planner) {
         Course course = planner.getCourse();
         String distance = getDistance(course);
         Long reviewCount = reviewQueryService.getUserCourseReviewCount(planner.getId());
