@@ -6,7 +6,7 @@ import com.gudgo.jeju.global.data.olle.service.HaYoungOlleDatabaseService;
 import com.gudgo.jeju.global.data.olle.service.HaYoungOlleSpotDatabaseService;
 import com.gudgo.jeju.global.data.olle.service.JejuOlleDatabaseService;
 import com.gudgo.jeju.global.data.olle.service.JejuOlleSpotDatabaseService;
-import com.gudgo.jeju.global.data.oruem.service.OreumRequestService;
+import com.gudgo.jeju.global.data.oruem.service.OreumDatabaseService;
 import com.gudgo.jeju.global.data.tourAPI.service.TourApiRequestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +27,8 @@ public class DataLoadRunner implements CommandLineRunner {
     private final JejuOlleSpotDatabaseService jejuOlleSpotDatabaseService;
     private final HaYoungOlleDatabaseService haYoungOlleDatabaseService;
     private final HaYoungOlleSpotDatabaseService haYoungOlleSpotDatabaseService;
+    private final OreumDatabaseService oreumDatabaseService;
     private final LabelDatabaseService labelDatabaseService;
-    private final OreumRequestService oreumRequestService;
 
     @Override
     public void run(String... args) throws Exception {
@@ -46,9 +46,8 @@ public class DataLoadRunner implements CommandLineRunner {
 
         nicknameDataService.loadAdjectiveCsvToDatabase();
         nicknameDataService.loadNounCsvToDatabase();
+        oreumDatabaseService.loadJejuOreumCsvToDatabase();
 
         labelDatabaseService.loadLabelCsvToDatabase();
-
-        oreumRequestService.prepareOreumData();
     }
 }

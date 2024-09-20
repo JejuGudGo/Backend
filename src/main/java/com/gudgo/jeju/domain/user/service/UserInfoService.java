@@ -59,13 +59,4 @@ public class UserInfoService {
 
         userRepository.save(user);
     }
-
-    public void delete(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(EntityNotFoundException::new);
-
-        user = user.withIsDeleted();
-
-        userRepository.save(user);
-    }
 }

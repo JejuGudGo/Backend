@@ -22,57 +22,33 @@ public class Profile {
 
     private String profileImageUrl;
 
-    private Long badgeCount;
+    private String ranking;
 
-    private Long walkingCount;
-
-//    public Profile withWalkingTime(Time walkingTime) {
-//        return Profile.builder()
-//                .id(this.id)
-//                .walkingTime(walkingTime != null ? walkingTime : this.walkingTime)
-//                .profileImageUrl(this.profileImageUrl)
-//                .ranking(this.ranking)
-//                .build();
-//    }
-
-    public Profile withProfileImageUrl(String profileImageUrl) {
-        return Profile.builder()
-                .id(id)
-                .walkingTime(walkingTime)
-                .profileImageUrl(profileImageUrl != null ? profileImageUrl : this.profileImageUrl)
-                .badgeCount(badgeCount)
-                .walkingCount(walkingCount)
-                .build();
-    }
 
     public Profile withWalkingTime(Time walkingTime) {
         return Profile.builder()
-                .id(id)
-                .walkingTime(walkingTime)
-                .profileImageUrl(profileImageUrl != null ? profileImageUrl : this.profileImageUrl)
-                .badgeCount(badgeCount)
-                .walkingCount(walkingCount)
+                .id(this.id)
+                .walkingTime(walkingTime != null ? walkingTime : this.walkingTime)
+                .profileImageUrl(this.profileImageUrl)
+                .ranking(this.ranking)
                 .build();
     }
-    public Profile withWalkingCount(Long walkingCount) {
+
+    public Profile withProfileImageUrl(String profileImageUrl) {
         return Profile.builder()
-                .id(id)
-                .walkingTime(walkingTime)
+                .id(this.id)
+                .walkingTime(this.walkingTime)
                 .profileImageUrl(profileImageUrl != null ? profileImageUrl : this.profileImageUrl)
-                .badgeCount(badgeCount)
-                .walkingCount(walkingCount)
+                .ranking(this.ranking)
                 .build();
     }
 
-
-    public Profile withBadgeCount(Long badgeCount) {
+    public Profile withUserRank(String userRank) {
         return Profile.builder()
-                .id(id)
-                .walkingTime(walkingTime)
-                .profileImageUrl(profileImageUrl != null ? profileImageUrl : this.profileImageUrl)
-                .badgeCount(badgeCount)
-                .walkingCount(walkingCount)
+                .id(this.id)
+                .walkingTime(this.walkingTime)
+                .profileImageUrl(this.profileImageUrl)
+                .ranking(userRank != null ? userRank : this.ranking)
                 .build();
     }
-
 }

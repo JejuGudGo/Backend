@@ -5,7 +5,6 @@ import com.gudgo.jeju.domain.badge.entity.Badge;
 import com.gudgo.jeju.domain.badge.entity.BadgeCode;
 import com.gudgo.jeju.domain.badge.event.BadgeEvent;
 import com.gudgo.jeju.domain.badge.repository.BadgeRepository;
-import com.gudgo.jeju.domain.profile.service.ProfileService;
 import com.gudgo.jeju.domain.user.dto.UserInfoResponseDto;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
@@ -31,11 +30,6 @@ public class BadgeService {
 
     private final UserRepository userRepository;
     private final BadgeRepository badgeRepository;
-    private final ProfileService profileService;
-
-    // 뱃지 부여 이벤트
-    @EventListener
-    @Transactional
 
     // 뱃지 부여 이벤트
     @EventListener
@@ -50,9 +44,6 @@ public class BadgeService {
                 .code(event.getCode())
                 .build();
         badgeRepository.save(badge);
-
-        profileService.incrementBadgeCount(user.getProfile().getId());
-
     }
 
 
@@ -92,6 +83,5 @@ public class BadgeService {
         return userRepository.findById(userid)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userid));
     }
-
 }
 
