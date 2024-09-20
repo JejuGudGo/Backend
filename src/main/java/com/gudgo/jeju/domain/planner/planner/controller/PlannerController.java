@@ -7,8 +7,6 @@ import com.gudgo.jeju.domain.planner.planner.dto.request.PlannerUpdateRequestDto
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerCreateResponse;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerDetailResponse;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerListResponse;
-import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerUserResponse;
-
 import com.gudgo.jeju.domain.planner.planner.query.PlannerQueryService;
 import com.gudgo.jeju.domain.planner.planner.service.PlannerService;
 import com.gudgo.jeju.domain.planner.spot.dto.response.SpotCreateResponse;
@@ -46,21 +44,8 @@ public class PlannerController {
     @GetMapping("/planners/{plannerId}")
     public ResponseEntity<PlannerDetailResponse> getPlanner(@PathVariable("plannerId") Long plannerId) {
         PlannerDetailResponse response = plannerQueryService.getUserPlannerDetail(plannerId);
+
         return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/planners/top10")
-    public ResponseEntity<List<PlannerListResponse>> getTopRatedPlanners() {
-        return ResponseEntity.ok(plannerQueryService.getTopRatedPlanners());
-    }
-
-
-    // 마이걷고 탭 조회
-    @GetMapping("/users/{userId}/planners/mygudgo")
-    public ResponseEntity<PlannerUserResponse> getPlannerUserInfo(@PathVariable("userId") Long userId) {
-        return ResponseEntity.ok(plannerQueryService.getPlannerUserInfo(userId));
-
-
     }
 
     // 유저 직접 생성

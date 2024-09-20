@@ -1,6 +1,6 @@
 package com.gudgo.jeju.domain.oreum.entity;
 
-import com.gudgo.jeju.domain.trail.entity.TrailType;
+import com.gudgo.jeju.domain.tourApi.entity.TourApiCategory1;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,6 +32,7 @@ public class Oreum {
 
     private LocalDate updatedAt;
 
-    @Enumerated(value = EnumType.STRING)
-    private TrailType type;
+    @ManyToOne
+    @JoinColumn(name = "tourApiCategory1Id")
+    private TourApiCategory1 tourApiCategory1;
 }

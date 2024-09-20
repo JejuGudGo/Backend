@@ -34,7 +34,7 @@ public class OreumSpotQueryService {
                 .map(oreum ->
                         new OreumResponseDto(
                                 oreum.getId(),
-                                oreum.getType(),
+                                oreum.getTourApiCategory1(),
                                 oreum.getTitle(),
                                 oreum.getAddress(),
                                 oreum.getLatitude(),
@@ -56,7 +56,7 @@ public class OreumSpotQueryService {
 
         return new OreumResponseDto(
                 oreum.getId(),
-                oreum.getType(),
+                oreum.getTourApiCategory1(),
                 oreum.getTitle(),
                 oreum.getAddress(),
                 oreum.getLatitude(),
