@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Time;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -50,6 +51,9 @@ public class SignupService {
 
         Profile profile = Profile.builder()
                 .profileImageUrl("Default")
+                .badgeCount(0L)
+                .walkingTime(Time.valueOf("00:00:00"))
+                .walkingCount(0L)
                 .build();
 
         User user = User.builder()
