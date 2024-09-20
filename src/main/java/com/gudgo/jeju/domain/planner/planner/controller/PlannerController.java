@@ -8,6 +8,7 @@ import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerCreateResponse;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerDetailResponse;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerListResponse;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerUserResponse;
+
 import com.gudgo.jeju.domain.planner.planner.query.PlannerQueryService;
 import com.gudgo.jeju.domain.planner.planner.service.PlannerService;
 import com.gudgo.jeju.domain.planner.spot.dto.response.SpotCreateResponse;
@@ -58,6 +59,8 @@ public class PlannerController {
     @GetMapping("/users/{userId}/planners/mygudgo")
     public ResponseEntity<PlannerUserResponse> getPlannerUserInfo(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok(plannerQueryService.getPlannerUserInfo(userId));
+
+
     }
 
     // 유저 직접 생성

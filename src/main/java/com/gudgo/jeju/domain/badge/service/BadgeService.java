@@ -36,6 +36,9 @@ public class BadgeService {
     // 뱃지 부여 이벤트
     @EventListener
     @Transactional
+
+    // 뱃지 부여 이벤트
+    @EventListener
     public void handleBadgeEvent(BadgeEvent event) {
         Long userId = event.getUserId();
 
@@ -89,7 +92,6 @@ public class BadgeService {
         return userRepository.findById(userid)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userid));
     }
-
 
 }
 

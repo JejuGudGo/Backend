@@ -24,4 +24,3 @@ public class Badge {
     @Enumerated(value = EnumType.STRING)
     private BadgeCode code;
 }
-
