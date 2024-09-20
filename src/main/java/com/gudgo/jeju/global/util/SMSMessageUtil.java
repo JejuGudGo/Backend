@@ -24,10 +24,10 @@ import java.util.Random;
 @RequiredArgsConstructor
 @Component
 public class SMSMessageUtil {
-    @Value("${coolsms.key}")
+    @Value("${coolsms.api.key}")
     private String apikey;
 
-    @Value("${coolsms.secret.key}")
+    @Value("${coolsms.api.secret}")
     private String apiSecretkey;
 
     @Value("${sendNumber}")
