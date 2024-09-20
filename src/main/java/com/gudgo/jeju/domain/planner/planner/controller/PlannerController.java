@@ -45,9 +45,14 @@ public class PlannerController {
     @GetMapping("/planners/{plannerId}")
     public ResponseEntity<PlannerDetailResponse> getPlanner(@PathVariable("plannerId") Long plannerId) {
         PlannerDetailResponse response = plannerQueryService.getUserPlannerDetail(plannerId);
-
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/planners/top10")
+    public ResponseEntity<List<PlannerListResponse>> getTopRatedPlanners() {
+        return ResponseEntity.ok(plannerQueryService.getTopRatedPlanners());
+    }
+
 
     // 마이걷고 탭 조회
     @GetMapping("/users/{userId}/planners/mygudgo")

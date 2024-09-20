@@ -4,6 +4,7 @@ import com.gudgo.jeju.domain.olle.entity.JeJuOlleCourse;
 import com.gudgo.jeju.domain.olle.repository.JeJuOlleCourseRepository;
 import com.gudgo.jeju.domain.planner.course.entity.Course;
 import com.gudgo.jeju.domain.planner.course.entity.CourseType;
+import com.gudgo.jeju.domain.planner.course.entity.QCourse;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerDetailResponse;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerListResponse;
 import com.gudgo.jeju.domain.planner.planner.dto.response.PlannerUserResponse;
@@ -165,13 +166,29 @@ public class PlannerQueryService {
         return convertPlannersToResponses(planners);
     }
 
+    public List<PlannerListResponse> getTopRatedPlanners() {
+        QPlanner qPlanner = QPlanner.planner;
+        QCourse qCourse = QCourse.course;
+
+        List<Planner> topPlanners = queryFactory
+                .selectFrom(qPlanner)
+                .join(qPlanner.course, qCourse)
+                .orderBy(qCourse.starAvg.desc())
+                .limit(10)
+                .fetch();
+
+        return convertPlannersToResponses(topPlanners);
+    }
+
+
     private List<PlannerListResponse> convertPlannersToResponses(List<Planner> planners) {
         return planners.stream()
-                .map(this::convertPlannerToResponse)
+                .map(this::convertUserPlannerToResponse)
                 .collect(Collectors.toList());
     }
 
-    private PlannerListResponse convertPlannerToResponse(Planner planner) {
+
+    private PlannerListResponse convertUserPlannerToResponse(Planner planner) {
         Course course = planner.getCourse();
         String distance = getDistance(course);
         Long reviewCount = reviewQueryService.getUserCourseReviewCount(planner.getId());
