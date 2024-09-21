@@ -22,13 +22,23 @@ public class Recommend {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
-
-    private String imageUrl;
+    private String title1;
 
     private String author;
 
     private LocalDateTime createdAt;
 
-    private String content;
+    private String title2;
+
+    private String section1Title;
+    private String section2Title;
+    private String section3Title;
+    private String section4Title;
+
+    private String section1Content;
+    private String section2Content;
+    private String section3Content;
+    private String section4Content;
+
+    private String imageUrl;
 }

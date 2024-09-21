@@ -27,11 +27,31 @@ public class EventQueryService {
     public Page<EventResponse> getEvents(EventType type, Pageable pageable) {
         QEvent event = QEvent.event;
 
+        if (type.equals(EventType.ALL)){
+            List<Event> events = queryFactory
+                    .selectFrom(event)
+                    .fetch();
+            List<EventResponse> eventResponses = events.stream().map(e -> {
+                return new EventResponse(
+                        e.getId(),
+                        e.getTitle(),
+                        e.getOrganization(),
+                        e.getStartDate(),
+                        e.getFinishDate(),
+                        e.getImageUrl(),
+                        e.getInformationUrl(),
+                        e.getType()
+                );
+            }).collect(Collectors.toList());
+
+            return PaginationUtil.listToPage(eventResponses, pageable);
+        }
+
+
         List<Event> events = queryFactory
                 .selectFrom(event)
                 .where(event.type.eq(type))
                 .fetch();
-
         List<EventResponse> eventResponses = events.stream().map(e -> {
             return new EventResponse(
                     e.getId(),
@@ -46,6 +66,8 @@ public class EventQueryService {
         }).collect(Collectors.toList());
 
         return PaginationUtil.listToPage(eventResponses, pageable);
+
+
     }
 
 
