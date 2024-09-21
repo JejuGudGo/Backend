@@ -61,7 +61,7 @@ public class TrailService {
     public void updateAllOriginalTrailStarAvg() {
         List<Trail> trails = trailRepository.findAll();
         for (Trail trail : trails) {
-            List<Review> reviews = reviewRepository.findByTrailIdNotNull(trail.getId());
+            List<Review> reviews = reviewRepository.findByTrailNotNull();
 
             if (!reviews.isEmpty()) {
                 OptionalDouble avgStars = reviews.stream()

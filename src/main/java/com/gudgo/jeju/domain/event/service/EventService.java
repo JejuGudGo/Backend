@@ -33,7 +33,7 @@ public class EventService {
                 event.getInformationUrl(),
                 event.getType()
         );
- 
+
     }
 
     @Transactional

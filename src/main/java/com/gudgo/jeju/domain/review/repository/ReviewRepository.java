@@ -11,6 +11,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     int countByUserId(Long userId);
 
-    List<Review> findByTrailIdNotNull(Long trailId);
+    List<Review> findByTrailNotNull();
 
 }
