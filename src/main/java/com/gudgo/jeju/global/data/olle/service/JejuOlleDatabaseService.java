@@ -49,6 +49,13 @@ public class JejuOlleDatabaseService {
     public void processJejuOlleData() {
         try {
             log.info("Starting processJejuOlleData");
+            if (!isOlleDataLoaded()) {
+                log.info("Loading Jeju Olle data");
+                loadJejuOlleData();
+            } else {
+                log.info("Olle data already loaded");
+            }
+
             if (isInitializationRequired()) {
                 log.info("Creating Courses and Planners from existing Jeju Olle data");
                 createCoursesAndPlannersFromJejuOlleData();
@@ -60,6 +67,27 @@ public class JejuOlleDatabaseService {
         } catch (Exception e) {
             log.error("Unexpected error in processJejuOlleData", e);
             throw new RuntimeException("Failed to process Jeju Olle data", e);
+        }
+    }
+
+    private boolean isOlleDataLoaded() {
+        DataConfiguration dataConfig = dataConfigurationRepository.findByConfigKey("OlleDataLoaded")
+                .orElse(null);
+        return dataConfig != null && dataConfig.isConfigValue();
+    }
+
+    public boolean loadJejuOlleData() {
+        log.info("Starting loadJejuOlleData");
+        try {
+            log.info("Starting data loading process");
+            convertGpxToDatabase();
+            addAdditionalData();
+            updateDataLoadedStatus();
+            log.info("Successfully loaded Jeju Olle courses");
+            return true;
+        } catch (IOException e) {
+            log.error("Error occurred while loading Jeju Olle data", e);
+            return false;
         }
     }
 
@@ -104,21 +132,6 @@ public class JejuOlleDatabaseService {
 
     private boolean isOlleCourseAlreadyProcessed(JeJuOlleCourse olleCourse) {
         return courseRepository.existsByTypeAndOlleCourseId(CourseType.JEJU, olleCourse.getId());
-    }
-
-    private boolean loadJejuOlleData() {
-        log.info("Starting loadJejuOlleData");
-        try {
-            log.info("Starting data loading process");
-            convertGpxToDatabase();
-            addAdditionalData();
-            updateDataLoadedStatus();
-            log.info("Successfully loaded Jeju Olle courses");
-            return true;
-        } catch (IOException e) {
-            log.error("Error occurred while loading Jeju Olle data", e);
-            return false;
-        }
     }
 
     private void updateDataLoadedStatus() {
