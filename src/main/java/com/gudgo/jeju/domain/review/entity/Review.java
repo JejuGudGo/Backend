@@ -43,7 +43,7 @@ public class Review {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "trail")
+    @JoinColumn(name = "trailId")
     private Trail trail;
 
 

@@ -78,6 +78,12 @@ public class TourApiSpotFinder {
         TourApiContentInfo tourApiContentInfo = spot.getTourApiContentInfo();
         if (tourApiContentInfo == null) {
             requestService.requestSpotDetail(spot.getId(), contentTypeId);
+            spot = tourApiContentRepository.findById(spot.getId()).orElseThrow(() -> new EntityNotFoundException("TourApiContent not found"));
+            tourApiContentInfo = spot.getTourApiContentInfo();
+        }
+
+        if (tourApiContentInfo == null) {
+            throw new EntityNotFoundException("TourApiContentInfo not found for spot: " + spot.getId());
         }
 
         List<TourApiContentImage> images = tourApiContentImageRepository.findByTourApiContentInfoId(tourApiContentInfo.getId());
