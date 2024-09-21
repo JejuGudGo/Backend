@@ -24,8 +24,8 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -148,9 +148,8 @@ public class JejuOlleDatabaseService {
             Resource[] resources = resolver.getResources("classpath:gpx/*.gpx");
 
             for (Resource resource : resources) {
-                try (BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
-                    File gpxFile = resource.getFile();
-                    String fileName = gpxFile.getName();
+                try (InputStream inputStream = resource.getInputStream()) {
+                    String fileName = resource.getFilename();
 
                     boolean wheelchairAccessible = fileName.contains("휠체어구간");
                     String courseTitle = fileName.replace("제주올레길_", "")
@@ -161,7 +160,7 @@ public class JejuOlleDatabaseService {
                     String courseNumber = extractCourseNumberFromTitle(courseTitle);
 
                     if (courseNumber != null) {
-                        parseAndSaveGpxFile(resource, courseNumber, courseTitle, wheelchairAccessible);
+                        parseAndSaveGpxFile(inputStream, courseNumber, courseTitle, wheelchairAccessible);
                     } else {
                         log.warn("===============================================================================");
                         log.warn("Course number not found for file: {}", fileName);
@@ -180,7 +179,8 @@ public class JejuOlleDatabaseService {
         } else {
             log.info("===============================================================================");
             log.info("OlleData is already loaded");
-            log.info("===============================================================================");        }
+            log.info("===============================================================================");
+        }
     }
 
     private String extractCourseNumberFromTitle(String title) {
@@ -206,11 +206,11 @@ public class JejuOlleDatabaseService {
         return null;
     }
 
-    private void parseAndSaveGpxFile(Resource resource, String courseNumber, String title, boolean wheelchairAccessible) {
+    private void parseAndSaveGpxFile(InputStream inputStream, String courseNumber, String title, boolean wheelchairAccessible) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(resource.getInputStream());
+            Document document = builder.parse(inputStream);
 
             List<JeJuOlleCourseData> jeJuOlleCourseDataList = new ArrayList<>();
             jeJuOlleCourseDataList.addAll(parseWaypoints(document, "wpt"));
@@ -238,7 +238,7 @@ public class JejuOlleDatabaseService {
             }
         } catch (Exception e) {
             log.error("===============================================================================");
-            log.error("Error parsing GPX file: {}", resource.getFilename(), e);
+            log.error("Error parsing GPX file for course: {}", courseNumber, e);
             log.error("===============================================================================");
         }
     }
@@ -319,8 +319,6 @@ public class JejuOlleDatabaseService {
             }
 
             updateAdditionalDataLoadedStatus();
-            log.info("===============================================================================");
-            log.info("Olle additional Data loaded successfully");
             log.info("===============================================================================");
 
         } else {
