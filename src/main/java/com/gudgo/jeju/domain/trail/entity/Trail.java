@@ -1,5 +1,6 @@
 package com.gudgo.jeju.domain.trail.entity;
 
+import com.gudgo.jeju.domain.planner.course.entity.Course;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,4 +37,20 @@ public class Trail {
     private double latitude;
 
     private double longitude;
+
+    public Trail withStarAvg(double avgStar) {
+        return Trail.builder()
+                .id(id)
+                .title(title)
+                .summary(summary)
+                .address(address)
+                .time(time)
+                .content(content)
+                .avgStar(avgStar)
+                .tel(tel)
+                .latitude(latitude)
+                .longitude(longitude)
+                .build();
+
+    }
 }

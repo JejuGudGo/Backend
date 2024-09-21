@@ -37,7 +37,8 @@ public class EventQueryService {
                     e.getId(),
                     e.getTitle(),
                     e.getOrganization(),
-                    e.getPeriod(),
+                    e.getStartDate(),
+                    e.getFinishDate(),
                     e.getImageUrl(),
                     e.getInformationUrl(),
                     e.getType()
@@ -46,6 +47,7 @@ public class EventQueryService {
 
         return PaginationUtil.listToPage(eventResponses, pageable);
     }
+
 
 
 }

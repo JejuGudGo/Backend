@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Builder
@@ -20,7 +22,9 @@ public class Event {
 
     private String organization;
 
-    private String period;
+    private LocalDate startDate;
+
+    private LocalDate finishDate;
 
     private String imageUrl;
 
@@ -28,4 +32,17 @@ public class Event {
 
     @Enumerated(value = EnumType.STRING)
     private EventType type;
+
+    public Event withType(EventType type) {
+        return Event.builder()
+                .id(id)
+                .title(title)
+                .organization(organization)
+                .startDate(startDate)
+                .finishDate(finishDate)
+                .imageUrl(imageUrl)
+                .informationUrl(informationUrl)
+                .type(type)
+                .build();
+    }
 }
