@@ -26,8 +26,6 @@ public class Trail {
 
     private String address;
 
-    private String time;
-
     private String content;
 
     private double avgStar;
@@ -38,18 +36,26 @@ public class Trail {
 
     private double longitude;
 
+    private String informationUrl;
+
+    private String useTime;
+
+    private String fee;
+
     public Trail withStarAvg(double avgStar) {
         return Trail.builder()
                 .id(id)
                 .title(title)
-                .summary(summary)
                 .address(address)
-                .time(time)
+                .summary(summary)
                 .content(content)
                 .avgStar(avgStar)
                 .tel(tel)
                 .latitude(latitude)
                 .longitude(longitude)
+                .informationUrl(informationUrl)
+                .useTime(useTime)
+                .fee(fee)
                 .build();
 
     }
