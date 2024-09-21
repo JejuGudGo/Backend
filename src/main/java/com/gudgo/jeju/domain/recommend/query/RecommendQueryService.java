@@ -4,9 +4,11 @@ package com.gudgo.jeju.domain.recommend.query;
 import com.gudgo.jeju.domain.recommend.dto.response.RecommendResponse;
 import com.gudgo.jeju.domain.recommend.entity.QRecommend;
 import com.gudgo.jeju.domain.recommend.entity.Recommend;
+import com.gudgo.jeju.domain.recommend.repository.RecommendRepository;
 import com.gudgo.jeju.global.util.PaginationUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +22,7 @@ public class RecommendQueryService {
     private final JPAQueryFactory queryFactory;
 
     @Autowired
-    RecommendQueryService(EntityManager entityManager){
+    RecommendQueryService(EntityManager entityManager, RecommendRepository recommendRepository){
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
@@ -51,4 +53,7 @@ public class RecommendQueryService {
 
         return PaginationUtil.listToPage(recommendResponses, pageable);
     }
+
+
+
 }
