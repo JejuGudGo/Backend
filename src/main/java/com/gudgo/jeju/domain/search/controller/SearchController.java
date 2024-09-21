@@ -18,14 +18,18 @@ public class SearchController {
 
     @GetMapping("")
     public Page<SearchListResponse> search(
-            @RequestParam("latitude") double latitude,
-            @RequestParam("longitude") double longitude,
-            @RequestParam("query") String title,
-            @RequestParam("category1") String category1,
-            @RequestParam("category2") String category2,
-            @RequestParam("category3") List<String> category3,
+            @RequestParam(value = "latitude", required = false) String latitude,
+            @RequestParam(value = "longitude", required = false) String longitude,
+            @RequestParam(value = "query", required = false) String title,
+            @RequestParam(value = "category1") String category1,
+            @RequestParam(value = "category2", required = false) List<String> category2,
+            @RequestParam(value = "category3", required = false) List<String> category3,
             Pageable pageable
     ) {
+        if (category3 == null) {
+            category3 = List.of();
+        }
+
         return searchQueryService.search(title, category1, category2, category3, latitude, longitude, pageable);
     }
 

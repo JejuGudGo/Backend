@@ -19,7 +19,7 @@ public class PlannerSearchController {
     private final PlannerSearchQueryService plannerSearchQueryService;
 
     @GetMapping("")
-    public Page<PlannerSearchResponse> getPlanners(@RequestParam("title") String title, Pageable pageable) {
+    public Page<PlannerSearchResponse> getPlanners(@RequestParam(value = "title", required = false) String title, Pageable pageable) {
         return plannerSearchQueryService.searchPlannersByTitle(pageable, title);
     }
 }

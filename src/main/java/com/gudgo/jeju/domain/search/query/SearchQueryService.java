@@ -1,5 +1,7 @@
 package com.gudgo.jeju.domain.search.query;
 
+import com.gudgo.jeju.domain.planner.course.entity.CourseType;
+import com.gudgo.jeju.domain.planner.course.entity.QCourse;
 import com.gudgo.jeju.domain.planner.planner.entity.Planner;
 import com.gudgo.jeju.domain.planner.planner.entity.PlannerType;
 import com.gudgo.jeju.domain.planner.planner.entity.QPlanner;
@@ -9,12 +11,16 @@ import com.gudgo.jeju.domain.review.entity.QReviewTag;
 import com.gudgo.jeju.domain.review.entity.ReviewFilterTag;
 import com.gudgo.jeju.domain.review.query.ReviewQueryService;
 import com.gudgo.jeju.domain.search.dto.response.SearchListResponse;
-import com.gudgo.jeju.domain.trail.entity.*;
+import com.gudgo.jeju.domain.trail.entity.QTrail;
+import com.gudgo.jeju.domain.trail.entity.QTrailImage;
+import com.gudgo.jeju.domain.trail.entity.QTrailTag;
+import com.gudgo.jeju.domain.trail.entity.Trail;
 import com.gudgo.jeju.global.util.PaginationUtil;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -39,151 +45,79 @@ public class SearchQueryService {
         this.reviewQueryService = reviewQueryService;
     }
 
-    public Page<SearchListResponse> search(String title, String category1, String category2, List<String> category3, Double latitude, Double longitude, Pageable pageable) {
-        if (latitude != null && longitude != null) {
-            return searchWithCoordinates(title, category1, category2, category3, latitude, longitude, pageable);
-        } else {
-            return searchWithoutCoordinates(title, category1, category2, category3, pageable);
-        }
-    }
+    public Page<SearchListResponse> search(String title, String category1, List<String> category2, List<String> category3, String latitude, String longitude, Pageable pageable) {
+        JPAQuery<Planner> query = queryFactory.selectFrom(QPlanner.planner)
+                .leftJoin(QCourse.course).on(QPlanner.planner.course.eq(QCourse.course))
+                .where(QPlanner.planner.isDeleted.eq(false));
 
-    private Page<SearchListResponse> searchWithCoordinates(String title, String category1, String category2, List<String> category3, Double latitude, Double longitude, Pageable pageable) {
-        QPlanner qPlanner = QPlanner.planner;
-        QTrail qTrail = QTrail.trail;
-        QReview qReview = QReview.review;
-        QPlannerTag qPlannerTag = QPlannerTag.plannerTag;
-        QReviewTag qReviewTag = QReviewTag.reviewTag;
-        QTrailTag qTrailTag = QTrailTag.trailTag1;
-        QTrailImage qTrailImage = QTrailImage.trailImage;
+        if (category1.equals("USER")) {
+            query.where(QCourse.course.type.eq(CourseType.USER)
+                    .and(QCourse.course.originalCreatorId.eq(QPlanner.planner.user.id)));
 
-        List<ReviewFilterTag> reviewFilterTags = category3.stream()
-                .map(ReviewFilterTag::valueOf)
-                .collect(Collectors.toList());
+        } else if (category1.equals("OLLE")) {
+            query.where(QCourse.course.type.eq(CourseType.OLLE)
+                    .and(QCourse.course.originalCreatorId.isNotNull())
+                    .and(QCourse.course.olleCourseId.isNotNull()));
 
-        if ("OLLE".equalsIgnoreCase(category1)) {
-            List<Planner> planners = queryFactory
-                    .selectFrom(qPlanner)
-                    .leftJoin(qReview.planner, qPlanner)
-                    .leftJoin(qReviewTag.review, qReview)
-                    .leftJoin(qPlannerTag).on(qPlannerTag.planner.eq(qPlanner))
-                    .where(qPlanner.course.title.containsIgnoreCase(title)
-                            .and(qPlanner.course.olleCourseId.isNotNull())
-                            .and(qPlanner.course.originalCreatorId.isNotNull())
-                            .and(qPlanner.isDeleted.isFalse())
-                            .and(qReviewTag.filterTag.in(reviewFilterTags))
-                            .and(withinRadius(qPlanner.course.startLatitude, qPlanner.course.startLongitude, latitude, longitude))
-                    )
-                    .groupBy(qPlanner.id)
-                    .orderBy(qReview.count().desc())
-                    .fetch();
+        } else if (category1.equals("TRAIL")) {
+            return PaginationUtil.listToPage(convertToTrailResponse(
+                    queryFactory.selectFrom(QTrail.trail).fetch()), pageable);
 
-            return PaginationUtil.listToPage(convertToPlannerResponse(planners), pageable);
+        } else if (category1.equals("ALL")) {
+            List<SearchListResponse> userAndOlleResults = convertToPlannerResponse(
+                    queryFactory.selectFrom(QPlanner.planner)
+                            .leftJoin(QCourse.course).on(QPlanner.planner.course.eq(QCourse.course))
+                            .where(QPlanner.planner.isDeleted.eq(false))
+                            .fetch());
 
-        } else if ("TRAIL".equalsIgnoreCase(category1)) {
-            List<Trail> trails = queryFactory
-                    .selectFrom(qTrail)
-                    .leftJoin(qTrailTag.trail, qTrail)
-                    .leftJoin(qReview.trail, qTrail)
-                    .where(qTrail.title.containsIgnoreCase(title)
-                            .and(qTrailTag.trailTag.eq(TrailType.valueOf(category2)))
-                            .and(qReviewTag.filterTag.in(reviewFilterTags))
-                            .and(withinRadius(qTrail.latitude, qTrail.longitude, latitude, longitude))
-                    )
-                    .groupBy(qTrail.id)
-                    .orderBy(qReview.count().desc())
-                    .fetch();
+            List<SearchListResponse> trailResults = convertToTrailResponse(
+                    queryFactory.selectFrom(QTrail.trail)
+                            .fetch());
 
-            return PaginationUtil.listToPage(convertToTrailResponse(trails), pageable);
+            userAndOlleResults.addAll(trailResults);
 
-        } else if ("USER".equalsIgnoreCase(category1)) {
-            List<Planner> planners = queryFactory
-                    .selectFrom(qPlanner)
-                    .leftJoin(qReview.planner, qPlanner)
-                    .leftJoin(qReviewTag.review, qReview)
-                    .leftJoin(qPlannerTag.planner, qPlanner)
-                    .where(qPlanner.course.title.containsIgnoreCase(title)
-                            .and(qPlanner.course.originalCreatorId.eq(qPlanner.user.id))
-                            .and(qPlannerTag.code.eq(PlannerType.valueOf(category2)))
-                            .and(qPlanner.isDeleted.isFalse())
-                            .and(qReviewTag.filterTag.in(reviewFilterTags))
-                            .and(withinRadius(qPlanner.course.startLatitude, qPlanner.course.startLongitude, latitude, longitude))
-                    )
-                    .groupBy(qPlanner.id)
-                    .orderBy(qReview.count().desc())
-                    .fetch();
-
-            return PaginationUtil.listToPage(convertToPlannerResponse(planners), pageable);
+            return PaginationUtil.listToPage(userAndOlleResults, pageable);
         }
 
-        return PaginationUtil.listToPage(List.of(), pageable);
-    }
+        if (category2 != null && !category2.isEmpty()) {
+            List<PlannerType> category2EnumList = category2.stream()
+                    .map(PlannerType::valueOf)
+                    .collect(Collectors.toList());
 
-    private Page<SearchListResponse> searchWithoutCoordinates(String title, String category1, String category2, List<String> category3, Pageable pageable) {
-        QPlanner qPlanner = QPlanner.planner;
-        QTrail qTrail = QTrail.trail;
-        QReview qReview = QReview.review;
-        QPlannerTag qPlannerTag = QPlannerTag.plannerTag;
-        QReviewTag qReviewTag = QReviewTag.reviewTag;
-        QTrailTag qTrailTag = QTrailTag.trailTag1;
-        QTrailImage qTrailImage = QTrailImage.trailImage;
-
-        List<ReviewFilterTag> reviewFilterTags = category3.stream()
-                .map(ReviewFilterTag::valueOf)
-                .collect(Collectors.toList());
-
-        if ("OLLE".equalsIgnoreCase(category1)) {
-            List<Planner> planners = queryFactory
-                    .selectFrom(qPlanner)
-                    .leftJoin(qReview.planner, qPlanner)
-                    .leftJoin(qReviewTag.review, qReview)
-                    .leftJoin(qPlannerTag).on(qPlannerTag.planner.eq(qPlanner))
-                    .where(qPlanner.course.title.containsIgnoreCase(title)
-                            .and(qPlanner.course.olleCourseId.isNotNull())
-                            .and(qPlanner.course.originalCreatorId.isNotNull())
-                            .and(qPlanner.isDeleted.isFalse())
-                            .and(qReviewTag.filterTag.in(reviewFilterTags))
-                    )
-                    .groupBy(qPlanner.id)
-                    .orderBy(qReview.count().desc())
-                    .fetch();
-
-            return PaginationUtil.listToPage(convertToPlannerResponse(planners), pageable);
-
-        } else if ("TRAIL".equalsIgnoreCase(category1)) {
-            List<Trail> trails = queryFactory
-                    .selectFrom(qTrail)
-                    .leftJoin(qTrailTag.trail, qTrail)
-                    .leftJoin(qReview.trail, qTrail)
-                    .where(qTrail.title.containsIgnoreCase(title)
-                            .and(qTrailTag.trailTag.eq(TrailType.valueOf(category2)))
-                            .and(qReviewTag.filterTag.in(reviewFilterTags))
-                    )
-                    .groupBy(qTrail.id)
-                    .orderBy(qReview.count().desc())
-                    .fetch();
-
-            return PaginationUtil.listToPage(convertToTrailResponse(trails), pageable);
-
-        } else if ("USER".equalsIgnoreCase(category1)) {
-            List<Planner> planners = queryFactory
-                    .selectFrom(qPlanner)
-                    .leftJoin(qReview.planner, qPlanner)
-                    .leftJoin(qReviewTag.review, qReview)
-                    .leftJoin(qPlannerTag.planner, qPlanner)
-                    .where(qPlanner.course.title.containsIgnoreCase(title)
-                            .and(qPlanner.course.originalCreatorId.eq(qPlanner.user.id))
-                            .and(qPlannerTag.code.eq(PlannerType.valueOf(category2)))
-                            .and(qPlanner.isDeleted.isFalse())
-                            .and(qReviewTag.filterTag.in(reviewFilterTags))
-                    )
-                    .groupBy(qPlanner.id)
-                    .orderBy(qReview.count().desc())
-                    .fetch();
-
-            return PaginationUtil.listToPage(convertToPlannerResponse(planners), pageable);
+            query.leftJoin(QPlannerTag.plannerTag)
+                    .on(QPlanner.planner.eq(QPlannerTag.plannerTag.planner))
+                    .where(QPlannerTag.plannerTag.code.in(category2EnumList));
         }
 
-        return PaginationUtil.listToPage(List.of(), pageable);
+        if (category3 != null && !category3.isEmpty()) {
+            List<ReviewFilterTag> category3EnumList = category3.stream()
+                    .map(ReviewFilterTag::valueOf)
+                    .collect(Collectors.toList());
+
+            query.leftJoin(QReview.review)
+                    .on(QReview.review.planner.eq(QPlanner.planner))
+                    .leftJoin(QReviewTag.reviewTag)
+                    .on(QReview.review.id.eq(QReviewTag.reviewTag.review.id))
+                    .where(QReviewTag.reviewTag.filterTag.in(category3EnumList));
+        }
+
+        if (latitude != null && !latitude.isEmpty() && longitude != null && !longitude.isEmpty()) {
+            try {
+                double lat = Double.parseDouble(latitude);
+                double lon = Double.parseDouble(longitude);
+                query.where(withinRadius(QCourse.course.startLatitude, QCourse.course.startLongitude, lat, lon));
+
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("위경도 오류");
+            }
+        }
+
+        if (title != null && !title.isEmpty()) {
+            query.where(QCourse.course.title.containsIgnoreCase(title));
+        }
+
+        List<SearchListResponse> results = convertToPlannerResponse(query.fetch());
+        return PaginationUtil.listToPage(results, pageable);
     }
 
     private BooleanExpression withinRadius(NumberPath<Double> entityLatitude, NumberPath<Double> entityLongitude, double centerLatitude, double centerLongitude) {
