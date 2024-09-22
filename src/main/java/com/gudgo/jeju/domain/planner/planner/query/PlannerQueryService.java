@@ -18,7 +18,6 @@ import com.gudgo.jeju.domain.planner.spot.entity.QSpot;
 import com.gudgo.jeju.domain.planner.spot.entity.Spot;
 import com.gudgo.jeju.domain.profile.entity.Profile;
 import com.gudgo.jeju.domain.profile.entity.QProfile;
-import com.gudgo.jeju.domain.review.entity.QReview;
 import com.gudgo.jeju.domain.review.query.ReviewQueryService;
 import com.gudgo.jeju.domain.user.dto.UserInfoResponseDto;
 import com.gudgo.jeju.domain.user.entity.QUser;
@@ -29,8 +28,9 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,6 +56,10 @@ public class PlannerQueryService {
                 .where(qPlanner.id.eq(plannerId))
                 .fetchOne();
 
+        if (planner == null || planner.getCourse() == null) {
+            throw new EntityNotFoundException("Planner or Course not found for id: " + plannerId);
+        }
+
         Long courseId = planner.getCourse().getId();
 
         List<Spot> spots = queryFactory
@@ -64,6 +68,7 @@ public class PlannerQueryService {
                 .fetch();
 
         List<SpotPositionResponse> spotResponses = spots.stream()
+                .filter(Objects::nonNull)
                 .map(spot -> new SpotPositionResponse(
                         spot.getOrderNumber(),
                         spot.getTitle(),
@@ -87,8 +92,8 @@ public class PlannerQueryService {
                 planner.getCourse().getTotalDistance(),
                 planner.getTime(),
                 planner.getCourse().getStarAvg(),
-                reviewCount,
-                tags,
+                reviewCount != null ? reviewCount : 0L,
+                tags != null ? tags : Collections.emptyList(),
                 spotResponses
         );
     }
@@ -110,10 +115,18 @@ public class PlannerQueryService {
                 .where(qUser.id.eq(userId))
                 .fetchOne();
 
+        if (user == null || user.getProfile() == null) {
+            throw new EntityNotFoundException("User or Profile not found for id: " + userId);
+        }
+
         Profile profile = queryFactory
                 .selectFrom(qProfile)
                 .where(qProfile.id.eq(user.getProfile().getId()))
                 .fetchOne();
+
+        if (profile == null) {
+            throw new EntityNotFoundException("Profile not found for user id: " + userId);
+        }
 
         UserInfoResponseDto userInfoResponseDto = new UserInfoResponseDto(
                 userId,
@@ -128,12 +141,10 @@ public class PlannerQueryService {
         return new PlannerUserResponse(
                 userInfoResponseDto,
                 profile.getWalkingTime(),
-                profile.getWalkingCount(),
-                profile.getBadgeCount()
-
+                profile.getWalkingCount() != null ? profile.getWalkingCount() : 0,
+                profile.getBadgeCount() != null ? profile.getBadgeCount() : 0
         );
     }
-
 
     public List<PlannerListResponse> getUserCreatedPlanners(Long userId) {
         QPlanner qPlanner = QPlanner.planner;
@@ -157,12 +168,6 @@ public class PlannerQueryService {
                         .and(qPlanner.isCompleted.isTrue()))
                 .fetch();
 
-//        List<Planner> planners = queryFactory
-//                .selectFrom(qPlanner)
-//                .where(qPlanner.user.id.eq(userId)
-//                        .and(qPlanner.isDeleted.isFalse()))
-//                .fetch();
-
         return convertPlannersToResponses(planners);
     }
 
@@ -173,6 +178,7 @@ public class PlannerQueryService {
         List<Planner> topPlanners = queryFactory
                 .selectFrom(qPlanner)
                 .join(qPlanner.course, qCourse)
+                .where(qCourse.starAvg.isNotNull())
                 .orderBy(qCourse.starAvg.desc())
                 .limit(10)
                 .fetch();
@@ -180,15 +186,18 @@ public class PlannerQueryService {
         return convertPlannersToResponses(topPlanners);
     }
 
-
     private List<PlannerListResponse> convertPlannersToResponses(List<Planner> planners) {
         return planners.stream()
                 .map(this::convertUserPlannerToResponse)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
-
     private PlannerListResponse convertUserPlannerToResponse(Planner planner) {
+        if (planner == null || planner.getCourse() == null) {
+            return null;
+        }
+
         Course course = planner.getCourse();
         String distance = getDistance(course);
         Long reviewCount = reviewQueryService.getUserCourseReviewCount(planner.getId());
@@ -200,28 +209,43 @@ public class PlannerQueryService {
                 distance,
                 planner.getTime(),
                 course.getStarAvg(),
-                reviewCount,
+                reviewCount != null ? reviewCount : 0L,
                 planner.isCompleted(),
                 planner.isPrivate(),
-                tagResponses
+                tagResponses != null ? tagResponses : Collections.emptyList()
         );
     }
 
     private String getDistance(Course course) {
+        if (course == null || course.getType() == null) {
+            return null;
+        }
+
         if (course.getType().equals(CourseType.JEJU) || course.getType().equals(CourseType.HAYOUNG)) {
-            JeJuOlleCourse jeJuOlleCourse = jeJuOlleCourseRepository.findById(course.getId())
-                    .orElseThrow(EntityNotFoundException::new);
-            return jeJuOlleCourse.getTotalDistance();
+            try {
+                JeJuOlleCourse jeJuOlleCourse = jeJuOlleCourseRepository.findById(course.getId())
+                        .orElseThrow(() -> new EntityNotFoundException("JeJuOlleCourse not found for id: " + course.getId()));
+                return jeJuOlleCourse.getTotalDistance();
+            } catch (EntityNotFoundException e) {
+                // Log the exception
+                return null;
+            }
         }
         return null;
     }
 
     private List<String> getPlannerTags(Planner planner) {
+        if (planner == null) {
+            return Collections.emptyList();
+        }
+
         QPlannerTag qPlannerTag = QPlannerTag.plannerTag;
-        return queryFactory
+        List<String> tags = queryFactory
                 .select(qPlannerTag.code.stringValue())
                 .from(qPlannerTag)
                 .where(qPlannerTag.planner.eq(planner))
                 .fetch();
+
+        return tags != null ? tags : Collections.emptyList();
     }
 }
