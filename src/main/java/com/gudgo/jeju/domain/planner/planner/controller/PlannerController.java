@@ -32,14 +32,14 @@ public class PlannerController {
 
     // 특정 유저 생성 코스
     @GetMapping("/users/{userId}/planners/created-planners")
-    public ResponseEntity<List<PlannerListResponse>> getUserCreatedPlanners(@PathVariable("usreId") Long usreId) {
-        return ResponseEntity.ok(plannerQueryService.getUserCreatedPlanners(usreId));
+    public ResponseEntity<List<PlannerListResponse>> getUserCreatedPlanners(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok(plannerQueryService.getUserCreatedPlanners(userId));
     }
 
     // 특정 유저 이용 코스
     @GetMapping("/users/{userId}/planners/completed-planners")
-    public ResponseEntity<List<PlannerListResponse>> getUserCompletedPlanners(@PathVariable("usreId") Long usreId) {
-        return ResponseEntity.ok(plannerQueryService.getUserCompletedPlanners(usreId));
+    public ResponseEntity<List<PlannerListResponse>> getUserCompletedPlanners(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok(plannerQueryService.getUserCompletedPlanners(userId));
     }
 
     @GetMapping("/users/{userId}/planners/{plannerId}")
