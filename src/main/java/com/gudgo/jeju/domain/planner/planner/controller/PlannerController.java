@@ -43,13 +43,13 @@ public class PlannerController {
     }
 
     @GetMapping("/users/{userId}/planners/{plannerId}")
-    public ResponseEntity<PlannerDetailResponse> getPlanner(@PathVariable("usreId") Long userId, @PathVariable("plannerId") Long plannerId) {
+    public ResponseEntity<PlannerDetailResponse> getPlanner(@PathVariable("userId") Long userId, @PathVariable("plannerId") Long plannerId) {
         PlannerDetailResponse response = plannerQueryService.getUserPlannerDetail(plannerId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/users/{userId}/planners/top10")
-    public ResponseEntity<List<PlannerListResponse>> getTopRatedPlanners(@PathVariable("usreId") Long userId) {
+    public ResponseEntity<List<PlannerListResponse>> getTopRatedPlanners(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok(plannerQueryService.getTopRatedPlanners());
     }
 
