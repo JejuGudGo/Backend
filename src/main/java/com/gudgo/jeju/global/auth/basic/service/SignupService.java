@@ -5,6 +5,7 @@ import com.gudgo.jeju.domain.badge.entity.BadgeCode;
 import com.gudgo.jeju.domain.badge.event.BadgeEvent;
 import com.gudgo.jeju.domain.profile.entity.Profile;
 import com.gudgo.jeju.domain.profile.repository.ProfileRepository;
+import com.gudgo.jeju.domain.todo.event.TodoEvent;
 import com.gudgo.jeju.domain.user.entity.Role;
 import com.gudgo.jeju.domain.user.entity.User;
 import com.gudgo.jeju.domain.user.repository.UserRepository;
@@ -75,6 +76,9 @@ public class SignupService {
 
         // 회원가입 시 뱃지 이벤트 발생
         eventPublisher.publishEvent(new BadgeEvent(user.getId(), BadgeCode.B01));
+
+        // 회원가입 시 체크리스트 생성
+        eventPublisher.publishEvent(new TodoEvent(user.getId()));
 
         SignupResponse response = new SignupResponse(nickname);
         return response;

@@ -3,7 +3,9 @@ package com.gudgo.jeju.domain.todo.service;
 import com.gudgo.jeju.domain.todo.dto.request.TodoCreateRequestDto;
 import com.gudgo.jeju.domain.todo.dto.response.TodoResponseDto;
 import com.gudgo.jeju.domain.todo.entity.Todo;
+import com.gudgo.jeju.domain.todo.entity.TodoConstants;
 import com.gudgo.jeju.domain.todo.entity.TodoType;
+import com.gudgo.jeju.domain.todo.event.TodoEvent;
 import com.gudgo.jeju.domain.todo.repository.TodoRepository;
 import com.gudgo.jeju.domain.todo.dto.request.TodoUpdateRequestDto;
 import com.gudgo.jeju.domain.user.entity.User;
@@ -15,9 +17,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,6 +31,29 @@ public class TodoService {
     private final TokenExtractor tokenExtractor;
     private final SubjectExtractor subjectExtractor;
     private final UserRepository userRepository;
+
+
+    // TODO 부여 이벤트
+    @EventListener
+    @Transactional
+    public void handleTodoEvent(TodoEvent event) {
+        Long userId = event.getUserId();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
+
+        List<Todo> todos = TodoConstants.DEFAULT_TODO_ITEMS.stream()
+                .map(item -> Todo.builder()
+                        .user(user)
+                        .content(item)
+                        .isFinished(false)
+                        .isDeleted(false)
+                        .build())
+                .collect(Collectors.toList());
+
+        todoRepository.saveAll(todos);
+    }
+
 
     @Transactional
     public TodoResponseDto create(HttpServletRequest request, TodoCreateRequestDto requestDto) {

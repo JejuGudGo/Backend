@@ -53,7 +53,6 @@ public class PlannerController {
         return ResponseEntity.ok(plannerQueryService.getTopRatedPlanners());
     }
 
-
     // 마이걷고 탭 조회
     @GetMapping("/users/{userId}/planners/mygudgo")
     public ResponseEntity<PlannerUserResponse> getPlannerUserInfo(@PathVariable("userId") Long userId) {
