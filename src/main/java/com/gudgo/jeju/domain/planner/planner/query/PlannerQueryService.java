@@ -78,9 +78,10 @@ public class PlannerQueryService {
                 ))
                 .toList();
 
+        // PlannerTag 쿼리 수정
         List<PlannerType> tags = queryFactory
                 .select(qPlannerTag.code)
-                .from(qPlanner)
+                .from(qPlannerTag)
                 .where(qPlannerTag.planner.id.eq(plannerId))
                 .fetch();
 
