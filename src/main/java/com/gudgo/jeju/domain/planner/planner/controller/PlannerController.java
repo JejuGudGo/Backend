@@ -42,14 +42,14 @@ public class PlannerController {
         return ResponseEntity.ok(plannerQueryService.getUserCompletedPlanners(usreId));
     }
 
-    @GetMapping("/planners/{plannerId}")
-    public ResponseEntity<PlannerDetailResponse> getPlanner(@PathVariable("plannerId") Long plannerId) {
+    @GetMapping("/users/{userId}/planners/{plannerId}")
+    public ResponseEntity<PlannerDetailResponse> getPlanner(@PathVariable("usreId") Long userId, @PathVariable("plannerId") Long plannerId) {
         PlannerDetailResponse response = plannerQueryService.getUserPlannerDetail(plannerId);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/planners/top10")
-    public ResponseEntity<List<PlannerListResponse>> getTopRatedPlanners() {
+    @GetMapping("/users/{userId}/planners/top10")
+    public ResponseEntity<List<PlannerListResponse>> getTopRatedPlanners(@PathVariable("usreId") Long userId) {
         return ResponseEntity.ok(plannerQueryService.getTopRatedPlanners());
     }
 
@@ -70,7 +70,7 @@ public class PlannerController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/planners/{plannerId}")
+    @DeleteMapping("/users/{userId}/planners/{plannerId}")
     public ResponseEntity<?> delete(@PathVariable("userId") Long userId, @PathVariable("plannerId") Long plannerId) {
         plannerService.delete(plannerId);
 
