@@ -6,6 +6,7 @@ import com.gudgo.jeju.domain.planner.planner.entity.PlannerType;
 import java.util.List;
 
 public record PlannerCreateResponse(
+        Long plannerId,
         String title,
         String content,
         List<PlannerType> tags,
