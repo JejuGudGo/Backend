@@ -28,7 +28,7 @@ public class SpotQueryService {
         QSpot qSpot = QSpot.spot;
 
         Long lastSpotId = queryFactory
-                .select(qSpot.orderNumber)
+                .select(qSpot.id)
                 .from(qSpot)
                 .where(qSpot.course.id.eq(courseId)
                         .and(qSpot.isDeleted.isFalse()))

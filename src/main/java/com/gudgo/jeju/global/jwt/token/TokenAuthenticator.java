@@ -25,10 +25,11 @@ public class TokenAuthenticator {
         }
 
         Long userId = subjectExtractor.getUserIdFromToken(accessToken);
-        Optional<User> user = userRepository.findById(userId);
-        if (user.isEmpty()) {
-            throw new EntityNotFoundException();
-        }
+        User user = userRepository.findById(userId)
+                .orElseThrow(EntityNotFoundException::new);
+//        if (user==null) {
+//            throw new EntityNotFoundException();
+//        }
 
         UsernamePasswordAuthenticationToken authenticationToken
                 = new UsernamePasswordAuthenticationToken(user, accessToken, new ArrayList<>());
