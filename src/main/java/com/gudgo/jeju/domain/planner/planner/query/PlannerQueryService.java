@@ -70,6 +70,7 @@ public class PlannerQueryService {
         List<SpotPositionResponse> spotResponses = spots.stream()
                 .filter(Objects::nonNull)
                 .map(spot -> new SpotPositionResponse(
+                        spot.getId(),
                         spot.getOrderNumber(),
                         spot.getTitle(),
                         spot.getLatitude(),

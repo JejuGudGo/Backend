@@ -62,6 +62,7 @@ public class SpotService {
 
         return spots.stream()
                 .map(spot -> new SpotPositionResponse(
+                        spot.getId(),
                         spot.getOrderNumber(),
                         spot.getTitle(),
                         spot.getLatitude(),
