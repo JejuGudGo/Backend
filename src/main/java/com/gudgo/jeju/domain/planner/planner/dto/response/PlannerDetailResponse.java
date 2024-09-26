@@ -7,6 +7,8 @@ import java.time.LocalTime;
 import java.util.List;
 
 public record PlannerDetailResponse(
+        Long plannerId,
+        Long courseId,
         String title,
         String summary,
         String distance,

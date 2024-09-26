@@ -88,6 +88,8 @@ public class PlannerQueryService {
         Long reviewCount = reviewQueryService.getUserCourseReviewCount(plannerId);
 
         return new PlannerDetailResponse(
+                plannerId,
+                planner.getCourse().getId(),
                 planner.getCourse().getTitle(),
                 planner.getSummary(),
                 planner.getCourse().getTotalDistance(),
