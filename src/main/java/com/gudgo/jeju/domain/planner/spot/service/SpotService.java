@@ -137,17 +137,14 @@ public class SpotService {
             courseRepository.save(course);
         }
 
+        courseService.calculateTimeLabs(course.getId(), LocalTime.now());
+
         // 마지막 스팟일 경우, 걷기 계획 완료 처리
         if (lastSpotId.equals(spotId)) {
             planner = planner.withCompleted(true);
+            planner = planner.withTime(course.getTimeLabs());
             isLastSpot = true;
 
-            if (spot.getOrderNumber() == 0) {
-                course = course.withTimeLabs(LocalTime.now());
-                courseRepository.save(course);
-            }
-
-            courseService.calculateTimeLabs(course.getId(), LocalTime.now());
             plannerRepository.save(planner);
 
             // 걷기 계획 완료 시, 프로필 업뎃 이벤트 발생
