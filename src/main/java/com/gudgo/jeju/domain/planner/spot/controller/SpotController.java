@@ -33,10 +33,9 @@ public class SpotController {
     @PatchMapping(value = "/courses/{courseId}/spots/{spotId}/status")
     public ResponseEntity<LastSpotResponse> validateSpot(
             @PathVariable("courseId") Long courseId,
-            @PathVariable("spotId") Long spotId,
-            @RequestBody SpotTimeLabsUpdateRequest request
+            @PathVariable("spotId") Long spotId
     ){
-        LastSpotResponse response = spotService.validateSpot(courseId, spotId, request);
+        LastSpotResponse response = spotService.validateSpot(courseId, spotId);
 
         return ResponseEntity.ok(response);
     }

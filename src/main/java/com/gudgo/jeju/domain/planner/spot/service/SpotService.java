@@ -115,7 +115,7 @@ public class SpotService {
 
 
     @Transactional
-    public LastSpotResponse validateSpot(Long courseId, Long spotId, SpotTimeLabsUpdateRequest request) {
+    public LastSpotResponse validateSpot(Long courseId, Long spotId) {
         boolean isLastSpot = false;
         Long lastSpotId = spotQueryService.getLastSpotId(courseId);
 
@@ -137,11 +137,12 @@ public class SpotService {
             planner = planner.withCompleted(true);
             isLastSpot = true;
 
-            if (spot.getOrderNumber() != 0) {
-                courseService.calculateTimeLabs(course.getId(), request.time());
+            if (spot.getOrderNumber() == 0) {
+                course = course.withTimeLabs(LocalTime.now());
+                courseRepository.save(course);
             }
 
-            courseRepository.save(course);
+            courseService.calculateTimeLabs(course.getId(), LocalTime.now());
             plannerRepository.save(planner);
 
             // 걷기 계획 완료 시, 프로필 업뎃 이벤트 발생
