@@ -119,6 +119,12 @@ public class SpotService {
         boolean isLastSpot = false;
         Long lastSpotId = spotQueryService.getLastSpotId(courseId);
 
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        Planner planner = plannerRepository.findByCourse(course)
+                .orElseThrow(EntityNotFoundException::new);
+
         Spot spot = spotRepository.findById(spotId)
                 .orElseThrow(() -> new EntityNotFoundException("Spot not found with id: " + spotId));
 
@@ -126,14 +132,13 @@ public class SpotService {
 
         spotRepository.save(spot);
 
+        if (spot.getOrderNumber() == 0) {
+            course = course.withTimeLabs(LocalTime.now());
+            courseRepository.save(course);
+        }
+
         // 마지막 스팟일 경우, 걷기 계획 완료 처리
         if (lastSpotId.equals(spotId)) {
-            Course course = courseRepository.findById(courseId)
-                    .orElseThrow(EntityNotFoundException::new);
-
-            Planner planner = plannerRepository.findByCourse(course)
-                    .orElseThrow(EntityNotFoundException::new);
-
             planner = planner.withCompleted(true);
             isLastSpot = true;
 
