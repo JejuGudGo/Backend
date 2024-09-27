@@ -189,7 +189,8 @@ public class SpotService {
         return new LastSpotResponse(isLastSpot);
     }
 
-    private void olleCourseBadge(Planner planner) {
+    @Transactional
+    public void olleCourseBadge(Planner planner) {
         int ollePlannerCount = plannerSearchQueryService.getOllePlannersCount(planner.getUser().getId());
         Long userId = planner.getUser().getId();
 
@@ -206,7 +207,8 @@ public class SpotService {
         }
     }
 
-    private void jejuCourseBadge(Planner planner) {
+    @Transactional
+    public void jejuCourseBadge(Planner planner) {
         int userPlannerCount = plannerSearchQueryService.getUserPlannersCount(planner.getUser().getId());
         Long userId = planner.getUser().getId();
 
@@ -223,7 +225,8 @@ public class SpotService {
         }
     }
 
-    private void participantBadge(Long userId) {
+    @Transactional
+    public void participantBadge(Long userId) {
         int participantCount = participantQueryService.getParticipateCount(userId);
 
         if (participantCount == 1 && badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B17)) {
@@ -239,8 +242,8 @@ public class SpotService {
         }
     }
 
-
-    private void consecutiveWalkingBadge(Long userId) {
+    @Transactional
+    public void consecutiveWalkingBadge(Long userId) {
         List<LocalDate> completedWalkDates = plannerSearchQueryService.getStartAt(userId);
 
         if (completedWalkDates.size() > 1) {
