@@ -135,6 +135,9 @@ public class SpotService {
         if (spot.getOrderNumber() == 0) {
             course = course.withTimeLabs(LocalTime.now());
             courseRepository.save(course);
+
+            planner = planner.withStartAt(LocalDate.now());
+            plannerRepository.save(planner);
         }
 
         courseService.calculateTimeLabs(course.getId(), LocalTime.now());
@@ -237,7 +240,6 @@ public class SpotService {
                 break; // 연속되지 않으면 반복 중단
             }
         }
-
 
         if (consecutiveDays == 2 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B22)) {
             eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B22));
