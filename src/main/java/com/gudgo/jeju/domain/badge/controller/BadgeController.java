@@ -2,6 +2,8 @@ package com.gudgo.jeju.domain.badge.controller;
 
 import com.gudgo.jeju.domain.badge.dto.response.BadgeResponseDto;
 import com.gudgo.jeju.domain.badge.service.BadgeService;
+import com.gudgo.jeju.global.jwt.token.SubjectExtractor;
+import com.gudgo.jeju.global.jwt.token.TokenExtractor;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,12 +22,15 @@ import java.util.List;
 public class BadgeController {
 
     private final BadgeService badgeService;
+    private final TokenExtractor tokenExtractor;
+    private final SubjectExtractor subjectExtractor;
 
     // user 뱃지 조회
     @GetMapping(value = "")
     public ResponseEntity<List<BadgeResponseDto>> get(HttpServletRequest request) {
-        return ResponseEntity.ok(badgeService.get(request));
+        String accessToken = tokenExtractor.getAccessTokenFromHeader(request);
+        Long userId = subjectExtractor.getUserIdFromToken(accessToken);
+
+        return ResponseEntity.ok(badgeService.get(userId));
     }
-
-
 }

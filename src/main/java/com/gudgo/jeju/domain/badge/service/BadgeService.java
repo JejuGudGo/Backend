@@ -53,8 +53,7 @@ public class BadgeService {
     }
 
 
-    public List<BadgeResponseDto> get(HttpServletRequest request) {
-        Long userId = getUser(request).getId();
+    public List<BadgeResponseDto> get(Long userId) {
         List<Badge> badges = badgeRepository.findByUserId(userId);
 
         List<BadgeResponseDto> result = new ArrayList<>();
@@ -81,15 +80,13 @@ public class BadgeService {
                 badge.getCode()
         );
     }
-
-    private User getUser(HttpServletRequest request) {
-        String token = tokenExtractor.getAccessTokenFromHeader(request);    // 요청 헤더에서 AccessToken 추출
-        Long userid = subjectExtractor.getUserIdFromToken(token);           // 토큰에서 userid 추출
-
-        return userRepository.findById(userid)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userid));
-    }
-
-
+//
+//    private User getUser(HttpServletRequest request) {
+//        String token = tokenExtractor.getAccessTokenFromHeader(request);    // 요청 헤더에서 AccessToken 추출
+//        Long userid = subjectExtractor.getUserIdFromToken(token);           // 토큰에서 userid 추출
+//
+//        return userRepository.findById(userid)
+//                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userid));
+//    }
 }
 
