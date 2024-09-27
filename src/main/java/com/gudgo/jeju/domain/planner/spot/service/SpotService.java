@@ -9,6 +9,7 @@ import com.gudgo.jeju.domain.planner.course.service.CourseService;
 import com.gudgo.jeju.domain.planner.event.PlannerCompletedEvent;
 import com.gudgo.jeju.domain.planner.planner.query.PlannerSearchQueryService;
 import com.gudgo.jeju.domain.planner.spot.dto.request.SpotCreateRequestDto;
+import com.gudgo.jeju.domain.planner.spot.dto.request.SpotTimeLabsUpdateRequest;
 import com.gudgo.jeju.domain.planner.spot.dto.response.LastSpotResponse;
 import com.gudgo.jeju.domain.planner.spot.dto.response.SpotCreateResponse;
 import com.gudgo.jeju.domain.planner.spot.dto.response.SpotPositionResponse;
@@ -114,7 +115,7 @@ public class SpotService {
 
 
     @Transactional
-    public LastSpotResponse validateSpot(Long courseId, Long spotId) {
+    public LastSpotResponse validateSpot(Long courseId, Long spotId, SpotTimeLabsUpdateRequest request) {
         boolean isLastSpot = false;
         Long lastSpotId = spotQueryService.getLastSpotId(courseId);
 
@@ -136,8 +137,11 @@ public class SpotService {
             planner = planner.withCompleted(true);
             isLastSpot = true;
 
-            courseService.calculateTimeLabs(courseId, LocalTime.now());
+            if (spot.getOrderNumber() != 0) {
+                courseService.calculateTimeLabs(course.getId(), request.time());
+            }
 
+            courseRepository.save(course);
             plannerRepository.save(planner);
 
             // 걷기 계획 완료 시, 프로필 업뎃 이벤트 발생

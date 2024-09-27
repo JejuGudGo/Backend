@@ -1,6 +1,8 @@
 package com.gudgo.jeju.domain.planner.spot.controller;
 
 
+import com.gudgo.jeju.domain.planner.spot.dto.request.SpotTimeLabsUpdateRequest;
+import com.gudgo.jeju.domain.planner.spot.dto.request.SpotUpdateRequestDto;
 import com.gudgo.jeju.domain.planner.spot.dto.response.LastSpotResponse;
 import com.gudgo.jeju.domain.planner.spot.dto.response.SpotPositionResponse;
 import com.gudgo.jeju.domain.planner.spot.service.SpotService;
@@ -31,9 +33,10 @@ public class SpotController {
     @PatchMapping(value = "/courses/{courseId}/spots/{spotId}/status")
     public ResponseEntity<LastSpotResponse> validateSpot(
             @PathVariable("courseId") Long courseId,
-            @PathVariable("spotId") Long spotId
+            @PathVariable("spotId") Long spotId,
+            @RequestBody SpotTimeLabsUpdateRequest request
     ){
-        LastSpotResponse response = spotService.validateSpot(courseId, spotId);
+        LastSpotResponse response = spotService.validateSpot(courseId, spotId, request);
 
         return ResponseEntity.ok(response);
     }
