@@ -129,7 +129,6 @@ public class SpotService {
                 .orElseThrow(() -> new EntityNotFoundException("Spot not found with id: " + spotId));
 
         spot = spot.withCompleted();
-
         spotRepository.save(spot);
 
         if (spot.getOrderNumber() == 0) {
@@ -142,16 +141,28 @@ public class SpotService {
 
         courseService.calculateTimeLabs(course.getId(), LocalTime.now());
 
+        log.info("====================================================================================");
+        log.info("last spot is: " + lastSpotId);
+        log.info("isLastspot is: " + isLastSpot);
+        log.info("current spot is: " + spot.getId());
+        log.info("====================================================================================");
+
         // 마지막 스팟일 경우, 걷기 계획 완료 처리
         if (lastSpotId.equals(spotId)) {
-            planner = planner.withCompleted(true);
-            planner = planner.withTime(course.getTimeLabs());
             spot = spot.withCompleted();
+            planner = planner.withTime(course.getTimeLabs());
+            planner = planner.withCompleted(true);
 
-            plannerRepository.save(planner);
             spotRepository.save(spot);
+            plannerRepository.save(planner);
 
             isLastSpot = true;
+
+            log.info("====================================================================================");
+            log.info("last spot is: " + lastSpotId);
+            log.info("isLastspot is: " + isLastSpot);
+            log.info("current spot is: " + spot.getId());
+            log.info("====================================================================================");
 
             // 걷기 계획 완료 시, 프로필 업뎃 이벤트 발생
             eventPublisher.publishEvent(new PlannerCompletedEvent(planner.getId()));
