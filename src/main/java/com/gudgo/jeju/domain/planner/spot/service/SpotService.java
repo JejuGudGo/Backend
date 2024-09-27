@@ -146,9 +146,12 @@ public class SpotService {
         if (lastSpotId.equals(spotId)) {
             planner = planner.withCompleted(true);
             planner = planner.withTime(course.getTimeLabs());
-            isLastSpot = true;
+            spot = spot.withCompleted();
 
             plannerRepository.save(planner);
+            spotRepository.save(spot);
+
+            isLastSpot = true;
 
             // 걷기 계획 완료 시, 프로필 업뎃 이벤트 발생
             eventPublisher.publishEvent(new PlannerCompletedEvent(planner.getId()));
@@ -228,27 +231,29 @@ public class SpotService {
     private void consecutiveWalkingBadge(Long userId) {
         List<LocalDate> completedWalkDates = plannerSearchQueryService.getStartAt(userId);
 
-        int consecutiveDays = 1;
-        LocalDate previousDate = completedWalkDates.get(completedWalkDates.size() - 1);
+        if (completedWalkDates.size() > 1) {
+            int consecutiveDays = 1;
+            LocalDate previousDate = completedWalkDates.get(completedWalkDates.size() - 1);
 
-        for (int i = completedWalkDates.size() - 2; i >= 0; i--) {
-            LocalDate currentDate = completedWalkDates.get(i);
-            if (currentDate.plusDays(1).equals(previousDate)) {
-                consecutiveDays++;
-                previousDate = currentDate;
-            } else {
-                break; // 연속되지 않으면 반복 중단
+            for (int i = completedWalkDates.size() - 2; i >= 0; i--) {
+                LocalDate currentDate = completedWalkDates.get(i);
+                if (currentDate.plusDays(1).equals(previousDate)) {
+                    consecutiveDays++;
+                    previousDate = currentDate;
+                } else {
+                    break; // 연속되지 않으면 반복 중단
+                }
             }
-        }
 
-        if (consecutiveDays == 2 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B22)) {
-            eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B22));
-        } else if (consecutiveDays == 4 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B23)) {
-            eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B23));
-        } else if (consecutiveDays == 7 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B24)) {
-            eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B24));
-        } else if (consecutiveDays == 14 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B25)) {
-            eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B25));
+            if (consecutiveDays == 2 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B22)) {
+                eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B22));
+            } else if (consecutiveDays == 4 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B23)) {
+                eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B23));
+            } else if (consecutiveDays == 7 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B24)) {
+                eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B24));
+            } else if (consecutiveDays == 14 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B25)) {
+                eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B25));
+            }
         }
     }
 }
