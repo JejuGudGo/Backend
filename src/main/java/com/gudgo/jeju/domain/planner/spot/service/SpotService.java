@@ -112,10 +112,18 @@ public class SpotService {
         return responses;
     }
 
+
     @Transactional
     public LastSpotResponse validateSpot(Long courseId, Long spotId) {
         boolean isLastSpot = false;
         Long lastSpotId = spotQueryService.getLastSpotId(courseId);
+
+        Spot spot = spotRepository.findById(spotId)
+                .orElseThrow(() -> new EntityNotFoundException("Spot not found with id: " + spotId));
+
+        spot = spot.withCompleted();
+
+        spotRepository.save(spot);
 
         // 마지막 스팟일 경우, 걷기 계획 완료 처리
         if (lastSpotId.equals(spotId)) {
@@ -127,11 +135,10 @@ public class SpotService {
 
             planner = planner.withCompleted(true);
             isLastSpot = true;
+
             courseService.calculateTimeLabs(courseId, LocalTime.now());
 
             plannerRepository.save(planner);
-
-
 
             // 걷기 계획 완료 시, 프로필 업뎃 이벤트 발생
             eventPublisher.publishEvent(new PlannerCompletedEvent(planner.getId()));
@@ -153,14 +160,6 @@ public class SpotService {
             // 3) 연속 걷기 뱃지 부여
             consecutiveWalkingBadge(planner.getUser().getId());
         }
-
-
-        Spot spot = spotRepository.findById(spotId)
-                .orElseThrow(() -> new EntityNotFoundException("Spot not found with id: " + spotId));
-
-        spot = spot.withCompleted();
-
-        spotRepository.save(spot);
 
         return new LastSpotResponse(isLastSpot);
     }
