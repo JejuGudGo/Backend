@@ -8,6 +8,7 @@ import com.gudgo.jeju.domain.badge.service.BadgeService;
 import com.gudgo.jeju.domain.planner.course.entity.CourseType;
 import com.gudgo.jeju.domain.planner.course.service.CourseService;
 import com.gudgo.jeju.domain.planner.event.PlannerCompletedEvent;
+import com.gudgo.jeju.domain.planner.event.PlannerCompletedEventListener;
 import com.gudgo.jeju.domain.planner.planner.query.PlannerSearchQueryService;
 import com.gudgo.jeju.domain.planner.spot.dto.request.SpotCreateRequestDto;
 import com.gudgo.jeju.domain.planner.spot.dto.request.SpotTimeLabsUpdateRequest;
@@ -45,6 +46,7 @@ public class SpotService {
     private final PlannerSearchQueryService plannerSearchQueryService;
     private final ParticipantQueryService participantQueryService;
     private final CourseService courseService;
+    private final PlannerCompletedEventListener listener;
 
     private final SpotRepository spotRepository;
     private final CourseRepository courseRepository;
@@ -160,13 +162,11 @@ public class SpotService {
             isLastSpot = true;
 
             log.info("====================================================================================");
-            log.info("last spot is: " + lastSpotId);
-            log.info("isLastspot is: " + isLastSpot);
-            log.info("current spot is: " + spot.getId());
+            log.info("spotEvent");
             log.info("====================================================================================");
 
             // 걷기 계획 완료 시, 프로필 업뎃 이벤트 발생
-//            badgeService.handleBadgeEvent(new PlannerCompletedEvent(planner.getId()));
+            listener.handlePlannerCompletedEvent(new PlannerCompletedEvent(planner.getId()));
 
             // 걷기 계획 완료 시, 뱃지 이벤트 발생
             // 1) 올레 코스 or 유저 코스 이용 시 뱃지 부여

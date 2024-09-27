@@ -48,8 +48,11 @@ public class BadgeService {
                 .build();
         badgeRepository.save(badge);
 
-        profileService.incrementBadgeCount(user.getProfile().getId());
+        log.info("====================================================================================");
+        log.info("plannerEvent");
+        log.info("====================================================================================");
 
+        profileService.incrementBadgeCount(user.getProfile().getId());
     }
 
 
