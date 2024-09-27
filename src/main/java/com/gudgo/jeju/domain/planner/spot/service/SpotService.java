@@ -233,17 +233,24 @@ public class SpotService {
 
         if (completedWalkDates.size() > 1) {
             int consecutiveDays = 1;
-            LocalDate previousDate = completedWalkDates.get(completedWalkDates.size() - 1);
 
-            for (int i = completedWalkDates.size() - 2; i >= 0; i--) {
-                LocalDate currentDate = completedWalkDates.get(i);
-                if (currentDate.plusDays(1).equals(previousDate)) {
+            for (int i = completedWalkDates.size() - 1; i >= 1; i--) {
+                if (completedWalkDates.get(i).minusDays(1).equals(completedWalkDates.get(i - 1))) {
                     consecutiveDays++;
-                    previousDate = currentDate;
                 } else {
-                    break; // 연속되지 않으면 반복 중단
+                    break;
                 }
             }
+//            LocalDate previousDate = completedWalkDates.get(completedWalkDates.size() - 1);
+//            for (int i = completedWalkDates.size() - 2; i >= 0; i--) {
+//                LocalDate currentDate = completedWalkDates.get(i);
+//                if (currentDate.plusDays(1).equals(previousDate)) {
+//                    consecutiveDays++;
+//                    previousDate = currentDate;
+//                } else {
+//                    break; // 연속되지 않으면 반복 중단
+//                }
+//            }
 
             if (consecutiveDays == 2 && !badgeRepository.existsByUserIdAndCode(userId, BadgeCode.B22)) {
                 eventPublisher.publishEvent(new BadgeEvent(userId, BadgeCode.B22));
