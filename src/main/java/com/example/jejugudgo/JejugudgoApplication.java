@@ -1,13 +1,13 @@
-package com.gudgo.jeju;
+package com.example.jejugudgo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class JejuApplication {
+public class JejugudgoApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(JejuApplication.class, args);
+        SpringApplication.run(JejugudgoApplication.class, args);
     }
 
 }
