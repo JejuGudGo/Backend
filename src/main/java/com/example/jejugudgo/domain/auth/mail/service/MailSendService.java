@@ -20,7 +20,7 @@ public class MailSendService {
     private final RedisUtil redisUtil;
     private final SpringTemplateEngine templateEngine;
 
-    public String sendMailAuthenticationCode(MailAuthenticationRequest request) throws MessagingException {
+    public String sendAuthCode(MailAuthenticationRequest request) throws MessagingException {
 
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();

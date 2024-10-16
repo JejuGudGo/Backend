@@ -25,7 +25,7 @@ public class MailController {
                 "[제주걷GO] 이메일 인증 코드입니다."
         );
 
-        String authCode = mailSendService.sendMailAuthenticationCode(mailAuthenticationMessage);
+        String authCode = mailSendService.sendAuthCode(mailAuthenticationMessage);
         return ResponseEntity.ok(authCode);
     }
 
