@@ -51,4 +51,25 @@ public class TokenUtil {
                 = new UsernamePasswordAuthenticationToken(user, accessToken, new ArrayList<>());
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
+
+    public Long getUserIdFromToken(String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+
+        String userIdFromToken = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+
+        Long userId = Long.parseLong(userIdFromToken);
+
+        log.info("===========================================================================");
+        log.info("Extracted UserID from Token: " + userId);
+        log.info("===========================================================================");
+
+        return userId;
+    }
 }

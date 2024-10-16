@@ -38,18 +38,16 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String accessToken = cookieUtil.getCookie(request, "accessToken").getValue();
-        String userId = cookieUtil.getCookie(request, "userId").getValue();
+        Long userId = tokenUtil.getUserIdFromToken(accessToken);
 
-        if (accessToken != null) {
-            try {
-                tokenUtil.validateAccessToken(accessToken);
-                tokenUtil.getAuthenticationUsingToken(accessToken, userId);
+        try {
+            tokenUtil.validateAccessToken(accessToken);
+            tokenUtil.getAuthenticationUsingToken(accessToken, String.valueOf(userId));
 
-            } catch (ExpiredJwtException e) {
-                response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                setResponse(response, "TOKEN_01");
-                return;
-            }
+        } catch (ExpiredJwtException e) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            setResponse(response, "TOKEN_01");
+            return;
         }
 
         filterChain.doFilter(request, response);
