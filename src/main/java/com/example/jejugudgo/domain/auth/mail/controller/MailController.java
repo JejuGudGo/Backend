@@ -25,8 +25,8 @@ public class MailController {
                 "[제주걷GO] 이메일 인증 코드입니다."
         );
 
-        String authCode = mailSendService.sendAuthCode(mailAuthenticationMessage);
-        return ResponseEntity.ok(authCode);
+        mailSendService.sendAuthCode(mailAuthenticationMessage);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping(value = "/mail/check")
