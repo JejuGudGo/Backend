@@ -27,7 +27,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class BasicAuthService {
-
     private final UserRepository userRepository;
     private final TermsRepository termsRepository;
     private final UserTermsRepository userTermsRepository;
@@ -35,17 +34,38 @@ public class BasicAuthService {
     private final TokenUtil tokenUtil;
     private final RandomNicknameUtil randomNicknameUtil;
 
+    // 회원가입 메서드
     public SignupResponse signup(SignupRequest request) {
-        // 비밀번호 유효성 검사
+        // 1. 비밀번호 유효성 검사
         validatePassword(request.password());
 
-        // random 닉네임 생성
+        // 2. 사용자 정보 생성 및 저장
+        User user = createUser(request);
+
+        // 3. 약관 동의 처리
+        handleTermsAgreements(request.terms(), user);
+
+        // 4. 응답 생성
+        return createSignupResponse(user);
+    }
+
+    // 비밀번호 유효성 검사 메서드
+    private void validatePassword(String password) {
+        String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,20}$";
+        if (!password.matches(passwordPattern)) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    // 사용자 생성 메서드
+    private User createUser(SignupRequest request) {
+
+        // 랜덤 닉네임 생성
         String nickname = randomNicknameUtil.set();
 
-        // 1. 회원 정보 저장
         User user = User.builder()
                 .email(request.email())
-                .password(request.password())
+                .password(bCryptPasswordEncoder.encode(request.password()))  // 비밀번호 암호화
                 .name(request.name())
                 .nickname(nickname)
                 .phoneNumber(request.phoneNumber())
@@ -54,11 +74,11 @@ public class BasicAuthService {
                 .provider(Provider.BASIC)
                 .build();
 
-        userRepository.save(user);
+        return userRepository.save(user);
+    }
 
-        // 2. 약관 동의 처리
-        List<TermsAgreementRequest> termsAgreementRequests = request.terms();
-
+    // 약관 동의 처리 메서드
+    private void handleTermsAgreements(List<TermsAgreementRequest> termsAgreementRequests, User user) {
         for (TermsAgreementRequest agreementRequest : termsAgreementRequests) {
             Long termsId = agreementRequest.termsId();
             boolean isAgreed = agreementRequest.isAgreed();
@@ -74,8 +94,10 @@ public class BasicAuthService {
 
             userTermsRepository.save(userTerms);
         }
+    }
 
-        // 3. response 생성
+    // 응답 생성 메서드
+    private SignupResponse createSignupResponse(User user) {
         return new SignupResponse(
                 user.getId(),
                 user.getName(),
@@ -109,12 +131,5 @@ public class BasicAuthService {
                 user.getPhoneNumber(),
                 user.getRole()
         );
-    }
-
-    private void validatePassword(String password) {
-        String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,20}$";
-        if (!password.matches(passwordPattern)) {
-            throw new IllegalArgumentException();
-        }
     }
 }
