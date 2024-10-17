@@ -7,10 +7,7 @@ import com.example.jejugudgo.domain.user.service.FindUserInfoService;
 import com.example.jejugudgo.domain.user.service.UserInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,13 +19,13 @@ public class FindUserController {
     private final UserInfoService userInfoService;
 
     @PostMapping("/find")
-    public ResponseEntity<List<FindEmailResponse>> findUserByEmail(FindEmailRequest request) {
+    public ResponseEntity<List<FindEmailResponse>> findUserByEmail(@RequestBody FindEmailRequest request) {
         List<FindEmailResponse> responses = findUserInfoService.findUserByNameAndPhone(request);
         return ResponseEntity.ok(responses);
     }
 
     @PatchMapping("/find/update")
-    public ResponseEntity<?> updatePassword (PasswordUpdateRequest request) {
+    public ResponseEntity<?> updatePassword (@RequestBody PasswordUpdateRequest request) {
         userInfoService.updatePassword(request);
         return ResponseEntity.ok().build();
     }
