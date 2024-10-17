@@ -15,6 +15,7 @@ import com.example.jejugudgo.domain.user.entity.UserTerms;
 import com.example.jejugudgo.domain.user.repository.UserRepository;
 import com.example.jejugudgo.domain.user.repository.UserTermsRepository;
 import com.example.jejugudgo.global.jwt.token.TokenUtil;
+import com.example.jejugudgo.global.util.RandomNicknameUtil;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -32,13 +33,19 @@ public class BasicAuthService {
     private final UserTermsRepository userTermsRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TokenUtil tokenUtil;
+    private final RandomNicknameUtil randomNicknameUtil;
 
     public SignupResponse signup(SignupRequest request) {
+
+        // random 닉네임 생성
+        String nickname = randomNicknameUtil.set();
+
         // 1. 회원 정보 저장
         User user = User.builder()
                 .email(request.email())
                 .password(request.password())
                 .name(request.name())
+                .nickname(nickname)
                 .phoneNumber(request.phoneNumber())
                 .createdAt(LocalDateTime.now())
                 .role(Role.USER)
