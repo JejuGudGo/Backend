@@ -36,7 +36,7 @@ public class JWTRefreshService {
             String newAccessToken = tokenGenerator.generateToken(TokenType.ACCESS, String.valueOf(userId));
             String newRefreshToken = tokenGenerator.generateToken(TokenType.REFRESH, String.valueOf(userId));
 
-            response.setHeader("Authorization", "Bearer " + newAccessToken);
+            response.setHeader("Authorization", newAccessToken);
             cookieUtil.setCookie("refreshToken", newRefreshToken, response);
             redisUtil.setData(String.valueOf(userId), newRefreshToken);
         }

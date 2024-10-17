@@ -1,5 +1,6 @@
 package com.example.jejugudgo.global.security;
 
+import com.example.jejugudgo.domain.user.entity.Provider;
 import com.example.jejugudgo.domain.user.entity.User;
 import com.example.jejugudgo.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) {
-        User user = userRepository.findByEmailAndProvider(email, "basic")
+        User user = userRepository.findByEmailAndProvider(email, Provider.BASIC)
                 .orElseThrow(() -> new UsernameNotFoundException("AUTH_01"));
 
         return new CustomUserDetails(user);

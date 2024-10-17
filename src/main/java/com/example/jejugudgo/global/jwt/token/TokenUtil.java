@@ -25,10 +25,6 @@ public class TokenUtil {
 
     public void validateAccessToken(String token) {
         try {
-            if (token != null && token.startsWith("Bearer ")) {
-                token = token.substring(7);
-            }
-
             Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
@@ -40,10 +36,6 @@ public class TokenUtil {
     }
 
     public void getAuthenticationUsingToken(String accessToken, String userId) {
-        if (accessToken.contains("Bearer")) {
-            accessToken = accessToken.substring(7);
-        }
-
         User user = userRepository.findById(Long.parseLong(userId))
                 .orElseThrow(EntityNotFoundException::new);
 
@@ -53,10 +45,6 @@ public class TokenUtil {
     }
 
     public Long getUserIdFromToken(String token) {
-        if (token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        }
-
         String userIdFromToken = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()

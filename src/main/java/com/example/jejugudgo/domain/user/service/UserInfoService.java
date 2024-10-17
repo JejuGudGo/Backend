@@ -1,6 +1,7 @@
 package com.example.jejugudgo.domain.user.service;
 
 import com.example.jejugudgo.domain.user.dto.request.PasswordUpdateRequest;
+import com.example.jejugudgo.domain.user.entity.Provider;
 import com.example.jejugudgo.domain.user.entity.User;
 import com.example.jejugudgo.domain.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -15,7 +16,7 @@ public class UserInfoService {
     private final UserRepository userRepository;
 
     public void updatePassword(PasswordUpdateRequest request) {
-        User user = userRepository.findByEmailAndProvider(request.email(), "basic")
+        User user = userRepository.findByEmailAndProvider(request.email(), Provider.BASIC)
                 .orElseThrow(EntityNotFoundException::new);
 
         user.updatePassword(passwordEncoder.encode(request.password()));
