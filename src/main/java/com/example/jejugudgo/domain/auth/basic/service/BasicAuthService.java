@@ -36,6 +36,8 @@ public class BasicAuthService {
     private final RandomNicknameUtil randomNicknameUtil;
 
     public SignupResponse signup(SignupRequest request) {
+        // 비밀번호 유효성 검사
+        validatePassword(request.password());
 
         // random 닉네임 생성
         String nickname = randomNicknameUtil.set();
@@ -107,5 +109,12 @@ public class BasicAuthService {
                 user.getPhoneNumber(),
                 user.getRole()
         );
+    }
+
+    private void validatePassword(String password) {
+        String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,20}$";
+        if (!password.matches(passwordPattern)) {
+            throw new IllegalArgumentException();
+        }
     }
 }
