@@ -25,7 +25,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
 
   datasource:
     url: ${DATASOURCE_URL}
@@ -35,7 +35,7 @@ spring:
   data:
     redis:
       port: ${REDIS_PORT}
-      host: redis
+      host: localhost
 
   springdoc:
     version: v1.0.0

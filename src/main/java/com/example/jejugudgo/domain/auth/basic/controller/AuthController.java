@@ -7,6 +7,7 @@ import com.example.jejugudgo.domain.auth.basic.service.BasicAuthService;
 import com.example.jejugudgo.domain.auth.mail.dto.EmailRequest;
 import com.example.jejugudgo.domain.user.dto.response.UserInfoResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,8 +25,8 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<SignupResponse> signup(@RequestBody SignupRequest request) {
-        SignupResponse response = basicAuthService.signup(request);
-        return ResponseEntity.ok(response);
+        basicAuthService.signup(request);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/check/email")
@@ -36,14 +37,8 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<UserInfoResponse> login(@RequestBody LoginRequest loginRequest, HttpServletRequest httpServletRequest) {
-        String token = httpServletRequest.getHeader("Authorization");
-
-        if (token == null) {
-            return ResponseEntity.badRequest().body(null);
-        }
-
-        UserInfoResponse userInfoResponse = basicAuthService.loginAndGetUserInfo(loginRequest, token);
+    public ResponseEntity<UserInfoResponse> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+        UserInfoResponse userInfoResponse = basicAuthService.loginAndGetUserInfo(loginRequest, response);
 
         return ResponseEntity.ok(userInfoResponse);
     }

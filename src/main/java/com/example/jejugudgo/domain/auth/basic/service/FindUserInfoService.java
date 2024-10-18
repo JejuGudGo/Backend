@@ -1,10 +1,9 @@
-package com.example.jejugudgo.domain.user.service;
+package com.example.jejugudgo.domain.auth.basic.service;
 
 import com.example.jejugudgo.domain.user.dto.request.FindEmailRequest;
 import com.example.jejugudgo.domain.user.dto.response.FindEmailResponse;
 import com.example.jejugudgo.domain.user.entity.User;
 import com.example.jejugudgo.domain.user.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

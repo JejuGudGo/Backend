@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DataConfiguration {
+public class DataCommandLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,8 +28,8 @@ public class DataConfiguration {
     private LocalDate updatedAt;
 
 
-    public DataConfiguration withConfigValue(boolean configValue) {
-        return DataConfiguration.builder()
+    public DataCommandLog updateConfigValue(boolean configValue) {
+        return DataCommandLog.builder()
                 .id(this.id)
                 .configKey(this.configKey)
                 .configValue(configValue)
@@ -37,8 +37,8 @@ public class DataConfiguration {
                 .build();
     }
 
-    public DataConfiguration withUpdatedAt(LocalDate updatedAt) {
-        return DataConfiguration.builder()
+    public DataCommandLog updateUpdateAt(LocalDate updatedAt) {
+        return DataCommandLog.builder()
                 .id(this.id)
                 .configKey(this.configKey)
                 .configValue(this.configValue)

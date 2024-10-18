@@ -1,6 +1,6 @@
 package com.example.jejugudgo.global.data.nickname.service;
 
-import com.example.jejugudgo.global.data.common.entity.DataConfiguration;
+import com.example.jejugudgo.global.data.common.entity.DataCommandLog;
 import com.example.jejugudgo.global.data.common.repository.DataConfigurationRepository;
 import com.example.jejugudgo.global.data.nickname.entity.Adjective;
 import com.example.jejugudgo.global.data.nickname.entity.Noun;
@@ -27,7 +27,7 @@ public class NicknameDataService {
     private final NounRepository nounRepository;
 
     public void loadAdjectiveCsvToDatabase() throws IOException {
-        DataConfiguration checkDataConfig = dataConfigurationRepository.findByConfigKey("AdjectiveData")
+        DataCommandLog checkDataConfig = dataConfigurationRepository.findByConfigKey("AdjectiveData")
                 .orElse(null);
 
         if (checkDataConfig == null || !checkDataConfig.isConfigValue()) {
@@ -43,13 +43,13 @@ public class NicknameDataService {
                 e.printStackTrace();
             }
 
-            DataConfiguration dataConfiguration = DataConfiguration.builder()
+            DataCommandLog dataCommandLog = DataCommandLog.builder()
                     .configKey("AdjectiveData")
                     .configValue(true)
                     .updatedAt(LocalDate.now())
                     .build();
 
-            dataConfigurationRepository.save(dataConfiguration);
+            dataConfigurationRepository.save(dataCommandLog);
 
             log.info("===============================================================================");
             log.info("All Adjective data is uploaded!");
@@ -63,7 +63,7 @@ public class NicknameDataService {
     }
 
     public void loadNounCsvToDatabase() throws IOException {
-        DataConfiguration checkDataConfig = dataConfigurationRepository.findByConfigKey("NounData")
+        DataCommandLog checkDataConfig = dataConfigurationRepository.findByConfigKey("NounData")
                 .orElse(null);
 
         if (checkDataConfig == null || !checkDataConfig.isConfigValue()) {
@@ -79,13 +79,13 @@ public class NicknameDataService {
                 e.printStackTrace();
             }
 
-            DataConfiguration dataConfiguration = DataConfiguration.builder()
+            DataCommandLog dataCommandLog = DataCommandLog.builder()
                     .configKey("NounData")
                     .configValue(true)
                     .updatedAt(LocalDate.now())
                     .build();
 
-            dataConfigurationRepository.save(dataConfiguration);
+            dataConfigurationRepository.save(dataCommandLog);
 
             log.info("===============================================================================");
             log.info("All Noun data is uploaded!");
