@@ -18,7 +18,7 @@ public class FindUserController {
     private final FindUserInfoService findUserInfoService;
     private final UserInfoService userInfoService;
 
-    @PostMapping("/find")
+    @PostMapping("/find/email")
     public ResponseEntity<List<FindEmailResponse>> findUserByEmail(@RequestBody FindEmailRequest request) {
         List<FindEmailResponse> responses = findUserInfoService.findUserByNameAndPhone(request);
         return ResponseEntity.ok(responses);
