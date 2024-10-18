@@ -16,16 +16,16 @@ import java.time.LocalTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Profile {
+public class UserProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalTime walkingTime;
+    private LocalTime walkingTime = LocalTime.of(8, 0);
 
-    private String profileImageUrl;
+    private String profileImageUrl = "default";
 
-    private Long badgeCount;
+    private Long badgeCount = 0L;
 
-    private Long walkingCount;
+    private Long walkingCount = 0L;
 }
