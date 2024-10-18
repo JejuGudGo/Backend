@@ -20,7 +20,7 @@ public class MailSendService {
     private final RedisUtil redisUtil;
     private final SpringTemplateEngine templateEngine;
 
-    public String sendMailAuthenticationCode(MailAuthenticationRequest request) throws MessagingException {
+    public void sendAuthCode(MailAuthenticationRequest request) throws MessagingException {
 
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -33,8 +33,6 @@ public class MailSendService {
         mimeMessageHelper.setSubject(request.subject());
         mimeMessageHelper.setText(setContext(String.valueOf(authCode)),true);
         javaMailSender.send(mimeMessage);
-
-        return String.valueOf(authCode);
     }
 
     private String setContext(String authCode) {

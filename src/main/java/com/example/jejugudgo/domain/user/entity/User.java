@@ -1,5 +1,6 @@
 package com.example.jejugudgo.domain.user.entity;
 
+import com.example.jejugudgo.domain.profile.entity.UserProfile;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
@@ -29,23 +30,23 @@ public class User {
 
     private String name;
 
-    private Long numberTag;
-
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
-    private String provider;
+    @Enumerated(value = EnumType.STRING)
+    private Provider provider;
+
+    private Long userId;
 
     private LocalDateTime createdAt;
 
-    private boolean isDeleted = false;
+    private LocalDateTime deletedAt;
 
     private String phoneNumber;
 
-    // TODO: profile 생성
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "profileId")
-//    private Profile profile;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userProfileId")
+    private UserProfile userProfile;
 
     // with -> update 어떤가요?
     public User updatePassword(String password) {
@@ -55,13 +56,28 @@ public class User {
                 .password(password)
                 .nickname(this.nickname)
                 .name(this.name)
-                .numberTag(this.numberTag)
                 .role(this.role)
                 .provider(this.provider)
                 .createdAt(this.createdAt)
-                .isDeleted(this.isDeleted)
                 .phoneNumber(this.phoneNumber)
-//                .profile(this.profile)
+                .userProfile(this.userProfile)
+                .deletedAt(this.deletedAt)
+                .build();
+    }
+
+    public User updateUserStatus() {
+        return User.builder()
+                .id(this.id)
+                .email(this.email)
+                .password(password)
+                .nickname(this.nickname)
+                .name(this.name)
+                .role(this.role)
+                .provider(this.provider)
+                .createdAt(this.createdAt)
+                .phoneNumber(this.phoneNumber)
+                .userProfile(this.userProfile)
+                .deletedAt(LocalDateTime.now())
                 .build();
     }
 }

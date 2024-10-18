@@ -78,12 +78,12 @@ spring:
 #            user-info-uri: https://kapi.kakao.com/v2/user/me
 #            user-name-attribute: id
 
-#coolsms:
-#  api:
-#    key: ${COOLSMS_KEY}
-#    secret: ${COOLSMS_SECRET_KEY}
-#
-#sendNumber: ${SEND_NUMBER}
+coolsms:
+  api:
+    key: ${COOLSMS_KEY}
+    secret: ${COOLSMS_SECRET_KEY}
+
+sendNumber: ${SEND_NUMBER}
 
 logging:
   level:
