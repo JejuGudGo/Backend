@@ -2,11 +2,8 @@ package com.example.jejugudgo.domain.auth.basic.service;
 
 import com.example.jejugudgo.domain.auth.basic.dto.request.LoginRequest;
 import com.example.jejugudgo.domain.auth.basic.dto.request.SignupRequest;
-import com.example.jejugudgo.domain.auth.basic.dto.response.SignupResponse;
 import com.example.jejugudgo.domain.auth.mail.dto.EmailRequest;
 import com.example.jejugudgo.domain.auth.terms.dto.request.TermsAgreementRequest;
-import com.example.jejugudgo.domain.auth.terms.entity.Terms;
-import com.example.jejugudgo.domain.auth.terms.repository.TermsRepository;
 import com.example.jejugudgo.domain.profile.entity.UserProfile;
 import com.example.jejugudgo.domain.profile.service.UserProfileService;
 import com.example.jejugudgo.domain.user.dto.response.UserInfoResponse;
@@ -18,14 +15,12 @@ import com.example.jejugudgo.domain.user.repository.UserRepository;
 import com.example.jejugudgo.domain.user.repository.UserTermsRepository;
 import com.example.jejugudgo.global.jwt.token.TokenGenerator;
 import com.example.jejugudgo.global.jwt.token.TokenType;
-import com.example.jejugudgo.global.jwt.token.TokenUtil;
 import com.example.jejugudgo.global.util.CookieUtil;
 import com.example.jejugudgo.global.util.RandomNicknameUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -81,6 +76,7 @@ public class BasicAuthService {
                 .nickname(nickname)
                 .phoneNumber(request.phoneNumber())
                 .createdAt(LocalDateTime.now())
+                .deletedAt(LocalDateTime.of(1970, 1, 1, 0, 0))
                 .role(Role.USER)
                 .provider(Provider.BASIC)
                 .userProfile(userProfile)

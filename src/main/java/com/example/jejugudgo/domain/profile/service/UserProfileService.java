@@ -5,6 +5,8 @@ import com.example.jejugudgo.domain.profile.repository.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
+
 @Service
 @RequiredArgsConstructor
 public class UserProfileService {
@@ -12,6 +14,9 @@ public class UserProfileService {
 
     public UserProfile createProfile(String profileImageUrl) {
         UserProfile userProfile = UserProfile.builder()
+                .badgeCount(0L)
+                .walkingCount(0L)
+                .walkingTime(LocalTime.of(0, 0))
                 .profileImageUrl(profileImageUrl)
                 .build();
 
