@@ -3,6 +3,7 @@ package com.example.jejugudgo.domain.user.service;
 import com.example.jejugudgo.domain.user.dto.request.UserCheckListContentUpdateRequest;
 import com.example.jejugudgo.domain.user.dto.request.UserCheckListCreateRequest;
 import com.example.jejugudgo.domain.user.dto.request.UserCheckListFinishRequest;
+import com.example.jejugudgo.domain.user.dto.request.UserCheckListUpdateRequest;
 import com.example.jejugudgo.domain.user.dto.response.UserCheckListResponse;
 import com.example.jejugudgo.domain.user.entity.User;
 import com.example.jejugudgo.domain.user.entity.UserCheckList;
@@ -10,6 +11,7 @@ import com.example.jejugudgo.domain.user.repository.UserCheckListRepository;
 import com.example.jejugudgo.domain.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +49,7 @@ public class UserCheckListService {
         return toResponse(checkList);
     }
 
+    @Transactional
     public UserCheckListResponse create(UserCheckListCreateRequest createRequest, HttpServletRequest servletRequest) {
         // 1. 사용자 id 추출 후 사용자 엔티티 조회
         Long userId = userService.getAuthenticatedUserIdFromToken(servletRequest);
@@ -68,37 +71,25 @@ public class UserCheckListService {
         return toResponse(checkList);
     }
 
-    public UserCheckListResponse updateContent(Long checkItemId, UserCheckListContentUpdateRequest request) {
+    @Transactional
+    public UserCheckListResponse update(Long checkItemId, UserCheckListUpdateRequest request) {
         // 1. 체크리스트 항목 조회
         UserCheckList checkList = userCheckListRepository.findById(checkItemId)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(() -> new EntityNotFoundException("CheckList item with ID " + checkItemId + " not found."));
 
-        // 2. 요청으로부터 받은 콘텐츠 값이 null이 아닐 경우 콘텐츠 업데이트
-        if (request.content() != null) {
-            checkList = checkList.updateContent(request.content());
+        // 2. 상태 및 콘텐츠 업데이트
+        if (request.content() != null && !request.content().isEmpty()) {
+            checkList.updateContent(request.content());
         }
+        checkList.updateIsFinished(request.isFinished());
 
         // 3. 업데이트된 체크리스트 저장
         userCheckListRepository.save(checkList);
 
-        // 4. 업데이트된 체크리스트를 UserCheckListResponse 로 변환 후 반환
+        // 4. 저장된 체크리스트를 UserCheckListResponse 로 변환 후 반환
         return toResponse(checkList);
     }
 
-    public UserCheckListResponse updateFinish(Long checkItemId, UserCheckListFinishRequest request) {
-        // 1. 체크리스트 항목 조회
-        UserCheckList checkList = userCheckListRepository.findById(checkItemId)
-                .orElseThrow(EntityNotFoundException::new);
-
-        // 2. 상태 업데이트
-        checkList = checkList.updateIsFinished(request.isFinished());
-
-        // 3. 업데이트된 체크리스트 저장
-        userCheckListRepository.save(checkList);
-
-        // 4. 업데이트된 체크리스트를 UserCheckListResponse 로 변환 후 반환
-        return toResponse(checkList);
-    }
 
     // UserCheckList 객체를 UserCheckListResponse 로 변환하는 메서드
     private UserCheckListResponse toResponse(UserCheckList checkList) {

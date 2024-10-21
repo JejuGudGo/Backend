@@ -1,6 +1,8 @@
 package com.example.jejugudgo.domain.user.controller;
 
+import com.example.jejugudgo.domain.user.dto.request.UserCheckListContentUpdateRequest;
 import com.example.jejugudgo.domain.user.dto.request.UserCheckListCreateRequest;
+import com.example.jejugudgo.domain.user.dto.request.UserCheckListFinishRequest;
 import com.example.jejugudgo.domain.user.dto.request.UserCheckListUpdateRequest;
 import com.example.jejugudgo.domain.user.dto.response.UserCheckListResponse;
 import com.example.jejugudgo.domain.user.service.UserCheckListService;
@@ -36,15 +38,8 @@ public class UserCheckListController {
 
     @PatchMapping("/{checkItemId}")
     public ResponseEntity<UserCheckListResponse> updateContent(@PathVariable("checkItemId") Long checkItemId, @RequestBody UserCheckListUpdateRequest request) {
-        UserCheckListResponse userCheckListResponse = userCheckListService.updateContent(checkItemId, request);
+        UserCheckListResponse userCheckListResponse = userCheckListService.update(checkItemId, request);
         return ResponseEntity.ok(userCheckListResponse);
     }
-
-    @PatchMapping("/{checkItemId}/finish")
-    public ResponseEntity<UserCheckListResponse> updateFinish(@PathVariable("checkItemId") Long checkItemId, @RequestBody UserCheckListUpdateRequest request) {
-        UserCheckListResponse userCheckListResponse = userCheckListService.updateFinish(checkItemId, request);
-        return ResponseEntity.ok(userCheckListResponse);
-    }
-
 }
 
