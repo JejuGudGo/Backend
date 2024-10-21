@@ -1,8 +1,6 @@
 package com.example.jejugudgo.domain.user.controller;
 
-import com.example.jejugudgo.domain.user.dto.request.UserCheckListContentUpdateRequest;
 import com.example.jejugudgo.domain.user.dto.request.UserCheckListCreateRequest;
-import com.example.jejugudgo.domain.user.dto.request.UserCheckListFinishRequest;
 import com.example.jejugudgo.domain.user.dto.request.UserCheckListUpdateRequest;
 import com.example.jejugudgo.domain.user.dto.response.UserCheckListResponse;
 import com.example.jejugudgo.domain.user.service.UserCheckListService;

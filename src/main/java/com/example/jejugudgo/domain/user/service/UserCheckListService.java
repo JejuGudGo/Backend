@@ -75,13 +75,13 @@ public class UserCheckListService {
     public UserCheckListResponse update(Long checkItemId, UserCheckListUpdateRequest request) {
         // 1. 체크리스트 항목 조회
         UserCheckList checkList = userCheckListRepository.findById(checkItemId)
-                .orElseThrow(() -> new EntityNotFoundException("CheckList item with ID " + checkItemId + " not found."));
+                .orElseThrow(EntityNotFoundException::new);
 
         // 2. 상태 및 콘텐츠 업데이트
         if (request.content() != null && !request.content().isEmpty()) {
-            checkList.updateContent(request.content());
+            checkList = checkList.updateContent(request.content());
         }
-        checkList.updateIsFinished(request.isFinished());
+        checkList = checkList.updateIsFinished(request.isFinished());
 
         // 3. 업데이트된 체크리스트 저장
         userCheckListRepository.save(checkList);
