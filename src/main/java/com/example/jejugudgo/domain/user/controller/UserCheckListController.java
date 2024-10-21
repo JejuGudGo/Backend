@@ -1,17 +1,13 @@
 package com.example.jejugudgo.domain.user.controller;
 
 import com.example.jejugudgo.domain.user.dto.request.UserCheckListCreateRequest;
+import com.example.jejugudgo.domain.user.dto.request.UserCheckListUpdateRequest;
 import com.example.jejugudgo.domain.user.dto.response.UserCheckListResponse;
-import com.example.jejugudgo.domain.user.entity.UserCheckList;
 import com.example.jejugudgo.domain.user.service.UserCheckListService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import retrofit2.http.GET;
-import retrofit2.http.PATCH;
-import retrofit2.http.POST;
 
 import java.util.List;
 
@@ -41,6 +37,12 @@ public class UserCheckListController {
     @PatchMapping("/{checkItemId}")
     public ResponseEntity<UserCheckListResponse> updateContent(@PathVariable("checkItemId") Long checkItemId, @RequestBody UserCheckListUpdateRequest request) {
         userCheckListService.updateContent(checkItemId, request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{checkItemId}/finish")
+    public ResponseEntity<UserCheckListResponse> updateComplete(@PathVariable("checkItemId") Long checkItemId) {
+        userCheckListService.updateFinish(checkItemId);
         return ResponseEntity.ok().build();
     }
 

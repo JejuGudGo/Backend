@@ -23,4 +23,22 @@ public class UserCheckList {
     private String content;
 
     private boolean isFinished;
+
+    public UserCheckList updateContent(String content) {
+        return UserCheckList.builder()
+                .id(id)
+                .user(user)
+                .content(content)
+                .isFinished(isFinished)
+                .build();
+    }
+    public UserCheckList updateIsFinished(boolean isFinished) {
+        return UserCheckList.builder()
+                .id(id)
+                .user(user)
+                .content(content)
+                .isFinished(isFinished)
+                .build();
+    }
+
 }

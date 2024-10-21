@@ -1,6 +1,7 @@
 package com.example.jejugudgo.domain.user.service;
 
 import com.example.jejugudgo.domain.user.dto.request.UserCheckListCreateRequest;
+import com.example.jejugudgo.domain.user.dto.request.UserCheckListUpdateRequest;
 import com.example.jejugudgo.domain.user.dto.response.UserCheckListResponse;
 import com.example.jejugudgo.domain.user.entity.User;
 import com.example.jejugudgo.domain.user.entity.UserCheckList;
@@ -8,7 +9,6 @@ import com.example.jejugudgo.domain.user.repository.UserCheckListRepository;
 import com.example.jejugudgo.domain.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -68,6 +68,40 @@ public class UserCheckListService {
                 .content(createRequest.content())
                 .isFinished(false)
                 .build();
+
+        userCheckListRepository.save(checkList);
+
+        return new UserCheckListResponse(
+                checkList.getId(),
+                checkList.getUser().getId(),
+                checkList.getContent(),
+                checkList.isFinished()
+        );
+    }
+
+    public void updateContent(Long checkItemId, UserCheckListUpdateRequest request) {
+        UserCheckList checkList = userCheckListRepository.findById(checkItemId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        if (request.content() != null) {
+            checkList = checkList.updateContent(request.content());
+        }
+
+        userCheckListRepository.save(checkList);
+
+        new UserCheckListResponse(
+                checkList.getId(),
+                checkList.getUser().getId(),
+                checkList.getContent(),
+                checkList.isFinished()
+        );
+    }
+
+    public UserCheckListResponse updateFinish(Long checkItemId) {
+        UserCheckList checkList = userCheckListRepository.findById(checkItemId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        checkList = checkList.updateIsFinished(true);
 
         userCheckListRepository.save(checkList);
 
