@@ -36,14 +36,14 @@ public class UserCheckListController {
 
     @PatchMapping("/{checkItemId}")
     public ResponseEntity<UserCheckListResponse> updateContent(@PathVariable("checkItemId") Long checkItemId, @RequestBody UserCheckListUpdateRequest request) {
-        userCheckListService.updateContent(checkItemId, request);
-        return ResponseEntity.ok().build();
+        UserCheckListResponse userCheckListResponse = userCheckListService.updateContent(checkItemId, request);
+        return ResponseEntity.ok(userCheckListResponse);
     }
 
     @PatchMapping("/{checkItemId}/finish")
-    public ResponseEntity<UserCheckListResponse> updateComplete(@PathVariable("checkItemId") Long checkItemId) {
-        userCheckListService.updateFinish(checkItemId);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<UserCheckListResponse> updateFinish(@PathVariable("checkItemId") Long checkItemId, @RequestBody UserCheckListUpdateRequest request) {
+        UserCheckListResponse userCheckListResponse = userCheckListService.updateFinish(checkItemId, request);
+        return ResponseEntity.ok(userCheckListResponse);
     }
 
 }
