@@ -1,7 +1,7 @@
 package com.example.jejugudgo.global.data.nickname.service;
 
 import com.example.jejugudgo.global.data.common.entity.DataCommandLog;
-import com.example.jejugudgo.global.data.common.repository.DataConfigurationRepository;
+import com.example.jejugudgo.global.data.common.repository.DataCommandLogRepository;
 import com.example.jejugudgo.global.data.nickname.entity.Adjective;
 import com.example.jejugudgo.global.data.nickname.entity.Noun;
 import com.example.jejugudgo.global.data.nickname.repository.AdjectiveRepository;
@@ -22,12 +22,12 @@ import static org.hibernate.query.sqm.tree.SqmNode.log;
 @Service
 @RequiredArgsConstructor
 public class NicknameDataService {
-    private final DataConfigurationRepository dataConfigurationRepository;
+    private final DataCommandLogRepository dataCommandLogRepository;
     private final AdjectiveRepository adjectiveRepository;
     private final NounRepository nounRepository;
 
     public void loadAdjectiveCsvToDatabase() throws IOException {
-        DataCommandLog checkDataConfig = dataConfigurationRepository.findByConfigKey("AdjectiveData")
+        DataCommandLog checkDataConfig = dataCommandLogRepository.findByConfigKey("AdjectiveData")
                 .orElse(null);
 
         if (checkDataConfig == null || !checkDataConfig.isConfigValue()) {
@@ -49,7 +49,7 @@ public class NicknameDataService {
                     .updatedAt(LocalDate.now())
                     .build();
 
-            dataConfigurationRepository.save(dataCommandLog);
+            dataCommandLogRepository.save(dataCommandLog);
 
             log.info("===============================================================================");
             log.info("All Adjective data is uploaded!");
@@ -63,7 +63,7 @@ public class NicknameDataService {
     }
 
     public void loadNounCsvToDatabase() throws IOException {
-        DataCommandLog checkDataConfig = dataConfigurationRepository.findByConfigKey("NounData")
+        DataCommandLog checkDataConfig = dataCommandLogRepository.findByConfigKey("NounData")
                 .orElse(null);
 
         if (checkDataConfig == null || !checkDataConfig.isConfigValue()) {
@@ -85,7 +85,7 @@ public class NicknameDataService {
                     .updatedAt(LocalDate.now())
                     .build();
 
-            dataConfigurationRepository.save(dataCommandLog);
+            dataCommandLogRepository.save(dataCommandLog);
 
             log.info("===============================================================================");
             log.info("All Noun data is uploaded!");
