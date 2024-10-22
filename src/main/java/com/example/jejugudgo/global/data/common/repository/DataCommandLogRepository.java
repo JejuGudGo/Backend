@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface DataConfigurationRepository extends JpaRepository<DataCommandLog, Long> {
+public interface DataCommandLogRepository extends JpaRepository<DataCommandLog, Long> {
     Optional<DataCommandLog> findByConfigKey(String key);
     boolean existsByConfigKeyAndConfigValue(String configKey, boolean configValue);
 }

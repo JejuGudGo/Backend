@@ -3,7 +3,7 @@ package com.example.jejugudgo.global.data.terms;
 import com.example.jejugudgo.domain.auth.terms.entity.Terms;
 import com.example.jejugudgo.domain.auth.terms.repository.TermsRepository;
 import com.example.jejugudgo.global.data.common.entity.DataCommandLog;
-import com.example.jejugudgo.global.data.common.repository.DataConfigurationRepository;
+import com.example.jejugudgo.global.data.common.repository.DataCommandLogRepository;
 import com.opencsv.CSVReader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
@@ -20,11 +20,11 @@ import static org.hibernate.query.sqm.tree.SqmNode.log;
 @RequiredArgsConstructor
 public class TermsDataService {
 
-    private final DataConfigurationRepository dataConfigurationRepository;
+    private final DataCommandLogRepository dataCommandLogRepository;
     private final TermsRepository termsRepository;
 
     public void loadTermsCsvToDatabase() {
-        DataCommandLog checkDataConfig = dataConfigurationRepository.findByConfigKey("TermsData")
+        DataCommandLog checkDataConfig = dataCommandLogRepository.findByConfigKey("TermsData")
                 .orElse(null);
 
         if (checkDataConfig == null || !checkDataConfig.isConfigValue()) {
@@ -32,8 +32,8 @@ public class TermsDataService {
 
                 List<Terms> terms = csvReader.readAll().stream()
                         .map(fields -> Terms.builder()
-                                .title(fields[0].trim()) // 제목
-                                .content(fields[1].trim()) // 내용
+                                .title(fields[0].trim())
+                                .content(fields[1].trim())
                                 .build())
                         .collect(Collectors.toList());
 
@@ -49,7 +49,7 @@ public class TermsDataService {
                     .updatedAt(LocalDate.now())
                     .build();
 
-            dataConfigurationRepository.save(dataCommandLog);
+            dataCommandLogRepository.save(dataCommandLog);
 
             log.info("===============================================================================");
             log.info("All Term data is uploaded!");
