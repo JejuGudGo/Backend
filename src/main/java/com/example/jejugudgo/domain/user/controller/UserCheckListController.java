@@ -17,9 +17,8 @@ import java.util.List;
 public class UserCheckListController {
     private final UserCheckListService userCheckListService;
 
-
     @GetMapping("")
-    public ResponseEntity<List<UserCheckListResponse>> getAll(HttpServletRequest request){
+    public ResponseEntity<List<UserCheckListResponse>> getAll(HttpServletRequest request) {
         return ResponseEntity.ok(userCheckListService.getAll(request));
     }
 
@@ -36,7 +35,13 @@ public class UserCheckListController {
 
     @PatchMapping("/{checkItemId}")
     public ResponseEntity<UserCheckListResponse> updateContent(@PathVariable("checkItemId") Long checkItemId, @RequestBody UserCheckListUpdateRequest request) {
-        UserCheckListResponse userCheckListResponse = userCheckListService.update(checkItemId, request);
+        UserCheckListResponse userCheckListResponse = userCheckListService.updateCheckList(checkItemId, request);
+        return ResponseEntity.ok(userCheckListResponse);
+    }
+
+    @PatchMapping("/{checkItemId}/reorder")
+    public ResponseEntity<UserCheckListResponse> updateOrderNumber(@PathVariable("checkItemId") Long checkItemId, @RequestBody UserCheckListUpdateRequest request) {
+        UserCheckListResponse userCheckListResponse = userCheckListService.updateCheckList(checkItemId, request);
         return ResponseEntity.ok(userCheckListResponse);
     }
 }
