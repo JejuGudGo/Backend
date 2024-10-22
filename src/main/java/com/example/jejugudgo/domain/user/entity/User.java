@@ -36,7 +36,7 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private Provider provider;
 
-    private Long userId;
+    private String oauthUserId;
 
     private LocalDateTime createdAt;
 

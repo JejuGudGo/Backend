@@ -11,4 +11,3 @@ public interface UserCheckListRepository extends JpaRepository<UserCheckList, Lo
 
     Optional<UserCheckList> findTopByUserIdOrderByOrderNumberDesc(Long userId);
 }
-
