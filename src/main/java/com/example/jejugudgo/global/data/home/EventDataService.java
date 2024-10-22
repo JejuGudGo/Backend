@@ -1,8 +1,8 @@
-package com.example.jejugudgo.global.data.course;
+package com.example.jejugudgo.global.data.home;
 
-import com.example.jejugudgo.domain.trail.entity.Trail;
-import com.example.jejugudgo.domain.trail.entity.TrailType;
-import com.example.jejugudgo.domain.trail.repository.TrailRepository;
+import com.example.jejugudgo.domain.event.entity.Event;
+import com.example.jejugudgo.domain.event.entity.EventStatus;
+import com.example.jejugudgo.domain.event.repository.EventRepository;
 import com.example.jejugudgo.global.data.common.entity.DataCommandLog;
 import com.example.jejugudgo.global.data.common.repository.DataCommandLogRepository;
 import com.opencsv.CSVReader;
@@ -14,43 +14,42 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.hibernate.query.sqm.tree.SqmNode.log;
 
-
 @Service
 @RequiredArgsConstructor
-public class TrailDataService {
+public class EventDataService {
     private final DataCommandLogRepository dataCommandLogRepository;
-    private final TrailRepository trailRepository;
+    private final EventRepository eventRepository;
 
-    public void loadTrailCsvToDatabase() throws IOException, CsvException {
-        DataCommandLog checkDataConfig = dataCommandLogRepository.findByConfigKey("TrailData")
+    public void loadEventCsvToDatabase() throws IOException, CsvException {
+        DataCommandLog checkDataConfig = dataCommandLogRepository.findByConfigKey("EventData")
                 .orElse(null);
 
         if (checkDataConfig == null || !checkDataConfig.isConfigValue()) {
-            try (CSVReader csvReader = new CSVReader(new InputStreamReader(new ClassPathResource("csv/course/trail.csv").getInputStream()))) {
-
-                List<Trail> trails = csvReader.readAll().stream()
+            try (CSVReader csvReader = new CSVReader(new InputStreamReader(new ClassPathResource("csv/home/event.csv").getInputStream()))) {
+                List<Event> events = csvReader.readAll().stream()
                         .map(fields -> {
                             try {
-                                return Trail.builder()
-                                        .trailType(TrailType.fromCode(fields[1].trim()))
-                                        .title(fields[2])
-                                        .latitude(parseCoordinates(fields[3])[0])
-                                        .longitude(parseCoordinates(fields[3])[1])
-                                        .content(fields[4])
-                                        .address(fields[5])
-                                        .phoneNumber(fields[6])
-                                        .homepageUrl(fields[7])
-                                        .businessHours(fields[8])
-                                        .fee(fields[9])
-                                        .duration(fields[10])
-                                        .reference(fields[12])
+                                LocalDate startDate = parseDates(fields[3])[0];
+                                LocalDate endDate = parseDates(fields[3])[1];
+
+                                return Event.builder()
+                                        .title(fields[1])
+                                        .host(fields[2])
+                                        .startDate(startDate)
+                                        .endDate(endDate)
+                                        .eventStatus(EventStatus.getEventStatus(startDate, endDate))
+                                        .thumbnail(fields[4])
+                                        .link(fields[5])
                                         .build();
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 return null;
@@ -59,7 +58,7 @@ public class TrailDataService {
                         .filter(Objects::nonNull)
                         .collect(Collectors.toList());
 
-                trailRepository.saveAll(trails);
+                eventRepository.saveAll(events);
 
             } catch (IOException | CsvException e) {
                 e.printStackTrace();
@@ -67,7 +66,7 @@ public class TrailDataService {
             }
 
             DataCommandLog dataCommandLog = DataCommandLog.builder()
-                    .configKey("TrailData")
+                    .configKey("EventData")
                     .configValue(true)
                     .updatedAt(LocalDate.now())
                     .build();
@@ -75,21 +74,25 @@ public class TrailDataService {
             dataCommandLogRepository.save(dataCommandLog);
 
             log.info("===============================================================================");
-            log.info("All trail data is uploaded!");
+            log.info("All event data is uploaded!");
             log.info("===============================================================================");
 
         } else {
             log.info("===============================================================================");
-            log.info("trail data is already loaded");
+            log.info("Event data is already loaded");
             log.info("===============================================================================");
         }
     }
 
-    public double[] parseCoordinates(String coordinates) {
-        String[] parts = coordinates.split(", ");
+    public LocalDate[] parseDates(String dates) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String[] parts = dates.split(",");
+
         if (parts.length != 2) {
-            throw new IllegalArgumentException("Invalid coordinate format");
+            throw new IllegalArgumentException("Invalid dates format");
         }
-        return new double[]{Double.parseDouble(parts[0]), Double.parseDouble(parts[1])};
+        LocalDate startDate = LocalDate.parse(parts[0].trim(), formatter);
+        LocalDate endDate = LocalDate.parse(parts[1].trim(), formatter);
+        return new LocalDate[]{startDate, endDate};
     }
 }

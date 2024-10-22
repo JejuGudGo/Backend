@@ -1,6 +1,7 @@
 package com.example.jejugudgo.global.data.common.component;
 
-import com.example.jejugudgo.global.data.course.TrailDataService;
+import com.example.jejugudgo.global.data.home.EventDataService;
+import com.example.jejugudgo.global.data.home.TrailDataService;
 import com.example.jejugudgo.global.data.nickname.service.NicknameDataService;
 import com.example.jejugudgo.global.data.terms.TermsDataService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ public class DataLoadRunner implements CommandLineRunner {
     private final NicknameDataService nicknameDataService;
     private final TermsDataService termsDataService;
     private final TrailDataService trailDataService;
+    private final EventDataService eventDataService;
 
     @Override
     public void run(String... args) throws Exception {
@@ -20,5 +22,6 @@ public class DataLoadRunner implements CommandLineRunner {
         nicknameDataService.loadNounCsvToDatabase();
         termsDataService.loadTermsCsvToDatabase();
         trailDataService.loadTrailCsvToDatabase();
+        eventDataService.loadEventCsvToDatabase();
     }
 }
