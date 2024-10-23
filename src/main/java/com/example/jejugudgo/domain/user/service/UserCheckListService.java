@@ -7,6 +7,7 @@ import com.example.jejugudgo.domain.user.entity.User;
 import com.example.jejugudgo.domain.user.entity.UserCheckList;
 import com.example.jejugudgo.domain.user.repository.UserCheckListRepository;
 import com.example.jejugudgo.domain.user.repository.UserRepository;
+import com.example.jejugudgo.global.jwt.token.TokenUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -16,15 +17,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class UserCheckListService {
-    private final UserService userService;
+    private final TokenUtil tokenUtil;
     private final UserRepository userRepository;
     private final UserCheckListRepository userCheckListRepository;
 
     public List<UserCheckListResponse> getAll(HttpServletRequest request) {
-        Long userId = userService.getAuthenticatedUserIdFromToken(request);
+        Long userId = tokenUtil.getUserIdFromHeader(request);
         List<UserCheckList> userCheckListResponses = userCheckListRepository.findAllByUserId(userId);
         return userCheckListResponses.stream()
                 .map(this::toResponse)
@@ -39,7 +41,7 @@ public class UserCheckListService {
 
     @Transactional
     public UserCheckListResponse create(UserCheckListCreateRequest createRequest, HttpServletRequest servletRequest) {
-        Long userId = userService.getAuthenticatedUserIdFromToken(servletRequest);
+        Long userId = tokenUtil.getUserIdFromHeader(servletRequest);
         User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
 
         Optional<UserCheckList> latestCheckList = userCheckListRepository.findTopByUserIdOrderByOrderNumberDesc(userId);

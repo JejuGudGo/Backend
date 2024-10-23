@@ -16,8 +16,8 @@ public class UserController {
     private final UserService userService;
 
     @DeleteMapping("")
-    public ResponseEntity<?> deleteUser(HttpServletRequest request, HttpServletResponse response) {
-        userService.deleteUser(request, response);
+    public ResponseEntity<?> deleteUser(HttpServletRequest request) {
+        userService.deleteUser(request);
         return ResponseEntity.ok().build();
     }
 }

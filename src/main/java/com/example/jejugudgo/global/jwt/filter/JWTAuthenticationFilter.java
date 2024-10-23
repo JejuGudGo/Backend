@@ -1,7 +1,6 @@
 package com.example.jejugudgo.global.jwt.filter;
 
 import com.example.jejugudgo.global.jwt.token.TokenUtil;
-import com.example.jejugudgo.global.util.CookieUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,7 +15,6 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
-    private final CookieUtil cookieUtil;
     private final TokenUtil tokenUtil;
 
     @Override
@@ -37,26 +35,26 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String accessToken = cookieUtil.getCookie(request, "accessToken").getValue();
+        String accessToken = tokenUtil.getAccessTokenFromHeader(request);
         Long userId = tokenUtil.getUserIdFromToken(accessToken);
 
         try {
             tokenUtil.validateAccessToken(accessToken);
-            tokenUtil.getAuthenticationUsingToken(accessToken, String.valueOf(userId));
+            tokenUtil.getAuthenticationUsingToken(accessToken, userId);
 
         } catch (ExpiredJwtException e) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            setResponse(response, "TOKEN_01");
+            setResponse(response);
             return;
         }
 
         filterChain.doFilter(request, response);
     }
 
-    private void setResponse(HttpServletResponse response, String errorCode) throws IOException {
+    private void setResponse(HttpServletResponse response) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().println(
-                "{\"errorCode\" : \"" + errorCode + "\"}"
+                "{\"retCode\" : \"" + "98" + "\"}"
         );
     }
 }

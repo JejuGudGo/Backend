@@ -14,8 +14,7 @@ import com.example.jejugudgo.domain.user.entity.UserTerms;
 import com.example.jejugudgo.domain.user.repository.UserRepository;
 import com.example.jejugudgo.domain.user.repository.UserTermsRepository;
 import com.example.jejugudgo.global.jwt.token.TokenGenerator;
-import com.example.jejugudgo.global.jwt.token.TokenType;
-import com.example.jejugudgo.global.util.CookieUtil;
+import com.example.jejugudgo.global.jwt.token.TokenUtil;
 import com.example.jejugudgo.global.util.RandomNicknameUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,10 +35,10 @@ public class BasicAuthService {
     private final UserRepository userRepository;
     private final UserTermsRepository userTermsRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final CookieUtil cookieUtil;
-    private final TokenGenerator tokenGenerator;
     private final RandomNicknameUtil randomNicknameUtil;
     private final UserProfileService userProfileService;
+    private final TokenUtil tokenUtil;
+    private final TokenGenerator tokenGenerator;
 
     // 회원가입 메서드
     @Transactional
@@ -107,13 +106,14 @@ public class BasicAuthService {
         User user = userRepository.findByEmailAndProvider(request.email(), Provider.BASIC)
                 .orElseThrow(EntityNotFoundException::new);
 
-        addTokenToCookie(user.getId(), response);
         authenticateUser(request);
 
         // 2. 비밀번호 검증
         if (!bCryptPasswordEncoder.matches(request.password(), user.getPassword())) {
             throw new IllegalArgumentException();
         }
+
+        addAccessTokenToHeader(user.getId(), response);
 
         return new UserInfoResponse(
                 user.getId(),
@@ -126,17 +126,14 @@ public class BasicAuthService {
         );
     }
 
-    private void addTokenToCookie(Long userId, HttpServletResponse response) {
-        String accessToken = tokenGenerator.generateToken(TokenType.ACCESS, String.valueOf(userId));
-        String refreshToken = tokenGenerator.generateToken(TokenType.ACCESS, String.valueOf(userId));
-
-        cookieUtil.setCookie("accessToken", accessToken, response);
-        cookieUtil.setCookie("refreshToken", refreshToken, response);
-    }
-
     private void authenticateUser(LoginRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.email(), request.password())
         );
+    }
+
+    private void addAccessTokenToHeader(Long userId, HttpServletResponse response) {
+        String accessToken = tokenGenerator.generateToken(String.valueOf(userId));
+        response.setHeader("Authorization", accessToken);
     }
 }
