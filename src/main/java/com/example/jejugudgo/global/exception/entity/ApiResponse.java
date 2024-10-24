@@ -1,9 +1,7 @@
 package com.example.jejugudgo.global.exception.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +12,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApiResponse {
+@JsonInclude(JsonInclude.Include.NON_NULL)  // null 값을 제외하고 반환
+public class ApiResponse<T> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,12 +24,32 @@ public class ApiResponse {
 
     private String alertMessage;
 
-    public ApiResponse updateAlertMessage(String alertMessage) {
-        return ApiResponse.builder()
+    @Transient
+    private T data;
+
+
+    public ApiResponse<T> updateAlertMessage(String alertMessage) {
+        return ApiResponse.<T>builder()
                 .id(this.id)
                 .retCode(this.retCode)
                 .retMessage(this.retMessage)
                 .alertMessage(alertMessage)
+                .data(this.data)
+                .build();
+    }
+
+    public static <T> ApiResponse<T> success(T data) {
+        return ApiResponse.<T>builder()
+                .retCode("00")
+                .retMessage("요청에 성공하였습니다.")
+                .data(data)
+                .build();
+    }
+
+    public static <T> ApiResponse<T> error(RetCode retCode) {
+        return ApiResponse.<T>builder()
+                .retCode(retCode.getRetCode())
+                .retMessage(retCode.getMessage())
                 .build();
     }
 }

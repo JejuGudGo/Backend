@@ -1,6 +1,7 @@
 package com.example.jejugudgo.domain.user.controller;
 
 import com.example.jejugudgo.domain.user.service.UserService;
+import com.example.jejugudgo.global.exception.entity.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +17,8 @@ public class UserController {
     private final UserService userService;
 
     @DeleteMapping("")
-    public ResponseEntity<?> deleteUser(HttpServletRequest request) {
+    public ResponseEntity<ApiResponse<Void>> deleteUser(HttpServletRequest request) {
         userService.deleteUser(request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(ApiResponse.success(null));
     }
 }

@@ -5,6 +5,7 @@ import com.example.jejugudgo.domain.user.dto.request.PasswordUpdateRequest;
 import com.example.jejugudgo.domain.user.dto.response.FindEmailResponse;
 import com.example.jejugudgo.domain.auth.basic.service.FindUserInfoService;
 import com.example.jejugudgo.domain.user.service.UserInfoService;
+import com.example.jejugudgo.global.exception.entity.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,14 +20,15 @@ public class FindUserController {
     private final UserInfoService userInfoService;
 
     @PostMapping("/find/email")
-    public ResponseEntity<List<FindEmailResponse>> findUserByEmail(@RequestBody FindEmailRequest request) {
+    public ResponseEntity<ApiResponse<List<FindEmailResponse>>> findUserByEmail(
+            @RequestBody FindEmailRequest request) {
         List<FindEmailResponse> responses = findUserInfoService.findUserByNameAndPhone(request);
-        return ResponseEntity.ok(responses);
+        return ResponseEntity.ok(ApiResponse.success(responses));
     }
 
     @PatchMapping("/find/update")
-    public ResponseEntity<?> updatePassword (@RequestBody PasswordUpdateRequest request) {
+    public ResponseEntity<ApiResponse<Void>> updatePassword(@RequestBody PasswordUpdateRequest request) {
         userInfoService.updatePassword(request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(ApiResponse.success(null));
     }
 }

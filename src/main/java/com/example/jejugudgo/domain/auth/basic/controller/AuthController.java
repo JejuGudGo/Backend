@@ -6,6 +6,7 @@ import com.example.jejugudgo.domain.auth.basic.dto.response.SignupResponse;
 import com.example.jejugudgo.domain.auth.basic.service.BasicAuthService;
 import com.example.jejugudgo.domain.auth.mail.dto.EmailRequest;
 import com.example.jejugudgo.domain.user.dto.response.UserInfoResponse;
+import com.example.jejugudgo.global.exception.entity.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,22 +22,21 @@ public class AuthController {
     private final BasicAuthService basicAuthService;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody SignupRequest request) {
+    public ResponseEntity<ApiResponse<Void>> signup(@RequestBody SignupRequest request) {
         basicAuthService.signup(request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(ApiResponse.success(null));
     }
 
     @PostMapping("/check/email")
-    public ResponseEntity<Boolean> checkEmailDuplicate(@RequestBody EmailRequest request) {
-        boolean isDuplicate = basicAuthService.checkEmailDuplicate(request.email());
-        return ResponseEntity.ok(isDuplicate);
+    public ResponseEntity<ApiResponse<Void>> checkEmailDuplicate(@RequestBody EmailRequest request) {
+        basicAuthService.checkEmailDuplicate(request.email());
+        return ResponseEntity.ok(ApiResponse.success(null));
     }
 
 
     @PostMapping("/login")
-    public ResponseEntity<UserInfoResponse> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+    public ResponseEntity<ApiResponse<UserInfoResponse>> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         UserInfoResponse userInfoResponse = basicAuthService.loginAndGetUserInfo(loginRequest, response);
-
-        return ResponseEntity.ok(userInfoResponse);
+        return ResponseEntity.ok(ApiResponse.success(userInfoResponse));
     }
 }

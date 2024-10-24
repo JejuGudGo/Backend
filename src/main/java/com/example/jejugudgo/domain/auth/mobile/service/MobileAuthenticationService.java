@@ -2,8 +2,12 @@ package com.example.jejugudgo.domain.auth.mobile.service;
 
 import com.example.jejugudgo.domain.auth.mobile.dto.request.MobilAuthCodeRequest;
 import com.example.jejugudgo.domain.auth.mobile.dto.request.MobileAuthenticationRequest;
+import com.example.jejugudgo.global.exception.CustomException;
+import com.example.jejugudgo.global.exception.entity.RetCode;
 import com.example.jejugudgo.global.redis.RedisUtil;
 import lombok.RequiredArgsConstructor;
+import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
@@ -14,17 +18,48 @@ public class MobileAuthenticationService {
     private final RedisUtil redisUtil;
 
     public void sendAuthCode(MobilAuthCodeRequest request) {
-        String authCode = smsMessageService.generateAuthenticationCode();
         String phoneNumber = request.phoneNumber();
 
-        smsMessageService.sendMessage(phoneNumber, authCode);
+        // 전화번호 형식 검증
+        if (!isValidPhoneNumber(phoneNumber)) {
+            throw new CustomException(RetCode.RET_CODE03);
+        }
+
+        // 인증번호 생성
+        String authCode = smsMessageService.generateAuthenticationCode();
+
+        // SMS 발송
+        SingleMessageSentResponse response = smsMessageService.sendMessage(phoneNumber, authCode);
+
+        // 잔액 부족 에러 체크
+        if (response.getStatusCode().equals("1030")) {
+            throw new CustomException(RetCode.RET_CODE04);
+        }
+
         smsMessageService.saveDataForCheckUser(phoneNumber, authCode);
     }
 
-    public void checkAuthCode(MobileAuthenticationRequest request) throws BadRequestException {
+
+    private boolean isValidPhoneNumber(String phoneNumber) {
+        return phoneNumber != null && phoneNumber.matches("^010[0-9]{8}$");
+    }
+
+    public void checkAuthCode(MobileAuthenticationRequest request) {
         String redisValue = redisUtil.getData(request.phoneNumber());
-        if (!redisValue.equals(request.authCode())) {
-            throw new BadRequestException("인증번호가 불일치 합니다.");
+
+        // 인증번호의 형식이 올바르지 않은 경우
+        if (!isValidAuthCodeFormat(request.authCode())) {
+            throw new CustomException(RetCode.RET_CODE01);
         }
+
+        // 인증번호가 일치하지 않는 경우
+        if (!redisValue.equals(request.authCode())) {
+            throw new CustomException(RetCode.RET_CODE02);
+        }
+    }
+
+    // 인증번호의 형식이 유효한지 확인
+    private boolean isValidAuthCodeFormat(String authCode) {
+        return authCode.matches("\\d{6}");
     }
 }
