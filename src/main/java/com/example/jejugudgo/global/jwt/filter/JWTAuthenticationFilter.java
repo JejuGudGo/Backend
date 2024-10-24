@@ -1,5 +1,7 @@
 package com.example.jejugudgo.global.jwt.filter;
 
+import com.example.jejugudgo.global.exception.entity.ApiResponse;
+import com.example.jejugudgo.global.exception.repository.ApiResponseRepository;
 import com.example.jejugudgo.global.jwt.token.TokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -16,6 +18,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private final TokenUtil tokenUtil;
+    private final ApiResponseRepository apiResponseRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response,
@@ -52,9 +55,12 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private void setResponse(HttpServletResponse response) throws IOException {
+        ApiResponse apiResponse = apiResponseRepository.findByRetCode("98");
+
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().println(
-                "{\"retCode\" : \"" + "98" + "\"}"
+                "{\"retCode\" : \"" + apiResponse.getRetCode() + "\", " +
+                 "\"retMessage\" : \"" + apiResponse.getRetMessage() + "\"}"
         );
     }
 }

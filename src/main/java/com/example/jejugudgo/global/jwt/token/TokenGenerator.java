@@ -16,7 +16,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 @Slf4j
 public class TokenGenerator {
-    static final long ACCESS_TOKEN_VALID_TIME = 24 * 60 * 60 * 1000; // 15 분간 유효.
+    static final long ACCESS_TOKEN_VALID_TIME = 24 * 60 * 60 * 1000; // 하루간 유효.
 
     @Autowired
     private Key key;
