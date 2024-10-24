@@ -21,14 +21,14 @@ public class AuthController {
     private final BasicAuthService basicAuthService;
 
     @PostMapping("/signup")
-    public ResponseEntity<SignupResponse> signup(@RequestBody SignupRequest request) {
+    public ResponseEntity<?> signup(@RequestBody SignupRequest request) {
         basicAuthService.signup(request);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/check/email")
     public ResponseEntity<Boolean> checkEmailDuplicate(@RequestBody EmailRequest request) {
-        boolean isDuplicate = basicAuthService.checkEmailDuplicate(request);
+        boolean isDuplicate = basicAuthService.checkEmailDuplicate(request.email());
         return ResponseEntity.ok(isDuplicate);
     }
 

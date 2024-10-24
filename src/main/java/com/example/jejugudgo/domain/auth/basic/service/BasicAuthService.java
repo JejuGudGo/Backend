@@ -46,10 +46,15 @@ public class BasicAuthService {
         // 1. 비밀번호 유효성 검사
         validatePassword(request.password());
 
-        // 2. 사용자 정보 생성 및 저장
+        // 2. 이메일 중복 검사
+        if (checkEmailDuplicate(request.email())) {
+            throw new IllegalArgumentException();
+        }
+
+        // 3. 사용자 정보 생성 및 저장
         User user = createUser(request);
 
-        // 3. 약관 동의 처리
+        // 4. 약관 동의 처리
         handleTermsAgreements(request.terms(), user);
     }
 
@@ -97,8 +102,8 @@ public class BasicAuthService {
         }
     }
 
-    public boolean checkEmailDuplicate(EmailRequest request) {
-        return userRepository.findByEmail(request.email()).isPresent();
+    public boolean checkEmailDuplicate(String email) {
+        return userRepository.findByEmail(email).isPresent();
     }
 
     public UserInfoResponse loginAndGetUserInfo(LoginRequest request, HttpServletResponse response) {
