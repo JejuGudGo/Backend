@@ -2,10 +2,8 @@ package com.example.jejugudgo.domain.user.controller;
 
 import com.example.jejugudgo.domain.user.service.UserService;
 import com.example.jejugudgo.global.exception.dto.response.CommonApiResponse;
-import com.example.jejugudgo.global.exception.entity.ApiResponse;
 import com.example.jejugudgo.global.util.ApiResponseUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
