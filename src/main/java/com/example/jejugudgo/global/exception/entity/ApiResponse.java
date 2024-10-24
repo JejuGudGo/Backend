@@ -1,6 +1,5 @@
 package com.example.jejugudgo.global.exception.entity;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

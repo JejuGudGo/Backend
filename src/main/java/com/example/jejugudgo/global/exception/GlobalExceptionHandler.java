@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-@RequiredArgsConstructor  // ApiResponseUtil을 생성자 주입받기 위해 추가
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
-    private final ApiResponseUtil apiResponseUtil;  // ApiResponseUtil 주입
+    private final ApiResponseUtil apiResponseUtil;
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<CommonApiResponse> handleCustomException(CustomException e) {
