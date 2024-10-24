@@ -5,7 +5,9 @@ import com.example.jejugudgo.domain.user.dto.request.PasswordUpdateRequest;
 import com.example.jejugudgo.domain.user.dto.response.FindEmailResponse;
 import com.example.jejugudgo.domain.auth.basic.service.FindUserInfoService;
 import com.example.jejugudgo.domain.user.service.UserInfoService;
+import com.example.jejugudgo.global.exception.dto.response.CommonApiResponse;
 import com.example.jejugudgo.global.exception.entity.ApiResponse;
+import com.example.jejugudgo.global.util.ApiResponseUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,17 +20,18 @@ import java.util.List;
 public class FindUserController {
     private final FindUserInfoService findUserInfoService;
     private final UserInfoService userInfoService;
+    private final ApiResponseUtil apiResponseUtil;
 
     @PostMapping("/find/email")
-    public ResponseEntity<ApiResponse<List<FindEmailResponse>>> findUserByEmail(
+    public ResponseEntity<CommonApiResponse> findUserByEmail(
             @RequestBody FindEmailRequest request) {
         List<FindEmailResponse> responses = findUserInfoService.findUserByNameAndPhone(request);
-        return ResponseEntity.ok(ApiResponse.success(responses));
+        return ResponseEntity.ok(apiResponseUtil.success(responses));
     }
 
     @PatchMapping("/find/update")
-    public ResponseEntity<ApiResponse<Void>> updatePassword(@RequestBody PasswordUpdateRequest request) {
+    public ResponseEntity<CommonApiResponse> updatePassword(@RequestBody PasswordUpdateRequest request) {
         userInfoService.updatePassword(request);
-        return ResponseEntity.ok(ApiResponse.success(null));
+        return ResponseEntity.ok(apiResponseUtil.success(null));
     }
 }

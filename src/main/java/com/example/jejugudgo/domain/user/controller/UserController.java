@@ -1,7 +1,9 @@
 package com.example.jejugudgo.domain.user.controller;
 
 import com.example.jejugudgo.domain.user.service.UserService;
+import com.example.jejugudgo.global.exception.dto.response.CommonApiResponse;
 import com.example.jejugudgo.global.exception.entity.ApiResponse;
+import com.example.jejugudgo.global.util.ApiResponseUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -15,10 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final ApiResponseUtil apiResponseUtil;
 
     @DeleteMapping("")
-    public ResponseEntity<ApiResponse<Void>> deleteUser(HttpServletRequest request) {
+    public ResponseEntity<CommonApiResponse> deleteUser(HttpServletRequest request) {
         userService.deleteUser(request);
-        return ResponseEntity.ok(ApiResponse.success(null));
+        return ResponseEntity.ok(apiResponseUtil.success(null));
     }
 }

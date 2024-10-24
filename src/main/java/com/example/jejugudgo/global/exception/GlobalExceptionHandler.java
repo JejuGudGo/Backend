@@ -1,26 +1,31 @@
 package com.example.jejugudgo.global.exception;
 
-import com.example.jejugudgo.global.exception.entity.ApiResponse;
+import com.example.jejugudgo.global.exception.dto.response.CommonApiResponse;
 import com.example.jejugudgo.global.exception.entity.RetCode;
+import com.example.jejugudgo.global.util.ApiResponseUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
+@RequiredArgsConstructor  // ApiResponseUtil을 생성자 주입받기 위해 추가
 public class GlobalExceptionHandler {
 
+    private final ApiResponseUtil apiResponseUtil;  // ApiResponseUtil 주입
+
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ApiResponse<Void>> handleCustomException(CustomException e) {
+    public ResponseEntity<CommonApiResponse> handleCustomException(CustomException e) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.error(e.getRetCode()));
+                .body(apiResponseUtil.error(e.getRetCode()));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<Void>> handleUnexpectedException(Exception e) {
+    public ResponseEntity<CommonApiResponse> handleUnexpectedException(Exception e) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ApiResponse.error(RetCode.RET_CODE99));
+                .body(apiResponseUtil.error(RetCode.RET_CODE99));
     }
 }

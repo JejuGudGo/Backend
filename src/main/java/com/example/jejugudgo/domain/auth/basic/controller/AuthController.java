@@ -6,7 +6,9 @@ import com.example.jejugudgo.domain.auth.basic.dto.response.SignupResponse;
 import com.example.jejugudgo.domain.auth.basic.service.BasicAuthService;
 import com.example.jejugudgo.domain.auth.mail.dto.EmailRequest;
 import com.example.jejugudgo.domain.user.dto.response.UserInfoResponse;
+import com.example.jejugudgo.global.exception.dto.response.CommonApiResponse;
 import com.example.jejugudgo.global.exception.entity.ApiResponse;
+import com.example.jejugudgo.global.util.ApiResponseUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,23 +22,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
     private final BasicAuthService basicAuthService;
+    private final ApiResponseUtil apiResponseUtil;
 
     @PostMapping("/signup")
-    public ResponseEntity<ApiResponse<Void>> signup(@RequestBody SignupRequest request) {
+    public ResponseEntity<CommonApiResponse> signup(@RequestBody SignupRequest request) {
         basicAuthService.signup(request);
-        return ResponseEntity.ok(ApiResponse.success(null));
+        return ResponseEntity.ok(apiResponseUtil.success(null));
     }
 
     @PostMapping("/check/email")
-    public ResponseEntity<ApiResponse<Void>> checkEmailDuplicate(@RequestBody EmailRequest request) {
+    public ResponseEntity<CommonApiResponse> checkEmailDuplicate(@RequestBody EmailRequest request) {
         basicAuthService.checkEmailDuplicate(request.email());
-        return ResponseEntity.ok(ApiResponse.success(null));
+        return ResponseEntity.ok(apiResponseUtil.success(null));
     }
 
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<UserInfoResponse>> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+    public ResponseEntity<CommonApiResponse> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         UserInfoResponse userInfoResponse = basicAuthService.loginAndGetUserInfo(loginRequest, response);
-        return ResponseEntity.ok(ApiResponse.success(userInfoResponse));
+        return ResponseEntity.ok(apiResponseUtil.success(userInfoResponse));
     }
+
 }
