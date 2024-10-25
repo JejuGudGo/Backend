@@ -1,8 +1,8 @@
 package com.example.jejugudgo.global.security;
 
+import com.example.jejugudgo.global.exception.repository.ApiResponseRepository;
 import com.example.jejugudgo.global.jwt.filter.JWTAuthenticationFilter;
 import com.example.jejugudgo.global.jwt.token.TokenUtil;
-import com.example.jejugudgo.global.util.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -26,10 +26,10 @@ import org.springframework.web.filter.CorsFilter;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
     private final TokenUtil tokenUtil;
-    private final CookieUtil cookieUtil;
     private final CustomUserDetailsService customUserDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final ApiResponseRepository apiResponseRepository;
 //    private final CustomOAuth2UserService customOAuth2UserService;
 //    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
@@ -46,8 +46,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/oauth/**").permitAll()
                                 .requestMatchers("/api/v1/oauth/**").permitAll()
                                 .requestMatchers("/ws/**").permitAll()
-                                .requestMatchers("/favicon.ico/**").permitAll()
-                                .requestMatchers("/static/**").permitAll()
+                                .requestMatchers("/favicon.ico/**", "/static/**", "/resources/**", "/public/**").permitAll()
                                 .requestMatchers("/index.html").permitAll()
                                 .requestMatchers("/openapi.yml").permitAll()
                                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
@@ -62,7 +61,7 @@ public class SecurityConfiguration {
                         exception
                                 .authenticationEntryPoint(customAuthenticationEntryPoint)
                 )
-                .addFilterBefore(jwtAuthenticationFilter(cookieUtil, tokenUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter(tokenUtil, apiResponseRepository), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(customAuthenticationFilter(), JWTAuthenticationFilter.class);
 
 //        httpSecurity
@@ -120,7 +119,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public JWTAuthenticationFilter jwtAuthenticationFilter(CookieUtil cookieUtil, TokenUtil tokenUtil) {
-        return new JWTAuthenticationFilter(cookieUtil, tokenUtil);
+    public JWTAuthenticationFilter jwtAuthenticationFilter(TokenUtil tokenUtil, ApiResponseRepository apiResponseRepository) {
+        return new JWTAuthenticationFilter(tokenUtil, apiResponseRepository);
     }
 }
