@@ -5,7 +5,8 @@ import com.example.jejugudgo.domain.trail.dto.TrailListResponse;
 import com.example.jejugudgo.domain.trail.entity.Trail;
 import com.example.jejugudgo.domain.trail.entity.TrailType;
 import com.example.jejugudgo.domain.trail.repository.TrailRepository;
-import jakarta.persistence.EntityExistsException;
+import com.example.jejugudgo.global.exception.CustomException;
+import com.example.jejugudgo.global.exception.entity.RetCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,9 @@ public class TrailService {
                     ))
                     .collect(Collectors.toList());
 
+        } else if (query.isEmpty()) {
+            throw new CustomException(RetCode.RET_CODE97);
+
         } else {
             TrailType trailType = TrailType.fromCode(query);
             return trailRepository.findByTrailType(trailType).stream()
@@ -43,7 +47,7 @@ public class TrailService {
 
     public TrailDetailResponse getTrail(Long trailId) {
         Trail trail = trailRepository.findById(trailId)
-                .orElseThrow(EntityExistsException::new);
+                .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
 
         TrailDetailResponse response = new TrailDetailResponse(
                 trail.getId(),
