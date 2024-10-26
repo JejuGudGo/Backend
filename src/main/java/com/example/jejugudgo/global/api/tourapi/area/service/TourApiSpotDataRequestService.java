@@ -5,6 +5,8 @@ import com.example.jejugudgo.global.api.tourapi.common.entity.TourApiContentType
 import com.example.jejugudgo.global.api.tourapi.common.entity.TourApiSpots;
 import com.example.jejugudgo.global.api.tourapi.area.repository.TourApiContentTypeRepository;
 import com.example.jejugudgo.global.api.tourapi.area.repository.TourApiSpotRepository;
+import com.example.jejugudgo.global.data.common.entity.DataCommandLog;
+import com.example.jejugudgo.global.data.common.repository.DataCommandLogRepository;
 import com.example.jejugudgo.global.exception.CustomException;
 import com.example.jejugudgo.global.exception.entity.RetCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,26 +20,48 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.hibernate.query.sqm.tree.SqmNode.log;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class TourApiDataRequestService {
+public class TourApiSpotDataRequestService {
     @Value("${tour.api.key}")
     private String KEY;
     private final String FRONT_URL = "http://apis.data.go.kr/B551011/KorService1/";
 
     private final TourApiSpotRepository tourApiSpotRepository;
     private final TourApiContentTypeRepository tourApiContentTypeRepository;
+    private final DataCommandLogRepository dataCommandLogRepository;
 
     public void loadTourApiData() throws IOException {
-        List<TourApiContentType> contentTypes = tourApiContentTypeRepository.findAll();
-        for (TourApiContentType contentType : contentTypes) {
-            requestRowNumber(contentType.getContentType().getContentTypeId());
+        DataCommandLog checkDataConfig = dataCommandLogRepository.findByConfigKey("TourApiSpotsData")
+                .orElse(null);
+
+        if (checkDataConfig == null || !checkDataConfig.isConfigValue()) {
+            List<TourApiContentType> contentTypes = tourApiContentTypeRepository.findAll();
+            for (TourApiContentType contentType : contentTypes) {
+                requestRowNumber(contentType.getContentType().getContentTypeId());
+            }
         }
+
+        DataCommandLog dataCommandLog = DataCommandLog.builder()
+                .configKey("TourApiSpotsData")
+                .configValue(true)
+                .updatedAt(LocalDate.now())
+                .build();
+
+        dataCommandLogRepository.save(dataCommandLog);
+
+        log.info("===============================================================================");
+        log.info("All tour api spot data is uploaded!");
+        log.info("===============================================================================");
+
     }
 
     private void requestRowNumber(String contentTypeId) throws IOException {
@@ -182,7 +206,7 @@ public class TourApiDataRequestService {
         }
     }
 
-    private void requestSpotData(String contentTypeId, String contentId) throws IOException {
+    public void requestSpotData(String contentTypeId, String contentId) throws IOException {
         TourApiSpots tourApiSpots = tourApiSpotRepository.findByContentId(contentId)
                 .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
 
