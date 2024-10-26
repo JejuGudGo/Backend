@@ -3,6 +3,8 @@ package com.example.jejugudgo.domain.event.service;
 import com.example.jejugudgo.domain.event.dto.EventListResponse;
 import com.example.jejugudgo.domain.event.entity.EventStatus;
 import com.example.jejugudgo.domain.event.repository.EventRepository;
+import com.example.jejugudgo.global.exception.CustomException;
+import com.example.jejugudgo.global.exception.entity.RetCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,10 @@ public class EventService {
                             event.getLink()
                     ))
                     .collect(Collectors.toList());
+
+        } else if (query.isEmpty()) {
+            throw new CustomException(RetCode.RET_CODE99);
+
         } else {
             EventStatus eventStatus = EventStatus.fromCode(query);
             return eventRepository.findByEventStatus(eventStatus).stream()
