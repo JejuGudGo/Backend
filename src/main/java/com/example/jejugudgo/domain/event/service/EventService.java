@@ -29,7 +29,7 @@ public class EventService {
                     .collect(Collectors.toList());
 
         } else if (query.isEmpty()) {
-            throw new CustomException(RetCode.RET_CODE99);
+            throw new CustomException(RetCode.RET_CODE97);
 
         } else {
             EventStatus eventStatus = EventStatus.fromCode(query);

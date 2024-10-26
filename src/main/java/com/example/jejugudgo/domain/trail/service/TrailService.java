@@ -30,7 +30,7 @@ public class TrailService {
                     .collect(Collectors.toList());
 
         } else if (query.isEmpty()) {
-            throw new CustomException(RetCode.RET_CODE99);
+            throw new CustomException(RetCode.RET_CODE97);
 
         } else {
             TrailType trailType = TrailType.fromCode(query);
@@ -47,7 +47,7 @@ public class TrailService {
 
     public TrailDetailResponse getTrail(Long trailId) {
         Trail trail = trailRepository.findById(trailId)
-                .orElseThrow(() -> new CustomException(RetCode.RET_CODE99));
+                .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
 
         TrailDetailResponse response = new TrailDetailResponse(
                 trail.getId(),
