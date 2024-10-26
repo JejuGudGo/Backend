@@ -1,10 +1,10 @@
-package com.example.jejugudgo.global.api.tourapi.common.service;
+package com.example.jejugudgo.global.api.tourapi.area.service;
 
 import com.example.jejugudgo.global.api.tourapi.common.entity.ContentType;
 import com.example.jejugudgo.global.api.tourapi.common.entity.TourApiContentType;
 import com.example.jejugudgo.global.api.tourapi.common.entity.TourApiSpots;
-import com.example.jejugudgo.global.api.tourapi.common.repository.TourApiContentTypeRepository;
-import com.example.jejugudgo.global.api.tourapi.common.repository.TourApiSpotRepository;
+import com.example.jejugudgo.global.api.tourapi.area.repository.TourApiContentTypeRepository;
+import com.example.jejugudgo.global.api.tourapi.area.repository.TourApiSpotRepository;
 import com.example.jejugudgo.global.exception.CustomException;
 import com.example.jejugudgo.global.exception.entity.RetCode;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,7 +1,7 @@
 package com.example.jejugudgo.global.data.common.component;
 
-import com.example.jejugudgo.global.api.tourapi.common.service.TourApiDataRequestService;
-import com.example.jejugudgo.global.api.tourapi.common.service.TourApiService;
+import com.example.jejugudgo.global.api.tourapi.area.service.TourApiDataRequestService;
+import com.example.jejugudgo.global.api.tourapi.area.service.TourApiService;
 import com.example.jejugudgo.global.data.home.EventDataService;
 import com.example.jejugudgo.global.data.home.TrailDataService;
 import com.example.jejugudgo.global.data.nickname.service.NicknameDataService;

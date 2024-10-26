@@ -1,4 +1,4 @@
-package com.example.jejugudgo.global.api.tourapi.common.repository;
+package com.example.jejugudgo.global.api.tourapi.area.repository;
 
 import com.example.jejugudgo.global.api.tourapi.common.entity.ContentType;
 import com.example.jejugudgo.global.api.tourapi.common.entity.TourApiContentType;

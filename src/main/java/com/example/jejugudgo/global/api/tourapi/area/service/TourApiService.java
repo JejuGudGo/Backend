@@ -1,8 +1,8 @@
-package com.example.jejugudgo.global.api.tourapi.common.service;
+package com.example.jejugudgo.global.api.tourapi.area.service;
 
 import com.example.jejugudgo.global.api.tourapi.common.entity.ContentType;
 import com.example.jejugudgo.global.api.tourapi.common.entity.TourApiContentType;
-import com.example.jejugudgo.global.api.tourapi.common.repository.TourApiContentTypeRepository;
+import com.example.jejugudgo.global.api.tourapi.area.repository.TourApiContentTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
