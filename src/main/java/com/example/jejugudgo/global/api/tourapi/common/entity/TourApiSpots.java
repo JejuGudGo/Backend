@@ -20,6 +20,8 @@ public class TourApiSpots {
 
     private String contentId;
 
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String summary;
 
     private String imageUrl;
@@ -50,7 +52,6 @@ public class TourApiSpots {
     private String eventFee;
 
     private String sponsor;
-
 
 
     @ManyToOne

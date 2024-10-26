@@ -25,8 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.hibernate.query.sqm.tree.SqmNode.log;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -48,20 +46,24 @@ public class TourApiSpotDataRequestService {
             for (TourApiContentType contentType : contentTypes) {
                 requestRowNumber(contentType.getContentType().getContentTypeId());
             }
+
+            DataCommandLog dataCommandLog = DataCommandLog.builder()
+                    .configKey("TourApiSpotsData")
+                    .configValue(true)
+                    .updatedAt(LocalDate.now())
+                    .build();
+
+            dataCommandLogRepository.save(dataCommandLog);
+
+            log.info("===============================================================================");
+            log.info("All tour api spot data is uploaded!");
+            log.info("===============================================================================");
+
+        } else {
+            log.info("===============================================================================");
+            log.info("All tour api spot data is already uploaded!");
+            log.info("===============================================================================");
         }
-
-        DataCommandLog dataCommandLog = DataCommandLog.builder()
-                .configKey("TourApiSpotsData")
-                .configValue(true)
-                .updatedAt(LocalDate.now())
-                .build();
-
-        dataCommandLogRepository.save(dataCommandLog);
-
-        log.info("===============================================================================");
-        log.info("All tour api spot data is uploaded!");
-        log.info("===============================================================================");
-
     }
 
     private void requestRowNumber(String contentTypeId) throws IOException {
@@ -302,6 +304,10 @@ public class TourApiSpotDataRequestService {
                                     openingHours = item.get("usetimeculture").toString();
                                 }
 
+                                if (item.containsKey("infocenter")) {
+                                    phone = item.get("infocenter").toString();
+                                }
+
                                 if (item.containsKey("sponsor1")) {
                                     sponsor = item.get("sponsor1").toString();
 
@@ -379,23 +385,24 @@ public class TourApiSpotDataRequestService {
 
         TourApiSpots updatedSpot = TourApiSpots.builder()
                 .id(tourApiSpots.getId())
-                .summary(summary.isEmpty() ? tourApiSpots.getSummary() : summary)
-                .phone(phone.isEmpty() ? tourApiSpots.getPhone() : phone)
-                .homepage(homepage.isEmpty() ? tourApiSpots.getHomepage() : homepage)
-                .fee(fee.isEmpty() ? tourApiSpots.getFee() : fee)
-                .openingHours(openingHours.isEmpty() ? tourApiSpots.getOpeningHours() : openingHours)
-                .eventStartDate(eventStartDate.isEmpty() ? tourApiSpots.getEventStartDate() : eventStartDate)
-                .eventEndDate(eventEndDate.isEmpty() ? tourApiSpots.getEventEndDate() : eventEndDate)
-                .eventContent(eventContent.isEmpty() ? tourApiSpots.getEventContent() : eventContent)
-                .eventFee(eventFee.isEmpty() ? tourApiSpots.getEventFee() : eventFee)
-                .eventPlace(eventPlace.isEmpty() ? tourApiSpots.getEventPlace() : eventPlace)
-                .sponsor(sponsor.isEmpty() ? tourApiSpots.getSponsor() : sponsor)
+                .summary(summary)
+                .phone(phone)
+                .homepage(homepage)
+                .fee(fee)
+                .openingHours(openingHours)
+                .eventStartDate(eventStartDate)
+                .eventEndDate(eventEndDate)
+                .eventContent(eventContent)
+                .eventFee(eventFee)
+                .eventPlace(eventPlace)
+                .sponsor(sponsor)
                 .imageUrl(tourApiSpots.getImageUrl())
                 .tourApiContentType(tourApiSpots.getTourApiContentType())
                 .contentId(tourApiSpots.getContentId())
                 .title(tourApiSpots.getTitle())
                 .longitude(tourApiSpots.getLongitude())
                 .latitude(tourApiSpots.getLatitude())
+                .address(tourApiSpots.getAddress())
                 .build();
 
         tourApiSpots = tourApiSpots.updateTourApiSpots(updatedSpot);
