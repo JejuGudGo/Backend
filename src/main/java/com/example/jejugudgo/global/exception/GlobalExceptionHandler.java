@@ -3,6 +3,7 @@ package com.example.jejugudgo.global.exception;
 import com.example.jejugudgo.global.exception.dto.response.CommonApiResponse;
 import com.example.jejugudgo.global.exception.entity.RetCode;
 import com.example.jejugudgo.global.util.ApiResponseUtil;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

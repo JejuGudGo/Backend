@@ -21,7 +21,7 @@ public class DataLoadRunner implements CommandLineRunner {
     private final ApiResponseService responseService;
     private final TourApiSpotService tourApiSpotService;
     private final TourApiSpotDataRequestService tourApiSpotDataRequestService;
-
+  
     @Override
     public void run(String... args) throws Exception {
         nicknameDataService.loadAdjectiveCsvToDatabase();

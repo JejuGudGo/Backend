@@ -43,6 +43,8 @@ public class Trail {
 
     private String reference;
 
+    private double starAvg;
+
     @Enumerated(value = EnumType.STRING)
     private TrailType trailType;
 }
