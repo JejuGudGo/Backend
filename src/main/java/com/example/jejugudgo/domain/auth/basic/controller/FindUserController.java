@@ -26,7 +26,7 @@ public class FindUserController {
     public ResponseEntity<CommonApiResponse> findUserByEmail(
             @RequestBody FindEmailRequest request) {
         List<FindEmailResponse> responses = findUserInfoService.findUserByNameAndPhone(request);
-        return ResponseEntity.ok(apiResponseUtil.success(responses));
+        return ResponseEntity.ok(apiResponseUtil.success(responses, "results"));
     }
 
     @PatchMapping("/find/update")

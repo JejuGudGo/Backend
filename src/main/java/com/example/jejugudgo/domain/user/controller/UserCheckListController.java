@@ -23,7 +23,7 @@ public class UserCheckListController {
     @GetMapping("")
     public ResponseEntity<CommonApiResponse> getAll(HttpServletRequest request) {
         List<UserCheckListResponse> userCheckListResponseList = userCheckListService.getAll(request);
-        return ResponseEntity.ok(apiResponseUtil.success(userCheckListResponseList));
+        return ResponseEntity.ok(apiResponseUtil.success(userCheckListResponseList,"checkList"));
     }
 
     @GetMapping("/{checkItemId}")

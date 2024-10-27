@@ -21,7 +21,7 @@ public class TrailController {
     @GetMapping(value = "")
     public ResponseEntity<CommonApiResponse> getTrails(@RequestParam("type") String query) {
         List<TrailListResponse> responses = trailService.getTrails(query);
-        return ResponseEntity.ok(apiResponseUtil.success(responses));
+        return ResponseEntity.ok(apiResponseUtil.success(responses, "trails"));
     }
 
     @GetMapping(value = "/{trailId}")

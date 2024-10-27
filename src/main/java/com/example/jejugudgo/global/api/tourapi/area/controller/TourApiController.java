@@ -32,7 +32,7 @@ public class TourApiController {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<TourApiSpotListResponse> spotListPage = tourApiSpotQueryService
                 .getAllTourApiSpotsByContentType(ContentType.fromTitle(type), pageRequest);
-        return ResponseEntity.ok(apiResponseUtil.success(spotListPage));
+        return ResponseEntity.ok(apiResponseUtil.success(spotListPage, "spots"));
     }
 
     @GetMapping("/{tourApiSpotId}")

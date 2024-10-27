@@ -23,6 +23,6 @@ public class EventController {
     @GetMapping(value = "")
     public ResponseEntity<CommonApiResponse> getEvents(@RequestParam("status") String status) {
         List<EventListResponse> events = eventService.getEvents(status);
-        return ResponseEntity.ok(apiResponseUtil.success(events));
+        return ResponseEntity.ok(apiResponseUtil.success(events, "events"));
     }
 }
