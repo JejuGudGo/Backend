@@ -10,17 +10,17 @@ import com.example.jejugudgo.domain.user.entity.Provider;
 import com.example.jejugudgo.domain.user.entity.Role;
 import com.example.jejugudgo.domain.user.entity.User;
 import com.example.jejugudgo.domain.user.entity.UserTerms;
+import com.example.jejugudgo.domain.user.event.UserCheckListEvent;
 import com.example.jejugudgo.domain.user.repository.UserRepository;
 import com.example.jejugudgo.domain.user.repository.UserTermsRepository;
 import com.example.jejugudgo.global.exception.CustomException;
-import com.example.jejugudgo.global.exception.entity.ApiResponse;
 import com.example.jejugudgo.global.exception.entity.RetCode;
 import com.example.jejugudgo.global.jwt.token.TokenGenerator;
-import com.example.jejugudgo.global.jwt.token.TokenUtil;
 import com.example.jejugudgo.global.util.RandomNicknameUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -39,8 +39,10 @@ public class BasicAuthService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RandomNicknameUtil randomNicknameUtil;
     private final UserProfileService userProfileService;
-    private final TokenUtil tokenUtil;
     private final TokenGenerator tokenGenerator;
+
+    private final ApplicationEventPublisher eventPublisher;
+
 
     private static final String PASSWORD_PATTERN =
             "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&#]{8,20}$";
@@ -69,6 +71,9 @@ public class BasicAuthService {
 
         // 5. 약관 동의 처리
         handleTermsAgreements(request.terms(), user);
+
+        // 6. 체크리스트 생성
+        eventPublisher.publishEvent(new UserCheckListEvent(user.getId()));
     }
 
     private boolean isValidPhoneNumber(String phoneNumber) {
@@ -150,7 +155,7 @@ public class BasicAuthService {
         authenticateUser(request);
 
         // 4. 토큰 생성 및 헤더 추가
-        addAccessTokenToHeader(user.getId(), response);
+        String accessToken = addAccessTokenToHeader(user.getId(), response);
 
         // 5. 사용자 정보 반환
         return new UserInfoResponse(
@@ -160,7 +165,8 @@ public class BasicAuthService {
                 user.getNickname(),
                 user.getCreatedAt(),
                 user.getPhoneNumber(),
-                user.getRole()
+                user.getRole(),
+                accessToken
         );
     }
 
@@ -170,8 +176,9 @@ public class BasicAuthService {
         );
     }
 
-    private void addAccessTokenToHeader(Long userId, HttpServletResponse response) {
+    private String addAccessTokenToHeader(Long userId, HttpServletResponse response) {
         String accessToken = tokenGenerator.generateToken(String.valueOf(userId));
         response.setHeader("Authorization", accessToken);
+        return accessToken;
     }
 }
