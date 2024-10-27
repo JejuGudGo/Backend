@@ -50,6 +50,7 @@ public class TrailDataService {
                                         .fee(fields[9])
                                         .duration(fields[10])
                                         .reference(fields[12])
+                                        .imageUrl(fields[11 ])
                                         .build();
                             } catch (Exception e) {
                                 e.printStackTrace();

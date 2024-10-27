@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.hibernate.internal.util.StringHelper.nullIfEmpty;
+
 @Service
 @RequiredArgsConstructor
 public class TrailService {
@@ -23,9 +25,9 @@ public class TrailService {
             return trailRepository.findAll().stream()
                     .map(trail -> new TrailListResponse(
                             trail.getId(),
-                            trail.getImageUrl(),
-                            trail.getTitle(),
-                            trail.getContent()
+                            nullIfEmpty(trail.getImageUrl()),
+                            nullIfEmpty(trail.getTitle()),
+                            nullIfEmpty(trail.getContent())
                     ))
                     .collect(Collectors.toList());
 
@@ -37,9 +39,9 @@ public class TrailService {
             return trailRepository.findByTrailType(trailType).stream()
                     .map(trail -> new TrailListResponse(
                             trail.getId(),
-                            trail.getImageUrl(),
-                            trail.getTitle(),
-                            trail.getContent()
+                            nullIfEmpty(trail.getImageUrl()),
+                            nullIfEmpty(trail.getTitle()),
+                            nullIfEmpty(trail.getContent())
                     ))
                     .collect(Collectors.toList());
         }
@@ -51,18 +53,18 @@ public class TrailService {
 
         TrailDetailResponse response = new TrailDetailResponse(
                 trail.getId(),
-                trail.getTitle(),
+                nullIfEmpty(trail.getTitle()),
                 trail.getLatitude(),
                 trail.getLongitude(),
-                trail.getContent(),
-                trail.getAddress(),
-                trail.getPhoneNumber(),
-                trail.getHomepageUrl(),
-                trail.getBusinessHours(),
-                trail.getFee(),
-                trail.getDuration(),
-                trail.getImageUrl(),
-                trail.getReference(),
+                nullIfEmpty(trail.getContent()),
+                nullIfEmpty(trail.getAddress()),
+                nullIfEmpty(trail.getPhoneNumber()),
+                nullIfEmpty(trail.getHomepageUrl()),
+                nullIfEmpty(trail.getBusinessHours()),
+                nullIfEmpty(trail.getFee()),
+                nullIfEmpty(trail.getDuration()),
+                nullIfEmpty(trail.getImageUrl()),
+                nullIfEmpty(trail.getReference()),
                 trail.getTrailType().getCode()
         );
 
