@@ -11,7 +11,8 @@ public record UserInfoResponse(
         String nickname,
         LocalDateTime createdAt,
         String phoneNumber,
-        Role userRole
+        Role userRole,
+        String accessToken
 ) {
 
 }
