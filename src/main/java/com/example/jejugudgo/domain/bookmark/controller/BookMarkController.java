@@ -22,7 +22,7 @@ public class BookMarkController {
     @GetMapping("")
     public ResponseEntity<CommonApiResponse> getBookMarks(@RequestParam("type") String query, HttpServletRequest request) {
         List<BookMarkResponse> responses = bookMarkService.getBookMarks(query, request);
-        return ResponseEntity.ok(apiResponseUtil.success(responses));
+        return ResponseEntity.ok(apiResponseUtil.success(responses, "bookmarks"));
     }
 
     @PostMapping("")

@@ -22,6 +22,6 @@ public class TermsController {
     @GetMapping(value = "")
     public ResponseEntity<CommonApiResponse> getTerms() {
         List<TermsResponse> responses = termsService.getTerms();
-        return ResponseEntity.ok(apiResponseUtil.success(responses));
+        return ResponseEntity.ok(apiResponseUtil.success(responses, "terms"));
     }
 }

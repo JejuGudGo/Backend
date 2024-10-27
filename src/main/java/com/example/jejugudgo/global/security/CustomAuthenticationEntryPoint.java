@@ -1,5 +1,7 @@
 package com.example.jejugudgo.global.security;
 
+import com.example.jejugudgo.global.exception.entity.ApiResponse;
+import com.example.jejugudgo.global.exception.repository.ApiResponseRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,28 +18,32 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
-    // TODO: error code 수정
+    ApiResponseRepository apiResponseRepository;
+
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         if (authException instanceof UsernameNotFoundException) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
-            setResponse(response, "AUTH_01");
+            setResponse(response, "08");
 
         } else if (authException instanceof BadCredentialsException) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
-            setResponse(response, "AUTH_02");
+            setResponse(response, "09");
 
         }
         else if (authException instanceof InsufficientAuthenticationException) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            setResponse(response, "AUTH_03");
+            setResponse(response, "98");
         }
     }
 
     private void setResponse(HttpServletResponse response, String errorCode) throws IOException {
+        ApiResponse apiResponse = apiResponseRepository.findByRetCode(errorCode);
+
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().println(
-                "{\"errorCode\" : \"" + errorCode + "\"}"
+                "{\"retCode\" : \"" + apiResponse.getRetCode() + "\", " +
+                 "\"retMessage\" : \"" + apiResponse.getRetMessage() + "\"}"
         );
     }
 }
