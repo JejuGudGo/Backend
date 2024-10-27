@@ -155,7 +155,7 @@ public class BasicAuthService {
         authenticateUser(request);
 
         // 4. 토큰 생성 및 헤더 추가
-        addAccessTokenToHeader(user.getId(), response);
+        String accessToken = addAccessTokenToHeader(user.getId(), response);
 
         // 5. 사용자 정보 반환
         return new UserInfoResponse(
@@ -165,7 +165,8 @@ public class BasicAuthService {
                 user.getNickname(),
                 user.getCreatedAt(),
                 user.getPhoneNumber(),
-                user.getRole()
+                user.getRole(),
+                accessToken
         );
     }
 
@@ -175,8 +176,9 @@ public class BasicAuthService {
         );
     }
 
-    private void addAccessTokenToHeader(Long userId, HttpServletResponse response) {
+    private String addAccessTokenToHeader(Long userId, HttpServletResponse response) {
         String accessToken = tokenGenerator.generateToken(String.valueOf(userId));
         response.setHeader("Authorization", accessToken);
+        return accessToken;
     }
 }
