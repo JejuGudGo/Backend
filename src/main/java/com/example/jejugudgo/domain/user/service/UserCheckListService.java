@@ -7,6 +7,8 @@ import com.example.jejugudgo.domain.user.entity.User;
 import com.example.jejugudgo.domain.user.entity.UserCheckList;
 import com.example.jejugudgo.domain.user.repository.UserCheckListRepository;
 import com.example.jejugudgo.domain.user.repository.UserRepository;
+import com.example.jejugudgo.global.exception.CustomException;
+import com.example.jejugudgo.global.exception.entity.RetCode;
 import com.example.jejugudgo.global.jwt.token.TokenUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,14 +37,14 @@ public class UserCheckListService {
 
     public UserCheckListResponse get(Long checkItemId) {
         UserCheckList checkList = userCheckListRepository.findById(checkItemId)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));;
         return toResponse(checkList);
     }
 
     @Transactional
     public UserCheckListResponse create(UserCheckListCreateRequest createRequest, HttpServletRequest servletRequest) {
         Long userId = tokenUtil.getUserIdFromHeader(servletRequest);
-        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(RetCode.RET_CODE97));;
 
         Optional<UserCheckList> latestCheckList = userCheckListRepository.findTopByUserIdOrderByOrderNumberDesc(userId);
         Long maxOrderNumber = latestCheckList.map(UserCheckList::getOrderNumber).orElse(0L);
@@ -63,7 +65,7 @@ public class UserCheckListService {
     @Transactional
     public UserCheckListResponse updateCheckList(Long checkItemId, UserCheckListUpdateRequest request) {
         UserCheckList checkList = userCheckListRepository.findById(checkItemId)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));;
 
         if (request.content() != null && !request.content().isEmpty()) {
             checkList = checkList.updateContent(request.content());
@@ -92,4 +94,15 @@ public class UserCheckListService {
                 checkList.isFinished()
         );
     }
+
+    public void delete(Long checkItemId) {
+        // 1. 체크리스트 항목 조회
+        UserCheckList userCheckList = userCheckListRepository.findById(checkItemId)
+                .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));;
+
+        // 2. 체크리스트 항목 삭제
+        userCheckListRepository.delete(userCheckList);
+    }
+
+
 }
