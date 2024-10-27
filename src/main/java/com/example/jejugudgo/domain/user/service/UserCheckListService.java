@@ -5,6 +5,8 @@ import com.example.jejugudgo.domain.user.dto.request.UserCheckListUpdateRequest;
 import com.example.jejugudgo.domain.user.dto.response.UserCheckListResponse;
 import com.example.jejugudgo.domain.user.entity.User;
 import com.example.jejugudgo.domain.user.entity.UserCheckList;
+import com.example.jejugudgo.domain.user.entity.UserCheckListConstants;
+import com.example.jejugudgo.domain.user.event.UserCheckListEvent;
 import com.example.jejugudgo.domain.user.repository.UserCheckListRepository;
 import com.example.jejugudgo.domain.user.repository.UserRepository;
 import com.example.jejugudgo.global.exception.CustomException;
@@ -14,11 +16,13 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +30,27 @@ public class UserCheckListService {
     private final TokenUtil tokenUtil;
     private final UserRepository userRepository;
     private final UserCheckListRepository userCheckListRepository;
+
+    @EventListener
+    @Transactional
+    public void handleTodoEvent(UserCheckListEvent event) {
+        Long userId = event.getUserId();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));;
+
+        List<UserCheckList> checkLists = IntStream.range(0, UserCheckListConstants.DEFAULT_TODO_ITEMS.size())
+                .mapToObj(index -> UserCheckList.builder()
+                        .user(user)
+                        .content(UserCheckListConstants.DEFAULT_TODO_ITEMS.get(index))
+                        .isFinished(false)
+                        .orderNumber((long) index) // orderNumber가 0부터 시작하도록 설정
+                        .build())
+                .collect(Collectors.toList());
+
+        userCheckListRepository.saveAll(checkLists);
+    }
+
 
     public List<UserCheckListResponse> getAll(HttpServletRequest request) {
         Long userId = tokenUtil.getUserIdFromHeader(request);
