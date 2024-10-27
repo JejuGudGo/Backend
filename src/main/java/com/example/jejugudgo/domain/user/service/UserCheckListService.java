@@ -103,6 +103,4 @@ public class UserCheckListService {
         // 2. 체크리스트 항목 삭제
         userCheckListRepository.delete(userCheckList);
     }
-
-
 }
