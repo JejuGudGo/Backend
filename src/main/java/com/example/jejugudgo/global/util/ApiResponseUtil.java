@@ -22,6 +22,16 @@ public class ApiResponseUtil {
         );
     }
 
+    public CommonApiResponse success(Object data, String listKey) {
+        return CommonApiResponse.of(
+                RetCode.RET_CODE00.getRetCode(),
+                RetCode.RET_CODE00.getMessage(),
+                null,
+                data,
+                listKey
+        );
+    }
+
     // 오류 응답 생성
     public CommonApiResponse error(RetCode retCode) {
         // ApiResponseRepository에서 alertMessage를 조회
