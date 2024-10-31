@@ -2,6 +2,7 @@ package com.example.jejugudgo.domain.auth.basic.controller;
 
 import com.example.jejugudgo.domain.auth.basic.dto.request.LoginRequest;
 import com.example.jejugudgo.domain.auth.basic.dto.request.SignupRequest;
+import com.example.jejugudgo.domain.auth.basic.dto.response.SignupResponse;
 import com.example.jejugudgo.domain.auth.basic.service.BasicAuthService;
 import com.example.jejugudgo.domain.auth.mail.dto.EmailRequest;
 import com.example.jejugudgo.domain.user.dto.response.UserInfoResponse;
@@ -24,8 +25,8 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<CommonApiResponse> signup(@RequestBody SignupRequest request) {
-        basicAuthService.signup(request);
-        return ResponseEntity.ok(apiResponseUtil.success(null));
+        SignupResponse response = basicAuthService.signup(request);
+        return ResponseEntity.ok(apiResponseUtil.success(response));
     }
 
     @PostMapping("/check/email")
