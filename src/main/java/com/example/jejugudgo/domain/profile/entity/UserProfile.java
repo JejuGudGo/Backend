@@ -28,4 +28,15 @@ public class UserProfile {
     private Long badgeCount = 0L;
 
     private Long walkingCount = 0L;
+
+
+    public UserProfile updateProfileImageUrl(String profileImageUrl) {
+        return UserProfile.builder()
+                .id(id)
+                .walkingTime(walkingTime)
+                .profileImageUrl(profileImageUrl)
+                .badgeCount(badgeCount)
+                .walkingTime(walkingTime)
+                .build();
+    }
 }
