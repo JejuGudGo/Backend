@@ -2,6 +2,7 @@ package com.example.jejugudgo.domain.auth.basic.service;
 
 import com.example.jejugudgo.domain.auth.basic.dto.request.LoginRequest;
 import com.example.jejugudgo.domain.auth.basic.dto.request.SignupRequest;
+import com.example.jejugudgo.domain.auth.basic.dto.response.SignupResponse;
 import com.example.jejugudgo.domain.auth.terms.dto.request.TermsAgreementRequest;
 import com.example.jejugudgo.domain.profile.entity.UserProfile;
 import com.example.jejugudgo.domain.profile.service.UserProfileService;
@@ -27,7 +28,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.regex.Pattern;
 
 @Service
@@ -50,7 +50,7 @@ public class BasicAuthService {
 
     // 회원가입 메서드
     @Transactional
-    public void signup(SignupRequest request) {
+    public SignupResponse signup(SignupRequest request) {
         // 1. 비밀번호 유효성 검사
         if (!isValidPassword(request.password())) {
             throw new CustomException(RetCode.RET_CODE06);
@@ -74,6 +74,9 @@ public class BasicAuthService {
 
         // 6. 체크리스트 생성
         eventPublisher.publishEvent(new UserCheckListEvent(user.getId()));
+
+        SignupResponse response = new SignupResponse(user.getNickname());
+        return response;
     }
 
     private boolean isValidPhoneNumber(String phoneNumber) {
@@ -125,17 +128,16 @@ public class BasicAuthService {
     }
 
     // 약관 동의 처리 메서드
-    private void handleTermsAgreements(List<TermsAgreementRequest> termsAgreementRequests, User user) {
+    private void handleTermsAgreements(TermsAgreementRequest termsAgreementRequests, User user) {
         try {
-            for (TermsAgreementRequest agreementRequest : termsAgreementRequests) {
-                UserTerms userTerms = UserTerms.builder()
-                        .user(user)
-                        .termsId(agreementRequest.termsId())
-                        .isAgreed(agreementRequest.isAgreed())
-                        .build();
+            UserTerms userTerms = UserTerms.builder()
+                    .user(user)
+                    .isAgreed(termsAgreementRequests.isAgreed())
+                    .agreedAt(termsAgreementRequests.agreedAt())
+                    .build();
 
-                userTermsRepository.save(userTerms);
-            }
+            userTermsRepository.save(userTerms);
+
         } catch (Exception e) {
             throw new CustomException(RetCode.RET_CODE99);
         }
@@ -166,6 +168,7 @@ public class BasicAuthService {
                 user.getCreatedAt(),
                 user.getPhoneNumber(),
                 user.getRole(),
+                user.getUserProfile().getProfileImageUrl(),
                 accessToken
         );
     }

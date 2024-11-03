@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 @Entity
 @Getter
 @Builder
@@ -16,11 +17,21 @@ public class UserTerms {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long termsId;
-
     private boolean isAgreed;
+
+    private String agreedAt;
 
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
+
+    public UserTerms updateUserTerms(boolean isAgreed, String agreedAt) {
+        UserTerms userTerms = UserTerms.builder()
+                .id(this.id)
+                .isAgreed(isAgreed)
+                .agreedAt(agreedAt)
+                .build();
+
+        return userTerms;
+    }
 }

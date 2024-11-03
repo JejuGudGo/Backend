@@ -45,6 +45,8 @@ public class TourApiSpots {
 
     private String eventEndDate;
 
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String eventContent;
 
     private String eventPlace;

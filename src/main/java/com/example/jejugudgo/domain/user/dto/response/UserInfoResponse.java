@@ -12,7 +12,8 @@ public record UserInfoResponse(
         LocalDateTime createdAt,
         String phoneNumber,
         Role userRole,
-        String accessToken
+        String accessToken,
+        String profileImage
 ) {
 
 }
