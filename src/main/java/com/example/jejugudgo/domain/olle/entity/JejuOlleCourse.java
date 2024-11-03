@@ -1,9 +1,6 @@
 package com.example.jejugudgo.domain.olle.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,6 +36,8 @@ public class JejuOlleCourse {
 
     private double endLongitude;
 
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String summary;
 
     private String infoAddress;

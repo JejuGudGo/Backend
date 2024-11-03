@@ -19,6 +19,8 @@ public class JejuOlleLocationData {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long locationOrder;
+
     private double latitude;
 
     private double longitude;
