@@ -25,8 +25,6 @@ public class JejuOlleLocationData {
 
     private double longitude;
 
-    private double altitude;
-
     private OffsetDateTime time;
 
     private LocalDate updatedAt;
