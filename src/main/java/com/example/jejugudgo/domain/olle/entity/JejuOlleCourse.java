@@ -49,6 +49,8 @@ public class JejuOlleCourse {
 
     private double starAvg;
 
+    private String courseImageUrl;
+
     public JejuOlleCourse updateStartSpotEndSpot(String startSpotTitle, double startLatitude, double startLongitude,
                                                  String endSpotTitle, double endLatitude, double endLongitude) {
         return JejuOlleCourse.builder()
@@ -68,6 +70,7 @@ public class JejuOlleCourse {
                 .infoOpenTime(infoOpenTime)
                 .infoPhone(infoPhone)
                 .starAvg(starAvg)
+                .courseImageUrl(courseImageUrl)
                 .build();
     }
 }
