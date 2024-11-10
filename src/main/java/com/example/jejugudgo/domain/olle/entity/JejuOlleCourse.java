@@ -22,6 +22,7 @@ public class JejuOlleCourse {
 
     private String totalTime;
 
+    @Enumerated(value = EnumType.STRING)
     private OlleType olleType;
 
     private String startSpotTitle;
@@ -47,4 +48,26 @@ public class JejuOlleCourse {
     private String infoPhone;
 
     private double starAvg;
+
+    public JejuOlleCourse updateStartSpotEndSpot(String startSpotTitle, double startLatitude, double startLongitude,
+                                                 String endSpotTitle, double endLatitude, double endLongitude) {
+        return JejuOlleCourse.builder()
+                .id(id)
+                .title(title)
+                .totalDistance(totalDistance)
+                .totalTime(totalTime)
+                .olleType(olleType)
+                .startSpotTitle(startSpotTitle)
+                .startLatitude(startLatitude)
+                .startLongitude(startLongitude)
+                .endSpotTitle(endSpotTitle)
+                .endLatitude(endLatitude)
+                .endLongitude(endLongitude)
+                .summary(summary)
+                .infoAddress(infoAddress)
+                .infoOpenTime(infoOpenTime)
+                .infoPhone(infoPhone)
+                .starAvg(starAvg)
+                .build();
+    }
 }
