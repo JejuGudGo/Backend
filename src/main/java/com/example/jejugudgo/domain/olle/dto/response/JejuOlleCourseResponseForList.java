@@ -1,4 +1,4 @@
-package com.example.jejugudgo.domain.course.dto.response;
+package com.example.jejugudgo.domain.olle.dto.response;
 
 public record JejuOlleCourseResponseForList(
         Long jejuOlleCourseId,

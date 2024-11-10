@@ -6,7 +6,7 @@ import com.example.jejugudgo.domain.bookmark.entity.BookMark;
 import com.example.jejugudgo.domain.bookmark.entity.BookMarkType;
 import com.example.jejugudgo.domain.bookmark.repository.BookMarkRepository;
 import com.example.jejugudgo.domain.course.dto.response.JejuGudgoCourseResponseForList;
-import com.example.jejugudgo.domain.course.dto.response.JejuOlleCourseResponseForList;
+import com.example.jejugudgo.domain.olle.dto.response.JejuOlleCourseResponseForList;
 import com.example.jejugudgo.domain.course.entity.JejuGudgoCourse;
 import com.example.jejugudgo.domain.course.repository.JejuGudgoCourseRepository;
 import com.example.jejugudgo.domain.course.repository.JejuGudgoCourseSpotRepository;

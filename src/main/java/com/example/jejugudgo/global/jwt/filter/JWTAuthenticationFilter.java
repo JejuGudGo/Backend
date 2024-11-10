@@ -32,7 +32,8 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                         requestURI.startsWith("/favicon.ico") ||
                         requestURI.startsWith("/ws") ||
                         requestURI.contains("index.html") ||
-                        requestURI.contains("openapi.yml")
+                        requestURI.contains("openapi.yml") ||
+                        requestURI.startsWith("/api/v1/courses/olle")
         ) {
             filterChain.doFilter(request, response);
             return;
