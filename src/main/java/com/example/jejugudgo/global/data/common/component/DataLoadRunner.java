@@ -5,7 +5,8 @@ import com.example.jejugudgo.global.api.tourapi.area.service.TourApiSpotService;
 import com.example.jejugudgo.global.data.home.EventDataService;
 import com.example.jejugudgo.global.data.home.TrailDataService;
 import com.example.jejugudgo.global.data.nickname.service.NicknameDataService;
-import com.example.jejugudgo.global.data.olle.service.OlleDataService;
+import com.example.jejugudgo.global.data.olle.service.OlleCsvDataService;
+import com.example.jejugudgo.global.data.olle.service.OlleGpxDataService;
 import com.example.jejugudgo.global.data.terms.TermsDataService;
 import com.example.jejugudgo.global.exception.service.ApiResponseService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,8 @@ public class DataLoadRunner implements CommandLineRunner {
     private final ApiResponseService responseService;
     private final TourApiSpotService tourApiSpotService;
     private final TourApiSpotDataRequestService tourApiSpotDataRequestService;
-    private final OlleDataService olleDataService;
+    private final OlleCsvDataService olleDataService;
+    private final OlleGpxDataService olleGpxDataService;
   
     @Override
     public void run(String... args) throws Exception {
@@ -35,5 +37,6 @@ public class DataLoadRunner implements CommandLineRunner {
         tourApiSpotService.loadTourApiContentTypeIds();
         tourApiSpotDataRequestService.loadTourApiData();
         olleDataService.loadOlleCourseData();
+        olleGpxDataService.loadGpxData();
     }
 }

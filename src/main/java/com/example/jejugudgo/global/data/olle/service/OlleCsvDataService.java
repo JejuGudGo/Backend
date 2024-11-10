@@ -24,7 +24,7 @@ import java.util.Map;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class OlleDataService {
+public class OlleCsvDataService {
 
     private final JejuOlleCourseRepository courseRepository;
     private final JejuOlleSpotRepository spotRepository;
