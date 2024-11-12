@@ -7,6 +7,8 @@ import com.example.jejugudgo.domain.olle.entity.JejuOlleCourse;
 import com.example.jejugudgo.domain.olle.entity.JejuOlleSpot;
 import com.example.jejugudgo.domain.olle.entity.QJejuOlleCourse;
 import com.example.jejugudgo.domain.olle.entity.QJejuOlleSpot;
+import com.example.jejugudgo.global.exception.CustomException;
+import com.example.jejugudgo.global.exception.entity.RetCode;
 import com.example.jejugudgo.global.util.PaginationUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -34,6 +36,10 @@ public class JejuOlleCourseQueryService {
                 .selectFrom(qJejuOlleCourse)
                 .fetch();
 
+        if (jejuOlleCourseList.isEmpty()) {
+            throw new CustomException(RetCode.RET_CODE97);
+        }
+
         List<JejuOlleCourseResponseForList> courseResponseForLists = jejuOlleCourseList.stream()
                 .map(jejuOlleCourse ->
                         new JejuOlleCourseResponseForList(
@@ -57,6 +63,10 @@ public class JejuOlleCourseQueryService {
                 .selectFrom(qJejuOlleCourse)
                 .where(qJejuOlleCourse.id.eq(courseId))
                 .fetchOne();
+
+        if (jeJuOlleCourse == null) {
+            throw new CustomException(RetCode.RET_CODE97);
+        }
 
         List<JejuOlleSpot> jeJuOlleSpots = queryFactory
                 .selectFrom(qJejuOlleSpot)
