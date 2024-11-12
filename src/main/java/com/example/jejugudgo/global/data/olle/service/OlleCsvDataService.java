@@ -146,7 +146,7 @@ public class OlleCsvDataService {
     }
 
     private String formatTitleWithPrefix(OlleType olleType, String title) {
-        return title == null ? null : (olleType == OlleType.JEJU ? "제주올레_" : "하영올레_") + title;
+        return title == null ? null : (olleType == OlleType.JEJU ? "제주올레길_" : "하영올레길_") + title;
     }
 
     private String sanitizeField(String value) {

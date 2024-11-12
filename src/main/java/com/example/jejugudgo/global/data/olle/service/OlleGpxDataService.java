@@ -2,7 +2,6 @@ package com.example.jejugudgo.global.data.olle.service;
 
 import com.example.jejugudgo.domain.olle.entity.JejuOlleCourse;
 import com.example.jejugudgo.domain.olle.entity.JejuOlleLocationData;
-import com.example.jejugudgo.domain.olle.entity.OlleType;
 import com.example.jejugudgo.domain.olle.repository.JejuOlleCourseRepository;
 import com.example.jejugudgo.domain.olle.repository.JejuOlleLocationDataRepository;
 import com.example.jejugudgo.global.data.common.entity.DataCommandLog;
@@ -50,19 +49,20 @@ public class OlleGpxDataService {
                 try (InputStream inputStream = resource.getInputStream()) {
                     String fileName = resource.getFilename();
 
-                    String courseTitle = fileName.replace("제주올레길_", "")
+                    String courseTitle = fileName
                             .replace(".gpx", "")
-                            .replace("_", " ");
+                            .replace("코스", "");
 
+                    // title에 해당하는 JejuOlleCourse가 존재하는지 확인
                     JejuOlleCourse course = courseRepository.findByTitle(courseTitle)
-                            .orElseGet(() -> courseRepository.save(JejuOlleCourse.builder()
-                                    .title(courseTitle)
-                                    .olleType(OlleType.JEJU)
-                                    .build()));
+                            .orElse(null);
 
-                    parseAndSaveGpxFile(inputStream, course);
-
-                    log.info("Successfully processed GPX file: {}", fileName);
+                    if (course != null) {
+                        parseAndSaveGpxFile(inputStream, course);
+                        log.info("Successfully processed GPX file: {}", fileName);
+                    } else {
+                        log.warn("No matching course found for GPX file: {}", fileName);
+                    }
                 } catch (IOException e) {
                     log.error("Error reading GPX file: {}", resource.getFilename(), e);
                 }
@@ -70,7 +70,7 @@ public class OlleGpxDataService {
 
             saveDataLoadLog();
             log.info("===============================================================================");
-            log.info("GPX data has been successfully stored in the JejuOlleCourse and JejuOlleSpot tables.");
+            log.info("GPX data has been successfully processed.");
             log.info("===============================================================================");
         } catch (IOException e) {
             log.error("Error loading GPX resources", e);
@@ -99,11 +99,10 @@ public class OlleGpxDataService {
                 double latitude = Double.parseDouble(element.getAttribute("lat"));
                 double longitude = Double.parseDouble(element.getAttribute("lon"));
 
-                // time 값 가져오기
                 OffsetDateTime time = OffsetDateTime.now();
                 if (element.getElementsByTagName("time").getLength() > 0 && element.getElementsByTagName("time").item(0) != null) {
                     String timeText = element.getElementsByTagName("time").item(0).getTextContent();
-                    if (!timeText.isEmpty()) {  // time 값이 비어 있지 않은 경우에만 파싱
+                    if (!timeText.isEmpty()) {
                         time = OffsetDateTime.parse(timeText);
                     } else {
                         log.warn("Time value is empty for a location point, setting current time as default.");
