@@ -7,7 +7,7 @@ public record JejuOlleCourseResponseDetail(
         String title,
         String startSpot,
         String endSpot,
-        String TotalTime,
+        String totalTime,
         double starAvg,
         Long reviewCount,
         // 태그 리스폰스 (tagResponse)

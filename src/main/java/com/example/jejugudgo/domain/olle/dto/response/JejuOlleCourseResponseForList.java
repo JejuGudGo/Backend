@@ -5,7 +5,7 @@ public record JejuOlleCourseResponseForList(
         String title,
         String startSpot,
         String endSpot,
-        String TotalTime,
+        String totalTime,
         double starAvg,
         Long reviewCount
 ) {
