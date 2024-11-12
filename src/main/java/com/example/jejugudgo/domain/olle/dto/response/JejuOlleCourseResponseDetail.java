@@ -13,14 +13,14 @@ public record JejuOlleCourseResponseDetail(
         // 태그 리스폰스 (tagResponse)
 
         // 스팟 리스폰스 (spotReseponse)
-        List<JejuOlleSpotResponse> jejuOlleSpotResponses,
+        List<JejuOlleSpotResponse> jejuOlleSpots,
         // 설명
         String summary,
         // 안내소 관련
         String infoAddress,
         String infoOpenTime,
         String infoPhone,
-        String courseImageUrl
+        String imageUrl
 ) {
 
 }
