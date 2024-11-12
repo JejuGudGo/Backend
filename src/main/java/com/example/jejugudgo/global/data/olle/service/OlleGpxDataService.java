@@ -36,7 +36,9 @@ public class OlleGpxDataService {
     @Transactional
     public void loadGpxData() {
         if (isDataAlreadyLoaded()) {
-            log.info("데이터가 이미 적재되어 있습니다. 추가 작업을 수행하지 않습니다.");
+            log.info("===============================================================================");
+            log.info("Olle gpx data is already loaded");
+            log.info("===============================================================================");
             return;
         }
 
@@ -67,8 +69,9 @@ public class OlleGpxDataService {
             }
 
             saveDataLoadLog();
-            log.info("GPX 데이터가 성공적으로 JejuOlleCourse와 JejuOlleLocationData 테이블에 저장되었습니다.");
-
+            log.info("===============================================================================");
+            log.info("GPX data has been successfully stored in the JejuOlleCourse and JejuOlleSpot tables.");
+            log.info("===============================================================================");
         } catch (IOException e) {
             log.error("Error loading GPX resources", e);
         }

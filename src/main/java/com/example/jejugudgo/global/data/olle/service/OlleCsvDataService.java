@@ -33,7 +33,9 @@ public class OlleCsvDataService {
     @Transactional
     public void loadOlleCourseData() {
         if (isDataAlreadyLoaded()) {
-            log.info("데이터가 이미 적재되어 있습니다. 추가 작업을 수행하지 않습니다.");
+            log.info("===============================================================================");
+            log.info("Olle csv data is already loaded");
+            log.info("===============================================================================");
             return;
         }
 
@@ -50,10 +52,14 @@ public class OlleCsvDataService {
             updateCourseStartAndEndSpots(courseCache, minSpotOrderMap, maxSpotOrderMap);
             saveDataLoadLog();
 
-            log.info("CSV 데이터가 성공적으로 JejuOlleCourse와 JejuOlleSpot 테이블에 저장되었습니다.");
+            log.info("===============================================================================");
+            log.info("CSV data has been successfully stored in the JejuOlleCourse and JejuOlleSpot tables.");
+            log.info("===============================================================================");
 
         } catch (IOException | CsvValidationException e) {
-            log.error("CSV 파일을 읽는 중 오류가 발생했습니다.", e);
+            log.info("===============================================================================");
+            log.error("An error occurred while reading the CSV file.", e);
+            log.info("===============================================================================");
         }
     }
 
