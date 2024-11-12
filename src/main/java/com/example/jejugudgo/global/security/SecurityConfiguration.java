@@ -43,7 +43,6 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .requestMatchers("/api/v1/auth/**").permitAll()
                                 .requestMatchers("/api/v1/courses/tour/spots/**").permitAll()
-                                .requestMatchers("/api/v1/courses/olle/**").permitAll()
                                 .requestMatchers("/oauth/**").permitAll()
                                 .requestMatchers("/api/v1/oauth/**").permitAll()
                                 .requestMatchers("/ws/**").permitAll()
