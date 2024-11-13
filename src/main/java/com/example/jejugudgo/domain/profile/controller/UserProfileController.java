@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,7 +27,11 @@ public class UserProfileController {
 
 
     @PatchMapping("")
-    public ResponseEntity<CommonApiResponse> updateProfile(@RequestBody UserProfileUpdateRequest updateRequest, HttpServletRequest servletRequest) {
+    public ResponseEntity<CommonApiResponse> updateProfile(
+            @RequestParam(value = "nickname", required = false) String nickname,
+            @RequestParam(value = "profileImage", required = false) MultipartFile profileImage,
+            HttpServletRequest servletRequest) throws Exception {
+        UserProfileUpdateRequest updateRequest = new UserProfileUpdateRequest(nickname, profileImage);
         UserProfileUpdateResponse userProfileResponse = userProfileService.updateProfile(updateRequest, servletRequest);
         return ResponseEntity.ok(apiResponseUtil.success(userProfileResponse));
     }

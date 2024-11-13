@@ -9,10 +9,13 @@ import com.example.jejugudgo.domain.user.repository.UserRepository;
 import com.example.jejugudgo.global.exception.CustomException;
 import com.example.jejugudgo.global.exception.entity.RetCode;
 import com.example.jejugudgo.global.jwt.token.TokenUtil;
+import com.example.jejugudgo.global.util.ImageUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalTime;
 
 @Service
@@ -21,6 +24,7 @@ public class UserProfileService {
     private final UserProfileRepository userProfileRepository;
     private final UserRepository userRepository;
     private final TokenUtil tokenUtil;
+    private final ImageUtil imageUtil;
 
     public UserProfile createProfile(String profileImageUrl) {
         UserProfile userProfile = UserProfile.builder()
@@ -34,7 +38,6 @@ public class UserProfileService {
 
         return userProfile;
     }
-
     public UserProfileUpdateResponse getProfileForUpdate(HttpServletRequest request) {
         Long userId = tokenUtil.getUserIdFromHeader(request);
         User user = userRepository.findById(userId)
@@ -43,13 +46,10 @@ public class UserProfileService {
         return new UserProfileUpdateResponse(
                 user.getNickname(),
                 profileImageUrl
-
         );
-
     }
 
-
-    public UserProfileUpdateResponse updateProfile(UserProfileUpdateRequest updateRequest, HttpServletRequest servletRequest) {
+    public UserProfileUpdateResponse updateProfile(UserProfileUpdateRequest updateRequest, HttpServletRequest servletRequest) throws Exception {
         Long userId = tokenUtil.getUserIdFromHeader(servletRequest);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
@@ -60,10 +60,13 @@ public class UserProfileService {
             userRepository.save(user);
         }
 
-        if (updateRequest.profileImageUrl() != null) {
-            userProfile = userProfile.updateProfileImageUrl(updateRequest.profileImageUrl());
+        MultipartFile profileImage = updateRequest.profileImage();
+        if (profileImage != null && !profileImage.isEmpty()) {
+            String imageUrl = imageUtil.saveImage(userId, profileImage, "profile").toString();
+            userProfile = userProfile.updateProfileImageUrl(imageUrl);
             userProfileRepository.save(userProfile);
         }
+
         return new UserProfileUpdateResponse(
                 user.getNickname(),
                 userProfile.getProfileImageUrl()
