@@ -27,6 +27,17 @@ spring:
     hibernate:
       ddl-auto: update
 
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVER}
+    consumer:
+      group-id: jeju-gudgo
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
   datasource:
     url: ${DATASOURCE_URL}
     username: ${DATASOURCE_USERNAME}
@@ -36,6 +47,10 @@ spring:
     redis:
       port: ${REDIS_PORT}
       host: ${REDIS_HOST}
+
+  elasticsearch:
+    rest:
+      uris: ${ELASTIC_URI}
 
   springdoc:
     version: v1.0.0

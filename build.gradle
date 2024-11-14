@@ -62,6 +62,8 @@ dependencies {
     implementation 'org.thymeleaf:thymeleaf-spring5:3.1.0.RELEASE'
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0'
     implementation 'me.paulschwarz:spring-dotenv:2.5.4'
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+    implementation 'org.springframework.kafka:spring-kafka'
 }
 
 
