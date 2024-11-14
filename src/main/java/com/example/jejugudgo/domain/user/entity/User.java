@@ -80,4 +80,20 @@ public class User {
                 .deletedAt(LocalDateTime.now())
                 .build();
     }
+
+    public User updateNickname(String nickname) {
+        return User.builder()
+                .id(id)
+                .email(email)
+                .password(password)
+                .nickname(nickname)
+                .name(name)
+                .role(role)
+                .provider(provider)
+                .createdAt(createdAt)
+                .phoneNumber(phoneNumber)
+                .userProfile(userProfile)
+                .deletedAt(LocalDateTime.now())
+                .build();
+    }
 }

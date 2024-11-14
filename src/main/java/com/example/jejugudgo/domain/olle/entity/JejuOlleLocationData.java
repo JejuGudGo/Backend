@@ -1,4 +1,4 @@
-package com.example.jejugudgo.domain.course.entity;
+package com.example.jejugudgo.domain.olle.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,27 +6,30 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JejuOlleCourseSpot {
+public class JejuOlleLocationData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
+    private Long locationOrder;
 
     private double latitude;
 
     private double longitude;
 
-    private String distance;
+    private OffsetDateTime time;
 
-    private Long orderNumber;
+    private LocalDate updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "courseId")
+    @JoinColumn(name = "jejuOlleCourseId")
     private JejuOlleCourse jejuOlleCourse;
 }

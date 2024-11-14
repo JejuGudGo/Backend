@@ -6,13 +6,13 @@ import com.example.jejugudgo.domain.bookmark.entity.BookMark;
 import com.example.jejugudgo.domain.bookmark.entity.BookMarkType;
 import com.example.jejugudgo.domain.bookmark.repository.BookMarkRepository;
 import com.example.jejugudgo.domain.course.dto.response.JejuGudgoCourseResponseForList;
-import com.example.jejugudgo.domain.course.dto.response.JejuOlleCourseResponseForList;
+import com.example.jejugudgo.domain.olle.dto.response.JejuOlleCourseResponseForList;
 import com.example.jejugudgo.domain.course.entity.JejuGudgoCourse;
-import com.example.jejugudgo.domain.course.entity.JejuOlleCourse;
 import com.example.jejugudgo.domain.course.repository.JejuGudgoCourseRepository;
 import com.example.jejugudgo.domain.course.repository.JejuGudgoCourseSpotRepository;
-import com.example.jejugudgo.domain.course.repository.JejuOlleCourseRepository;
-import com.example.jejugudgo.domain.course.repository.JejuOlleCourseSpotRepository;
+import com.example.jejugudgo.domain.olle.entity.JejuOlleCourse;
+import com.example.jejugudgo.domain.olle.repository.JejuOlleCourseRepository;
+import com.example.jejugudgo.domain.olle.repository.JejuOlleSpotRepository;
 import com.example.jejugudgo.domain.trail.dto.TrailResponseForList;
 import com.example.jejugudgo.domain.trail.entity.Trail;
 import com.example.jejugudgo.domain.trail.repository.TrailRepository;
@@ -41,7 +41,7 @@ public class BookMarkService {
     private final TrailRepository trailRepository;
     private final JejuGudgoCourseRepository jejuGudgoCourseRepository;
     private final JejuOlleCourseRepository jejuOlleCourseRepository;
-    private final JejuOlleCourseSpotRepository jejuOlleCourseSpotRepository;
+    private final JejuOlleSpotRepository jejuOlleSpotRepository;
     private final JejuGudgoCourseSpotRepository jejuGudgoCourseSpotRepository;
 
     // 사용자 북마크 조회 메서드
@@ -101,16 +101,10 @@ public class BookMarkService {
     private BookMarkResponse convertOlleBookmark(BookMark bookmark) {
         JejuOlleCourse jejuOlleCourse = jejuOlleCourseRepository.findById(bookmark.getTargetId())
                 .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
-        String startSpotTitleOlle = jejuOlleCourseSpotRepository.findByJejuOlleCourseIdOrderByIdAsc(jejuOlleCourse.getId())
-                .map(spot -> spot.getTitle())
-                .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
-        String endSpotTitleOlle = jejuOlleCourseSpotRepository.findByJejuOlleCourseIdOrderByIdDesc(jejuOlleCourse.getId())
-                .map(spot -> spot.getTitle())
-                .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
 
         return new BookMarkResponse(
                 bookmark.getId(),
-                mapToJejuOlleCourseResponse(jejuOlleCourse, startSpotTitleOlle, endSpotTitleOlle),
+                mapToJejuOlleCourseResponse(jejuOlleCourse, jejuOlleCourse.getStartSpotTitle(), jejuOlleCourse.getEndSpotTitle()),
                 null,
                 null
         );
