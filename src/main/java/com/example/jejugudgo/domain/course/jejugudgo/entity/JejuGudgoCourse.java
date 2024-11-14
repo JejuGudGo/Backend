@@ -1,6 +1,5 @@
-package com.example.jejugudgo.domain.user.course.olle.entity;
+package com.example.jejugudgo.domain.course.jejugudgo.entity;
 
-import com.example.jejugudgo.domain.course.olle.entity.JejuOlleCourse;
 import com.example.jejugudgo.domain.user.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,21 +14,29 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserJejuOlleCourse {
+public class JejuGudgoCourse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDate startAt;
+    private String title;
 
-    private LocalDate finishedAt;
+    private LocalDate createdAt;
+
+    private double starAvg;
+
+    private String time;
+
+    private String distance;
+
+    private String imageUrl;
+
+    private String summary;
+
+    private Long viewCount;
 
 
-    @ManyToOne()
-    @JoinColumn(name = "jejuOlleCourseId")
-    private JejuOlleCourse jejuOlleCourse;
-
-    @ManyToOne()
-    @JoinColumn(name = "userId")
+    @ManyToOne
+    @JoinColumn(name = "originUserId")
     private User user;
 }

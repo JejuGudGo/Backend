@@ -1,7 +1,5 @@
-package com.example.jejugudgo.domain.user.course.jejuGudgo.entity;
+package com.example.jejugudgo.domain.course.jejugudgo.entity;
 
-import com.example.jejugudgo.domain.course.jejugudgo.entity.JejuGudgoCourseSpot;
-import com.example.jejugudgo.domain.course.jejugudgo.entity.SpotType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserJejuGudgoCourseSpot {
+public class JejuGudgoCourseSpot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,14 +29,7 @@ public class UserJejuGudgoCourseSpot {
 
     private double longitude;
 
-    private boolean isCompleted;
-
-
-    @ManyToOne()
-    @JoinColumn(name = "userCourseId")
-    private UserJejuGudgoCourse userCourse;
-
-    @ManyToOne()
-    @JoinColumn(name = "jejuGudgoSpotId")
-    private JejuGudgoCourseSpot jejuGudgoCourseSpot;
+    @ManyToOne
+    @JoinColumn(name = "courseId")
+    private JejuGudgoCourse jejuGudgoCourse;
 }

@@ -1,7 +1,7 @@
 package com.example.jejugudgo.domain.user.myGudgo.bookmark.dto.response;
 
-import com.example.jejugudgo.domain.course.dto.response.JejuGudgoCourseResponseForList;
-import com.example.jejugudgo.domain.olle.dto.response.JejuOlleCourseResponseForList;
+import com.example.jejugudgo.domain.course.jejugudgo.dto.response.JejuGudgoCourseResponseForList;
+import com.example.jejugudgo.domain.course.olle.dto.response.JejuOlleCourseResponseForList;
 import com.example.jejugudgo.domain.trail.dto.TrailResponseForList;
 
 public record BookMarkResponse(

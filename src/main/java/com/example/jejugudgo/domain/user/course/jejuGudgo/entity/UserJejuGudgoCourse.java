@@ -1,6 +1,6 @@
 package com.example.jejugudgo.domain.user.course.jejuGudgo.entity;
 
-import com.example.jejugudgo.domain.course.entity.JejuGudgoCourse;
+import com.example.jejugudgo.domain.course.jejugudgo.entity.JejuGudgoCourse;
 import com.example.jejugudgo.domain.user.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
