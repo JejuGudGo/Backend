@@ -161,7 +161,7 @@ public class BookMarkService {
                 jejuGudgoCourse.getTitle(),
                 startSpot,
                 endSpot,
-                jejuGudgoCourse.getTotalTime(),
+                jejuGudgoCourse.getTime(),
                 jejuGudgoCourse.getStarAvg(),
                 0L
         );

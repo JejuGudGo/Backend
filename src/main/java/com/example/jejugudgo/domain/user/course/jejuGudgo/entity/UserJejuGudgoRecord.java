@@ -1,4 +1,4 @@
-package com.example.jejugudgo.domain.course.entity;
+package com.example.jejugudgo.domain.user.course.jejuGudgo.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,25 +11,23 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JejuGudgoCourseSpot {
+public class UserJejuGudgoRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
+    private String selfieImageUrl;
 
-    @Enumerated(value = EnumType.STRING)
-    private SpotType spotType;
+    private String backImageUrl;
 
-    private Long orderNumber;
-
-    private String address;
+    private String content;
 
     private double latitude;
 
     private double longitude;
 
-    @ManyToOne
-    @JoinColumn(name = "courseId")
-    private JejuGudgoCourse jejuGudgoCourse;
+
+    @ManyToOne()
+    @JoinColumn(name = "userCourseId")
+    private UserJejuGudgoCourse userCourse;
 }
