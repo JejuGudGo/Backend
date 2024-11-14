@@ -16,9 +16,9 @@ public enum EventStatus {
         this.code = code;
     }
 
-    public static EventStatus fromCode(String code) {
+    public static EventStatus fromQuery(String query) {
         for (EventStatus eventStatus : EventStatus.values()) {
-            if (eventStatus.getCode().equals(code)) {
+            if (eventStatus.getCode().equals(query)) {
                 return eventStatus;
             }
         }

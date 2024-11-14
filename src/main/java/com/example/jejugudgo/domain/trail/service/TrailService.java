@@ -35,7 +35,7 @@ public class TrailService {
             throw new CustomException(RetCode.RET_CODE97);
 
         } else {
-            TrailType trailType = TrailType.fromCode(query);
+            TrailType trailType = TrailType.fromQuery(query);
             return trailRepository.findByTrailType(trailType).stream()
                     .map(trail -> new TrailListResponse(
                             trail.getId(),

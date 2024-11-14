@@ -38,7 +38,7 @@ public class TrailDataService {
                         .map(fields -> {
                             try {
                                 return Trail.builder()
-                                        .trailType(TrailType.fromCode(fields[1].trim()))
+                                        .trailType(TrailType.fromQuery(fields[1].trim()))
                                         .title(fields[2])
                                         .latitude(parseCoordinates(fields[3])[0])
                                         .longitude(parseCoordinates(fields[3])[1])

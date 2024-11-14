@@ -1,5 +1,8 @@
 package com.example.jejugudgo.domain.course.jejugudgo.entity;
 
+import lombok.Getter;
+
+@Getter
 public enum SpotType {
     TOUR("투어API"),
     SEARCH("검색");
@@ -12,7 +15,7 @@ public enum SpotType {
 
     public static SpotType fromType(String type) {
         for (SpotType spotType : SpotType.values()) {
-            if (spotType.type.equals(type)) {
+            if (spotType.getType().equals(type)) {
                 return spotType;
             }
         }

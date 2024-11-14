@@ -32,7 +32,7 @@ public class EventService {
             throw new CustomException(RetCode.RET_CODE97);
 
         } else {
-            EventStatus eventStatus = EventStatus.fromCode(query);
+            EventStatus eventStatus = EventStatus.fromQuery(query);
             return eventRepository.findByEventStatus(eventStatus).stream()
                     .map(event -> new EventListResponse(
                             event.getId(),

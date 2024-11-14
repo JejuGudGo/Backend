@@ -1,5 +1,8 @@
 package com.example.jejugudgo.domain.course.olle.entity;
 
+import lombok.Getter;
+
+@Getter
 public enum OlleType {
     JEJU("제주올레"),
     HAYOUNG("하영올레");
@@ -12,7 +15,7 @@ public enum OlleType {
 
     public static OlleType fromType(String type) {
         for (OlleType olleType : OlleType.values()) {
-            if (olleType.type.equals(type)) {
+            if (olleType.getType().equals(type)) {
                 return olleType;
             }
         }
