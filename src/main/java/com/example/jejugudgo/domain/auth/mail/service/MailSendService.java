@@ -1,11 +1,10 @@
 package com.example.jejugudgo.domain.auth.mail.service;
 
 import com.example.jejugudgo.domain.auth.mail.dto.MailAuthenticationRequest;
-import com.example.jejugudgo.global.exception.CustomException;
-import com.example.jejugudgo.global.exception.entity.RetCode;
+import com.example.jejugudgo.global.exception.exception.CustomException;
+import com.example.jejugudgo.global.exception.enums.RetCode;
 import com.example.jejugudgo.global.redis.RedisUtil;
-import com.example.jejugudgo.global.util.RandomNumberUtil;
-import jakarta.mail.MessagingException;
+import com.example.jejugudgo.global.util.random.RandomNumberUtil;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;

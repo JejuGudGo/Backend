@@ -2,13 +2,12 @@ package com.example.jejugudgo.domain.auth.mobile.service;
 
 import com.example.jejugudgo.domain.auth.mobile.dto.request.MobilAuthCodeRequest;
 import com.example.jejugudgo.domain.auth.mobile.dto.request.MobileAuthenticationRequest;
-import com.example.jejugudgo.global.exception.CustomException;
-import com.example.jejugudgo.global.exception.entity.RetCode;
+import com.example.jejugudgo.domain.auth.validation.PhoneValidation;
+import com.example.jejugudgo.global.exception.exception.CustomException;
+import com.example.jejugudgo.global.exception.enums.RetCode;
 import com.example.jejugudgo.global.redis.RedisUtil;
 import lombok.RequiredArgsConstructor;
-import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,14 +15,13 @@ import org.springframework.stereotype.Service;
 public class MobileAuthenticationService {
     private final SMSMessageService smsMessageService;
     private final RedisUtil redisUtil;
+    private final PhoneValidation phoneValidation;
 
     public void sendAuthCode(MobilAuthCodeRequest request) {
         String phoneNumber = request.phoneNumber();
 
         // 전화번호 형식 검증
-        if (!isValidPhoneNumber(phoneNumber)) {
-            throw new CustomException(RetCode.RET_CODE03);
-        }
+        phoneValidation.validatePhoneNumber(phoneNumber);
 
         // 인증번호 생성
         String authCode = smsMessageService.generateAuthenticationCode();
@@ -37,11 +35,6 @@ public class MobileAuthenticationService {
         }
 
         smsMessageService.saveDataForCheckUser(phoneNumber, authCode);
-    }
-
-
-    private boolean isValidPhoneNumber(String phoneNumber) {
-        return phoneNumber != null && phoneNumber.matches("^010[0-9]{8}$");
     }
 
     public void checkAuthCode(MobileAuthenticationRequest request) {

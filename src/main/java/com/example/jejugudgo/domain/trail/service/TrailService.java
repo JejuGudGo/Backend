@@ -5,8 +5,8 @@ import com.example.jejugudgo.domain.trail.dto.TrailListResponse;
 import com.example.jejugudgo.domain.trail.entity.Trail;
 import com.example.jejugudgo.domain.trail.entity.TrailType;
 import com.example.jejugudgo.domain.trail.repository.TrailRepository;
-import com.example.jejugudgo.global.exception.CustomException;
-import com.example.jejugudgo.global.exception.entity.RetCode;
+import com.example.jejugudgo.global.exception.exception.CustomException;
+import com.example.jejugudgo.global.exception.enums.RetCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,8 +1,8 @@
 package com.example.jejugudgo.global.config.controller;
 
 import com.example.jejugudgo.global.config.dto.response.VersionResponse;
-import com.example.jejugudgo.global.exception.dto.response.CommonApiResponse;
-import com.example.jejugudgo.global.util.ApiResponseUtil;
+import com.example.jejugudgo.global.exception.dto.CommonApiResponse;
+import com.example.jejugudgo.global.exception.util.ApiResponseUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

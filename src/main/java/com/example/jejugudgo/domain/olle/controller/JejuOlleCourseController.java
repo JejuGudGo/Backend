@@ -3,8 +3,8 @@ package com.example.jejugudgo.domain.olle.controller;
 import com.example.jejugudgo.domain.olle.dto.response.JejuOlleCourseResponseDetail;
 import com.example.jejugudgo.domain.olle.dto.response.JejuOlleCourseResponseForList;
 import com.example.jejugudgo.domain.olle.query.JejuOlleCourseQueryService;
-import com.example.jejugudgo.global.exception.dto.response.CommonApiResponse;
-import com.example.jejugudgo.global.util.ApiResponseUtil;
+import com.example.jejugudgo.global.exception.dto.CommonApiResponse;
+import com.example.jejugudgo.global.exception.util.ApiResponseUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

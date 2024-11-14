@@ -6,8 +6,8 @@ import com.example.jejugudgo.global.api.tourapi.common.entity.ContentType;
 import com.example.jejugudgo.global.api.tourapi.common.entity.TourApiContentType;
 import com.example.jejugudgo.global.api.tourapi.area.repository.TourApiContentTypeRepository;
 import com.example.jejugudgo.global.api.tourapi.common.entity.TourApiSpots;
-import com.example.jejugudgo.global.exception.CustomException;
-import com.example.jejugudgo.global.exception.entity.RetCode;
+import com.example.jejugudgo.global.exception.exception.CustomException;
+import com.example.jejugudgo.global.exception.enums.RetCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

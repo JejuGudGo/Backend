@@ -1,8 +1,8 @@
 package com.example.jejugudgo.domain.auth.mail.service;
 
 import com.example.jejugudgo.domain.auth.mail.dto.EmailAuthenticationRequest;
-import com.example.jejugudgo.global.exception.CustomException;
-import com.example.jejugudgo.global.exception.entity.RetCode;
+import com.example.jejugudgo.global.exception.exception.CustomException;
+import com.example.jejugudgo.global.exception.enums.RetCode;
 import com.example.jejugudgo.global.redis.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

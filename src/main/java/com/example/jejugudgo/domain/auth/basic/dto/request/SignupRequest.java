@@ -1,6 +1,6 @@
 package com.example.jejugudgo.domain.auth.basic.dto.request;
 
-import com.example.jejugudgo.domain.auth.terms.dto.request.TermsAgreementRequest;
+import com.example.jejugudgo.domain.user.terms.dto.TermsAgreementRequest;
 
 
 public record SignupRequest(

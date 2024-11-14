@@ -2,9 +2,9 @@ package com.example.jejugudgo.domain.auth.oauth.controller;
 
 import com.example.jejugudgo.domain.auth.oauth.repository.OAuthRequest;
 import com.example.jejugudgo.domain.auth.oauth.service.OAuthService;
-import com.example.jejugudgo.domain.user.dto.response.UserInfoResponse;
-import com.example.jejugudgo.global.exception.dto.response.CommonApiResponse;
-import com.example.jejugudgo.global.util.ApiResponseUtil;
+import com.example.jejugudgo.domain.auth.basic.dto.response.UserInfoResponse;
+import com.example.jejugudgo.global.exception.dto.CommonApiResponse;
+import com.example.jejugudgo.global.exception.util.ApiResponseUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -3,8 +3,8 @@ package com.example.jejugudgo.domain.event.service;
 import com.example.jejugudgo.domain.event.dto.EventListResponse;
 import com.example.jejugudgo.domain.event.entity.EventStatus;
 import com.example.jejugudgo.domain.event.repository.EventRepository;
-import com.example.jejugudgo.global.exception.CustomException;
-import com.example.jejugudgo.global.exception.entity.RetCode;
+import com.example.jejugudgo.global.exception.exception.CustomException;
+import com.example.jejugudgo.global.exception.enums.RetCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

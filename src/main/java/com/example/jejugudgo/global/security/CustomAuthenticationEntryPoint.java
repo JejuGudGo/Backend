@@ -1,7 +1,6 @@
 package com.example.jejugudgo.global.security;
 
-import com.example.jejugudgo.global.exception.entity.ApiResponse;
-import com.example.jejugudgo.global.exception.repository.ApiResponseRepository;
+import com.example.jejugudgo.global.exception.enums.RetCode;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,32 +17,30 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
-    private final ApiResponseRepository apiResponseRepository;
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         if (authException instanceof UsernameNotFoundException) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
-            setResponse(response, "08");
+            setResponse(response, RetCode.RET_CODE08);
 
         } else if (authException instanceof BadCredentialsException) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
-            setResponse(response, "09");
+            setResponse(response, RetCode.RET_CODE09);
 
         }
         else if (authException instanceof InsufficientAuthenticationException) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            setResponse(response, "98");
+            setResponse(response, RetCode.RET_CODE98);
         }
     }
 
-    private void setResponse(HttpServletResponse response, String errorCode) throws IOException {
-        ApiResponse apiResponse = apiResponseRepository.findByRetCode(errorCode);
+    private void setResponse(HttpServletResponse response, RetCode errorCode) throws IOException {
 
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().println(
-                "{\"retCode\" : \"" + apiResponse.getRetCode() + "\", " +
-                 "\"retMessage\" : \"" + apiResponse.getRetMessage() + "\"}"
+                "{\"retCode\" : \"" + errorCode.getRetCode() + "\", " +
+                 "\"retMessage\" : \"" + errorCode.getMessage() + "\"}"
         );
     }
 }
