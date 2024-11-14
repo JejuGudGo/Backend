@@ -1,6 +1,6 @@
-package com.example.jejugudgo.global.config.controller;
+package com.example.jejugudgo.global.release.controller;
 
-import com.example.jejugudgo.global.config.dto.response.VersionResponse;
+import com.example.jejugudgo.global.release.dto.response.VersionResponse;
 import com.example.jejugudgo.global.exception.dto.CommonApiResponse;
 import com.example.jejugudgo.global.exception.util.ApiResponseUtil;
 import lombok.RequiredArgsConstructor;

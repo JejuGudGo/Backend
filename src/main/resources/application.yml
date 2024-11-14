@@ -49,8 +49,9 @@ spring:
       host: ${REDIS_HOST}
 
   elasticsearch:
-    rest:
-      uris: ${ELASTIC_URI}
+    username: ${ELASTIC_USERNAME}
+    password: ${ELASTIC_PASS}
+    uris: ${ELASTIC_URI}
 
   springdoc:
     version: v1.0.0

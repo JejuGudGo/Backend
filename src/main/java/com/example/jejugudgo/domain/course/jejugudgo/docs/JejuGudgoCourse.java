@@ -1,7 +1,7 @@
 package com.example.jejugudgo.domain.course.jejugudgo.docs;
 
-import jakarta.persistence.Id;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.time.LocalDate;
