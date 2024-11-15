@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -25,9 +26,9 @@ public class JejuGudgoCourse {
 
     private double starAvg;
 
-    private String time;
+    private LocalTime time;
 
-    private String distance;
+    private double distance;
 
     private String imageUrl;
 
@@ -39,4 +40,18 @@ public class JejuGudgoCourse {
     @ManyToOne
     @JoinColumn(name = "originUserId")
     private User user;
+
+    public JejuGudgoCourse updateStarAvg(double starAvg) {
+        return JejuGudgoCourse.builder()
+                .id(this.id)
+                .title(this.title)
+                .createdAt(this.createdAt)
+                .starAvg(starAvg)
+                .time(this.time)
+                .distance(this.distance)
+                .imageUrl(this.imageUrl)
+                .summary(this.summary)
+                .viewCount(this.viewCount)
+                .build();
+    }
 }

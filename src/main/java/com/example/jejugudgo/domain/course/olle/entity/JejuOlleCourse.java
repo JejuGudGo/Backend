@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalTime;
+
 @Entity
 @Getter
 @Builder
@@ -73,6 +75,28 @@ public class JejuOlleCourse {
                 .infoPhone(infoPhone)
                 .starAvg(starAvg)
                 .courseImageUrl(courseImageUrl)
+                .build();
+    }
+
+    public JejuOlleCourse updateStarAvg(double starAvg) {
+        return JejuOlleCourse.builder()
+                .id(this.id)
+                .title(this.title)
+                .totalDistance(this.totalDistance)
+                .totalTime(this.totalTime)
+                .olleType(this.olleType)
+                .startSpotTitle(this.startSpotTitle)
+                .startLatitude(this.startLatitude)
+                .startLongitude(this.startLongitude)
+                .endSpotTitle(this.endSpotTitle)
+                .endLatitude(this.endLatitude)
+                .endLongitude(this.endLongitude)
+                .summary(this.summary)
+                .infoAddress(this.infoAddress)
+                .infoOpenTime(this.infoOpenTime)
+                .infoPhone(this.infoPhone)
+                .starAvg(starAvg)
+                .courseImageUrl(this.courseImageUrl)
                 .build();
     }
 }

@@ -1,5 +1,7 @@
 package com.example.jejugudgo.global.util;
 
+import com.example.jejugudgo.global.exception.enums.RetCode;
+import com.example.jejugudgo.global.exception.exception.CustomException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,10 +24,6 @@ public class ImageUtil {
     }
 
     public Path saveImage(Long userId, MultipartFile multipartFile, String imageCategory) throws Exception {
-        if (multipartFile.isEmpty()) {
-            throw new MultipartException("IMAGE_01");
-        }
-
         Path rootLocation = setImagePath(imageCategory);
 
         // 파일 이름, 확장자 추출
@@ -48,8 +46,7 @@ public class ImageUtil {
             return imageUrl;
 
         } catch (IOException e) {
-            // TODO: exception custom
-            throw new Exception("파일 저장 중 오류가 발생 했습니다: " + e.getMessage());
+            throw new CustomException(RetCode.RET_CODE12);
         }
     }
 
@@ -72,40 +69,11 @@ public class ImageUtil {
 
         } catch (IOException e) {
             if (Files.notExists(imageLocation)) {
-                throw new IOException("File not found: " + imageLocation, e);
+                throw new CustomException(RetCode.RET_CODE13);
 
             } else {
-                throw new IOException("Failed to delete file: " + imageLocation, e);
+                throw new CustomException(RetCode.RET_CODE14);
             }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         }
     }
 }

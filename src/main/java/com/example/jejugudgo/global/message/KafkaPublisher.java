@@ -12,6 +12,8 @@ import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @Component
@@ -26,9 +28,13 @@ public class KafkaPublisher {
             maxAttempts = 3,
             backoff = @Backoff(delay = 2000)
     )
-    public void sendData(String topic, Object data) {
+    public void sendData(String topic, Object data, String actionType) {
         try {
-            String jsonData = objectMapper.writeValueAsString(data);
+            Map<String, Object> message = new HashMap<>();
+            message.put("actionType", actionType);
+            message.put("data", data);
+
+            String jsonData = objectMapper.writeValueAsString(message);
             CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(topic, jsonData);
 
             future.whenComplete((result, ex) -> {
@@ -36,7 +42,9 @@ public class KafkaPublisher {
                     throw new CustomException(RetCode.RET_CODE96);
 
                 } else {
-                    System.out.println("Message sent successfully: " + topic);
+                    System.out.println("===============================================================================");
+                    System.out.println("Message sent successfully: " + topic + " actionType: " + actionType);
+                    System.out.println("===============================================================================");
                 }
             });
 

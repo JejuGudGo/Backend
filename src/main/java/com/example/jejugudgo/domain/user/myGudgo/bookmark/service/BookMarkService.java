@@ -41,7 +41,6 @@ public class BookMarkService {
     private final TrailRepository trailRepository;
     private final JejuGudgoCourseRepository jejuGudgoCourseRepository;
     private final JejuOlleCourseRepository jejuOlleCourseRepository;
-    private final JejuOlleSpotRepository jejuOlleSpotRepository;
     private final JejuGudgoCourseSpotRepository jejuGudgoCourseSpotRepository;
 
     // 사용자 북마크 조회 메서드

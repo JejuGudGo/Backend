@@ -1,0 +1,65 @@
+package com.example.jejugudgo.domain.course.jejugudgo.docs;
+
+import com.example.jejugudgo.domain.course.jejugudgo.entity.JejuGudgoCourse;
+import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+
+@Document(indexName = "jeju_gudgo_course")
+@Data
+public class JejuGudgoCourseDocument {
+    @Id
+    private Long courseId;
+
+    private String title;
+
+    private LocalDate createdAt;
+
+    private double starAvg;
+
+    private LocalTime time;
+
+    private double distance;
+
+    private String imageUrl;
+
+    private String summary;
+
+    private Long viewCount;
+
+    @Field(type = FieldType.Nested, includeInParent = true)
+    private List<JejuGudgoCourseSpotDocument> jejuGudgoCourseSpots;
+
+    @Field(type = FieldType.Nested, includeInParent = true)
+    private List<JejuGudgoCourseTagDocument> jejuGudgoCourseTags;
+
+
+    public static JejuGudgoCourseDocument of(JejuGudgoCourse jejuGudgoCourse, List<JejuGudgoCourseSpotDocument> spots, List<JejuGudgoCourseTagDocument> tags) {
+        JejuGudgoCourseDocument document = new JejuGudgoCourseDocument();
+        document.setCourseId(jejuGudgoCourse.getId());
+        document.setTitle(jejuGudgoCourse.getTitle());
+        document.setCreatedAt(jejuGudgoCourse.getCreatedAt());
+        document.setStarAvg(jejuGudgoCourse.getStarAvg());
+        document.setTime(jejuGudgoCourse.getTime());
+        document.setDistance(jejuGudgoCourse.getDistance());
+        document.setImageUrl(jejuGudgoCourse.getImageUrl());
+        document.setSummary(jejuGudgoCourse.getSummary());
+        document.setViewCount(jejuGudgoCourse.getViewCount());
+        document.setJejuGudgoCourseSpots(spots);
+        document.setJejuGudgoCourseTags(tags);
+
+        return document;
+    }
+
+    public JejuGudgoCourseDocument updateStarAvg(double starAvg) {
+        JejuGudgoCourseDocument jejuGudgoCourseDocument = this;
+        jejuGudgoCourseDocument.setStarAvg(starAvg);
+        return jejuGudgoCourseDocument;
+    }
+}

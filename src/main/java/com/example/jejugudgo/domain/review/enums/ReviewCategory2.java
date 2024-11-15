@@ -18,7 +18,7 @@ public enum ReviewCategory2 {
         this.category2 = category2;
     }
 
-    public ReviewCategory2 fromQuery(String query) {
+    public static ReviewCategory2 fromQuery(String query) {
         for (ReviewCategory2 category : ReviewCategory2.values()) {
             if (category.getCategory2().equals(query)) {
                 return category;

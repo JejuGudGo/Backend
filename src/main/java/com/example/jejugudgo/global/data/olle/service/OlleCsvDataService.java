@@ -3,6 +3,7 @@ package com.example.jejugudgo.global.data.olle.service;
 import com.example.jejugudgo.domain.course.olle.entity.JejuOlleCourse;
 import com.example.jejugudgo.domain.course.olle.entity.JejuOlleSpot;
 import com.example.jejugudgo.domain.course.olle.entity.OlleType;
+import com.example.jejugudgo.domain.course.olle.message.JejuOlleCoursePublisher;
 import com.example.jejugudgo.domain.course.olle.repository.JejuOlleCourseRepository;
 import com.example.jejugudgo.domain.course.olle.repository.JejuOlleSpotRepository;
 import com.example.jejugudgo.global.data.common.entity.DataCommandLog;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +27,7 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 public class OlleCsvDataService {
-
+    private final JejuOlleCoursePublisher jejuOlleCoursePublisher;
     private final JejuOlleCourseRepository courseRepository;
     private final JejuOlleSpotRepository spotRepository;
     private final DataCommandLogRepository logRepository;
@@ -129,6 +131,9 @@ public class OlleCsvDataService {
                     endSpot.getTitle(), endSpot.getLatitude(), endSpot.getLongitude()
             );
             courseRepository.save(updatedCourse);
+
+            // kafka publish
+            jejuOlleCoursePublisher.jejuOlleCourseMessagePublish(updatedCourse);
         });
     }
 

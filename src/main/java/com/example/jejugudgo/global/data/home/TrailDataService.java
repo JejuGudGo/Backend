@@ -2,6 +2,7 @@ package com.example.jejugudgo.global.data.home;
 
 import com.example.jejugudgo.domain.trail.entity.Trail;
 import com.example.jejugudgo.domain.trail.entity.TrailType;
+import com.example.jejugudgo.domain.trail.message.TrailPublisher;
 import com.example.jejugudgo.domain.trail.repository.TrailRepository;
 import com.example.jejugudgo.global.data.common.entity.DataCommandLog;
 import com.example.jejugudgo.global.data.common.repository.DataCommandLogRepository;
@@ -26,6 +27,7 @@ import static org.hibernate.query.sqm.tree.SqmNode.log;
 public class TrailDataService {
     private final DataCommandLogRepository dataCommandLogRepository;
     private final TrailRepository trailRepository;
+    private final TrailPublisher trailPublisher;
 
     public void loadTrailCsvToDatabase() throws IOException, CsvException {
         DataCommandLog checkDataConfig = dataCommandLogRepository.findByConfigKey("TrailData")
@@ -61,6 +63,7 @@ public class TrailDataService {
                         .collect(Collectors.toList());
 
                 trailRepository.saveAll(trails);
+                trails.forEach(trailPublisher::createTrailMessagePublish);
 
             } catch (IOException | CsvException e) {
                 e.printStackTrace();

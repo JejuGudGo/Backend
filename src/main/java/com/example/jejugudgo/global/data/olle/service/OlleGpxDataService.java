@@ -50,6 +50,7 @@ public class OlleGpxDataService {
                     String fileName = resource.getFilename();
 
                     String courseTitle = fileName
+                            .replace("_", " ")
                             .replace(".gpx", "")
                             .replace("코스", "");
 

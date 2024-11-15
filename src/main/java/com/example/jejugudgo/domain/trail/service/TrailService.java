@@ -4,6 +4,7 @@ import com.example.jejugudgo.domain.trail.dto.TrailDetailResponse;
 import com.example.jejugudgo.domain.trail.dto.TrailListResponse;
 import com.example.jejugudgo.domain.trail.entity.Trail;
 import com.example.jejugudgo.domain.trail.entity.TrailType;
+import com.example.jejugudgo.domain.trail.message.TrailPublisher;
 import com.example.jejugudgo.domain.trail.repository.TrailRepository;
 import com.example.jejugudgo.global.exception.exception.CustomException;
 import com.example.jejugudgo.global.exception.enums.RetCode;
@@ -19,6 +20,7 @@ import static org.hibernate.internal.util.StringHelper.nullIfEmpty;
 @RequiredArgsConstructor
 public class TrailService {
     private final TrailRepository trailRepository;
+    private final TrailPublisher publisher;
 
     public List<TrailListResponse> getTrails(String query) {
         if (query.equals("전체")) {
@@ -69,5 +71,11 @@ public class TrailService {
         );
 
         return response;
+    }
+
+    public void updateStarAvg(double newStarAvg, Trail trail) {
+        trail = trail.updateStarAvg(newStarAvg);
+        trailRepository.save(trail);
+        publisher.updateTrailMessagePublish(trail, newStarAvg);
     }
 }

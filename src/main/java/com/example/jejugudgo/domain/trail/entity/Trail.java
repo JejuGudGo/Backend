@@ -47,4 +47,25 @@ public class Trail {
 
     @Enumerated(value = EnumType.STRING)
     private TrailType trailType;
+
+
+    public Trail updateStarAvg(double starAvg) {
+        return Trail.builder()
+                .id(this.id)
+                .title(this.title)
+                .latitude(this.latitude)
+                .longitude(this.longitude)
+                .content(this.content)
+                .address(this.address)
+                .phoneNumber(this.phoneNumber)
+                .homepageUrl(this.homepageUrl)
+                .businessHours(this.businessHours)
+                .fee(this.fee)
+                .duration(this.duration)
+                .imageUrl(this.imageUrl)
+                .reference(this.reference)
+                .starAvg(starAvg)
+                .trailType(this.trailType)
+                .build();
+    }
 }

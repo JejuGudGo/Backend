@@ -25,7 +25,7 @@ public enum ReviewCategory3 {
         this.category3 = category3;
     }
 
-    public ReviewCategory3 fromQuery(String query) {
+    public static ReviewCategory3 fromQuery(String query) {
         for (ReviewCategory3 category : ReviewCategory3.values()) {
             if (category.getCategory3().equals(query)) {
                 return category;
