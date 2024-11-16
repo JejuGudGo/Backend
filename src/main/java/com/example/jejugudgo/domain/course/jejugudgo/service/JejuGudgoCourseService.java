@@ -35,6 +35,12 @@ public class JejuGudgoCourseService {
                 .imageUrl(request.userJejuGudgoCourse().getImageUrl())
                 .summary(request.userJejuGudgoCourse().getSummary())
                 .viewCount(0L)
+                .startSpotTitle(request.userJejuGudgoCourse().getStartSpotTitle())
+                .startLatitude(request.userJejuGudgoCourse().getStartLatitude())
+                .startLongitude(request.userJejuGudgoCourse().getStartLongitude())
+                .endSpotTitle(request.userJejuGudgoCourse().getEndSpotTitle())
+                .endLatitude(request.userJejuGudgoCourse().getEndLatitude())
+                .endLongitude(request.userJejuGudgoCourse().getEndLongitude())
                 .build();
 
         jejuGudgoCourseRepository.save(jejuGudgoCourse);

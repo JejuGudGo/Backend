@@ -36,6 +36,18 @@ public class JejuGudgoCourse {
 
     private Long viewCount;
 
+    private String startSpotTitle;
+
+    private double startLatitude;
+
+    private double startLongitude;
+
+    private String endSpotTitle;
+
+    private double endLatitude;
+
+    private double endLongitude;
+
 
     @ManyToOne
     @JoinColumn(name = "originUserId")

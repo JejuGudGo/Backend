@@ -26,7 +26,6 @@ public enum CourseTag {
                 return courseTag;
             }
         }
-
         return null;
     }
 }

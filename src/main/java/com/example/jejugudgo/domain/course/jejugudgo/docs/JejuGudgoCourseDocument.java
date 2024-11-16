@@ -33,6 +33,19 @@ public class JejuGudgoCourseDocument {
 
     private Long viewCount;
 
+    private String startSpotTitle;
+
+    private double startLatitude;
+
+    private double startLongitude;
+
+    private String endSpotTitle;
+
+    private double endLatitude;
+
+    private double endLongitude;
+
+
     @Field(type = FieldType.Nested, includeInParent = true)
     private List<JejuGudgoCourseSpotDocument> jejuGudgoCourseSpots;
 
@@ -51,6 +64,12 @@ public class JejuGudgoCourseDocument {
         document.setImageUrl(jejuGudgoCourse.getImageUrl());
         document.setSummary(jejuGudgoCourse.getSummary());
         document.setViewCount(jejuGudgoCourse.getViewCount());
+        document.setStartSpotTitle(jejuGudgoCourse.getStartSpotTitle());
+        document.setStartLatitude(jejuGudgoCourse.getStartLatitude());
+        document.setStartLongitude(jejuGudgoCourse.getStartLongitude());
+        document.setEndSpotTitle(jejuGudgoCourse.getEndSpotTitle());
+        document.setEndLatitude(jejuGudgoCourse.getEndLatitude());
+        document.setEndLongitude(jejuGudgoCourse.getEndLongitude());
         document.setJejuGudgoCourseSpots(spots);
         document.setJejuGudgoCourseTags(tags);
 

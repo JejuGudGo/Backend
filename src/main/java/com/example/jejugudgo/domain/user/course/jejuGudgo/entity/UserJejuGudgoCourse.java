@@ -39,9 +39,27 @@ public class UserJejuGudgoCourse {
 
     private Long steps;
 
+    private LocalTime restTime;
+
+    private double averageSpeed;
+
+    private double averagedPace;
+
     private String imageUrl;
 
     private String summary;
+
+    private String startSpotTitle;
+
+    private double startLatitude;
+
+    private double startLongitude;
+
+    private String endSpotTitle;
+
+    private double endLatitude;
+
+    private double endLongitude;
 
 
     @ManyToOne
