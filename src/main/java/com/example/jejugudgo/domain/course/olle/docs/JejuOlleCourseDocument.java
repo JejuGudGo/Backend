@@ -7,6 +7,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import java.util.Collections;
 import java.util.List;
 
 @Document(indexName = "jeju_olle_course")
@@ -49,6 +50,9 @@ public class JejuOlleCourseDocument {
 
     private Long viewCount;
 
+    @Field(type = FieldType.Keyword)
+    private List<String> olleTags;
+
     @Field(type = FieldType.Nested, includeInParent = true)
     private List<JejuOlleSpotDocument> spots;
 
@@ -56,10 +60,11 @@ public class JejuOlleCourseDocument {
     private List<Long> bookmarkUsers;
 
 
-    public static JejuOlleCourseDocument of(JejuOlleCourse jejuOlleCourse, List<JejuOlleSpotDocument> jejuOlleSpotDocuments, List<Long> bookmarkUsers) {
+    public static JejuOlleCourseDocument of(JejuOlleCourse jejuOlleCourse, List<JejuOlleSpotDocument> jejuOlleSpotDocuments, List<Long> bookmarkUsers, List<String> olleTags) {
         JejuOlleCourseDocument document = new JejuOlleCourseDocument();
         document.setCourseId(jejuOlleCourse.getId());
         document.setTitle(jejuOlleCourse.getTitle());
+        document.setOlleTags(olleTags != null ? olleTags : Collections.emptyList());
         document.setTotalTime(jejuOlleCourse.getTotalTime());
         document.setOlleType(jejuOlleCourse.getOlleType().getType());
         document.setStartSpotTitle(jejuOlleCourse.getStartSpotTitle());
@@ -76,7 +81,7 @@ public class JejuOlleCourseDocument {
         document.setCourseImageUrl(jejuOlleCourse.getCourseImageUrl());
         document.setViewCount(jejuOlleCourse.getViewCount());
         document.setSpots(jejuOlleSpotDocuments);
-        document.setBookmarkUsers(bookmarkUsers);
+        document.setBookmarkUsers(bookmarkUsers != null ? bookmarkUsers : Collections.emptyList());
         return document;
     }
 

@@ -18,4 +18,8 @@ public class JejuOlleCourseTag {
 
     @Enumerated(EnumType.STRING)
     private OlleTag olleTag;
+
+    @ManyToOne
+    @JoinColumn(name = "jejuOlleCourse")
+    private JejuOlleCourse jejuOlleCourse;
 }

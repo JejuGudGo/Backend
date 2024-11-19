@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+
 @Component
 @RequiredArgsConstructor
 public class JejuOlleCourseConsumer {
@@ -46,6 +48,11 @@ public class JejuOlleCourseConsumer {
     private void handleCreate(JsonNode course) {
         try {
             JejuOlleCourseDocument jejuOlleCourseDocument= objectMapper.treeToValue(course, JejuOlleCourseDocument.class);
+
+            if (jejuOlleCourseDocument.getOlleTags() == null) {
+                jejuOlleCourseDocument.setOlleTags(Collections.emptyList());
+            }
+
             jejuOlleCourseDocumentRepository.save(jejuOlleCourseDocument);
 
             System.out.println("===============================================================================");

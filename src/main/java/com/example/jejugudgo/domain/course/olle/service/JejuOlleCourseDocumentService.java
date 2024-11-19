@@ -3,6 +3,7 @@ package com.example.jejugudgo.domain.course.olle.service;
 import com.example.jejugudgo.domain.course.olle.docs.JejuOlleCourseDocument;
 import com.example.jejugudgo.domain.course.olle.docs.JejuOlleSpotDocument;
 import com.example.jejugudgo.domain.course.olle.entity.JejuOlleCourse;
+import com.example.jejugudgo.domain.course.olle.entity.JejuOlleCourseTag;
 import com.example.jejugudgo.domain.course.olle.entity.JejuOlleSpot;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.BookmarkType;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.repository.BookmarkRepository;
@@ -18,10 +19,10 @@ import java.util.List;
 public class JejuOlleCourseDocumentService {
     private final BookmarkRepository bookmarkRepository;
 
-    public JejuOlleCourseDocument documentsJejuOlleCourse(JejuOlleCourse jejuOlleCourse, List<JejuOlleSpot> jejuOlleSpots) {
+    public JejuOlleCourseDocument documentsJejuOlleCourse(JejuOlleCourse jejuOlleCourse, List<JejuOlleSpot> jejuOlleSpots, List<String> olleTags) {
         List<JejuOlleSpotDocument> jejuOlleSpotDocuments = documentsJejuOlleSpot(jejuOlleSpots);
         List<Long> bookmarkUsers = bookmarkRepository.findDistinctUserByBookMarkTypeAndTargetId(BookmarkType.OLLE, jejuOlleCourse.getId());
-        JejuOlleCourseDocument jejuOlleCourseDocument = JejuOlleCourseDocument.of(jejuOlleCourse, jejuOlleSpotDocuments, bookmarkUsers);
+        JejuOlleCourseDocument jejuOlleCourseDocument = JejuOlleCourseDocument.of(jejuOlleCourse, jejuOlleSpotDocuments, bookmarkUsers, olleTags);
 
         return jejuOlleCourseDocument;
     }

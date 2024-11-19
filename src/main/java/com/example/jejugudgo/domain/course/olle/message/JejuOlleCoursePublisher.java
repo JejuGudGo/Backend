@@ -19,9 +19,9 @@ public class JejuOlleCoursePublisher {
     private final JejuOlleSpotRepository jejuOlleSpotRepository;
     private final JejuOlleCourseDocumentService jejuOlleCourseDocumentService;
 
-    public void jejuOlleCourseMessagePublish(JejuOlleCourse jejuOlleCourse) {
+    public void jejuOlleCourseMessagePublish(JejuOlleCourse jejuOlleCourse, List<String> olleTypes) {
         List<JejuOlleSpot> jejuOlleSpots = jejuOlleSpotRepository.findByJejuOlleCourse(jejuOlleCourse);
-        JejuOlleCourseDocument jejuOlleCourseDocument = jejuOlleCourseDocumentService.documentsJejuOlleCourse(jejuOlleCourse, jejuOlleSpots);
+        JejuOlleCourseDocument jejuOlleCourseDocument = jejuOlleCourseDocumentService.documentsJejuOlleCourse(jejuOlleCourse, jejuOlleSpots, olleTypes);
         kafkaPublisher.sendData("olle_topic", jejuOlleCourseDocument, "CREATE");
     }
 
