@@ -20,9 +20,11 @@ public class JejuOlleCourse {
 
     private String title;
 
-    private String totalDistance;
+    private String summary;
 
-    private String totalTime;
+    private String distance;
+
+    private String time;
 
     private Long viewCount;
 
@@ -43,7 +45,7 @@ public class JejuOlleCourse {
 
     @Lob
     @Column(columnDefinition = "TEXT")
-    private String summary;
+    private String content;
 
     private String infoAddress;
 
@@ -60,8 +62,9 @@ public class JejuOlleCourse {
         return JejuOlleCourse.builder()
                 .id(id)
                 .title(title)
-                .totalDistance(totalDistance)
-                .totalTime(totalTime)
+                .summary(startSpotTitle + "-" + endSpotTitle)
+                .distance(distance)
+                .time(time)
                 .olleType(olleType)
                 .startSpotTitle(startSpotTitle)
                 .startLatitude(startLatitude)
@@ -74,6 +77,7 @@ public class JejuOlleCourse {
                 .infoOpenTime(infoOpenTime)
                 .infoPhone(infoPhone)
                 .starAvg(starAvg)
+                .content(content)
                 .courseImageUrl(courseImageUrl)
                 .build();
     }
@@ -82,8 +86,8 @@ public class JejuOlleCourse {
         return JejuOlleCourse.builder()
                 .id(this.id)
                 .title(this.title)
-                .totalDistance(this.totalDistance)
-                .totalTime(this.totalTime)
+                .distance(this.distance)
+                .time(this.time)
                 .olleType(this.olleType)
                 .startSpotTitle(this.startSpotTitle)
                 .startLatitude(this.startLatitude)

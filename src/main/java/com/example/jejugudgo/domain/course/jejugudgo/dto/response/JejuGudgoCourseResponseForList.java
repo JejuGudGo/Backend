@@ -7,8 +7,9 @@ public record JejuGudgoCourseResponseForList(
         String title,
         String startSpot,
         String endSpot,
-        LocalTime TotalTime,
+        String time,
+        String distance,
         double starAvg,
-        Long reviewCount
+        int reviewCount
 ) {
 }

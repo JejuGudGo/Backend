@@ -87,24 +87,26 @@ public class OlleCsvDataService {
                 .map(String::trim)
                 .distinct()
                 .toList();
+        String content = sanitizeField(data[12]);
 
-        JejuOlleCourse course = courseCache.computeIfAbsent(title, key -> getOrSaveCourse(olleType, title, totalDistance, totalTime, summary, infoAddress, infoOpenTime));
+        JejuOlleCourse course = courseCache.computeIfAbsent(title, key -> getOrSaveCourse(olleType, title, totalDistance, totalTime, summary, infoAddress, infoOpenTime, content));
         JejuOlleSpot spot = saveSpot(spotTitle, latitude, longitude, spotOrder, course);
         saveTags(olleTags, course);
 
         updateSpotOrderMaps(title, spot, minSpotOrderMap, maxSpotOrderMap);
     }
 
-    private JejuOlleCourse getOrSaveCourse(OlleType olleType, String title, String totalDistance, String totalTime, String summary, String infoAddress, String infoOpenTime) {
+    private JejuOlleCourse getOrSaveCourse(OlleType olleType, String title, String totalDistance, String totalTime, String summary, String infoAddress, String infoOpenTime, String content) {
         return courseRepository.findByTitle(title).orElseGet(() -> courseRepository.save(
                 JejuOlleCourse.builder()
                         .olleType(olleType)
                         .title(title)
-                        .totalDistance(totalDistance)
-                        .totalTime(totalTime)
+                        .distance(totalDistance)
+                        .time(totalTime)
                         .summary(summary)
                         .infoAddress(infoAddress)
                         .infoOpenTime(infoOpenTime)
+                        .content(content)
                         .build()
         ));
     }

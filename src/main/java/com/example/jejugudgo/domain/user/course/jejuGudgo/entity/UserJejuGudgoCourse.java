@@ -29,9 +29,9 @@ public class UserJejuGudgoCourse {
 
     private LocalDate finishedAt;
 
-    private LocalTime time;
+    private String time;
 
-    private double distance;
+    private String distance;
 
     private double speed;
 

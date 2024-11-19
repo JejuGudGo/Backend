@@ -26,9 +26,9 @@ public class JejuGudgoCourse {
 
     private double starAvg;
 
-    private LocalTime time;
+    private String time;
 
-    private double distance;
+    private String distance;
 
     private String imageUrl;
 

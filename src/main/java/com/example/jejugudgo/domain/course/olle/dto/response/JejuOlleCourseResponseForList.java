@@ -7,6 +7,6 @@ public record JejuOlleCourseResponseForList(
         String endSpot,
         String totalTime,
         double starAvg,
-        Long reviewCount
+        int reviewCount
 ) {
 }

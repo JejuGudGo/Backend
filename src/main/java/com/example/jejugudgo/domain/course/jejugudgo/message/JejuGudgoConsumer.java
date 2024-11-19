@@ -49,7 +49,7 @@ public class JejuGudgoConsumer {
             jejuGudgoCourseDocumentRepository.save(courseDocument);
 
             System.out.println("===============================================================================");
-            System.out.println("Jeju Gudgo course saved to Elasticsearch: " + courseDocument.getCourseId());
+            System.out.println("Jeju Gudgo course saved to Elasticsearch: " + courseDocument.getId());
             System.out.println("===============================================================================");
 
         } catch (JsonProcessingException e) {
@@ -67,7 +67,7 @@ public class JejuGudgoConsumer {
             jejuGudgoCourseDocumentRepository.save(courseDocument);
 
             System.out.println("===============================================================================");
-            System.out.println("Jeju Gudgo star average changed to Elasticsearch: " + courseDocument.getCourseId());
+            System.out.println("Jeju Gudgo star average changed to Elasticsearch: " + courseDocument.getId());
             System.out.println("===============================================================================");
 
         } catch (JsonProcessingException e) {
@@ -85,7 +85,7 @@ public class JejuGudgoConsumer {
             jejuGudgoCourseDocumentRepository.save(courseDocument);
 
             System.out.println("===============================================================================");
-            System.out.println("Jeju gudgo course bookmark users changed to Elasticsearch: " + courseDocument.getCourseId());
+            System.out.println("Jeju gudgo course bookmark users changed to Elasticsearch: " + courseDocument.getId());
             System.out.println("===============================================================================");
 
         } catch (Exception e) {

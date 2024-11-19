@@ -47,18 +47,18 @@ public class TrailConsumer {
         try {
             TrailDocument trailDocument = objectMapper.treeToValue(trail, TrailDocument.class);
 
-            boolean exists = trailDocumentRepository.existsById(trailDocument.getTrailId());
+            boolean exists = trailDocumentRepository.existsById(trailDocument.getId());
 
             if (exists) {
                 System.out.println("===============================================================================");
-                System.out.println("Trail already exists in Elasticsearch: " + trailDocument.getTrailId());
+                System.out.println("Trail already exists in Elasticsearch: " + trailDocument.getId());
                 System.out.println("===============================================================================");
 
             } else {
                 trailDocumentRepository.save(trailDocument);
 
                 System.out.println("===============================================================================");
-                System.out.println("Trail saved to Elasticsearch: " + trailDocument.getTrailId());
+                System.out.println("Trail saved to Elasticsearch: " + trailDocument.getId());
                 System.out.println("===============================================================================");
             }
         } catch (JsonProcessingException e) {
@@ -76,7 +76,7 @@ public class TrailConsumer {
             trailDocumentRepository.save(trailDocument);
 
             System.out.println("===============================================================================");
-            System.out.println("Trail star average changed to Elasticsearch: " + trailDocument.getTrailId());
+            System.out.println("Trail star average changed to Elasticsearch: " + trailDocument.getId());
             System.out.println("===============================================================================");
 
         } catch (JsonProcessingException e) {
@@ -94,7 +94,7 @@ public class TrailConsumer {
             trailDocumentRepository.save(trailDocument);
 
             System.out.println("===============================================================================");
-            System.out.println("Trail bookmark users changed to Elasticsearch: " + trailDocument.getTrailId());
+            System.out.println("Trail bookmark users changed to Elasticsearch: " + trailDocument.getId());
             System.out.println("===============================================================================");
 
         } catch (Exception e) {

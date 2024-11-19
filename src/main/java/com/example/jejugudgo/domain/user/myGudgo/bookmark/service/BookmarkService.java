@@ -147,9 +147,9 @@ public class BookmarkService {
                 jejuOlleCourse.getTitle(),
                 startSpot,
                 endSpot,
-                jejuOlleCourse.getTotalTime(),
+                jejuOlleCourse.getTime(),
                 jejuOlleCourse.getStarAvg(),
-                0L
+                0
         );
     }
 
@@ -162,8 +162,9 @@ public class BookmarkService {
                 startSpot,
                 endSpot,
                 jejuGudgoCourse.getTime(),
+                jejuGudgoCourse.getDistance(),
                 jejuGudgoCourse.getStarAvg(),
-                0L
+                0
         );
     }
 
@@ -174,7 +175,7 @@ public class BookmarkService {
                 trail.getId(),
                 trail.getTitle(),
                 trail.getStarAvg(),
-                0L
+                0
         );
     }
 

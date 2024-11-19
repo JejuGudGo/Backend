@@ -14,15 +14,17 @@ import java.util.List;
 @Data
 public class JejuOlleCourseDocument {
     @Id
-    private Long courseId;
+    private Long id;
 
     private String title;
 
-    private String totalDistance;
+    private String summary;
 
-    private String totalTime;
+    private String distance;
 
-    private String olleType;
+    private String time;
+
+    private String type;
 
     private String startSpotTitle;
 
@@ -36,7 +38,7 @@ public class JejuOlleCourseDocument {
 
     private double endLongitude;
 
-    private String summary;
+    private String content;
 
     private String infoAddress;
 
@@ -51,7 +53,7 @@ public class JejuOlleCourseDocument {
     private Long viewCount;
 
     @Field(type = FieldType.Keyword)
-    private List<String> olleTags;
+    private List<String> tags;
 
     @Field(type = FieldType.Nested, includeInParent = true)
     private List<JejuOlleSpotDocument> spots;
@@ -62,11 +64,13 @@ public class JejuOlleCourseDocument {
 
     public static JejuOlleCourseDocument of(JejuOlleCourse jejuOlleCourse, List<JejuOlleSpotDocument> jejuOlleSpotDocuments, List<Long> bookmarkUsers, List<String> olleTags) {
         JejuOlleCourseDocument document = new JejuOlleCourseDocument();
-        document.setCourseId(jejuOlleCourse.getId());
+        document.setId(jejuOlleCourse.getId());
         document.setTitle(jejuOlleCourse.getTitle());
-        document.setOlleTags(olleTags != null ? olleTags : Collections.emptyList());
-        document.setTotalTime(jejuOlleCourse.getTotalTime());
-        document.setOlleType(jejuOlleCourse.getOlleType().getType());
+        document.setContent(jejuOlleCourse.getContent());
+        document.setTags(olleTags != null ? olleTags : Collections.emptyList());
+        document.setTime(jejuOlleCourse.getTime());
+        document.setDistance(jejuOlleCourse.getDistance());
+        document.setType(jejuOlleCourse.getOlleType().getType());
         document.setStartSpotTitle(jejuOlleCourse.getStartSpotTitle());
         document.setStartLatitude(jejuOlleCourse.getStartLatitude());
         document.setStartLongitude(jejuOlleCourse.getStartLongitude());

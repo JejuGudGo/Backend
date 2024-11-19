@@ -49,14 +49,14 @@ public class JejuOlleCourseConsumer {
         try {
             JejuOlleCourseDocument jejuOlleCourseDocument= objectMapper.treeToValue(course, JejuOlleCourseDocument.class);
 
-            if (jejuOlleCourseDocument.getOlleTags() == null) {
-                jejuOlleCourseDocument.setOlleTags(Collections.emptyList());
+            if (jejuOlleCourseDocument.getTags() == null) {
+                jejuOlleCourseDocument.setTags(Collections.emptyList());
             }
 
             jejuOlleCourseDocumentRepository.save(jejuOlleCourseDocument);
 
             System.out.println("===============================================================================");
-            System.out.println("Olle course saved to Elasticsearch: " + jejuOlleCourseDocument.getCourseId());
+            System.out.println("Olle course saved to Elasticsearch: " + jejuOlleCourseDocument.getId());
             System.out.println("===============================================================================");
 
         } catch (JsonProcessingException e) {
@@ -74,7 +74,7 @@ public class JejuOlleCourseConsumer {
             jejuOlleCourseDocumentRepository.save(courseDocument);
 
             System.out.println("===============================================================================");
-            System.out.println("Olle course tar average changed to Elasticsearch: " + courseDocument.getCourseId());
+            System.out.println("Olle course tar average changed to Elasticsearch: " + courseDocument.getId());
             System.out.println("===============================================================================");
 
         } catch (JsonProcessingException e) {
@@ -92,7 +92,7 @@ public class JejuOlleCourseConsumer {
             jejuOlleCourseDocumentRepository.save(jejuOlleDocument);
 
             System.out.println("===============================================================================");
-            System.out.println("Jeju olle bookmark users changed to Elasticsearch: " + jejuOlleDocument.getCourseId());
+            System.out.println("Jeju olle bookmark users changed to Elasticsearch: " + jejuOlleDocument.getId());
             System.out.println("===============================================================================");
 
         } catch (Exception e) {

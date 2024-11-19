@@ -13,7 +13,7 @@ import java.util.List;
 @Document(indexName = "trail")
 public class TrailDocument {
     @Id
-    private Long trailId;
+    private Long id;
 
     private String title;
 
@@ -41,7 +41,7 @@ public class TrailDocument {
 
     private double starAvg;
 
-    private String trailType;
+    private String type;
 
     @Field(type = FieldType.Nested, includeInParent = true)
     private List<Long> bookmarkUsers;
@@ -49,7 +49,7 @@ public class TrailDocument {
 
     public static TrailDocument of(Trail trail, List<Long> bookmarkUsers) {
         TrailDocument document = new TrailDocument();
-        document.setTrailId(trail.getId());
+        document.setId(trail.getId());
         document.setTitle(trail.getTitle());
         document.setLatitude(trail.getLatitude());
         document.setLongitude(trail.getLongitude());
@@ -63,7 +63,7 @@ public class TrailDocument {
         document.setImageUrl(trail.getImageUrl());
         document.setReference(trail.getReference());
         document.setStarAvg(trail.getStarAvg());
-        document.setTrailType(trail.getTrailType().getCode());
+        document.setType(trail.getTrailType().getCode());
         document.setBookmarkUsers(bookmarkUsers);
 
         return document;

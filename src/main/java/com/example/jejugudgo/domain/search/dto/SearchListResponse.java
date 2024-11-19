@@ -1,7 +1,6 @@
 package com.example.jejugudgo.domain.search.dto;
 
-import com.example.jejugudgo.domain.search.dto.sub.SpotResponse;
-
+import java.time.LocalDateTime;
 import java.util.List;
 
 public record SearchListResponse(
@@ -16,6 +15,8 @@ public record SearchListResponse(
         String starAvg,
         int reviewCount,
         String content,
-        List<SpotResponse> spots
+        String startSpoTitle,
+        double startSpotLatitude,
+        double startSpotLongitude
 ) {
 }

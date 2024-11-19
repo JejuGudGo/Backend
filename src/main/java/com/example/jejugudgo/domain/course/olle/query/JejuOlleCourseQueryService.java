@@ -47,9 +47,9 @@ public class JejuOlleCourseQueryService {
                                 jejuOlleCourse.getTitle(),
                                 jejuOlleCourse.getStartSpotTitle(),
                                 jejuOlleCourse.getEndSpotTitle(),
-                                jejuOlleCourse.getTotalTime(),
+                                jejuOlleCourse.getTime(),
                                 jejuOlleCourse.getStarAvg(),
-                                0L
+                                0
                         ))
                 .toList();
         return PaginationUtil.listToPage(courseResponseForLists, pageable);
@@ -89,9 +89,9 @@ public class JejuOlleCourseQueryService {
                 jeJuOlleCourse.getTitle(),
                 jeJuOlleCourse.getStartSpotTitle(),
                 jeJuOlleCourse.getEndSpotTitle(),
-                jeJuOlleCourse.getTotalTime(),
+                jeJuOlleCourse.getTime(),
                 jeJuOlleCourse.getStarAvg(),
-                0L,
+                0,
                 spotResponses,
                 jeJuOlleCourse.getSummary(),
                 jeJuOlleCourse.getInfoAddress(),

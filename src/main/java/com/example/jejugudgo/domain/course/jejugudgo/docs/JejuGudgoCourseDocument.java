@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 public class JejuGudgoCourseDocument {
     @Id
-    private Long courseId;
+    private Long id;
 
     private String title;
 
@@ -23,9 +23,9 @@ public class JejuGudgoCourseDocument {
 
     private double starAvg;
 
-    private LocalTime time;
+    private String time;
 
-    private double distance;
+    private String distance;
 
     private String imageUrl;
 
@@ -47,10 +47,10 @@ public class JejuGudgoCourseDocument {
 
 
     @Field(type = FieldType.Nested, includeInParent = true)
-    private List<JejuGudgoCourseSpotDocument> jejuGudgoCourseSpots;
+    private List<JejuGudgoCourseSpotDocument> spots;
 
     @Field(type = FieldType.Nested, includeInParent = true)
-    private List<JejuGudgoCourseTagDocument> jejuGudgoCourseTags;
+    private List<JejuGudgoCourseTagDocument> tags;
 
     @Field(type = FieldType.Nested, includeInParent = true)
     private List<Long> bookmarkUsers;
@@ -58,7 +58,7 @@ public class JejuGudgoCourseDocument {
 
     public static JejuGudgoCourseDocument of(JejuGudgoCourse jejuGudgoCourse, List<JejuGudgoCourseSpotDocument> spots, List<JejuGudgoCourseTagDocument> tags, List<Long> bookmarkUsers) {
         JejuGudgoCourseDocument document = new JejuGudgoCourseDocument();
-        document.setCourseId(jejuGudgoCourse.getId());
+        document.setId(jejuGudgoCourse.getId());
         document.setTitle(jejuGudgoCourse.getTitle());
         document.setCreatedAt(jejuGudgoCourse.getCreatedAt());
         document.setStarAvg(jejuGudgoCourse.getStarAvg());
@@ -73,8 +73,8 @@ public class JejuGudgoCourseDocument {
         document.setEndSpotTitle(jejuGudgoCourse.getEndSpotTitle());
         document.setEndLatitude(jejuGudgoCourse.getEndLatitude());
         document.setEndLongitude(jejuGudgoCourse.getEndLongitude());
-        document.setJejuGudgoCourseSpots(spots);
-        document.setJejuGudgoCourseTags(tags);
+        document.setSpots(spots);
+        document.setTags(tags);
         document.setBookmarkUsers(bookmarkUsers);
 
         return document;
