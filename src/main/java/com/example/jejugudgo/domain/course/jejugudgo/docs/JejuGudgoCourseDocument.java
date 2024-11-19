@@ -8,7 +8,6 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 @Document(indexName = "jeju_gudgo_course")
@@ -18,6 +17,8 @@ public class JejuGudgoCourseDocument {
     private Long id;
 
     private String title;
+
+    private String type;
 
     private LocalDate createdAt;
 
@@ -58,6 +59,7 @@ public class JejuGudgoCourseDocument {
 
     public static JejuGudgoCourseDocument of(JejuGudgoCourse jejuGudgoCourse, List<JejuGudgoCourseSpotDocument> spots, List<JejuGudgoCourseTagDocument> tags, List<Long> bookmarkUsers) {
         JejuGudgoCourseDocument document = new JejuGudgoCourseDocument();
+        document.setType("제주걷고");
         document.setId(jejuGudgoCourse.getId());
         document.setTitle(jejuGudgoCourse.getTitle());
         document.setCreatedAt(jejuGudgoCourse.getCreatedAt());

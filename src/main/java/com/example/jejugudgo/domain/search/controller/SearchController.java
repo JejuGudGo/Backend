@@ -22,7 +22,16 @@ public class SearchController {
     private final SearchElasticService searchElasticService;
     private final ApiResponseUtil apiResponseUtil;
 
-    @GetMapping
+    /**
+     *
+     * @param keyword 검색어
+     * @param cat1 제주올레, 제주걷고, 산책로 (미 입력시 전체)
+     * @param cat2 cat1 에 맞는 중분류
+     * @param cat3 리뷰 목적에 맞는 소분류
+     * @param page 페이지
+     * @param size 페이지당 사이즈
+     */
+    @GetMapping(value = "")
     public ResponseEntity<CommonApiResponse> searchCourseByKeywordAndTags(
             @RequestParam("keyword") String keyword,
             @RequestParam(value = "cat1", defaultValue = "전체") String cat1,

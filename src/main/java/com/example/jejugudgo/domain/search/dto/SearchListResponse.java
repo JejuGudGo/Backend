@@ -1,6 +1,5 @@
 package com.example.jejugudgo.domain.search.dto;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public record SearchListResponse(
@@ -12,9 +11,9 @@ public record SearchListResponse(
         String summary, // 시작점 - 종점
         String distance,
         String time,
-        String starAvg,
+        double starAvg,
         int reviewCount,
-        String content,
+//        String content,
         String startSpoTitle,
         double startSpotLatitude,
         double startSpotLongitude
