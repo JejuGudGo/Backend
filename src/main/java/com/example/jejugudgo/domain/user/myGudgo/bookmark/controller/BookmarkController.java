@@ -1,8 +1,8 @@
 package com.example.jejugudgo.domain.user.myGudgo.bookmark.controller;
 
-import com.example.jejugudgo.domain.user.myGudgo.bookmark.dto.request.BookMarkRequest;
-import com.example.jejugudgo.domain.user.myGudgo.bookmark.dto.response.BookMarkResponse;
-import com.example.jejugudgo.domain.user.myGudgo.bookmark.service.BookMarkService;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.dto.request.BookmarkRequest;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.dto.response.BookmarkResponse;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.service.BookmarkService;
 import com.example.jejugudgo.global.exception.dto.CommonApiResponse;
 import com.example.jejugudgo.global.exception.util.ApiResponseUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,18 +15,18 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/api/v1/users/bookmark")
 @RequiredArgsConstructor
-public class BookMarkController {
-    private final BookMarkService bookMarkService;
+public class BookmarkController {
+    private final BookmarkService bookMarkService;
     private final ApiResponseUtil apiResponseUtil;
 
     @GetMapping("")
     public ResponseEntity<CommonApiResponse> getBookMarks(@RequestParam("type") String query, HttpServletRequest request) {
-        List<BookMarkResponse> responses = bookMarkService.getBookMarks(query, request);
+        List<BookmarkResponse> responses = bookMarkService.getBookMarks(query, request);
         return ResponseEntity.ok(apiResponseUtil.success(responses, "bookmarks"));
     }
 
     @PostMapping("")
-    public ResponseEntity<CommonApiResponse> create(HttpServletRequest servletRequest,@RequestBody BookMarkRequest bookMarkRequest) {
+    public ResponseEntity<CommonApiResponse> create(HttpServletRequest servletRequest,@RequestBody BookmarkRequest bookMarkRequest) {
         bookMarkService.create(servletRequest, bookMarkRequest);
         return ResponseEntity.ok(apiResponseUtil.success(null));
     }

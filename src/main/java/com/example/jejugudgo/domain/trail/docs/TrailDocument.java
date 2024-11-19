@@ -4,6 +4,10 @@ import com.example.jejugudgo.domain.trail.entity.Trail;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
+import java.util.List;
 
 @Data
 @Document(indexName = "trail")
@@ -39,8 +43,11 @@ public class TrailDocument {
 
     private String trailType;
 
+    @Field(type = FieldType.Nested, includeInParent = true)
+    private List<Long> bookmarkUsers;
 
-    public static TrailDocument of(Trail trail) {
+
+    public static TrailDocument of(Trail trail, List<Long> bookmarkUsers) {
         TrailDocument document = new TrailDocument();
         document.setTrailId(trail.getId());
         document.setTitle(trail.getTitle());
@@ -57,6 +64,7 @@ public class TrailDocument {
         document.setReference(trail.getReference());
         document.setStarAvg(trail.getStarAvg());
         document.setTrailType(trail.getTrailType().getCode());
+        document.setBookmarkUsers(bookmarkUsers);
 
         return document;
     }
@@ -64,6 +72,12 @@ public class TrailDocument {
     public TrailDocument updateStarAvg(double starAvg) {
         TrailDocument trailDocument = this;
         trailDocument.setStarAvg(starAvg);
+        return trailDocument;
+    }
+
+    public TrailDocument updateBookmarkUsers(List<Long> bookmarkUsers) {
+        TrailDocument trailDocument = this;
+        trailDocument.setBookmarkUsers(bookmarkUsers);
         return trailDocument;
     }
 }

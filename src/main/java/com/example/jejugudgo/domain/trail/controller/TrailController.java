@@ -5,6 +5,7 @@ import com.example.jejugudgo.domain.trail.dto.TrailListResponse;
 import com.example.jejugudgo.domain.trail.service.TrailService;
 import com.example.jejugudgo.global.exception.dto.CommonApiResponse;
 import com.example.jejugudgo.global.exception.util.ApiResponseUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,14 +20,14 @@ public class TrailController {
     private final ApiResponseUtil apiResponseUtil;
 
     @GetMapping(value = "")
-    public ResponseEntity<CommonApiResponse> getTrails(@RequestParam("type") String query) {
-        List<TrailListResponse> responses = trailService.getTrails(query);
+    public ResponseEntity<CommonApiResponse> getTrails(HttpServletRequest request, @RequestParam("type") String query) {
+        List<TrailListResponse> responses = trailService.getTrails(request, query);
         return ResponseEntity.ok(apiResponseUtil.success(responses, "trails"));
     }
 
     @GetMapping(value = "/{trailId}")
-    public ResponseEntity<CommonApiResponse> getTrailDetail(@PathVariable("trailId") Long trailId) {
-        TrailDetailResponse response = trailService.getTrail(trailId);
+    public ResponseEntity<CommonApiResponse> getTrailDetail(HttpServletRequest request, @PathVariable("trailId") Long trailId) {
+        TrailDetailResponse response = trailService.getTrail(request, trailId);
         return ResponseEntity.ok(apiResponseUtil.success(response));
     }
 }

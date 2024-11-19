@@ -3,6 +3,8 @@ package com.example.jejugudgo.domain.course.olle.message;
 import com.example.jejugudgo.domain.course.olle.docs.JejuOlleCourseDocument;
 import com.example.jejugudgo.domain.course.olle.repository.JejuOlleCourseDocumentRepository;
 import com.example.jejugudgo.domain.review.dto.request.StarAvgUpdateRequest;
+import com.example.jejugudgo.domain.trail.docs.TrailDocument;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.dto.request.UpdateBookmarkElasticDataRequest;
 import com.example.jejugudgo.global.exception.enums.RetCode;
 import com.example.jejugudgo.global.exception.exception.CustomException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -29,6 +31,9 @@ public class JejuOlleCourseConsumer {
                     break;
                 case "UPDATE_STAR_AVG":
                     handleUpdateStarAvg(jsonNode.get("data"));
+                    break;
+                case "UPDATE_BOOKMARK_USERS":
+                    handleUpdateBookmarkUsers(jsonNode.get("data"));
                     break;
                 default:
                     throw new CustomException(RetCode.RET_CODE93);
@@ -66,6 +71,24 @@ public class JejuOlleCourseConsumer {
             System.out.println("===============================================================================");
 
         } catch (JsonProcessingException e) {
+            throw new CustomException(RetCode.RET_CODE95);
+        }
+    }
+
+    private void handleUpdateBookmarkUsers(JsonNode updateRequest) {
+        try {
+            UpdateBookmarkElasticDataRequest request = objectMapper.treeToValue(updateRequest, UpdateBookmarkElasticDataRequest.class);
+            JejuOlleCourseDocument jejuOlleDocument = jejuOlleCourseDocumentRepository.findById(request.courseId())
+                    .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
+
+            jejuOlleDocument = jejuOlleDocument.updateBookmarkUsers(request.bookmarkUsers());
+            jejuOlleCourseDocumentRepository.save(jejuOlleDocument);
+
+            System.out.println("===============================================================================");
+            System.out.println("Jeju olle bookmark users changed to Elasticsearch: " + jejuOlleDocument.getCourseId());
+            System.out.println("===============================================================================");
+
+        } catch (Exception e) {
             throw new CustomException(RetCode.RET_CODE95);
         }
     }

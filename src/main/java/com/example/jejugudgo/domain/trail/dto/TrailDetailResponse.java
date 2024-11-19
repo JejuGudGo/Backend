@@ -1,6 +1,6 @@
 package com.example.jejugudgo.domain.trail.dto;
 
-import com.example.jejugudgo.domain.search.dto.sub.TopFiveRankedKeywordResponse;
+import com.example.jejugudgo.domain.review.dto.response.TopFiveRankedKeywordResponse;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;

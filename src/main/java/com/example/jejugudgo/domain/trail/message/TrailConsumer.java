@@ -3,10 +3,10 @@ package com.example.jejugudgo.domain.trail.message;
 import com.example.jejugudgo.domain.review.dto.request.StarAvgUpdateRequest;
 import com.example.jejugudgo.domain.trail.docs.TrailDocument;
 import com.example.jejugudgo.domain.trail.repository.TrailDocumentRepository;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.dto.request.UpdateBookmarkElasticDataRequest;
 import com.example.jejugudgo.global.exception.enums.RetCode;
 import com.example.jejugudgo.global.exception.exception.CustomException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +31,9 @@ public class TrailConsumer {
                     break;
                 case "UPDATE_STAR_AVG":
                     handleUpdateStarAvg(jsonNode.get("data"));
+                    break;
+                case "UPDATE_BOOKMARK_USERS":
+                    handleUpdateBookmarkUsers(jsonNode.get("data"));
                     break;
                 default:
                     throw new CustomException(RetCode.RET_CODE93);
@@ -77,6 +80,24 @@ public class TrailConsumer {
             System.out.println("===============================================================================");
 
         } catch (JsonProcessingException e) {
+            throw new CustomException(RetCode.RET_CODE95);
+        }
+    }
+
+    private void handleUpdateBookmarkUsers(JsonNode updateRequest) {
+        try {
+            UpdateBookmarkElasticDataRequest request = objectMapper.treeToValue(updateRequest, UpdateBookmarkElasticDataRequest.class);
+            TrailDocument trailDocument = trailDocumentRepository.findById(request.courseId())
+                    .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
+
+            trailDocument = trailDocument.updateBookmarkUsers(request.bookmarkUsers());
+            trailDocumentRepository.save(trailDocument);
+
+            System.out.println("===============================================================================");
+            System.out.println("Trail bookmark users changed to Elasticsearch: " + trailDocument.getTrailId());
+            System.out.println("===============================================================================");
+
+        } catch (Exception e) {
             throw new CustomException(RetCode.RET_CODE95);
         }
     }

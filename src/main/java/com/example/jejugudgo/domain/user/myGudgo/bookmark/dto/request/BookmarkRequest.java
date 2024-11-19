@@ -1,6 +1,6 @@
 package com.example.jejugudgo.domain.user.myGudgo.bookmark.dto.request;
 
-public record BookMarkRequest(
+public record BookmarkRequest(
         Long targetId,
         String code
 ) {

@@ -3,7 +3,7 @@ package com.example.jejugudgo.domain.search.dto;
 import com.example.jejugudgo.domain.search.dto.sub.CourseBasicResponse;
 import com.example.jejugudgo.domain.search.dto.sub.JeujuGudgoCourseInfoResponse;
 import com.example.jejugudgo.domain.search.dto.sub.OlleCourseInfoResponse;
-import com.example.jejugudgo.domain.search.dto.sub.TopFiveRankedKeywordResponse;
+import com.example.jejugudgo.domain.review.dto.response.TopFiveRankedKeywordResponse;
 
 import java.util.List;
 

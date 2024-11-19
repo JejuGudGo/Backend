@@ -6,6 +6,7 @@ import com.example.jejugudgo.domain.course.jejugudgo.entity.JejuGudgoCourse;
 import com.example.jejugudgo.domain.course.jejugudgo.entity.JejuGudgoCourseSpot;
 import com.example.jejugudgo.domain.course.jejugudgo.entity.JejuGudgoCourseTag;
 import com.example.jejugudgo.domain.course.jejugudgo.repository.JejuGudgoCourseRepository;
+import com.example.jejugudgo.domain.review.util.StarAvgCalculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import java.util.List;
 public class JejuGudgoCourseService {
     private final JejuGudgoPublisher publisher;
     private final JejuGudgoCourseRepository jejuGudgoCourseRepository;
+    private final StarAvgCalculator starAvgCalculator;
 
     private final JejuGudgoCourseSpotService jejuGudgoCourseSpotService;
     private final JejuGudgoCourseTagService jejuGudgoCourseTagService;

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookMark {
+public class Bookmark {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,7 @@ public class BookMark {
     private User user;
 
     @Enumerated(value = EnumType.STRING)
-    private BookMarkType bookMarkType;
+    private BookmarkType bookMarkType;
 
     private Long targetId;
 }

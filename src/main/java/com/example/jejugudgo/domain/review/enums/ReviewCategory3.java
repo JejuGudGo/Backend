@@ -34,4 +34,9 @@ public enum ReviewCategory3 {
 
         return null;
     }
+
+    @Override
+    public String toString() {
+        return category3;
+    }
 }

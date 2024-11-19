@@ -3,19 +3,19 @@ package com.example.jejugudgo.domain.user.myGudgo.bookmark.entity;
 import lombok.Getter;
 
 @Getter
-public enum BookMarkType {
+public enum BookmarkType {
     JEJU_GUDGO("제주객의길"),
     OLLE("올레길"),
     TRAIL("산책로");
 
     private final String code;
 
-    BookMarkType(String code) {
+    BookmarkType(String code) {
         this.code = code;
     }
 
-    public static BookMarkType fromCode(String code) {
-        for (BookMarkType type : BookMarkType.values()) {
+    public static BookmarkType fromCode(String code) {
+        for (BookmarkType type : BookmarkType.values()) {
             if (type.getCode().equals(code)) {
                 return type;
             }

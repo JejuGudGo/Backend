@@ -12,4 +12,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findDistinctUserByJejuGudgoCourse(JejuGudgoCourse jejuGudgoCourse);
     List<Review> findDistinctUserByJejuOlleCourse(JejuOlleCourse olleCourse);
     List<Review> findDistinctUserByTrail(Trail trail);
+
+    List<Review> findDistinctByJejuGudgoCourse(JejuGudgoCourse jejuGudgoCourse);
+    List<Review> findDistinctByJejuOlleCourse(JejuOlleCourse jejuOlleCourse);
+    List<Review> findDistinctByTrail(Trail trail);
 }

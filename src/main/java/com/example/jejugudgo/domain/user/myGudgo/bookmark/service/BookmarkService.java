@@ -1,10 +1,11 @@
 package com.example.jejugudgo.domain.user.myGudgo.bookmark.service;
 
-import com.example.jejugudgo.domain.user.myGudgo.bookmark.dto.request.BookMarkRequest;
-import com.example.jejugudgo.domain.user.myGudgo.bookmark.dto.response.BookMarkResponse;
-import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.BookMark;
-import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.BookMarkType;
-import com.example.jejugudgo.domain.user.myGudgo.bookmark.repository.BookMarkRepository;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.dto.request.BookmarkRequest;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.dto.response.BookmarkResponse;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.Bookmark;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.BookmarkType;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.message.BookmarkPublisher;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.repository.BookmarkRepository;
 import com.example.jejugudgo.domain.course.jejugudgo.dto.response.JejuGudgoCourseResponseForList;
 import com.example.jejugudgo.domain.course.olle.dto.response.JejuOlleCourseResponseForList;
 import com.example.jejugudgo.domain.course.jejugudgo.entity.JejuGudgoCourse;
@@ -12,7 +13,6 @@ import com.example.jejugudgo.domain.course.jejugudgo.repository.JejuGudgoCourseR
 import com.example.jejugudgo.domain.course.jejugudgo.repository.JejuGudgoCourseSpotRepository;
 import com.example.jejugudgo.domain.course.olle.entity.JejuOlleCourse;
 import com.example.jejugudgo.domain.course.olle.repository.JejuOlleCourseRepository;
-import com.example.jejugudgo.domain.course.olle.repository.JejuOlleSpotRepository;
 import com.example.jejugudgo.domain.trail.dto.TrailResponseForList;
 import com.example.jejugudgo.domain.trail.entity.Trail;
 import com.example.jejugudgo.domain.trail.repository.TrailRepository;
@@ -32,10 +32,11 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class BookMarkService {
+public class BookmarkService {
 
     // 필요한 리포지토리 및 유틸 클래스 선언
-    private final BookMarkRepository bookMarkRepository;
+    private final BookmarkRepository bookMarkRepository;
+    private final BookmarkPublisher bookmarkPublisher;
     private final TokenUtil tokenUtil;
     private final UserRepository userRepository;
     private final TrailRepository trailRepository;
@@ -44,7 +45,7 @@ public class BookMarkService {
     private final JejuGudgoCourseSpotRepository jejuGudgoCourseSpotRepository;
 
     // 사용자 북마크 조회 메서드
-    public List<BookMarkResponse> getBookMarks(String query, HttpServletRequest request) {
+    public List<BookmarkResponse> getBookMarks(String query, HttpServletRequest request) {
         Long userId = tokenUtil.getUserIdFromHeader(request);
 
         if ("전체".equals(query)) {
@@ -55,8 +56,8 @@ public class BookMarkService {
     }
 
     // 모든 북마크를 조회하여 BookMarkResponse 형태로 반환
-    private List<BookMarkResponse> getAllBookmarks(Long userId) {
-        List<BookMark> bookmarks = bookMarkRepository.findByUserId(userId);
+    private List<BookmarkResponse> getAllBookmarks(Long userId) {
+        List<Bookmark> bookmarks = bookMarkRepository.findByUserId(userId);
 
         if (bookmarks.isEmpty()) {
             throw new CustomException(RetCode.RET_CODE97);
@@ -69,8 +70,8 @@ public class BookMarkService {
 
 
     // 특정 유형의 즐겨찾기만 조회하여 BookMarkResponse 형태로 반환
-    private List<BookMarkResponse> getBookmarksByType(Long userId, String typeCode) {
-        BookMarkType bookMarkType = BookMarkType.fromCode(typeCode);
+    private List<BookmarkResponse> getBookmarksByType(Long userId, String typeCode) {
+        BookmarkType bookMarkType = BookmarkType.fromCode(typeCode);
 
         // 존재하지 않는 북마크 유형일 경우 RETCODE_10 예외 발생
         if (bookMarkType == null) {
@@ -84,7 +85,7 @@ public class BookMarkService {
 
 
     // BookMark 엔티티를 BookMarkResponse로 변환하는 메서드
-    private BookMarkResponse convertToBookMarkResponse(BookMark bookmark) {
+    private BookmarkResponse convertToBookMarkResponse(Bookmark bookmark) {
         switch (bookmark.getBookMarkType()) {
             case OLLE:
                 return convertOlleBookmark(bookmark);  // 올레 코스 북마크 변환
@@ -97,11 +98,11 @@ public class BookMarkService {
         }
     }
 
-    private BookMarkResponse convertOlleBookmark(BookMark bookmark) {
+    private BookmarkResponse convertOlleBookmark(Bookmark bookmark) {
         JejuOlleCourse jejuOlleCourse = jejuOlleCourseRepository.findById(bookmark.getTargetId())
                 .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
 
-        return new BookMarkResponse(
+        return new BookmarkResponse(
                 bookmark.getId(),
                 mapToJejuOlleCourseResponse(jejuOlleCourse, jejuOlleCourse.getStartSpotTitle(), jejuOlleCourse.getEndSpotTitle()),
                 null,
@@ -109,7 +110,7 @@ public class BookMarkService {
         );
     }
 
-    private BookMarkResponse convertGudgoBookmark(BookMark bookmark) {
+    private BookmarkResponse convertGudgoBookmark(Bookmark bookmark) {
         JejuGudgoCourse jejuGudgoCourse = jejuGudgoCourseRepository.findById(bookmark.getTargetId())
                 .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
         String startSpotTitleGudgo = jejuGudgoCourseSpotRepository.findByJejuGudgoCourseIdOrderByIdAsc(jejuGudgoCourse.getId())
@@ -119,7 +120,7 @@ public class BookMarkService {
                 .map(spot -> spot.getTitle())
                 .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
 
-        return new BookMarkResponse(
+        return new BookmarkResponse(
                 bookmark.getId(),
                 null,
                 mapToJejuGudgoCourseResponse(jejuGudgoCourse, startSpotTitleGudgo, endSpotTitleGudgo),
@@ -127,10 +128,10 @@ public class BookMarkService {
         );
     }
 
-    private BookMarkResponse convertTrailBookmark(BookMark bookmark) {
+    private BookmarkResponse convertTrailBookmark(Bookmark bookmark) {
         Trail trail = trailRepository.findById(bookmark.getTargetId())
                 .orElse(null);
-        return new BookMarkResponse(
+        return new BookmarkResponse(
                 bookmark.getId(),
                 null,
                 null,
@@ -178,19 +179,37 @@ public class BookMarkService {
     }
 
     @Transactional
-    public void create(HttpServletRequest servletRequest, BookMarkRequest bookMarkRequest) {
+    public void create(HttpServletRequest servletRequest, BookmarkRequest bookMarkRequest) {
         Long userId = tokenUtil.getUserIdFromHeader(servletRequest);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(RetCode.RET_CODE99));
 
-        BookMarkType bookMarkType = BookMarkType.fromCode(bookMarkRequest.code());
+        BookmarkType bookMarkType = BookmarkType.fromCode(bookMarkRequest.code());
 
         if (bookMarkType == null) {
             throw new CustomException(RetCode.RET_CODE10);
+
+        } else if (bookMarkType.equals(BookmarkType.JEJU_GUDGO)) {
+            JejuGudgoCourse jejuGudgoCourse  = jejuGudgoCourseRepository.findById(bookMarkRequest.targetId())
+                            .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
+
+            bookmarkPublisher.updateJejuGudgoBookmarkUsers(jejuGudgoCourse);
+
+        } else if (bookMarkType.equals(BookmarkType.OLLE)) {
+            JejuOlleCourse jejuOlleCourse  = jejuOlleCourseRepository.findById(bookMarkRequest.targetId())
+                    .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
+
+            bookmarkPublisher.updateJejuOlleBookmarkUsers(jejuOlleCourse);
+
+        } else if (bookMarkType.equals(BookmarkType.TRAIL)) {
+            Trail trail = trailRepository.findById(bookMarkRequest.targetId())
+                    .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
+
+            bookmarkPublisher.updateTrailBookmarkUsers(trail);
         }
 
         // 새로운 북마크 생성 및 저장
-        BookMark bookMark = BookMark.builder()
+        Bookmark bookMark = Bookmark.builder()
                 .user(user)
                 .bookMarkType(bookMarkType)
                 .targetId(bookMarkRequest.targetId())
@@ -204,7 +223,7 @@ public class BookMarkService {
         Long userId = tokenUtil.getUserIdFromHeader(request);
 
         // 해당 ID의 북마크가 사용자와 일치하는지 확인 후 삭제
-        BookMark bookMark = bookMarkRepository.findById(bookMarkId)
+        Bookmark bookMark = bookMarkRepository.findById(bookMarkId)
                 .filter(b -> b.getUser().getId().equals(userId))
                 .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
 

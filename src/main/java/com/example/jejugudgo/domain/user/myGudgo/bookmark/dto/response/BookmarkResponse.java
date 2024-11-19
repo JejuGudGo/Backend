@@ -4,7 +4,7 @@ import com.example.jejugudgo.domain.course.jejugudgo.dto.response.JejuGudgoCours
 import com.example.jejugudgo.domain.course.olle.dto.response.JejuOlleCourseResponseForList;
 import com.example.jejugudgo.domain.trail.dto.TrailResponseForList;
 
-public record BookMarkResponse(
+public record BookmarkResponse(
         Long bookmarkId,
         JejuOlleCourseResponseForList jejuOlleCourseResponseForList,
         JejuGudgoCourseResponseForList jejuGudgoCourseResponseForList,
