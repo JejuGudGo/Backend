@@ -44,6 +44,8 @@ public class User {
 
     private String phoneNumber;
 
+    private boolean isDeleted;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userProfileId")
     private UserProfile userProfile;
@@ -62,6 +64,7 @@ public class User {
                 .phoneNumber(this.phoneNumber)
                 .userProfile(this.userProfile)
                 .deletedAt(this.deletedAt)
+                .isDeleted(this.isDeleted)
                 .build();
     }
 
@@ -78,6 +81,7 @@ public class User {
                 .phoneNumber(this.phoneNumber)
                 .userProfile(this.userProfile)
                 .deletedAt(LocalDateTime.now())
+                .isDeleted(true)
                 .build();
     }
 
@@ -94,6 +98,7 @@ public class User {
                 .phoneNumber(phoneNumber)
                 .userProfile(userProfile)
                 .deletedAt(LocalDateTime.now())
+                .isDeleted(this.isDeleted)
                 .build();
     }
 }

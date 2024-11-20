@@ -33,8 +33,8 @@ public class UserInfoService {
         User user = userRepository.findByEmailAndProvider(request.email(), Provider.BASIC)
                 .orElseThrow(() -> new CustomException(RetCode.RET_CODE08));  // 존재하지 않는 이메일
 
-        user.updatePassword(passwordEncoder.encode(request.password()));
-        userRepository.save(user);
+        User newUser = user.updatePassword(passwordEncoder.encode(request.password()));
+        userRepository.save(newUser);
     }
 
     private boolean isValidPassword(String password) {

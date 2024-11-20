@@ -25,8 +25,8 @@ public class UserService {
                     .orElseThrow(() -> new CustomException(RetCode.RET_CODE99));
 
             // 2. 사용자 삭제
-            user = user.updateUserStatus();
-            userRepository.save(user);
+            User deleteUser = user.updateUserStatus();
+            userRepository.save(deleteUser);
 
         } catch (ExpiredJwtException e) {
             throw new CustomException(RetCode.RET_CODE98);  // 토큰 만료
