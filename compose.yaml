@@ -2,12 +2,20 @@ version: '3.8'
 
 services:
   zookeeper:
-    image: wurstmeister/zookeeper
+    image: bitnami/zookeeper:3.8.0
+    container_name: zookeeper
     ports:
       - "2181:2181"
+    env_file:
+      - docker.env
+    networks:
+      - app-network
 
   kafka:
-    image: wurstmeister/kafka
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka
+    env_file:
+      - docker.env
     ports:
       - "9092:9092"
     environment:
@@ -15,11 +23,15 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_BROKER_ID: 1
     depends_on:
       - zookeeper
+    networks:
+      - app-network
 
   mysql:
     image: mysql
+    container_name: mysql
     env_file:
       - docker.env
     ports:
@@ -29,43 +41,56 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+    networks:
+      - app-network
 
   redis:
-    image: redis
+    image: redis:7.0
+    container_name: redis
     ports:
       - "6379:6379"
     healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
+      test: ["CMD", "redis-cli", "ping"]
       interval: 30s
       timeout: 10s
       retries: 5
+    networks:
+      - app-network
 
-  elasticsearch:
+  elastic:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
     environment:
-      - discovery.type=single-node
-      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      discovery.type: single-node
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
     ports:
       - "9200:9200"
       - "9300:9300"
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://elasticsearch:9200 || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://elastic:9200 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
+    networks:
+      - app-network
 
   app:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: app
     ports:
       - "8080:8080"
     env_file:
       - docker.env
     depends_on:
-      mysql:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      elasticsearch:
-        condition: service_healthy
+      - mysql
+      - redis
+      - elastic
+      - zookeeper
+      - kafka
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

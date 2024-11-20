@@ -5,8 +5,10 @@ import com.example.jejugudgo.domain.course.olle.dto.response.JejuOlleCourseRespo
 import com.example.jejugudgo.domain.course.olle.query.JejuOlleCourseQueryService;
 import com.example.jejugudgo.global.exception.dto.CommonApiResponse;
 import com.example.jejugudgo.global.exception.util.ApiResponseUtil;
+import com.example.jejugudgo.global.util.PagingUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -27,18 +30,9 @@ public class JejuOlleCourseController {
 
     @GetMapping("")
     public ResponseEntity<CommonApiResponse> getJejuOlleCourses(Pageable pageable) {
-        Page<JejuOlleCourseResponseForList> response = jejuOlleCourseQueryService.getOlleCourses(pageable);
-        Map<String, Object> responseData = new LinkedHashMap<>();
-        responseData.put("jejuOlleCourse", response.getContent());
-        responseData.put("pageable", response.getPageable());
-        responseData.put("totalElements", response.getTotalElements());
-        responseData.put("totalPages", response.getTotalPages());
-        responseData.put("size", response.getSize());
-        responseData.put("first", response.isFirst());
-        responseData.put("last", response.isLast());
-        responseData.put("numberOfElements", response.getNumberOfElements());
-
-        return ResponseEntity.ok(apiResponseUtil.success(responseData));
+        Pageable page = PagingUtil.createPageable(pageable.getPageNumber(), pageable.getPageSize());
+        List<JejuOlleCourseResponseForList> response = jejuOlleCourseQueryService.getOlleCourses(page);
+        return ResponseEntity.ok(apiResponseUtil.success(response));
     }
 
     @GetMapping("/{courseId}")

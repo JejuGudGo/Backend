@@ -40,7 +40,7 @@ public class TrailService {
                             nullIfEmpty(trail.getTitle()),
                             nullIfEmpty(trail.getContent()),
                             trail.getStarAvg(),
-                            reviewCounter.getJejuGudgoReviewcount(ReviewType.TRAIL, trail.getId()),
+                            reviewCounter.getReviewCount(ReviewType.TRAIL, trail.getId()),
                             bookmarkUtil.isBookmarked(request, BookmarkType.TRAIL, trail.getId()),
                             trail.getTrailType().getCode()
                     ))
@@ -58,7 +58,7 @@ public class TrailService {
                             nullIfEmpty(trail.getTitle()),
                             nullIfEmpty(trail.getContent()),
                             trail.getStarAvg(),
-                            reviewCounter.getJejuGudgoReviewcount(ReviewType.TRAIL, trail.getId()),
+                            reviewCounter.getReviewCount(ReviewType.TRAIL, trail.getId()),
                             bookmarkUtil.isBookmarked(request, BookmarkType.TRAIL, trail.getId()),
                             trail.getTrailType().getCode()
                     ))

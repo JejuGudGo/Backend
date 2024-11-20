@@ -9,7 +9,7 @@ import com.example.jejugudgo.domain.course.olle.entity.QJejuOlleCourse;
 import com.example.jejugudgo.domain.course.olle.entity.QJejuOlleSpot;
 import com.example.jejugudgo.global.exception.exception.CustomException;
 import com.example.jejugudgo.global.exception.enums.RetCode;
-import com.example.jejugudgo.global.util.PaginationUtil;
+import com.example.jejugudgo.global.util.PagingUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +29,13 @@ public class JejuOlleCourseQueryService {
     }
 
 
-    public Page<JejuOlleCourseResponseForList> getOlleCourses(Pageable pageable) {
+    public List<JejuOlleCourseResponseForList> getOlleCourses(Pageable pageable) {
         QJejuOlleCourse qJejuOlleCourse = QJejuOlleCourse.jejuOlleCourse;
 
         List<JejuOlleCourse> jejuOlleCourseList = queryFactory
                 .selectFrom(qJejuOlleCourse)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
 
         if (jejuOlleCourseList.isEmpty()) {
@@ -52,7 +54,7 @@ public class JejuOlleCourseQueryService {
                                 0
                         ))
                 .toList();
-        return PaginationUtil.listToPage(courseResponseForLists, pageable);
+        return courseResponseForLists;
     }
 
     public JejuOlleCourseResponseDetail getOlleCourse(Long courseId) {

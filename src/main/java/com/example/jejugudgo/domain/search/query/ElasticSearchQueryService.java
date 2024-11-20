@@ -1,4 +1,4 @@
-package com.example.jejugudgo.domain.search.service;
+package com.example.jejugudgo.domain.search.query;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.FieldValue;
@@ -21,14 +21,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class SearchElasticService {
+public class ElasticSearchQueryService {
     private final ElasticsearchClient elasticsearchClient;
 
-    public SearchElasticService(ElasticsearchClient elasticsearchClient) {
+    public ElasticSearchQueryService(ElasticsearchClient elasticsearchClient) {
         this.elasticsearchClient = elasticsearchClient;
     }
 
-    public List<SearchListResponse> searchCourses(String keyword, String cat1, List<String> cat2, List<String> cat3, Pageable pageable) {
+    public List<SearchListResponse> searchCoursesByKeywordAndCategory(String keyword, String cat1, List<String> cat2, List<String> cat3, Pageable pageable) {
         try {
             BoolQuery.Builder boolQueryBuilder = QueryBuilders.bool();
 
@@ -64,7 +64,12 @@ public class SearchElasticService {
                     ))
                     .from(pageable.getPageNumber() * pageable.getPageSize())
                     .size(pageable.getPageSize())
-                    .sort(s -> s.field(f -> f.field("id").order(SortOrder.Asc)))
+                    .sort(s -> s
+                            .field(f -> f
+                                    .field("id").order(SortOrder.Asc)
+                                    .field("title").order(SortOrder.Asc)
+                            )
+                    )
             );
 
             return executeSearch(searchRequest);

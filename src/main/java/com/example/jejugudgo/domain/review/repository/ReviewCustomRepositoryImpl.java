@@ -44,7 +44,7 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
     }
 
     private com.querydsl.core.types.dsl.BooleanExpression getConditionByType(QReview qReview, ReviewType type, Long courseId) {
-        if (type == ReviewType.JEJUGUDGO)
+        if (type == ReviewType.JEJU_GUDGO)
             return qReview.jejuGudgoCourse.id.eq(courseId);
 
         else if (type == ReviewType.OLLE)

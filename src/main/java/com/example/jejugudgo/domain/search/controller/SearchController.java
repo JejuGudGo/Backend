@@ -1,9 +1,11 @@
 package com.example.jejugudgo.domain.search.controller;
 
 import com.example.jejugudgo.domain.search.dto.SearchListResponse;
-import com.example.jejugudgo.domain.search.service.SearchElasticService;
+import com.example.jejugudgo.domain.search.query.ElasticSearchQueryService;
+import com.example.jejugudgo.domain.search.query.SearchQueryService;
 import com.example.jejugudgo.global.exception.dto.CommonApiResponse;
 import com.example.jejugudgo.global.exception.util.ApiResponseUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,13 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/v1/search")
 public class SearchController {
-    private final SearchElasticService searchElasticService;
+    private final ElasticSearchQueryService elasticSearchQueryService;
+    private final SearchQueryService searchQueryService;
     private final ApiResponseUtil apiResponseUtil;
 
     /**
@@ -31,9 +35,9 @@ public class SearchController {
      * @param page 페이지
      * @param size 페이지당 사이즈
      */
-    @GetMapping(value = "")
+    @GetMapping(value = "keywords")
     public ResponseEntity<CommonApiResponse> searchCourseByKeywordAndTags(
-            @RequestParam("keyword") String keyword,
+            @RequestParam(value = "keyword") String keyword,
             @RequestParam(value = "cat1", defaultValue = "전체") String cat1,
             @RequestParam(value = "cat2",  required = false) List<String> cat2,
             @RequestParam(value = "cat3",  required = false) List<String> cat3,
@@ -41,7 +45,45 @@ public class SearchController {
             @RequestParam(defaultValue = "10") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
-        List<SearchListResponse> responses = searchElasticService.searchCourses(keyword, cat1, cat2, cat3, pageable);
+        List<SearchListResponse> responses = elasticSearchQueryService.searchCoursesByKeywordAndCategory(keyword, cat1, cat2, cat3, pageable);
         return ResponseEntity.ok(apiResponseUtil.success(responses, "search-result"));
+    }
+
+    /**
+     * @param latitude 현재 위도
+     * @param longitude 현재 경도
+     * @param cat1 제주올레, 제주걷고, 산책로 (미 입력시 전체)
+     * @param cat2 cat1 에 맞는 중분류
+     * @param cat3 리뷰 목적에 맞는 소분류
+     * @param page 페이지
+     * @param size 페이지당 사이즈
+     */
+    @GetMapping(value = "/tags")
+    public ResponseEntity<CommonApiResponse> searchCourseByTags(
+            HttpServletRequest request,
+            @RequestParam(value = "lat", required = false) String latitude,
+            @RequestParam(value = "lon", required = false) String longitude,
+            @RequestParam(value = "cat1", defaultValue = "전체") String cat1,
+            @RequestParam(value = "cat2",  required = false) List<String> cat2,
+            @RequestParam(value = "cat3",  required = false) List<String> cat3,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        try {
+            Pageable pageable = (size > 0) ? PageRequest.of(page, size) : Pageable.unpaged();
+
+            List<SearchListResponse> responses = searchQueryService.searchCoursesBySpotOrCategory(request, cat1, cat2, cat3, latitude, longitude, pageable);
+            return ResponseEntity.ok(apiResponseUtil.success(responses, "search-result"));
+
+        } catch (Exception e) {
+            System.err.println("Exception occurred: " + e.getMessage());
+            if (e.getCause() != null) {
+                System.err.println("Actual Cause: " + e.getCause().getMessage());
+                e.getCause().printStackTrace();
+            } else {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }

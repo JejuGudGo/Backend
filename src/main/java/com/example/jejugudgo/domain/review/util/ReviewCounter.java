@@ -21,8 +21,8 @@ public class ReviewCounter {
     private final JejuOlleCourseRepository jejuOlleCourseRepository;
     private final TrailRepository trailRepository;
 
-    public int getJejuGudgoReviewcount(ReviewType type, Long id) {
-        if (type.equals(ReviewType.JEJUGUDGO))
+    public int getReviewCount(ReviewType type, Long id) {
+        if (type.equals(ReviewType.JEJU_GUDGO))
             return getJejuGudgoCourseReviewCount(id);
 
         else if (type.equals(ReviewType.OLLE))
