@@ -1,8 +1,10 @@
 package com.example.jejugudgo.domain.course.jejugudgo.repository;
 
+import com.example.jejugudgo.domain.course.jejugudgo.entity.JejuGudgoCourse;
 import com.example.jejugudgo.domain.course.jejugudgo.entity.JejuGudgoCourseSpot;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface JejuGudgoCourseSpotRepository extends JpaRepository<JejuGudgoCourseSpot, Long> {
@@ -10,4 +12,5 @@ public interface JejuGudgoCourseSpotRepository extends JpaRepository<JejuGudgoCo
 
     Optional<JejuGudgoCourseSpot> findByJejuGudgoCourseIdOrderByIdDesc(Long courseId);
 
+    List<JejuGudgoCourseSpot> findByJejuGudgoCourseOrderByOrderNumberAsc(JejuGudgoCourse jejuGudgoCourse);
 }

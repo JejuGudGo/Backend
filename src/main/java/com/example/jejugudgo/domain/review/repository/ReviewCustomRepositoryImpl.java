@@ -3,6 +3,8 @@ package com.example.jejugudgo.domain.review.repository;
 import com.example.jejugudgo.domain.review.dto.response.TopFiveRankedKeywordResponse;
 import com.example.jejugudgo.domain.review.entity.QReview;
 import com.example.jejugudgo.domain.review.entity.QReviewCategory;
+import com.example.jejugudgo.domain.review.entity.Review;
+import com.example.jejugudgo.domain.review.entity.ReviewCategory;
 import com.example.jejugudgo.domain.review.enums.ReviewType;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -11,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -28,7 +31,14 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
         QReview qReview = QReview.review;
         QReviewCategory qReviewCategory = QReviewCategory.reviewCategory;
 
-        return queryFactory
+        Review review = queryFactory
+                .selectFrom(qReview)
+                .where(getConditionByType(qReview, type, courseId))
+                .fetchOne();
+
+        if(review == null) return new ArrayList<>();
+
+        List<TopFiveRankedKeywordResponse> responses = queryFactory
                 .select(Projections.constructor(
                         TopFiveRankedKeywordResponse.class,
                         qReviewCategory.category3,
@@ -41,6 +51,8 @@ public class ReviewCustomRepositoryImpl implements ReviewCustomRepository {
                 .orderBy(qReviewCategory.count().desc())
                 .limit(5)
                 .fetch();
+
+        return responses != null ? responses : new ArrayList<>();
     }
 
     private com.querydsl.core.types.dsl.BooleanExpression getConditionByType(QReview qReview, ReviewType type, Long courseId) {

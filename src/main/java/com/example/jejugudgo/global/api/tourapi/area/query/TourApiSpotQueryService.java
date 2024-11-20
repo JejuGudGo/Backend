@@ -24,7 +24,7 @@ public class TourApiSpotQueryService {
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
-    public Page<TourApiSpotListResponse> getAllTourApiSpotsByContentType(ContentType contentType, Pageable pageable) {
+    public List<TourApiSpotListResponse> getAllTourApiSpotsByContentType(ContentType contentType, Pageable pageable) {
         QTourApiSpots tourApiSpots = QTourApiSpots.tourApiSpots;
 
         List<TourApiSpotListResponse> spots = queryFactory
@@ -55,7 +55,7 @@ public class TourApiSpotQueryService {
             throw new CustomException(RetCode.RET_CODE97);
         }
 
-        return new PageImpl<>(spots, pageable, total);
+        return spots;
     }
 
     private BooleanExpression eqContentType(QTourApiSpots tourApiSpots, ContentType contentType) {

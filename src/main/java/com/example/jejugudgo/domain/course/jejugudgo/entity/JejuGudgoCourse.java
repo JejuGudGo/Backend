@@ -34,6 +34,10 @@ public class JejuGudgoCourse {
 
     private String summary;
 
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String content;
+
     private Long viewCount;
 
     private String startSpotTitle;
@@ -60,6 +64,7 @@ public class JejuGudgoCourse {
                 .createdAt(this.createdAt)
                 .starAvg(starAvg)
                 .time(this.time)
+                .content(this.content)
                 .distance(this.distance)
                 .imageUrl(this.imageUrl)
                 .summary(this.summary)

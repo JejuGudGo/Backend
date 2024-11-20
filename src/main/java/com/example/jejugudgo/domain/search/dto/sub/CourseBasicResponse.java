@@ -11,7 +11,7 @@ public record CourseBasicResponse(
         String summary, // 시작점-종점
         String distance,
         String time,
-        String starAvg,
+        double starAvg,
         int reviewCount
 ) {
 }

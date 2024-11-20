@@ -19,12 +19,6 @@ public class TrailController {
     private final TrailService trailService;
     private final ApiResponseUtil apiResponseUtil;
 
-    @GetMapping(value = "")
-    public ResponseEntity<CommonApiResponse> getTrails(HttpServletRequest request, @RequestParam("type") String query) {
-        List<TrailListResponse> responses = trailService.getTrails(request, query);
-        return ResponseEntity.ok(apiResponseUtil.success(responses, "trails"));
-    }
-
     @GetMapping(value = "/{trailId}")
     public ResponseEntity<CommonApiResponse> getTrailDetail(HttpServletRequest request, @PathVariable("trailId") Long trailId) {
         TrailDetailResponse response = trailService.getTrail(request, trailId);

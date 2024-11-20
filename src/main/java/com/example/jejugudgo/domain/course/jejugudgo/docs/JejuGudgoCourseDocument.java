@@ -32,6 +32,8 @@ public class JejuGudgoCourseDocument {
 
     private String summary;
 
+    private String content;
+
     private Long viewCount;
 
     private String startSpotTitle;
@@ -62,6 +64,7 @@ public class JejuGudgoCourseDocument {
         document.setType("제주걷고");
         document.setId(jejuGudgoCourse.getId());
         document.setTitle(jejuGudgoCourse.getTitle());
+        document.setContent(jejuGudgoCourse.getContent());
         document.setCreatedAt(jejuGudgoCourse.getCreatedAt());
         document.setStarAvg(jejuGudgoCourse.getStarAvg());
         document.setTime(jejuGudgoCourse.getTime());
