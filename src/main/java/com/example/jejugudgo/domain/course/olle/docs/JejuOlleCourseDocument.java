@@ -48,7 +48,7 @@ public class JejuOlleCourseDocument {
 
     private double starAvg;
 
-    private String courseImageUrl;
+    private String imageUrl;
 
     private Long viewCount;
 
@@ -82,7 +82,7 @@ public class JejuOlleCourseDocument {
         document.setInfoOpenTime(jejuOlleCourse.getInfoOpenTime());
         document.setInfoPhone(jejuOlleCourse.getInfoPhone());
         document.setStarAvg(jejuOlleCourse.getStarAvg());
-        document.setCourseImageUrl(jejuOlleCourse.getCourseImageUrl());
+        document.setImageUrl(jejuOlleCourse.getCourseImageUrl());
         document.setViewCount(jejuOlleCourse.getViewCount());
         document.setSpots(jejuOlleSpotDocuments);
         document.setBookmarkUsers(bookmarkUsers != null ? bookmarkUsers : Collections.emptyList());

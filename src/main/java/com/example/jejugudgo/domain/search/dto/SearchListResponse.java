@@ -11,6 +11,7 @@ public record SearchListResponse(
         String summary, // 시작점 - 종점
         String distance,
         String time,
+        String imgUrl,
         double starAvg,
         int reviewCount,
 //        String content,

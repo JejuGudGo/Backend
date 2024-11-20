@@ -135,12 +135,15 @@ public class JejuOlleSearchQueryService {
                             course.getSummary(),
                             course.getDistance(),
                             course.getTime(),
+                            course.getCourseImageUrl(),
                             course.getStarAvg(),
                             reviewCounter.getReviewCount(ReviewType.OLLE, courseId),
                             course.getStartSpotTitle(),
                             course.getStartLatitude(),
                             course.getStartLongitude()
                     );
-                }).collect(Collectors.toList());
+                })
+                .distinct()
+                .collect(Collectors.toList());
     }
 }

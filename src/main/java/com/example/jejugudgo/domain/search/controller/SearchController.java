@@ -42,8 +42,8 @@ public class SearchController {
             @RequestParam(value = "cat2",  required = false) List<String> cat2,
             @RequestParam(value = "cat3",  required = false) List<String> cat3,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
+            @RequestParam(defaultValue = "10") int size
+    ) {
         Pageable pageable = PageRequest.of(page, size);
         List<SearchListResponse> responses = elasticSearchQueryService.searchCoursesByKeywordAndCategory(keyword, cat1, cat2, cat3, pageable);
         return ResponseEntity.ok(apiResponseUtil.success(responses, "search-result"));
@@ -67,23 +67,11 @@ public class SearchController {
             @RequestParam(value = "cat2",  required = false) List<String> cat2,
             @RequestParam(value = "cat3",  required = false) List<String> cat3,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = (size > 0) ? PageRequest.of(page, size) : Pageable.unpaged();
 
-        try {
-            Pageable pageable = (size > 0) ? PageRequest.of(page, size) : Pageable.unpaged();
-
-            List<SearchListResponse> responses = searchQueryService.searchCoursesBySpotOrCategory(request, cat1, cat2, cat3, latitude, longitude, pageable);
-            return ResponseEntity.ok(apiResponseUtil.success(responses, "search-result"));
-
-        } catch (Exception e) {
-            System.err.println("Exception occurred: " + e.getMessage());
-            if (e.getCause() != null) {
-                System.err.println("Actual Cause: " + e.getCause().getMessage());
-                e.getCause().printStackTrace();
-            } else {
-                e.printStackTrace();
-            }
-        }
-        return null;
+        List<SearchListResponse> responses = searchQueryService.searchCoursesBySpotOrCategory(request, cat1, cat2, cat3, latitude, longitude, pageable);
+        return ResponseEntity.ok(apiResponseUtil.success(responses, "search-result"));
     }
 }

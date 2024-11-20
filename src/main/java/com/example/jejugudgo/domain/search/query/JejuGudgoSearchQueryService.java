@@ -133,12 +133,15 @@ public class JejuGudgoSearchQueryService {
                             course.getSummary(),
                             course.getDistance(),
                             course.getTime(),
+                            course.getImageUrl(),
                             course.getStarAvg(),
                             reviewCounter.getReviewCount(ReviewType.JEJU_GUDGO, courseId),
                             course.getStartSpotTitle(),
                             course.getStartLatitude(),
                             course.getStartLongitude()
                     );
-                }).collect(Collectors.toList());
+                })
+                .distinct()
+                .collect(Collectors.toList());
     }
 }

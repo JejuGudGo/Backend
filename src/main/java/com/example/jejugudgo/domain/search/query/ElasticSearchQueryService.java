@@ -67,7 +67,6 @@ public class ElasticSearchQueryService {
                     .sort(s -> s
                             .field(f -> f
                                     .field("id").order(SortOrder.Asc)
-                                    .field("title").order(SortOrder.Asc)
                             )
                     )
             );
@@ -167,6 +166,7 @@ public class ElasticSearchQueryService {
                             (String) source.get("summary"),
                             (String) source.get("distance"),
                             (String) source.get("time"),
+                            (String) source.get("imageUrl"),
                             source.get("starAvg") != null ? (Double) source.get("starAvg") : 0.0,
                             source.get("reviewCount") != null ? (Integer) source.get("reviewCount") : 0,
                             (String) source.get("startSpotTitle"),

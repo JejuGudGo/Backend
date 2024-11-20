@@ -128,12 +128,15 @@ public class TrailSearchQueryService {
                             trail.getContent(),
                             null,
                             null,
+                            trail.getImageUrl(),
                             trail.getStarAvg(),
                             reviewCounter.getReviewCount(ReviewType.TRAIL, trailId),
                             trail.getTitle(),
                             trail.getLatitude(),
                             trail.getLongitude()
                     );
-                }).collect(Collectors.toList());
+                })
+                .distinct()
+                .collect(Collectors.toList());
     }
 }
