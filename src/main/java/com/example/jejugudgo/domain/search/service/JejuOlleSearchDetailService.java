@@ -56,6 +56,7 @@ public class JejuOlleSearchDetailService {
                 jejuOlleCourse.getOlleType().getType(),
                 tags,
                 bookmarkUtil.isBookmarked(request, BookmarkType.OLLE, jejuOlleCourse.getId()),
+                jejuOlleCourse.getCourseImageUrl(),
                 jejuOlleCourse.getTitle(),
                 jejuOlleCourse.getSummary(),
                 jejuOlleCourse.getDistance(),

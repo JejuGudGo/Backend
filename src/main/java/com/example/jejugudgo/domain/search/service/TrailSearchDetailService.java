@@ -46,6 +46,7 @@ public class TrailSearchDetailService {
                 "산책로",
                 tags,
                 bookmarkUtil.isBookmarked(request, BookmarkType.TRAIL, trail.getId()),
+                trail.getImageUrl(),
                 trail.getTitle(),
                 trail.getContent(),
                 null,

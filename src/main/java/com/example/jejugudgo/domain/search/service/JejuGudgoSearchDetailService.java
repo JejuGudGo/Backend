@@ -56,6 +56,7 @@ public class JejuGudgoSearchDetailService {
                 "제주걷고",
                 tags,
                 bookmarkUtil.isBookmarked(request, BookmarkType.JEJU_GUDGO, jejuGudgoCourse.getId()),
+                jejuGudgoCourse.getImageUrl(),
                 jejuGudgoCourse.getTitle(),
                 jejuGudgoCourse.getSummary(),
                 jejuGudgoCourse.getDistance(),
