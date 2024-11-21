@@ -67,34 +67,36 @@ public class JejuGudgoSearchDetailService {
     }
 
     private JeujuGudgoCourseInfoResponse getJejuGodgoCourseInfo(JejuGudgoCourse jejuGudgoCourse) {
+        // 1. 스팟 리스트 가져오기
         List<JejuGudgoCourseSpot> spots = jejuGudgoCourseSpotRepository.findByJejuGudgoCourseOrderByOrderNumberAsc(jejuGudgoCourse);
         List<SpotResponse> spotResponses = spots.stream()
-                .map(response -> new SpotResponse (
-                        response.getId(),
-                        response.getTitle(),
-                        response.getOrderNumber(),
-                        response.getLatitude(),
-                        response.getLongitude()
-                        )
-                ).toList();
+                .map(spot -> new SpotResponse(
+                        spot.getId(),
+                        spot.getTitle(),
+                        spot.getOrderNumber(),
+                        spot.getLatitude(),
+                        spot.getLongitude()
+                )).toList();
 
-        int size = spots.size();
-        SpotResponse startSpot = new SpotResponse (
-                spots.get(0).getId(),
-                spots.get(0).getTitle(),
-                spots.get(0).getOrderNumber(),
-                spots.get(0).getLatitude(),
-                spots.get(0).getLongitude()
+        // 2. 시작 스팟 정보
+        SpotResponse startSpot = new SpotResponse(
+                null, // ID는 필요하지 않으므로 null 처리
+                jejuGudgoCourse.getStartSpotTitle(),
+                1L, // 순서는 항상 1로 가정
+                jejuGudgoCourse.getStartLatitude(),
+                jejuGudgoCourse.getStartLongitude()
         );
 
-        SpotResponse endSpot = new SpotResponse (
-                spots.get(size - 1).getId(),
-                spots.get(size - 1).getTitle(),
-                spots.get(size - 1).getOrderNumber(),
-                spots.get(size - 1).getLatitude(),
-                spots.get(size - 1).getLongitude()
+        // 3. 종료 스팟 정보
+        SpotResponse endSpot = new SpotResponse(
+                null, // ID는 필요하지 않으므로 null 처리
+                jejuGudgoCourse.getEndSpotTitle(),
+                (long) spots.size(), // 순서는 전체 스팟 수로 설정
+                jejuGudgoCourse.getEndLatitude(),
+                jejuGudgoCourse.getEndLongitude()
         );
 
+        // 4. 응답 객체 생성 및 반환
         return new JeujuGudgoCourseInfoResponse(
                 spotResponses,
                 jejuGudgoCourse.getContent(),
@@ -102,6 +104,7 @@ public class JejuGudgoSearchDetailService {
                 endSpot
         );
     }
+
 
     private SearchDetailResponse getSearchDetailResponse(
             CourseBasicResponse courseBasicResponse,
