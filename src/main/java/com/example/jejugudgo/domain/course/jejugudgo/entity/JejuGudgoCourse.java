@@ -52,6 +52,7 @@ public class JejuGudgoCourse {
 
     private double endLongitude;
 
+    private boolean isDeleted;
 
     @ManyToOne
     @JoinColumn(name = "originUserId")
@@ -64,11 +65,19 @@ public class JejuGudgoCourse {
                 .createdAt(this.createdAt)
                 .starAvg(starAvg)
                 .time(this.time)
-                .content(this.content)
                 .distance(this.distance)
                 .imageUrl(this.imageUrl)
                 .summary(this.summary)
+                .content(this.content)
                 .viewCount(this.viewCount)
+                .startSpotTitle(this.startSpotTitle)
+                .startLatitude(this.startLatitude)
+                .startLongitude(this.startLongitude)
+                .endSpotTitle(this.endSpotTitle)
+                .endLatitude(this.endLatitude)
+                .endLongitude(this.endLongitude)
+                .isDeleted(this.isDeleted)
+                .user(this.user)
                 .build();
     }
 }
