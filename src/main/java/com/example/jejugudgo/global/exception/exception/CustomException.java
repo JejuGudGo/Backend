@@ -11,4 +11,9 @@ public class CustomException extends RuntimeException {
         super(retCode.getMessage());
         this.retCode = retCode;
     }
+
+    public CustomException(RetCode retCode, String message) {
+        super(message);
+        this.retCode = retCode;
+    }
 }
