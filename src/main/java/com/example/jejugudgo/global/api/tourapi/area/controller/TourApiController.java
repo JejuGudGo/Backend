@@ -5,15 +5,18 @@ import com.example.jejugudgo.global.api.tourapi.area.dto.TourApiSpotResponse;
 import com.example.jejugudgo.global.api.tourapi.area.query.TourApiSpotQueryService;
 import com.example.jejugudgo.global.api.tourapi.area.service.TourApiSpotService;
 import com.example.jejugudgo.global.api.tourapi.common.entity.ContentType;
-import com.example.jejugudgo.global.exception.dto.response.CommonApiResponse;
-import com.example.jejugudgo.global.util.ApiResponseUtil;
+import com.example.jejugudgo.global.exception.dto.CommonApiResponse;
+import com.example.jejugudgo.global.exception.util.ApiResponseUtil;
+import com.example.jejugudgo.global.util.PagingUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/search/spots/tour-api")
@@ -26,12 +29,11 @@ public class TourApiController {
     @GetMapping("")
     public ResponseEntity<CommonApiResponse> getTourApiSpots(
             @RequestParam("type") String type,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size
+            Pageable pageable
     ) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Page<TourApiSpotListResponse> spotListPage = tourApiSpotQueryService
-                .getAllTourApiSpotsByContentType(ContentType.fromTitle(type), pageRequest);
+        Pageable page = PagingUtil.createPageable(pageable.getPageNumber(), pageable.getPageSize());
+        List<TourApiSpotListResponse> spotListPage = tourApiSpotQueryService
+                .getAllTourApiSpotsByContentType(ContentType.fromTitle(type), page);
         return ResponseEntity.ok(apiResponseUtil.success(spotListPage, "spots"));
     }
 

@@ -1,6 +1,9 @@
 package com.example.jejugudgo.domain.trail.dto;
 
+import com.example.jejugudgo.domain.review.dto.response.TopFiveRankedKeywordResponse;
 import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public record TrailDetailResponse(
@@ -8,6 +11,7 @@ public record TrailDetailResponse(
     String title,
     double latitude,
     double longitude,
+    boolean isBookmarked,
     String content,
     String address,
     String phoneNumber,
@@ -17,6 +21,7 @@ public record TrailDetailResponse(
     String duration,
     String imageUrl,
     String reference,
-    String trailType
+    String trailType,
+    List<TopFiveRankedKeywordResponse> keywords
 ) {
 }

@@ -3,21 +3,27 @@ package com.example.jejugudgo.domain.auth.basic.service;
 import com.example.jejugudgo.domain.auth.basic.dto.request.LoginRequest;
 import com.example.jejugudgo.domain.auth.basic.dto.request.SignupRequest;
 import com.example.jejugudgo.domain.auth.basic.dto.response.SignupResponse;
-import com.example.jejugudgo.domain.auth.terms.dto.request.TermsAgreementRequest;
-import com.example.jejugudgo.domain.profile.entity.UserProfile;
-import com.example.jejugudgo.domain.profile.service.UserProfileService;
-import com.example.jejugudgo.domain.user.dto.response.UserInfoResponse;
-import com.example.jejugudgo.domain.user.entity.Provider;
-import com.example.jejugudgo.domain.user.entity.Role;
-import com.example.jejugudgo.domain.user.entity.User;
-import com.example.jejugudgo.domain.user.entity.UserTerms;
-import com.example.jejugudgo.domain.user.event.UserCheckListEvent;
-import com.example.jejugudgo.domain.user.repository.UserRepository;
-import com.example.jejugudgo.domain.user.repository.UserTermsRepository;
-import com.example.jejugudgo.global.exception.CustomException;
-import com.example.jejugudgo.global.exception.entity.RetCode;
+import com.example.jejugudgo.domain.user.terms.dto.TermsAgreementRequest;
+import com.example.jejugudgo.domain.auth.validation.PasswordValidation;
+import com.example.jejugudgo.domain.auth.validation.PhoneValidation;
+import com.example.jejugudgo.domain.auth.validation.UserValidation;
+import com.example.jejugudgo.domain.user.myGudgo.profile.entity.UserProfile;
+import com.example.jejugudgo.domain.user.myGudgo.profile.service.UserProfileService;
+import com.example.jejugudgo.domain.auth.basic.dto.response.UserInfoResponse;
+import com.example.jejugudgo.domain.user.user.entity.Provider;
+import com.example.jejugudgo.domain.user.user.entity.Role;
+import com.example.jejugudgo.domain.user.user.entity.User;
+import com.example.jejugudgo.domain.user.terms.entity.UserTerms;
+import com.example.jejugudgo.domain.user.checkList.event.UserCheckListEvent;
+import com.example.jejugudgo.domain.user.user.repository.UserRepository;
+import com.example.jejugudgo.domain.user.terms.repository.UserTermsRepository;
+import com.example.jejugudgo.global.exception.exception.CustomException;
+import com.example.jejugudgo.global.exception.enums.RetCode;
 import com.example.jejugudgo.global.jwt.token.TokenGenerator;
-import com.example.jejugudgo.global.util.RandomNicknameUtil;
+import com.example.jejugudgo.global.jwt.token.TokenUtil;
+import com.example.jejugudgo.global.util.random.RandomNicknameUtil;
+import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +34,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -40,34 +45,26 @@ public class BasicAuthService {
     private final RandomNicknameUtil randomNicknameUtil;
     private final UserProfileService userProfileService;
     private final TokenGenerator tokenGenerator;
-
+    private final PasswordValidation passwordValidation;
+    private final PhoneValidation phoneValidation;
+    private final UserValidation userValidation;
+    private final TokenUtil tokenUtil;
     private final ApplicationEventPublisher eventPublisher;
-
-
-    private static final String PASSWORD_PATTERN =
-            "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&#]{8,20}$";
-    private static final Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
 
     // 회원가입 메서드
     @Transactional
     public SignupResponse signup(SignupRequest request) {
         // 1. 비밀번호 유효성 검사
-        if (!isValidPassword(request.password())) {
-            throw new CustomException(RetCode.RET_CODE06);
-        }
+        String encodedPassword = passwordValidation.validatePassword(request.password());
 
         // 2. 이메일 중복 검사
-        if (isEmailExists(request.email())) {
-            throw new CustomException(RetCode.RET_CODE07);
-        }
+        userValidation.validateEmail(request.email());
 
         // 3. 휴대폰 번호 형식 검증
-        if (!isValidPhoneNumber(request.phoneNumber())) {
-            throw new CustomException(RetCode.RET_CODE03);
-        }
+        phoneValidation.validatePhoneNumber(request.phoneNumber());
 
         // 4. 사용자 정보 생성 및 저장
-        User user = createUser(request);
+        User user = createUser(request, encodedPassword);
 
         // 5. 약관 동의 처리
         handleTermsAgreements(request.terms(), user);
@@ -76,31 +73,13 @@ public class BasicAuthService {
         eventPublisher.publishEvent(new UserCheckListEvent(user.getId()));
 
         SignupResponse response = new SignupResponse(user.getNickname());
+
         return response;
     }
 
-    private boolean isValidPhoneNumber(String phoneNumber) {
-        return phoneNumber != null && phoneNumber.matches("^010[0-9]{8}$");  // 010 + 8자리 숫자
-    }
-
-    private boolean isValidPassword(String password) {
-        if (password == null) return false;
-        return pattern.matcher(password).matches();
-    }
-
-    private boolean isEmailExists(String email) {
-        return userRepository.findByEmail(email).isPresent();
-    }
-
-    // API 엔드포인트용 이메일 중복 체크
-    public void checkEmailDuplicate(String email) {
-        if (isEmailExists(email)) {
-            throw new CustomException(RetCode.RET_CODE07);  // 해당 이메일을 가진 유저가 존재합니다
-        }
-    }
 
     // 사용자 생성 메서드
-    private User createUser(SignupRequest request) {
+    private User createUser(SignupRequest request, String encodedPassword) {
         try {
             UserProfile userProfile = userProfileService.createProfile("default");
 
@@ -109,7 +88,7 @@ public class BasicAuthService {
 
             User user = User.builder()
                     .email(request.email())
-                    .password(bCryptPasswordEncoder.encode(request.password()))  // 비밀번호 암호화
+                    .password(encodedPassword)  // 비밀번호 암호화
                     .name(request.name())
                     .nickname(nickname)
                     .phoneNumber(request.phoneNumber())
@@ -121,6 +100,7 @@ public class BasicAuthService {
                     .build();
 
             return userRepository.save(user);
+
         } catch (Exception e) {
             throw new CustomException(RetCode.RET_CODE99);
         }
@@ -183,5 +163,24 @@ public class BasicAuthService {
         String accessToken = tokenGenerator.generateToken(String.valueOf(userId));
         response.setHeader("Authorization", accessToken);
         return accessToken;
+    }
+
+    // 사용자 삭제 로직
+    public void deleteUser(HttpServletRequest request) {
+        try {
+            // 1. 사용자 조회
+            Long userId = tokenUtil.getUserIdFromHeader(request);
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new CustomException(RetCode.RET_CODE99));
+
+            // 2. 사용자 삭제
+            user = user.updateUserStatus();
+            userRepository.save(user);
+
+        } catch (ExpiredJwtException e) {
+            throw new CustomException(RetCode.RET_CODE98);  // 토큰 만료
+        } catch (Exception e) {
+            throw new CustomException(RetCode.RET_CODE99);  // 기타 서버 오류
+        }
     }
 }

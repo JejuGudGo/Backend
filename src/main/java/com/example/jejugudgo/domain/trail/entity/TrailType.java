@@ -15,9 +15,9 @@ public enum TrailType {
         this.code = code;
     }
 
-    public static TrailType fromCode(String code) {
+    public static TrailType fromQuery(String query) {
         for (TrailType type : TrailType.values()) {
-            if (type.getCode().equals(code)) {
+            if (type.getCode().equals(query)) {
                 return type;
             }
         }

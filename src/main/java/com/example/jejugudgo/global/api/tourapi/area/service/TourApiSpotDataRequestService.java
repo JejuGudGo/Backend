@@ -7,8 +7,8 @@ import com.example.jejugudgo.global.api.tourapi.area.repository.TourApiContentTy
 import com.example.jejugudgo.global.api.tourapi.area.repository.TourApiSpotRepository;
 import com.example.jejugudgo.global.data.common.entity.DataCommandLog;
 import com.example.jejugudgo.global.data.common.repository.DataCommandLogRepository;
-import com.example.jejugudgo.global.exception.CustomException;
-import com.example.jejugudgo.global.exception.entity.RetCode;
+import com.example.jejugudgo.global.exception.exception.CustomException;
+import com.example.jejugudgo.global.exception.enums.RetCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

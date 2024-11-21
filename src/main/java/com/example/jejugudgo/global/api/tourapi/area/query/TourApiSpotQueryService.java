@@ -3,8 +3,8 @@ package com.example.jejugudgo.global.api.tourapi.area.query;
 import com.example.jejugudgo.global.api.tourapi.area.dto.TourApiSpotListResponse;
 import com.example.jejugudgo.global.api.tourapi.common.entity.ContentType;
 import com.example.jejugudgo.global.api.tourapi.common.entity.QTourApiSpots;
-import com.example.jejugudgo.global.exception.CustomException;
-import com.example.jejugudgo.global.exception.entity.RetCode;
+import com.example.jejugudgo.global.exception.exception.CustomException;
+import com.example.jejugudgo.global.exception.enums.RetCode;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -24,7 +24,7 @@ public class TourApiSpotQueryService {
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
-    public Page<TourApiSpotListResponse> getAllTourApiSpotsByContentType(ContentType contentType, Pageable pageable) {
+    public List<TourApiSpotListResponse> getAllTourApiSpotsByContentType(ContentType contentType, Pageable pageable) {
         QTourApiSpots tourApiSpots = QTourApiSpots.tourApiSpots;
 
         List<TourApiSpotListResponse> spots = queryFactory
@@ -55,7 +55,7 @@ public class TourApiSpotQueryService {
             throw new CustomException(RetCode.RET_CODE97);
         }
 
-        return new PageImpl<>(spots, pageable, total);
+        return spots;
     }
 
     private BooleanExpression eqContentType(QTourApiSpots tourApiSpots, ContentType contentType) {

@@ -1,6 +1,5 @@
 package com.example.jejugudgo.global.security;
 
-import com.example.jejugudgo.global.exception.repository.ApiResponseRepository;
 import com.example.jejugudgo.global.jwt.filter.JWTAuthenticationFilter;
 import com.example.jejugudgo.global.jwt.token.TokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +28,6 @@ public class SecurityConfiguration {
     private final CustomUserDetailsService customUserDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-    private final ApiResponseRepository apiResponseRepository;
 //    private final CustomOAuth2UserService customOAuth2UserService;
 //    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
@@ -61,7 +59,7 @@ public class SecurityConfiguration {
                         exception
                                 .authenticationEntryPoint(customAuthenticationEntryPoint)
                 )
-                .addFilterBefore(jwtAuthenticationFilter(tokenUtil, apiResponseRepository), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter(tokenUtil), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(customAuthenticationFilter(), JWTAuthenticationFilter.class);
 
 //        httpSecurity
@@ -119,7 +117,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public JWTAuthenticationFilter jwtAuthenticationFilter(TokenUtil tokenUtil, ApiResponseRepository apiResponseRepository) {
-        return new JWTAuthenticationFilter(tokenUtil, apiResponseRepository);
+    public JWTAuthenticationFilter jwtAuthenticationFilter(TokenUtil tokenUtil) {
+        return new JWTAuthenticationFilter(tokenUtil);
     }
 }

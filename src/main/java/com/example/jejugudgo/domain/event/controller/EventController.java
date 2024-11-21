@@ -2,8 +2,8 @@ package com.example.jejugudgo.domain.event.controller;
 
 import com.example.jejugudgo.domain.event.dto.EventListResponse;
 import com.example.jejugudgo.domain.event.service.EventService;
-import com.example.jejugudgo.global.exception.dto.response.CommonApiResponse;
-import com.example.jejugudgo.global.util.ApiResponseUtil;
+import com.example.jejugudgo.global.exception.dto.CommonApiResponse;
+import com.example.jejugudgo.global.exception.util.ApiResponseUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

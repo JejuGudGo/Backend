@@ -1,9 +1,9 @@
 package com.example.jejugudgo.global.data.olle.service;
 
-import com.example.jejugudgo.domain.olle.entity.JejuOlleCourse;
-import com.example.jejugudgo.domain.olle.entity.JejuOlleLocationData;
-import com.example.jejugudgo.domain.olle.repository.JejuOlleCourseRepository;
-import com.example.jejugudgo.domain.olle.repository.JejuOlleLocationDataRepository;
+import com.example.jejugudgo.domain.course.olle.entity.JejuOlleCourse;
+import com.example.jejugudgo.domain.course.olle.entity.JejuOlleLocationData;
+import com.example.jejugudgo.domain.course.olle.repository.JejuOlleCourseRepository;
+import com.example.jejugudgo.domain.course.olle.repository.JejuOlleLocationDataRepository;
 import com.example.jejugudgo.global.data.common.entity.DataCommandLog;
 import com.example.jejugudgo.global.data.common.repository.DataCommandLogRepository;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +50,7 @@ public class OlleGpxDataService {
                     String fileName = resource.getFilename();
 
                     String courseTitle = fileName
+                            .replace("_", " ")
                             .replace(".gpx", "")
                             .replace("코스", "");
 

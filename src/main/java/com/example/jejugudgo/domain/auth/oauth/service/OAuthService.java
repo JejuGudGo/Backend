@@ -1,17 +1,16 @@
 package com.example.jejugudgo.domain.auth.oauth.service;
 
 import com.example.jejugudgo.domain.auth.basic.dto.request.LoginRequest;
-import com.example.jejugudgo.domain.auth.basic.dto.response.SignupResponse;
 import com.example.jejugudgo.domain.auth.basic.service.BasicAuthService;
 import com.example.jejugudgo.domain.auth.oauth.repository.OAuthRequest;
-import com.example.jejugudgo.domain.profile.entity.UserProfile;
-import com.example.jejugudgo.domain.profile.service.UserProfileService;
-import com.example.jejugudgo.domain.user.dto.response.UserInfoResponse;
-import com.example.jejugudgo.domain.user.entity.Provider;
-import com.example.jejugudgo.domain.user.entity.Role;
-import com.example.jejugudgo.domain.user.entity.User;
-import com.example.jejugudgo.domain.user.repository.UserRepository;
-import com.example.jejugudgo.global.util.RandomNicknameUtil;
+import com.example.jejugudgo.domain.user.myGudgo.profile.entity.UserProfile;
+import com.example.jejugudgo.domain.user.myGudgo.profile.service.UserProfileService;
+import com.example.jejugudgo.domain.auth.basic.dto.response.UserInfoResponse;
+import com.example.jejugudgo.domain.user.user.entity.Provider;
+import com.example.jejugudgo.domain.user.user.entity.Role;
+import com.example.jejugudgo.domain.user.user.entity.User;
+import com.example.jejugudgo.domain.user.user.repository.UserRepository;
+import com.example.jejugudgo.global.util.random.RandomNicknameUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

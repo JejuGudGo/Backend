@@ -1,11 +1,10 @@
 package com.example.jejugudgo.domain.auth.mobile.service;
 
 import com.example.jejugudgo.domain.auth.mobile.dto.request.MobilAuthCodeRequest;
-import com.example.jejugudgo.domain.user.entity.User;
-import com.example.jejugudgo.domain.user.repository.UserRepository;
+import com.example.jejugudgo.domain.user.user.entity.User;
+import com.example.jejugudgo.domain.user.user.repository.UserRepository;
 import com.example.jejugudgo.global.redis.RedisUtil;
 import jakarta.annotation.PostConstruct;
-import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;

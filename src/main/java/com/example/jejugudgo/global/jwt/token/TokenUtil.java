@@ -1,7 +1,7 @@
 package com.example.jejugudgo.global.jwt.token;
 
-import com.example.jejugudgo.domain.user.entity.User;
-import com.example.jejugudgo.domain.user.repository.UserRepository;
+import com.example.jejugudgo.domain.user.user.entity.User;
+import com.example.jejugudgo.domain.user.user.repository.UserRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import jakarta.persistence.EntityNotFoundException;

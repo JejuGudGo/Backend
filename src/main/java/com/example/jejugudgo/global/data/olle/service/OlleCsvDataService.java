@@ -1,10 +1,10 @@
 package com.example.jejugudgo.global.data.olle.service;
 
-import com.example.jejugudgo.domain.olle.entity.JejuOlleCourse;
-import com.example.jejugudgo.domain.olle.entity.JejuOlleSpot;
-import com.example.jejugudgo.domain.olle.entity.OlleType;
-import com.example.jejugudgo.domain.olle.repository.JejuOlleCourseRepository;
-import com.example.jejugudgo.domain.olle.repository.JejuOlleSpotRepository;
+import com.example.jejugudgo.domain.course.olle.entity.*;
+import com.example.jejugudgo.domain.course.olle.message.JejuOlleCoursePublisher;
+import com.example.jejugudgo.domain.course.olle.repository.JejuOlleCourseRepository;
+import com.example.jejugudgo.domain.course.olle.repository.JejuOlleSpotRepository;
+import com.example.jejugudgo.domain.course.olle.repository.JejuOlleTagRepository;
 import com.example.jejugudgo.global.data.common.entity.DataCommandLog;
 import com.example.jejugudgo.global.data.common.repository.DataCommandLogRepository;
 import com.opencsv.CSVReader;
@@ -18,16 +18,17 @@ import org.springframework.stereotype.Service;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalTime;
+import java.util.*;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class OlleCsvDataService {
-
+    private final JejuOlleCoursePublisher jejuOlleCoursePublisher;
     private final JejuOlleCourseRepository courseRepository;
     private final JejuOlleSpotRepository spotRepository;
+    private final JejuOlleTagRepository tagRepository;
     private final DataCommandLogRepository logRepository;
 
     @Transactional
@@ -74,7 +75,7 @@ public class OlleCsvDataService {
         OlleType olleType = determineOlleType(data[0]);
         String title = formatTitleWithPrefix(olleType, sanitizeField(data[1]));
         String totalDistance = sanitizeField(data[2]);
-        String totalTime = sanitizeField(data[3]);
+        String totalTime = sanitizeField(data[3].substring(2));
         String spotTitle = sanitizeField(data[4]);
         Double latitude = parseDoubleOrNull(data[5]);
         Double longitude = parseDoubleOrNull(data[6]);
@@ -82,23 +83,30 @@ public class OlleCsvDataService {
         String summary = sanitizeField(data[8]);
         String infoAddress = sanitizeField(data[9]);
         String infoOpenTime = sanitizeField(data[10]);
+        List<String> olleTags = Arrays.stream(sanitizeField(data[11]).split(","))
+                .map(String::trim)
+                .distinct()
+                .toList();
+        String content = sanitizeField(data[12]);
 
-        JejuOlleCourse course = courseCache.computeIfAbsent(title, key -> getOrSaveCourse(olleType, title, totalDistance, totalTime, summary, infoAddress, infoOpenTime));
+        JejuOlleCourse course = courseCache.computeIfAbsent(title, key -> getOrSaveCourse(olleType, title, totalDistance, totalTime, summary, infoAddress, infoOpenTime, content));
         JejuOlleSpot spot = saveSpot(spotTitle, latitude, longitude, spotOrder, course);
+        saveTags(olleTags, course);
 
         updateSpotOrderMaps(title, spot, minSpotOrderMap, maxSpotOrderMap);
     }
 
-    private JejuOlleCourse getOrSaveCourse(OlleType olleType, String title, String totalDistance, String totalTime, String summary, String infoAddress, String infoOpenTime) {
+    private JejuOlleCourse getOrSaveCourse(OlleType olleType, String title, String totalDistance, String totalTime, String summary, String infoAddress, String infoOpenTime, String content) {
         return courseRepository.findByTitle(title).orElseGet(() -> courseRepository.save(
                 JejuOlleCourse.builder()
                         .olleType(olleType)
                         .title(title)
-                        .totalDistance(totalDistance)
-                        .totalTime(totalTime)
+                        .distance(totalDistance)
+                        .time(totalTime)
                         .summary(summary)
                         .infoAddress(infoAddress)
                         .infoOpenTime(infoOpenTime)
+                        .content(content)
                         .build()
         ));
     }
@@ -112,6 +120,20 @@ public class OlleCsvDataService {
                 .jejuOlleCourse(course)
                 .build()
         );
+    }
+
+    private void saveTags(List<String> tags, JejuOlleCourse course) {
+        for (String tag : tags) {
+            OlleTag olleTag = OlleTag.fromTag(tag);
+            if (olleTag == null || tagRepository.existsByJejuOlleCourseAndOlleTag(course, olleTag)) continue;
+
+            JejuOlleCourseTag courseTag = JejuOlleCourseTag.builder()
+                    .olleTag(olleTag)
+                    .jejuOlleCourse(course)
+                    .build();
+
+            tagRepository.save(courseTag);
+        }
     }
 
     private void updateSpotOrderMaps(String title, JejuOlleSpot spot, Map<String, JejuOlleSpot> minSpotOrderMap, Map<String, JejuOlleSpot> maxSpotOrderMap) {
@@ -128,7 +150,17 @@ public class OlleCsvDataService {
                     startSpot.getTitle(), startSpot.getLatitude(), startSpot.getLongitude(),
                     endSpot.getTitle(), endSpot.getLatitude(), endSpot.getLongitude()
             );
+
             courseRepository.save(updatedCourse);
+
+            List<JejuOlleCourseTag> olleCourseTags = tagRepository.findByJejuOlleCourse(updatedCourse);
+            List<String> olleTags = new ArrayList<>();
+            for (JejuOlleCourseTag olleCourseTag : olleCourseTags) {
+                olleTags.add(olleCourseTag.getOlleTag().getTag());
+            }
+
+            // kafka publish
+            jejuOlleCoursePublisher.jejuOlleCourseMessagePublish(updatedCourse, olleTags);
         });
     }
 
@@ -146,7 +178,7 @@ public class OlleCsvDataService {
     }
 
     private String formatTitleWithPrefix(OlleType olleType, String title) {
-        return title == null ? null : (olleType == OlleType.JEJU ? "제주올레길_" : "하영올레길_") + title;
+        return title == null ? null : (olleType == OlleType.JEJU ? "제주 올레길 " : "하영 올레길 ") + title;
     }
 
     private String sanitizeField(String value) {

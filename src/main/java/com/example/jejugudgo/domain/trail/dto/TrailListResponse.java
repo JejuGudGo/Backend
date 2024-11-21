@@ -7,6 +7,10 @@ public record TrailListResponse(
         Long trailId,
         String trailImgUrl,
         String title,
-        String content
+        String content,
+        double starAvg,
+        int reviewCount,
+        boolean isBookmarked,
+        String trailType
 ) {
 }
