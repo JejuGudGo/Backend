@@ -31,7 +31,7 @@ public class SpotCalculator {
     ) {
         Expression<Double> distance = Expressions.numberTemplate(Double.class,
                 "({0} * acos(cos(radians({1})) * cos(radians({2})) * cos(radians({3}) - radians({4})) + sin(radians({1})) * sin(radians({2}))))",
-                EARTH_RADIUS_KM, currentLatitude, spotLatitude, spotLongitude, currentLongitude);
+                EARTH_RADIUS_KM, spotLatitude, currentLatitude, spotLongitude, currentLongitude);
 
         return Expressions.booleanTemplate("{0} <= 10.0", distance);
     }
