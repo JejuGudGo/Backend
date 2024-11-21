@@ -17,6 +17,7 @@ public enum RetCode {
     RET_CODE08("08", "존재하지 않는 이메일 입니다."),
     RET_CODE09("09", "알맞지 않은 비밀번호 입니다."),
     RET_CODE10("10", "존재하지 않는 북마크 유형입니다."),
+    RET_CODE15("15", "비밀번호 입력 5회 실패로 인하여 10분간 로그인이 제한됩니다."),
     RET_CODE97("97", "해당 결과가 존재하지 않습니다."),
     RET_CODE98("98", "토큰이 만료되었습니다."),
     RET_CODE99("99", "서버 오류로 인하여 요청에 실패하였습니다.");
@@ -41,4 +42,6 @@ public enum RetCode {
     public static List<RetCode> getAllCodes() {
         return List.of(RetCode.values());
     }
+
+    ˆ
 }

@@ -17,6 +17,7 @@ import com.example.jejugudgo.domain.user.repository.UserTermsRepository;
 import com.example.jejugudgo.global.exception.CustomException;
 import com.example.jejugudgo.global.exception.entity.RetCode;
 import com.example.jejugudgo.global.jwt.token.TokenGenerator;
+import com.example.jejugudgo.global.redis.RedisUtil;
 import com.example.jejugudgo.global.util.RandomNicknameUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
@@ -27,6 +28,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.regex.Pattern;
 
@@ -40,6 +42,7 @@ public class BasicAuthService {
     private final RandomNicknameUtil randomNicknameUtil;
     private final UserProfileService userProfileService;
     private final TokenGenerator tokenGenerator;
+    private final RedisUtil redisUtil;
 
     private final ApplicationEventPublisher eventPublisher;
 
@@ -149,9 +152,7 @@ public class BasicAuthService {
                 .orElseThrow(() -> new CustomException(RetCode.RET_CODE08));
 
         // 2. 비밀번호 검증
-        if (!bCryptPasswordEncoder.matches(request.password(), user.getPassword())) {
-            throw new CustomException(RetCode.RET_CODE09);
-        }
+        validatePassword(request.password(), user);
 
         // 3. 인증 처리
         authenticateUser(request);
@@ -183,5 +184,29 @@ public class BasicAuthService {
         String accessToken = tokenGenerator.generateToken(String.valueOf(userId));
         response.setHeader("Authorization", accessToken);
         return accessToken;
+    }
+
+    private void validatePassword(String password, User user) {
+        String count = redisUtil.getData(user.getId().toString() + "_password");
+        String status = redisUtil.getData(user.getId().toString() + "_status");
+
+        if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
+            // 1. count 증가
+            if (count == null && status == null)
+                count = "0";
+            else {
+                count = String.valueOf(Integer.parseInt(count) + 1);
+
+                // 2. count validation
+                if (Integer.parseInt(count) == 5) {
+                    redisUtil.setDataWithExpire(user.getId().toString() , "pended", Duration.ofMinutes(1));
+                    throw new CustomException(RetCode.RET_CODE15);
+                }
+            }
+
+            redisUtil.setData(user.getId().toString() + "_password", count);
+            String message = RetCode.RET_CODE09.getMessage() + "\n현재 비밀번호를 " + count + " 회 잘못 입력하였습니다.".
+            throw new CustomException(RetCode.RET_CODE09);
+        }
     }
 }
