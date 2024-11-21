@@ -1,6 +1,7 @@
 package com.example.jejugudgo.domain.search.query;
 
 import com.example.jejugudgo.domain.course.olle.entity.*;
+import com.example.jejugudgo.domain.course.olle.entity.QJejuOlleCourse;
 import com.example.jejugudgo.domain.review.entity.QReview;
 import com.example.jejugudgo.domain.review.entity.QReviewCategory;
 import com.example.jejugudgo.domain.review.enums.ReviewCategory3;

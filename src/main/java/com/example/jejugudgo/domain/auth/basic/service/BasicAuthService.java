@@ -33,6 +33,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Service
@@ -41,7 +42,6 @@ public class BasicAuthService {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final UserTermsRepository userTermsRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RandomNicknameUtil randomNicknameUtil;
     private final UserProfileService userProfileService;
     private final TokenGenerator tokenGenerator;
@@ -129,9 +129,7 @@ public class BasicAuthService {
                 .orElseThrow(() -> new CustomException(RetCode.RET_CODE08));
 
         // 2. 비밀번호 검증
-        if (!bCryptPasswordEncoder.matches(request.password(), user.getPassword())) {
-            throw new CustomException(RetCode.RET_CODE09);
-        }
+       passwordValidation.validateLoginPassword(request.password(), user);
 
         // 3. 인증 처리
         authenticateUser(request);
@@ -179,6 +177,7 @@ public class BasicAuthService {
 
         } catch (ExpiredJwtException e) {
             throw new CustomException(RetCode.RET_CODE98);  // 토큰 만료
+
         } catch (Exception e) {
             throw new CustomException(RetCode.RET_CODE99);  // 기타 서버 오류
         }
