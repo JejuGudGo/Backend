@@ -38,4 +38,13 @@ public class ApiResponseUtil {
                 null
         );
     }
+
+    public CommonApiResponse error(RetCode retCode, String message) {
+        return new CommonApiResponse(
+                retCode.getRetCode(),
+                message,
+                null,
+                null
+        );
+    }
 }

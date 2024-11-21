@@ -48,13 +48,14 @@ public class PasswordValidation {
                 // 2. count validation
                 if (Integer.parseInt(count) == 5) {
                     redisUtil.setDataWithExpire(user.getId().toString() , "pended", Duration.ofMinutes(10));
-                    throw new CustomException(RetCode.RET_CODE15);
+                    throw new CustomException(RetCode.RET_CODE16);
                 }
             }
 
             redisUtil.setData(user.getId().toString() + "_password", count);
             String message = RetCode.RET_CODE09.getMessage() + System.lineSeparator()
                     + "현재 비밀번호를 " + count + " 회 잘못 입력하였습니다.";
+            System.out.println(message);
             throw new CustomException(RetCode.RET_CODE09, message);
         }
     }
