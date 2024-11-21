@@ -13,7 +13,7 @@ public class SearchService {
     private final TrailSearchDetailService trailSearchDetailService;
 
     public SearchDetailResponse getCourseDetail(HttpServletRequest request, String type, Long id) {
-        if (type.equals("제주걷고"))
+        if (type.equals("제주객의 길"))
             return jejuGudgoSearchDetailService.getJejuGudgoCourseDetail(request, id);
 
         else if (type.equals("제주올레"))

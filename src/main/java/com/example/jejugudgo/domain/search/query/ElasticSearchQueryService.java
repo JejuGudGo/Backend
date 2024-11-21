@@ -187,7 +187,7 @@ public class ElasticSearchQueryService {
 
     private String mapCat2ToFieldValue(String cat1, String value) {
         switch (cat1) {
-            case "제주걷고":
+            case "제주객의 길":
                 return CourseTag.fromTag(value).getTag();
             case "제주올레":
                 return OlleType.fromType(value).getType();
@@ -203,7 +203,7 @@ public class ElasticSearchQueryService {
             return List.of("jeju_gudgo_course", "jeju_olle_course", "trail");
         }
         switch (cat1) {
-            case "제주걷고":
+            case "제주객의 길":
                 return List.of("jeju_gudgo_course");
             case "제주올레":
                 return List.of("jeju_olle_course");
@@ -220,7 +220,7 @@ public class ElasticSearchQueryService {
         }
 
         switch (cat1) {
-            case "제주걷고", "산책로":
+            case "제주객의 길", "산책로":
                 return "tags";
             case "제주올레":
                 return "type";

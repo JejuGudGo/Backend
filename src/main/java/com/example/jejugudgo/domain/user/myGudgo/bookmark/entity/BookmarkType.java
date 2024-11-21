@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum BookmarkType {
-    JEJU_GUDGO("제주객의길"),
+    JEJU_GUDGO("제주객의 길"),
     OLLE("올레길"),
     TRAIL("산책로");
 
