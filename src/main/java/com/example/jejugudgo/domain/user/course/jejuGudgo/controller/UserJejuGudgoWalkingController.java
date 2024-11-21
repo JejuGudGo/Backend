@@ -4,10 +4,8 @@ package com.example.jejugudgo.domain.user.course.jejuGudgo.controller;
 import com.example.jejugudgo.domain.course.jejugudgo.dto.request.JejuGudgoCourseOptionCreateRequest;
 import com.example.jejugudgo.domain.course.jejugudgo.dto.response.JejuGudgoCourseOptionResponse;
 import com.example.jejugudgo.domain.course.jejugudgo.service.JejuGudgoCourseOptionService;
-import com.example.jejugudgo.domain.course.jejugudgo.service.JejuGudgoCourseSpotService;
 import com.example.jejugudgo.domain.user.course.jejuGudgo.dto.request.UserJejuGudgoCourseCompletedRequest;
 import com.example.jejugudgo.domain.user.course.jejuGudgo.dto.reseponse.UserJejuGudgoWalkingStartResponse;
-import com.example.jejugudgo.domain.user.course.jejuGudgo.dto.reseponse.UserJejugudgoCourseResponse;
 import com.example.jejugudgo.domain.user.course.jejuGudgo.serivce.UserJejuGudgoCourseService;
 import com.example.jejugudgo.domain.user.course.jejuGudgo.serivce.UserJejuGudgoCourseSpotService;
 import com.example.jejugudgo.domain.user.course.jejuGudgo.serivce.UserJejuGudgoWalkingService;
@@ -84,16 +82,4 @@ public class UserJejuGudgoWalkingController {
         // 성공 응답 반환
         return ResponseEntity.ok(apiResponseUtil.success(null));
     }
-
-    /*
-     * 코스 완료 처리
-     * */
-//    @PostMapping("/{courseId}/complete")
-//    ResponseEntity<CommonApiResponse> walking(
-//            @PathVariable("courseId") Long courseId,
-//            HttpServletRequest servletRequest,
-//            @RequestBody UserJejuGudgoCourseCompletedRequest completedRequest) {
-//        UserJejugudgoCourseResponse response = userJejuGudgoCourseService.completedCourse(courseId, servletRequest, completedRequest);
-//        return ResponseEntity.ok(apiResponseUtil.success(response));
-//    }
 }
