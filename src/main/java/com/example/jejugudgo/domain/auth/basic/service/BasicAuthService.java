@@ -153,6 +153,9 @@ public class BasicAuthService {
 
         // 2. 비밀번호 검증
         validatePassword(request.password(), user);
+        if (redisUtil.getData(user.getId().toString() + "_password") != null) {
+            redisUtil.deleteData(user.getId() +  "_password");
+        }
 
         // 3. 인증 처리
         authenticateUser(request);
