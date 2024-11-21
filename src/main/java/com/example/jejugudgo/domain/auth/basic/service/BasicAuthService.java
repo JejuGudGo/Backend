@@ -21,6 +21,7 @@ import com.example.jejugudgo.global.exception.exception.CustomException;
 import com.example.jejugudgo.global.exception.enums.RetCode;
 import com.example.jejugudgo.global.jwt.token.TokenGenerator;
 import com.example.jejugudgo.global.jwt.token.TokenUtil;
+import com.example.jejugudgo.global.redis.RedisUtil;
 import com.example.jejugudgo.global.util.random.RandomNicknameUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,6 +50,7 @@ public class BasicAuthService {
     private final PhoneValidation phoneValidation;
     private final UserValidation userValidation;
     private final TokenUtil tokenUtil;
+    private final RedisUtil redisUtil;
     private final ApplicationEventPublisher eventPublisher;
 
     // 회원가입 메서드
@@ -129,7 +131,10 @@ public class BasicAuthService {
                 .orElseThrow(() -> new CustomException(RetCode.RET_CODE08));
 
         // 2. 비밀번호 검증
-       passwordValidation.validateLoginPassword(request.password(), user);
+        passwordValidation.validateLoginPassword(request.password(), user);
+        if (redisUtil.getData(user.getId().toString() + "_password") != null) {
+            redisUtil.deleteData(user.getId() +  "_password");
+        }
 
         // 3. 인증 처리
         authenticateUser(request);
