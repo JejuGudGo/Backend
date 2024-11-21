@@ -41,4 +41,18 @@ public class UserJejuGudgoCourseSpot {
     @ManyToOne()
     @JoinColumn(name = "jejuGudgoSpotId")
     private JejuGudgoCourseSpot jejuGudgoCourseSpot;
+
+
+    public UserJejuGudgoCourseSpot updateIsCompleted(boolean isCompleted) {
+        return UserJejuGudgoCourseSpot.builder()
+                .id(id)
+                .title(title)
+                .spotType(spotType)
+                .orderNumber(orderNumber)
+                .address(address)
+                .latitude(latitude)
+                .longitude(longitude)
+                .isCompleted(isCompleted)
+                .build();
+    }
 }

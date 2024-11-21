@@ -13,4 +13,5 @@ public interface JejuGudgoCourseSpotRepository extends JpaRepository<JejuGudgoCo
     Optional<JejuGudgoCourseSpot> findByJejuGudgoCourseIdOrderByIdDesc(Long courseId);
 
     List<JejuGudgoCourseSpot> findByJejuGudgoCourseOrderByOrderNumberAsc(JejuGudgoCourse jejuGudgoCourse);
+
 }

@@ -1,15 +1,33 @@
 package com.example.jejugudgo.domain.course.jejugudgo.service;
 
+import com.example.jejugudgo.domain.course.jejugudgo.entity.*;
 import com.example.jejugudgo.domain.course.jejugudgo.message.JejuGudgoPublisher;
 import com.example.jejugudgo.domain.course.jejugudgo.dto.request.JejuGudgoCreateRequest;
-import com.example.jejugudgo.domain.course.jejugudgo.entity.JejuGudgoCourse;
-import com.example.jejugudgo.domain.course.jejugudgo.entity.JejuGudgoCourseSpot;
-import com.example.jejugudgo.domain.course.jejugudgo.entity.JejuGudgoCourseTag;
 import com.example.jejugudgo.domain.course.jejugudgo.repository.JejuGudgoCourseRepository;
 import com.example.jejugudgo.domain.review.util.StarAvgCalculator;
+import com.example.jejugudgo.domain.search.dto.sub.JeujuGudgoCourseInfoResponse;
+import com.example.jejugudgo.domain.search.dto.sub.SpotResponse;
+import com.example.jejugudgo.domain.user.course.jejuGudgo.dto.request.UserJejuGudgoCourseCreateRequest;
+import com.example.jejugudgo.domain.user.course.jejuGudgo.dto.request.UserJejuGudgoCourseSpotCreateRequest;
+import com.example.jejugudgo.domain.user.course.jejuGudgo.dto.request.UserJejuGudgoCourseTagCreateRequest;
+import com.example.jejugudgo.domain.user.course.jejuGudgo.entity.UserJejuGudgoCourse;
+import com.example.jejugudgo.domain.user.course.jejuGudgo.entity.UserJejuGudgoCourseSpot;
+import com.example.jejugudgo.domain.user.course.jejuGudgo.entity.UserJejuGudgoCourseTag;
+import com.example.jejugudgo.domain.user.course.jejuGudgo.repository.UserJejuGudgoCourseRepository;
+import com.example.jejugudgo.domain.user.course.jejuGudgo.repository.UserJejuGudgoCourseSpotRepository;
+import com.example.jejugudgo.domain.user.course.jejuGudgo.repository.UserJejuGudgoCourseTagRepository;
+import com.example.jejugudgo.domain.user.user.entity.User;
+import com.example.jejugudgo.domain.user.user.repository.UserRepository;
+import com.example.jejugudgo.global.exception.enums.RetCode;
+import com.example.jejugudgo.global.exception.exception.CustomException;
+import com.example.jejugudgo.global.jwt.token.TokenUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -22,6 +40,11 @@ public class JejuGudgoCourseService {
     private final JejuGudgoCourseSpotService jejuGudgoCourseSpotService;
     private final JejuGudgoCourseTagService jejuGudgoCourseTagService;
     private final JejuGudgoCourseDocumentService jejuGudgoCourseDocumentService;
+    private final TokenUtil tokenUtil;
+    private final UserRepository userRepository;
+    private final UserJejuGudgoCourseRepository userJejuGudgoCourseRepository;
+    private final UserJejuGudgoCourseSpotRepository userJejuGudgoCourseSpotRepository;
+    private final UserJejuGudgoCourseTagRepository userJejuGudgoCourseTagRepository;
 
     /*
         해당 코드는 유저가 생성한 코스를 완료했을 때 동작합니다.
