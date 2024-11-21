@@ -80,4 +80,50 @@ public class JejuGudgoCourse {
                 .user(this.user)
                 .build();
     }
+    public JejuGudgoCourse updateDetails(String newImageUrl, String newTitle, String newContent) {
+        return JejuGudgoCourse.builder()
+                .id(this.id)
+                .title(newTitle != null ? newTitle : this.title)
+                .createdAt(this.createdAt)
+                .starAvg(this.starAvg)
+                .time(this.time)
+                .distance(this.distance)
+                .imageUrl(newImageUrl != null ? newImageUrl : this.imageUrl)
+                .summary(this.summary)
+                .content(newContent != null ? newContent : this.content)
+                .viewCount(this.viewCount)
+                .startSpotTitle(this.startSpotTitle)
+                .startLatitude(this.startLatitude)
+                .startLongitude(this.startLongitude)
+                .endSpotTitle(this.endSpotTitle)
+                .endLatitude(this.endLatitude)
+                .endLongitude(this.endLongitude)
+                .isDeleted(this.isDeleted)
+                .user(this.user)
+                .build();
+    }
+
+    public JejuGudgoCourse updateDeleted(boolean isDeleted) {
+        return JejuGudgoCourse.builder()
+                .id(this.id)
+                .title(this.title)
+                .createdAt(this.createdAt)
+                .starAvg(this.starAvg)
+                .time(this.time)
+                .distance(this.distance)
+                .imageUrl(this.imageUrl)
+                .summary(this.summary)
+                .content(this.content)
+                .viewCount(this.viewCount)
+                .startSpotTitle(this.startSpotTitle)
+                .startLatitude(this.startLatitude)
+                .startLongitude(this.startLongitude)
+                .endSpotTitle(this.endSpotTitle)
+                .endLatitude(this.endLatitude)
+                .endLongitude(this.endLongitude)
+                .isDeleted(isDeleted)
+                .user(this.user)
+                .build();
+    }
+
 }

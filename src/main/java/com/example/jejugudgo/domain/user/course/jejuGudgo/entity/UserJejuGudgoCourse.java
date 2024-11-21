@@ -110,4 +110,34 @@ public class UserJejuGudgoCourse {
                 .isCompleted(isCompleted)
                 .build();
     }
+
+    public UserJejuGudgoCourse updateDetails(String newImageUrl, String newTitle, String newContent) {
+        return UserJejuGudgoCourse.builder()
+                .id(this.id)
+                .title(newTitle != null ? newTitle : this.title)
+                .isPrivate(this.isPrivate)
+                .createdAt(this.createdAt)
+                .finishedAt(this.finishedAt)
+                .time(this.time)
+                .distance(this.distance)
+                .speed(this.speed)
+                .restTime(this.restTime)
+                .kcal(this.kcal)
+                .steps(this.steps)
+                .averageSpeed(this.averageSpeed)
+                .averagedPace(this.averagedPace)
+                .imageUrl(newImageUrl != null ? newImageUrl : this.imageUrl)
+                .summary(this.summary)
+                .content(newContent != null ? newContent : this.content)
+                .startSpotTitle(this.startSpotTitle)
+                .startLatitude(this.startLatitude)
+                .startLongitude(this.startLongitude)
+                .endSpotTitle(this.endSpotTitle)
+                .endLatitude(this.endLatitude)
+                .endLongitude(this.endLongitude)
+                .user(this.user)
+                .jejuGudgoCourse(this.jejuGudgoCourse)
+                .isCompleted(this.isCompleted)
+                .build();
+    }
 }

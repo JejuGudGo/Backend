@@ -9,6 +9,7 @@ import com.example.jejugudgo.domain.user.course.jejuGudgo.entity.UserJejuGudgoCo
 import com.example.jejugudgo.domain.user.course.jejuGudgo.entity.UserJejuGudgoCourseTag;
 import com.example.jejugudgo.domain.user.course.jejuGudgo.repository.UserJejuGudgoCourseRepository;
 import com.example.jejugudgo.domain.user.course.jejuGudgo.repository.UserJejuGudgoCourseSpotRepository;
+import com.example.jejugudgo.domain.user.course.jejuGudgo.repository.UserJejuGudgoCourseTagRepository;
 import com.example.jejugudgo.global.exception.enums.RetCode;
 import com.example.jejugudgo.global.exception.exception.CustomException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,6 +29,7 @@ public class UserJejuGudgoCourseSpotService {
     private final UserJejuGudgoCourseSpotRepository userJejuGudgoCourseSpotRepository;
     private final UserJejuGudgoCourseRepository userJejuGudgoCourseRepository;
     private final JejuGudgoCourseService jejuGudgoCourseService;
+    private final UserJejuGudgoCourseTagRepository userJejuGudgoCourseTagRepository;
 
     /**
      * 스팟 완료 처리
@@ -79,7 +81,7 @@ public class UserJejuGudgoCourseSpotService {
     private void handleFirstWalking(UserJejuGudgoCourse userCourse, Long courseId) {
         // 1. UserJejuGudgoCourseSpot 및 UserJejuGudgoCourseTag 조회
         List<UserJejuGudgoCourseSpot> spots = userJejuGudgoCourseSpotRepository.findByUserCourseId(courseId);
-        List<UserJejuGudgoCourseTag> tags = userJejuGudgoCourseRepository.findTagsByUserCourseId(courseId);
+        List<UserJejuGudgoCourseTag> tags = userJejuGudgoCourseTagRepository.findTagsByUserCourseId(courseId);
 
         // 2. JejuGudgoCreateRequest 생성
         JejuGudgoCreateRequest createRequest = new JejuGudgoCreateRequest(userCourse, spots, tags);
