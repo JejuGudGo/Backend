@@ -31,6 +31,7 @@ public class JejuGudgoCourseDocumentService {
         List<Long> bookmarkUsers = bookmarkRepository.findDistinctUserByBookMarkTypeAndTargetId(BookmarkType.JEJU_GUDGO, jejuGudgoCourse.getId());
 
         JejuGudgoCourseDocument jejuGudgoCourseDocument = JejuGudgoCourseDocument.of(jejuGudgoCourse, spotDocuments, tagDocuments, bookmarkUsers);
+        jejuGudgoCourseDocument.setDeleted(jejuGudgoCourse.isDeleted());
         return jejuGudgoCourseDocument;
     }
 

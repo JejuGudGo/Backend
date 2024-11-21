@@ -48,6 +48,14 @@ public class ElasticSearchQueryService {
                 addCategory3Filter(boolQueryBuilder, cat3);
             }
 
+            // "제주걷고"일 때만 isDeleted 필터 추가
+            if (cat1 != null && cat1.equalsIgnoreCase("제주걷고")) {
+                boolQueryBuilder.filter(QueryBuilders.term(t -> t
+                        .field("isDeleted")
+                        .value(false)
+                ));
+            }
+
             SearchRequest searchRequest = SearchRequest.of(sr -> sr
                     .index(List.of("jeju_gudgo_course", "jeju_olle_course", "trail"))
                     .query(q -> q.functionScore(fs -> fs

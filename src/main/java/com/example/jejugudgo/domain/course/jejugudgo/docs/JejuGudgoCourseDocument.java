@@ -48,6 +48,7 @@ public class JejuGudgoCourseDocument {
 
     private double endLongitude;
 
+    private boolean isDeleted;
 
     @Field(type = FieldType.Nested, includeInParent = true)
     private List<JejuGudgoCourseSpotDocument> spots;
@@ -57,7 +58,6 @@ public class JejuGudgoCourseDocument {
 
     @Field(type = FieldType.Nested, includeInParent = true)
     private List<Long> bookmarkUsers;
-
 
     public static JejuGudgoCourseDocument of(JejuGudgoCourse jejuGudgoCourse, List<JejuGudgoCourseSpotDocument> spots, List<JejuGudgoCourseTagDocument> tags, List<Long> bookmarkUsers) {
         JejuGudgoCourseDocument document = new JejuGudgoCourseDocument();
@@ -81,19 +81,7 @@ public class JejuGudgoCourseDocument {
         document.setSpots(spots);
         document.setTags(tags);
         document.setBookmarkUsers(bookmarkUsers);
-
+        document.setDeleted(jejuGudgoCourse.isDeleted());
         return document;
-    }
-
-    public JejuGudgoCourseDocument updateStarAvg(double starAvg) {
-        JejuGudgoCourseDocument jejuGudgoCourseDocument = this;
-        jejuGudgoCourseDocument.setStarAvg(starAvg);
-        return jejuGudgoCourseDocument;
-    }
-
-    public JejuGudgoCourseDocument updateBookmarkUsers(List<Long> bookmarkUsers) {
-        JejuGudgoCourseDocument jejuGudgoCourseDocument = this;
-        jejuGudgoCourseDocument.setBookmarkUsers(bookmarkUsers);
-        return jejuGudgoCourseDocument;
     }
 }

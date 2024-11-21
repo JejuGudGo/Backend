@@ -43,6 +43,7 @@ public class JejuGudgoCourseService {
                 .endSpotTitle(request.userJejuGudgoCourse().getEndSpotTitle())
                 .endLatitude(request.userJejuGudgoCourse().getEndLatitude())
                 .endLongitude(request.userJejuGudgoCourse().getEndLongitude())
+                .isDeleted(false)
                 .build();
 
         jejuGudgoCourseRepository.save(jejuGudgoCourse);

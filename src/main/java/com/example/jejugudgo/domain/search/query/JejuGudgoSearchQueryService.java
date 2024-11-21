@@ -57,7 +57,8 @@ public class JejuGudgoSearchQueryService {
             String latitude, String longitude, Pageable pageable
     ) {
         JPAQuery<JejuGudgoCourse> query = queryFactory
-                .selectFrom(qJejuGudgoCourse);
+                .selectFrom(qJejuGudgoCourse)
+                .where(qJejuGudgoCourse.isDeleted.eq(false));
 
         if (pageable.isPaged()) {
             query.offset(pageable.getOffset())
