@@ -193,20 +193,21 @@ public class BasicAuthService {
         if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
             // 1. count 증가
             if (count == null && status == null)
-                count = "0";
+                count = "1";
             else {
                 count = String.valueOf(Integer.parseInt(count) + 1);
 
                 // 2. count validation
                 if (Integer.parseInt(count) == 5) {
-                    redisUtil.setDataWithExpire(user.getId().toString() , "pended", Duration.ofMinutes(1));
+                    redisUtil.setDataWithExpire(user.getId().toString() , "pended", Duration.ofMinutes(10));
                     throw new CustomException(RetCode.RET_CODE15);
                 }
             }
 
             redisUtil.setData(user.getId().toString() + "_password", count);
-            String message = RetCode.RET_CODE09.getMessage() + "\n현재 비밀번호를 " + count + " 회 잘못 입력하였습니다.".
-            throw new CustomException(RetCode.RET_CODE09);
+            String message = RetCode.RET_CODE09.getMessage() + System.lineSeparator()
+                    + "현재 비밀번호를 " + count + " 회 잘못 입력하였습니다.";
+            throw new CustomException(RetCode.RET_CODE09, message);
         }
     }
 }

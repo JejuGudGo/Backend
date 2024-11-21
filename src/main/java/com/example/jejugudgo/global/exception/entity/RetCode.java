@@ -42,6 +42,4 @@ public enum RetCode {
     public static List<RetCode> getAllCodes() {
         return List.of(RetCode.values());
     }
-
-    ˆ
 }
