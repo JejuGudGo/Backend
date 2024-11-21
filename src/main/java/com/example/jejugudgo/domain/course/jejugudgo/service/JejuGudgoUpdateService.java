@@ -3,6 +3,7 @@ package com.example.jejugudgo.domain.course.jejugudgo.service;
 import com.example.jejugudgo.domain.course.jejugudgo.dto.request.JejuGudgoCourseUpdateRequest;
 import com.example.jejugudgo.domain.course.jejugudgo.dto.response.JejuGudgoCourseUpdateResponse;
 import com.example.jejugudgo.domain.course.jejugudgo.entity.JejuGudgoCourse;
+import com.example.jejugudgo.domain.course.jejugudgo.message.JejuGudgoPublisher;
 import com.example.jejugudgo.domain.course.jejugudgo.repository.JejuGudgoCourseRepository;
 import com.example.jejugudgo.domain.user.course.jejuGudgo.entity.UserJejuGudgoCourse;
 import com.example.jejugudgo.domain.user.course.jejuGudgo.repository.UserJejuGudgoCourseRepository;
@@ -25,6 +26,7 @@ public class JejuGudgoUpdateService {
     private final JejuGudgoCourseRepository jejuGudgoCourseRepository;
     private final ImageUtil imageUtil;
     private final UserJejuGudgoCourseRepository userJejuGudgoCourseRepository;
+    private final JejuGudgoPublisher jejuGudgoPublisher;
 
     @Transactional
     public JejuGudgoCourseUpdateResponse updateUserCourse(
@@ -56,7 +58,11 @@ public class JejuGudgoUpdateService {
             userJejuGudgoCourseRepository.save(updatedCourse);
         }
 
-        // 5. 응답 생성
+        // 5. 도큐먼트화
+        jejuGudgoPublisher.updateJejuGudgoCourseMessagePublish(newJejuGudgoCourse);
+
+
+        // 6. 응답 생성
         return new JejuGudgoCourseUpdateResponse(
                 newJejuGudgoCourse.getImageUrl(),
                 newJejuGudgoCourse.getTitle(),

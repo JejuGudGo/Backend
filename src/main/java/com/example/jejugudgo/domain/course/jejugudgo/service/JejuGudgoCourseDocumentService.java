@@ -58,4 +58,18 @@ public class JejuGudgoCourseDocumentService {
     }
 
     // TODO: 코스 수정시 도큐먼트화 하는 코드 -> 퍼블리셔에서 사용
+    public JejuGudgoCourseDocument updateDocument(JejuGudgoCourse jejuGudgoCourse) {
+        JejuGudgoCourseDocument existingDocument = jejuGudgoCourseDocumentRepository
+                .findById(jejuGudgoCourse.getId())
+                .orElseThrow(() -> new CustomException(RetCode.RET_CODE12));
+
+        // 도큐먼트 업데이트
+        existingDocument.setTitle(jejuGudgoCourse.getTitle());
+        existingDocument.setContent(jejuGudgoCourse.getContent());
+        existingDocument.setImageUrl(jejuGudgoCourse.getImageUrl());
+        existingDocument.setDeleted(jejuGudgoCourse.isDeleted());
+
+        jejuGudgoCourseDocumentRepository.save(existingDocument);
+        return existingDocument;
+    }
 }

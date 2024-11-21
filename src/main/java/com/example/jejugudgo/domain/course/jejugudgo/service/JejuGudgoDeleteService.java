@@ -1,6 +1,7 @@
 package com.example.jejugudgo.domain.course.jejugudgo.service;
 
 import com.example.jejugudgo.domain.course.jejugudgo.entity.JejuGudgoCourse;
+import com.example.jejugudgo.domain.course.jejugudgo.message.JejuGudgoPublisher;
 import com.example.jejugudgo.domain.course.jejugudgo.repository.JejuGudgoCourseRepository;
 import com.example.jejugudgo.global.exception.enums.RetCode;
 import com.example.jejugudgo.global.exception.exception.CustomException;
@@ -16,6 +17,7 @@ public class JejuGudgoDeleteService {
 
     private final JejuGudgoCourseRepository jejuGudgoCourseRepository;
     private final TokenUtil tokenUtil;
+    private final JejuGudgoPublisher jejuGudgoPublisher;
 
     @Transactional
     public void deleteJejuGudgoCourse(Long courseId, HttpServletRequest servletRequest) {
@@ -30,5 +32,6 @@ public class JejuGudgoDeleteService {
         JejuGudgoCourse updatedCourse = course.updateDeleted(true);
         jejuGudgoCourseRepository.save(updatedCourse);
 
+        jejuGudgoPublisher.deleteJejuGudgoCourseMessagePublish(course);
     }
 }

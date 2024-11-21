@@ -29,5 +29,13 @@ public class JejuGudgoPublisher {
     }
 
     // TODO: elastic 에서 특정 course 수정
+    public void updateJejuGudgoCourseMessagePublish(JejuGudgoCourse jejuGudgoCourse) {
+        JejuGudgoCourseDocument jejuGudgoCourseDocument = jejuGudgoCourseDocumentService.updateDocument(jejuGudgoCourse);
+        kafkaPublisher.sendData("jejugudgo_topic", jejuGudgoCourseDocument, "UPDATE");
+    }
     // TODO: elastic 에서 특정 course 삭제
+    public void deleteJejuGudgoCourseMessagePublish(JejuGudgoCourse jejuGudgoCourse) {
+        JejuGudgoCourseDocument jejuGudgoCourseDocument = jejuGudgoCourseDocumentService.updateDocument(jejuGudgoCourse);
+        kafkaPublisher.sendData("jejugudgo_topic", jejuGudgoCourseDocument, "DELETE");
+    }
 }
