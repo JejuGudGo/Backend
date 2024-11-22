@@ -49,10 +49,13 @@ jobs:
 
       - name: Upload artifact to EC2
         run: |
+          # Environments에서 가져온 SSH 키를 파일로 저장
           echo "${{ vars.EC2_SSH_KEY }}" > ec2-key.pem
           chmod 600 ec2-key.pem
-          scp -o StrictHostKeyChecking=no -i ec2-key.pem build/libs/jejugudgo-1.2.3-SNAPSHOT.jar ubuntu@13.124.30.46:/home/ubuntu/jejugudgo-1.2.3-SNAPSHOT.jar
-      
+          
+          # 디버그 모드 활성화 및 SCP 명령 실행
+          scp -v -o StrictHostKeyChecking=no -i ec2-key.pem build/libs/jejugudgo-1.2.3-SNAPSHOT.jar ubuntu@13.124.30.46:/home/ubuntu/jejugudgo-1.2.3-SNAPSHOT.jar
+
       - name: Start application on EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i ec2-key.pem ubuntu@13.124.30.46 << EOF
