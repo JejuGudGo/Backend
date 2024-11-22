@@ -26,19 +26,19 @@ jobs:
 
       - name: Set up environment variables
         env:
-          DOCKER_COMPOSE_ENABLED: ${{ secrets.DOCKER_COMPOSE_ENABLED }}
-          MAIL_ID: ${{ secrets.MAIL_ID }}
-          MAIL_PASS: ${{ secrets.MAIL_PASS }}
-          DATASOURCE_URL: ${{ secrets.DATASOURCE_URL }}
-          DATASOURCE_USERNAME: ${{ secrets.DATASOURCE_USERNAME }}
-          DATASOURCE_PASSWORD: ${{ secrets.DATASOURCE_PASSWORD }}
-          REDIS_PORT: ${{ secrets.REDIS_PORT }}
-          REDIS_HOST: ${{ secrets.REDIS_HOST }}
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          COOLSMS_KEY: ${{ secrets.COOLSMS_KEY }}
-          COOLSMS_SECRET_KEY: ${{ secrets.COOLSMS_SECRET_KEY }}
-          SEND_NUMBER: ${{ secrets.SEND_NUMBER }}
-          TOUR_API_KEY: ${{ secrets.TOUR_API_KEY }}
+          DOCKER_COMPOSE_ENABLED: ${{ vars.DOCKER_COMPOSE_ENABLED }}
+          MAIL_ID: ${{ vars.MAIL_ID }}
+          MAIL_PASS: ${{ vars.MAIL_PASS }}
+          DATASOURCE_URL: ${{ vars.DATASOURCE_URL }}
+          DATASOURCE_USERNAME: ${{ vars.DATASOURCE_USERNAME }}
+          DATASOURCE_PASSWORD: ${{ vars.DATASOURCE_PASSWORD }}
+          REDIS_PORT: ${{ vars.REDIS_PORT }}
+          REDIS_HOST: ${{ vars.REDIS_HOST }}
+          SECRET_KEY: ${{ vars.SECRET_KEY }}
+          COOLSMS_KEY: ${{ vars.COOLSMS_KEY }}
+          COOLSMS_SECRET_KEY: ${{ vars.COOLSMS_SECRET_KEY }}
+          SEND_NUMBER: ${{ vars.SEND_NUMBER }}
+          TOUR_API_KEY: ${{ vars.TOUR_API_KEY }}
         run: echo "Environment variables are set."
 
       - name: Build application
@@ -46,13 +46,13 @@ jobs:
 
       - name: Upload artifact to EC2
         run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" > ec2-key.pem
+          echo "${{ vars.EC2_SSH_KEY }}" > ec2-key.pem
           chmod 600 ec2-key.pem
           scp -o StrictHostKeyChecking=no -i ec2-key.pem build/libs/myapp.jar ubuntu@43.203.169.18:/home/ubuntu/myapp.jar
 
       - name: Start application on EC2
         run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" > ec2-key.pem
+          echo "${{ vars.EC2_SSH_KEY }}" > ec2-key.pem
           chmod 600 ec2-key.pem
           ssh -o StrictHostKeyChecking=no -i ec2-key.pem ubuntu@43.203.169.18 << EOF
           pm2 stop myapp || true
