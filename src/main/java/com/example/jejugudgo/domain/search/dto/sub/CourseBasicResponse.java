@@ -7,12 +7,13 @@ public record CourseBasicResponse(
         String type,
         List<String> tags, // 화면 명세상 태그
         boolean isBookmarked, // 즐겨찾기 여부
+        Long bookmarkId,
         String imageUrl,
         String title,
         String summary, // 시작점-종점
         String distance,
         String time,
-        double starAvg,
-        int reviewCount
+        Double starAvg,
+        Long reviewCount
 ) {
 }

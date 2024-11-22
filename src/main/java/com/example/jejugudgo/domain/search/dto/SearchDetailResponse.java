@@ -9,7 +9,7 @@ import java.util.List;
 
 public record SearchDetailResponse(
         CourseBasicResponse courseBasicInfo,
-        JeujuGudgoCourseInfoResponse jeujuGudgoCourseInfo, // 제주걷고 코스의 경우
+        JeujuGudgoCourseInfoResponse jeujuGudgoCourseInfo, // 제주객의 길 코스의 경우
         OlleCourseInfoResponse olleCourseInfo, // 올레 코스의 경우
         List<TopFiveRankedKeywordResponse> keywords
 ) {

@@ -14,6 +14,7 @@ import com.example.jejugudgo.domain.search.dto.SearchDetailResponse;
 import com.example.jejugudgo.domain.search.dto.sub.CourseBasicResponse;
 import com.example.jejugudgo.domain.search.dto.sub.OlleCourseInfoResponse;
 import com.example.jejugudgo.domain.search.dto.sub.SpotResponse;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.Bookmark;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.BookmarkType;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.util.BookmarkUtil;
 import com.example.jejugudgo.global.exception.enums.RetCode;
@@ -51,18 +52,22 @@ public class JejuOlleSearchDetailService {
                 .map(tag -> tag.getOlleTag().getTag())
                 .toList();
 
+        Bookmark bookmark =  bookmarkUtil
+                .isBookmarked(request, BookmarkType.OLLE, jejuOlleCourse.getId());
+
         return new CourseBasicResponse(
                 jejuOlleCourse.getId(),
                 jejuOlleCourse.getOlleType().getType(),
                 tags,
-                bookmarkUtil.isBookmarked(request, BookmarkType.OLLE, jejuOlleCourse.getId()),
+                bookmark != null,
+                bookmark != null ? bookmark.getId() : null,
                 jejuOlleCourse.getCourseImageUrl(),
                 jejuOlleCourse.getTitle(),
                 jejuOlleCourse.getSummary(),
                 jejuOlleCourse.getDistance(),
                 jejuOlleCourse.getTime(),
                 jejuOlleCourse.getStarAvg(),
-                reviewCounter.getReviewCount(ReviewType.OLLE, jejuOlleCourse.getId())
+                reviewCounter.getReviewCount(BookmarkType.OLLE, jejuOlleCourse.getId())
         );
     }
 

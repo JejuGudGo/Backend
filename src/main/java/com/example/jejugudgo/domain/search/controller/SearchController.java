@@ -32,7 +32,7 @@ public class SearchController {
     /**
      *
      * @param keyword 검색어
-     * @param cat1 제주올레, 제주걷고, 산책로 (미 입력시 전체)
+     * @param cat1 올레길, 제주객의 길, 산책로 (미 입력시 전체)
      * @param cat2 cat1 에 맞는 중분류
      * @param cat3 리뷰 목적에 맞는 소분류
      * @param page 페이지
@@ -40,6 +40,7 @@ public class SearchController {
      */
     @GetMapping(value = "keywords")
     public ResponseEntity<CommonApiResponse> searchCourseByKeywordAndTags(
+            HttpServletRequest request,
             @RequestParam(value = "keyword") String keyword,
             @RequestParam(value = "cat1", defaultValue = "전체") String cat1,
             @RequestParam(value = "cat2",  required = false) List<String> cat2,
@@ -48,14 +49,14 @@ public class SearchController {
             @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        List<SearchListResponse> responses = elasticSearchQueryService.searchCoursesByKeywordAndCategory(keyword, cat1, cat2, cat3, pageable);
+        List<SearchListResponse> responses = elasticSearchQueryService.searchCoursesByKeywordAndCategory(request, keyword, cat1, cat2, cat3, pageable);
         return ResponseEntity.ok(apiResponseUtil.success(responses, "search-result"));
     }
 
     /**
      * @param latitude 현재 위도
      * @param longitude 현재 경도
-     * @param cat1 제주올레, 제주걷고, 산책로 (미 입력시 전체)
+     * @param cat1 올레길, 제주객의 길, 산책로 (미 입력시 전체)
      * @param cat2 cat1 에 맞는 중분류
      * @param cat3 리뷰 목적에 맞는 소분류
      */
@@ -75,7 +76,7 @@ public class SearchController {
     }
 
     /**
-     * @param type 제주올레, 제주걷고, 산책로 (미 입력시 전체)
+     * @param type 올레길, 제주객의 길,  산책로 (미 입력시 전체)
      * @param id 인덱스
      */
 

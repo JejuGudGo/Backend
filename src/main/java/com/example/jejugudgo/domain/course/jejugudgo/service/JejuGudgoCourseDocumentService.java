@@ -6,12 +6,6 @@ import com.example.jejugudgo.domain.course.jejugudgo.docs.JejuGudgoCourseTagDocu
 import com.example.jejugudgo.domain.course.jejugudgo.entity.JejuGudgoCourse;
 import com.example.jejugudgo.domain.course.jejugudgo.entity.JejuGudgoCourseSpot;
 import com.example.jejugudgo.domain.course.jejugudgo.entity.JejuGudgoCourseTag;
-import com.example.jejugudgo.domain.course.jejugudgo.repository.JejuGudgoCourseDocumentRepository;
-import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.BookmarkType;
-import com.example.jejugudgo.domain.user.myGudgo.bookmark.repository.BookmarkRepository;
-import com.example.jejugudgo.global.exception.enums.RetCode;
-import com.example.jejugudgo.global.exception.exception.CustomException;
-import com.example.jejugudgo.global.redis.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,16 +15,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class JejuGudgoCourseDocumentService {
-    private final JejuGudgoCourseDocumentRepository jejuGudgoCourseDocumentRepository;
-    private final RedisUtil redisUtil;
-    private final BookmarkRepository bookmarkRepository;
 
     public JejuGudgoCourseDocument documentsJejuCourse(JejuGudgoCourse jejuGudgoCourse, List<JejuGudgoCourseSpot> spots, List<JejuGudgoCourseTag> tags) {
         List<JejuGudgoCourseSpotDocument> spotDocuments = documentsJejuCourses(spots);
         List<JejuGudgoCourseTagDocument> tagDocuments = documentsJejuCourseTags(tags);
-        List<Long> bookmarkUsers = bookmarkRepository.findDistinctUserByBookMarkTypeAndTargetId(BookmarkType.JEJU_GUDGO, jejuGudgoCourse.getId());
 
-        JejuGudgoCourseDocument jejuGudgoCourseDocument = JejuGudgoCourseDocument.of(jejuGudgoCourse, spotDocuments, tagDocuments, bookmarkUsers);
+        JejuGudgoCourseDocument jejuGudgoCourseDocument = JejuGudgoCourseDocument.of(jejuGudgoCourse, spotDocuments, tagDocuments);
         return jejuGudgoCourseDocument;
     }
 

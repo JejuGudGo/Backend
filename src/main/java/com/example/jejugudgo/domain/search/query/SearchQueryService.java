@@ -1,6 +1,7 @@
 package com.example.jejugudgo.domain.search.query;
 
 import com.example.jejugudgo.domain.search.dto.SearchListResponse;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.BookmarkType;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpServletRequest;
@@ -50,13 +51,13 @@ public class SearchQueryService {
 
             return pagination(pageable);
 
-        } else if (category1.equals("제주올레")) {
+        } else if (category1.equals(BookmarkType.OLLE.getCode())) {
             return olleTagSearchQueryService.getJejuOlleCourses(request, category2, category3, latitude, longitude, pageable);
 
-        } else if (category1.equals("제주걷고")) {
+        } else if (category1.equals(BookmarkType.JEJU_GUDGO.getCode())) {
             return jejuGudgoSearchQueryService.getJejuGudgoCourses(request, category2, category3, latitude, longitude, pageable);
 
-        } else if (category1.equals("산책로")) {
+        } else if (category1.equals(BookmarkType.TRAIL.getCode())) {
             return trailSearchQueryService.getTrails(request, category2, category3, latitude, longitude, pageable);
         }
 

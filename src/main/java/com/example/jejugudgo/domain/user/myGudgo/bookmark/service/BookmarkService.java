@@ -4,7 +4,6 @@ import com.example.jejugudgo.domain.user.myGudgo.bookmark.dto.request.BookmarkRe
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.dto.response.BookmarkResponse;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.Bookmark;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.BookmarkType;
-import com.example.jejugudgo.domain.user.myGudgo.bookmark.message.BookmarkPublisher;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.repository.BookmarkRepository;
 import com.example.jejugudgo.domain.course.jejugudgo.dto.response.JejuGudgoCourseResponseForList;
 import com.example.jejugudgo.domain.course.olle.dto.response.JejuOlleCourseResponseForList;
@@ -36,7 +35,6 @@ public class BookmarkService {
 
     // 필요한 리포지토리 및 유틸 클래스 선언
     private final BookmarkRepository bookMarkRepository;
-    private final BookmarkPublisher bookmarkPublisher;
     private final TokenUtil tokenUtil;
     private final UserRepository userRepository;
     private final TrailRepository trailRepository;
@@ -186,28 +184,6 @@ public class BookmarkService {
                 .orElseThrow(() -> new CustomException(RetCode.RET_CODE99));
 
         BookmarkType bookMarkType = BookmarkType.fromCode(bookMarkRequest.code());
-
-        if (bookMarkType == null) {
-            throw new CustomException(RetCode.RET_CODE10);
-
-        } else if (bookMarkType.equals(BookmarkType.JEJU_GUDGO)) {
-            JejuGudgoCourse jejuGudgoCourse  = jejuGudgoCourseRepository.findById(bookMarkRequest.targetId())
-                            .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
-
-            bookmarkPublisher.updateJejuGudgoBookmarkUsers(jejuGudgoCourse);
-
-        } else if (bookMarkType.equals(BookmarkType.OLLE)) {
-            JejuOlleCourse jejuOlleCourse  = jejuOlleCourseRepository.findById(bookMarkRequest.targetId())
-                    .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
-
-            bookmarkPublisher.updateJejuOlleBookmarkUsers(jejuOlleCourse);
-
-        } else if (bookMarkType.equals(BookmarkType.TRAIL)) {
-            Trail trail = trailRepository.findById(bookMarkRequest.targetId())
-                    .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
-
-            bookmarkPublisher.updateTrailBookmarkUsers(trail);
-        }
 
         // 새로운 북마크 생성 및 저장
         Bookmark bookMark = Bookmark.builder()

@@ -8,6 +8,7 @@ import com.example.jejugudgo.domain.review.enums.ReviewType;
 import com.example.jejugudgo.domain.review.repository.ReviewRepository;
 import com.example.jejugudgo.domain.trail.entity.Trail;
 import com.example.jejugudgo.domain.trail.repository.TrailRepository;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.BookmarkType;
 import com.example.jejugudgo.global.exception.enums.RetCode;
 import com.example.jejugudgo.global.exception.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -21,37 +22,40 @@ public class ReviewCounter {
     private final JejuOlleCourseRepository jejuOlleCourseRepository;
     private final TrailRepository trailRepository;
 
-    public int getReviewCount(ReviewType type, Long id) {
-        if (type.equals(ReviewType.JEJU_GUDGO))
+    public Long getReviewCount(BookmarkType type, Long id) {
+        if (type.equals(BookmarkType.JEJU_GUDGO))
             return getJejuGudgoCourseReviewCount(id);
 
-        else if (type.equals(ReviewType.OLLE))
+        else if (type.equals(BookmarkType.OLLE))
             return getJejuOlleCourseReviewCount(id);
 
-        else if (type.equals(ReviewType.TRAIL))
+        else if (type.equals(BookmarkType.TRAIL))
             return getTrailReviewCount(id);
 
-        return 0;
+        return null;
     }
 
-    private int getJejuGudgoCourseReviewCount(Long id) {
+    private Long getJejuGudgoCourseReviewCount(Long id) {
         JejuGudgoCourse course = jejuGudgoCourseRepository.findById(id)
                 .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
 
-        return reviewRepository.findDistinctByJejuGudgoCourse(course).size();
+        int size = reviewRepository.findDistinctByJejuGudgoCourse(course).size();
+        return size == 0 ? null : Long.parseLong(String.valueOf(size));
     }
 
-    private int getJejuOlleCourseReviewCount(Long id) {
+    private Long getJejuOlleCourseReviewCount(Long id) {
         JejuOlleCourse course = jejuOlleCourseRepository.findById(id)
                 .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
 
-        return reviewRepository.findDistinctByJejuOlleCourse(course).size();
+        int size = reviewRepository.findDistinctByJejuOlleCourse(course).size();
+        return size == 0 ? null : Long.parseLong(String.valueOf(size));
     }
 
-    private int getTrailReviewCount(Long id) {
+    private Long getTrailReviewCount(Long id) {
         Trail trail = trailRepository.findById(id)
                 .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
 
-        return reviewRepository.findDistinctByTrail(trail).size();
+        int size = reviewRepository.findDistinctByTrail(trail).size();
+        return size == 0 ? null : Long.parseLong(String.valueOf(size));
     }
 }

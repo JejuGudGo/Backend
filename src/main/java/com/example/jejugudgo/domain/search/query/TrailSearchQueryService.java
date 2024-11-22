@@ -11,6 +11,7 @@ import com.example.jejugudgo.domain.search.dto.SearchListResponse;
 import com.example.jejugudgo.domain.trail.entity.QTrail;
 import com.example.jejugudgo.domain.trail.entity.Trail;
 import com.example.jejugudgo.domain.trail.entity.TrailType;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.Bookmark;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.BookmarkType;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.util.BookmarkUtil;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -119,18 +120,22 @@ public class TrailSearchQueryService {
                     List<String> tags = new ArrayList<>();
                     tags.add(trail.getTrailType().getCode());
 
+                    Bookmark bookmark =  bookmarkUtil
+                            .isBookmarked(request, BookmarkType.TRAIL, trail.getId());
+
                     return new SearchListResponse(
                             trailId,
-                            "산책로",
+                            BookmarkType.TRAIL.getCode(),
                             tags,
-                            bookmarkUtil.isBookmarked(request, BookmarkType.TRAIL, trailId),
+                            bookmark != null,
+                            bookmark != null ? bookmark.getId() : null,
                             trail.getTitle(),
                             trail.getContent(),
                             null,
                             null,
                             trail.getImageUrl(),
                             trail.getStarAvg(),
-                            reviewCounter.getReviewCount(ReviewType.TRAIL, trailId),
+                            reviewCounter.getReviewCount(BookmarkType.TRAIL, trailId),
                             trail.getTitle(),
                             trail.getLatitude(),
                             trail.getLongitude()

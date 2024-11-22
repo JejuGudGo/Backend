@@ -21,8 +21,7 @@ public class JejuOlleCourseDocumentService {
 
     public JejuOlleCourseDocument documentsJejuOlleCourse(JejuOlleCourse jejuOlleCourse, List<JejuOlleSpot> jejuOlleSpots, List<String> olleTags) {
         List<JejuOlleSpotDocument> jejuOlleSpotDocuments = documentsJejuOlleSpot(jejuOlleSpots);
-        List<Long> bookmarkUsers = bookmarkRepository.findDistinctUserByBookMarkTypeAndTargetId(BookmarkType.OLLE, jejuOlleCourse.getId());
-        JejuOlleCourseDocument jejuOlleCourseDocument = JejuOlleCourseDocument.of(jejuOlleCourse, jejuOlleSpotDocuments, bookmarkUsers, olleTags);
+        JejuOlleCourseDocument jejuOlleCourseDocument = JejuOlleCourseDocument.of(jejuOlleCourse, jejuOlleSpotDocuments, olleTags);
 
         return jejuOlleCourseDocument;
     }

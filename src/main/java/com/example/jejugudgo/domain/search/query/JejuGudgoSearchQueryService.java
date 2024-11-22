@@ -8,6 +8,7 @@ import com.example.jejugudgo.domain.review.enums.ReviewType;
 import com.example.jejugudgo.domain.review.util.ReviewCounter;
 import com.example.jejugudgo.domain.search.component.SpotCalculator;
 import com.example.jejugudgo.domain.search.dto.SearchListResponse;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.Bookmark;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.BookmarkType;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.util.BookmarkUtil;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -109,8 +110,8 @@ public class JejuGudgoSearchQueryService {
         return jejuGudgoCourses;
     }
 
-    private List<SearchListResponse> getResponses(HttpServletRequest request, List<JejuGudgoCourse> jejuOlleCourses) {
-        return jejuOlleCourses.stream()
+    private List<SearchListResponse> getResponses(HttpServletRequest request, List<JejuGudgoCourse> jejuGudgoCourses) {
+        return jejuGudgoCourses.stream()
                 .map(course -> {
                     Long courseId = course.getId();
 
@@ -124,18 +125,22 @@ public class JejuGudgoSearchQueryService {
                             .map(CourseTag::getTag)
                             .toList();
 
+                    Bookmark bookmark =  bookmarkUtil
+                            .isBookmarked(request, BookmarkType.JEJU_GUDGO, course.getId());
+
                     return new SearchListResponse(
                             courseId,
-                            "제주걷고",
+                            BookmarkType.JEJU_GUDGO.getCode(),
                             tags,
-                            bookmarkUtil.isBookmarked(request, BookmarkType.JEJU_GUDGO, courseId),
+                            bookmark != null,
+                            bookmark != null ? bookmark.getId() : null,
                             course.getTitle(),
                             course.getSummary(),
                             course.getDistance(),
                             course.getTime(),
                             course.getImageUrl(),
                             course.getStarAvg(),
-                            reviewCounter.getReviewCount(ReviewType.JEJU_GUDGO, courseId),
+                            reviewCounter.getReviewCount(BookmarkType.JEJU_GUDGO, courseId),
                             course.getStartSpotTitle(),
                             course.getStartLatitude(),
                             course.getStartLongitude()

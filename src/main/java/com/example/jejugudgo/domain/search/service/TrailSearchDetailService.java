@@ -8,6 +8,7 @@ import com.example.jejugudgo.domain.search.dto.SearchDetailResponse;
 import com.example.jejugudgo.domain.search.dto.sub.CourseBasicResponse;
 import com.example.jejugudgo.domain.trail.entity.Trail;
 import com.example.jejugudgo.domain.trail.repository.TrailRepository;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.Bookmark;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.BookmarkType;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.util.BookmarkUtil;
 import com.example.jejugudgo.global.exception.enums.RetCode;
@@ -41,18 +42,22 @@ public class TrailSearchDetailService {
         List<String> tags = new ArrayList<>();
         tags.add(trail.getTrailType().getCode());
 
+        Bookmark bookmark =  bookmarkUtil
+                .isBookmarked(request, BookmarkType.TRAIL, trail.getId());
+
         return new CourseBasicResponse(
                 trail.getId(),
                 "산책로",
                 tags,
-                bookmarkUtil.isBookmarked(request, BookmarkType.TRAIL, trail.getId()),
+                bookmark != null,
+                bookmark != null ? bookmark.getId() : null,
                 trail.getImageUrl(),
                 trail.getTitle(),
                 trail.getContent(),
                 null,
                 null,
                 trail.getStarAvg(),
-                reviewCounter.getReviewCount(ReviewType.TRAIL, trail.getId())
+                reviewCounter.getReviewCount(BookmarkType.TRAIL, trail.getId())
         );
     }
 

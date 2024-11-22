@@ -88,7 +88,6 @@ public class JejuOlleCourseConsumer {
             JejuOlleCourseDocument jejuOlleDocument = jejuOlleCourseDocumentRepository.findById(request.courseId())
                     .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
 
-            jejuOlleDocument = jejuOlleDocument.updateBookmarkUsers(request.bookmarkUsers());
             jejuOlleCourseDocumentRepository.save(jejuOlleDocument);
 
             System.out.println("===============================================================================");

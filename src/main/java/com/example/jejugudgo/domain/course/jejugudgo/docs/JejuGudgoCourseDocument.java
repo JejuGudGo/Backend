@@ -1,6 +1,7 @@
 package com.example.jejugudgo.domain.course.jejugudgo.docs;
 
 import com.example.jejugudgo.domain.course.jejugudgo.entity.JejuGudgoCourse;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.BookmarkType;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -16,7 +17,11 @@ public class JejuGudgoCourseDocument {
     @Id
     private Long id;
 
+    @Field(type = FieldType.Text)
     private String title;
+
+    @Field(type = FieldType.Keyword)
+    private String titleKeyword;
 
     private String type;
 
@@ -55,15 +60,12 @@ public class JejuGudgoCourseDocument {
     @Field(type = FieldType.Nested, includeInParent = true)
     private List<JejuGudgoCourseTagDocument> tags;
 
-    @Field(type = FieldType.Nested, includeInParent = true)
-    private List<Long> bookmarkUsers;
-
-
-    public static JejuGudgoCourseDocument of(JejuGudgoCourse jejuGudgoCourse, List<JejuGudgoCourseSpotDocument> spots, List<JejuGudgoCourseTagDocument> tags, List<Long> bookmarkUsers) {
+    public static JejuGudgoCourseDocument of(JejuGudgoCourse jejuGudgoCourse, List<JejuGudgoCourseSpotDocument> spots, List<JejuGudgoCourseTagDocument> tags) {
         JejuGudgoCourseDocument document = new JejuGudgoCourseDocument();
-        document.setType("제주걷고");
+        document.setType(BookmarkType.JEJU_GUDGO.getCode());
         document.setId(jejuGudgoCourse.getId());
         document.setTitle(jejuGudgoCourse.getTitle());
+        document.setTitleKeyword(jejuGudgoCourse.getTitle());
         document.setContent(jejuGudgoCourse.getContent());
         document.setCreatedAt(jejuGudgoCourse.getCreatedAt());
         document.setStarAvg(jejuGudgoCourse.getStarAvg());
@@ -80,7 +82,6 @@ public class JejuGudgoCourseDocument {
         document.setEndLongitude(jejuGudgoCourse.getEndLongitude());
         document.setSpots(spots);
         document.setTags(tags);
-        document.setBookmarkUsers(bookmarkUsers);
 
         return document;
     }
@@ -91,9 +92,4 @@ public class JejuGudgoCourseDocument {
         return jejuGudgoCourseDocument;
     }
 
-    public JejuGudgoCourseDocument updateBookmarkUsers(List<Long> bookmarkUsers) {
-        JejuGudgoCourseDocument jejuGudgoCourseDocument = this;
-        jejuGudgoCourseDocument.setBookmarkUsers(bookmarkUsers);
-        return jejuGudgoCourseDocument;
-    }
 }

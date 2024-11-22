@@ -14,6 +14,7 @@ import com.example.jejugudgo.domain.search.dto.SearchDetailResponse;
 import com.example.jejugudgo.domain.search.dto.sub.CourseBasicResponse;
 import com.example.jejugudgo.domain.search.dto.sub.JeujuGudgoCourseInfoResponse;
 import com.example.jejugudgo.domain.search.dto.sub.SpotResponse;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.Bookmark;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.BookmarkType;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.util.BookmarkUtil;
 import com.example.jejugudgo.global.exception.enums.RetCode;
@@ -51,18 +52,24 @@ public class JejuGudgoSearchDetailService {
                 .map(tag -> tag.getCourseTag().getTag())
                 .toList();
 
+        Bookmark bookmark =  bookmarkUtil
+                .isBookmarked(request, BookmarkType.JEJU_GUDGO, jejuGudgoCourse.getId());
+
+        System.out.println("bookmark: " + bookmark == null);
+
         return new CourseBasicResponse (
                 jejuGudgoCourse.getId(),
-                "제주걷고",
+                BookmarkType.JEJU_GUDGO.getCode(),
                 tags,
-                bookmarkUtil.isBookmarked(request, BookmarkType.JEJU_GUDGO, jejuGudgoCourse.getId()),
+                bookmark != null,
+                bookmark != null ? bookmark.getId() : null,
                 jejuGudgoCourse.getImageUrl(),
                 jejuGudgoCourse.getTitle(),
                 jejuGudgoCourse.getSummary(),
                 jejuGudgoCourse.getDistance(),
                 jejuGudgoCourse.getTime(),
                 jejuGudgoCourse.getStarAvg(),
-                reviewCounter.getReviewCount(ReviewType.JEJU_GUDGO, jejuGudgoCourse.getId())
+                reviewCounter.getReviewCount(BookmarkType.JEJU_GUDGO, jejuGudgoCourse.getId())
         );
     }
 

@@ -8,6 +8,7 @@ import com.example.jejugudgo.domain.review.enums.ReviewType;
 import com.example.jejugudgo.domain.review.util.ReviewCounter;
 import com.example.jejugudgo.domain.search.component.SpotCalculator;
 import com.example.jejugudgo.domain.search.dto.SearchListResponse;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.Bookmark;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.BookmarkType;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.util.BookmarkUtil;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -115,6 +116,7 @@ public class JejuOlleSearchQueryService {
         return jejuOlleCourses.stream()
                 .map(course -> {
                     Long courseId = course.getId();
+                    Bookmark bookmark = bookmarkUtil.isBookmarked(request, BookmarkType.OLLE, courseId);
 
                     List<OlleTag> olleCourseTags = queryFactory
                             .select(qJejuOlleCourseTag.olleTag)
@@ -130,14 +132,15 @@ public class JejuOlleSearchQueryService {
                             courseId,
                             "제주올레",
                             tags,
-                            bookmarkUtil.isBookmarked(request, BookmarkType.OLLE, courseId),
+                            bookmark != null,
+                            bookmark != null ? bookmark.getId() : null,
                             course.getTitle(),
                             course.getSummary(),
                             course.getDistance(),
                             course.getTime(),
                             course.getCourseImageUrl(),
                             course.getStarAvg(),
-                            reviewCounter.getReviewCount(ReviewType.OLLE, courseId),
+                            reviewCounter.getReviewCount(BookmarkType.OLLE, courseId),
                             course.getStartSpotTitle(),
                             course.getStartLatitude(),
                             course.getStartLongitude()
