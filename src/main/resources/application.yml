@@ -1,7 +1,7 @@
 spring:
   docker:
     compose:
-      enabled: ${DOCKER_COMPOSE_ENABLED}
+      enabled: false
 
   main:
     allow-bean-definition-overriding: true
@@ -9,8 +9,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${MAIL_ID}
-    password: ${MAIL_PASS}
+    username: jejugudgo
+    password: uvwflpcvvrahuvys
     properties:
       mail:
         smtp:
@@ -28,21 +28,23 @@ spring:
       ddl-auto: update
 
   datasource:
-    url: ${DATASOURCE_URL}
-    username: ${DATASOURCE_USERNAME}
-    password: ${DATASOURCE_PASSWORD}
+    url: jdbc:mysql://rds-jejugudgo.c1k0gky20mjs.ap-northeast-2.rds.amazonaws.com
+:3306/jejugudgo?useSSL\=false&allowPublicKeyRetrieval\=true&useUnicode\=true&characterEncoding\=UTF-8
+    username: jejugudgo
+    password: 
+jejugudgo123!
 
   data:
     redis:
-      port: ${REDIS_PORT}
-      host: ${REDIS_HOST}
+      port: 6379
+      host: 13.124.30.46
 
   springdoc:
     version: v1.0.0
     default-consumes-media-type: application/json;charset=UTF-8
 
   secret:
-    key: ${SECRET_KEY}
+    key: 68a4ef27a3f2f0f605a6781e6be34b466b5da3d11db5384218c407e99e6dcecf3361e1f6def13c78f2deb1e6e822bef2ca1c95b1166c97c5278ad81fdba4538
 
   servlet:
     multipart:
@@ -80,10 +82,10 @@ spring:
 
 coolsms:
   api:
-    key: ${COOLSMS_KEY}
-    secret: ${COOLSMS_SECRET_KEY}
+    key: NCSGT9CA86D62BVL
+    secret: ZANS0FUZCRD4THLG8PNFQ8NQLFCML6KV
 
-sendNumber: ${SEND_NUMBER}
+sendNumber: 01065535378
 
 logging:
   level:
