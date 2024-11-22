@@ -45,37 +45,16 @@ jobs:
         run: ./gradlew build
 
       - name: Upload artifact to EC2
-        env:
-          EC2_USER: ubuntu
-          EC2_HOST: 43.203.169.18
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > ec2-key.pem
           chmod 600 ec2-key.pem
-          scp -o StrictHostKeyChecking=no -i ec2-key.pem build/libs/myapp.jar $EC2_USER@$EC2_HOST:/home/ubuntu/myapp.jar
+          scp -o StrictHostKeyChecking=no -i ec2-key.pem build/libs/myapp.jar ubuntu@43.203.169.18:/home/ubuntu/myapp.jar
 
-      - name: Install dependencies on EC2
-        env:
-          EC2_USER: ubuntu
-          EC2_HOST: 43.203.169.18
+      - name: Start application on EC2
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > ec2-key.pem
           chmod 600 ec2-key.pem
-          ssh -i ec2-key.pem $EC2_USER@$EC2_HOST << EOF
-          sudo apt update
-          sudo apt install -y openjdk-17-jdk redis
-          curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-          sudo apt install -y nodejs
-          sudo npm install -g pm2
-          EOF
-
-      - name: Start application with PM2
-        env:
-          EC2_USER: ubuntu
-          EC2_HOST: 43.203.169.18
-        run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" > ec2-key.pem
-          chmod 600 ec2-key.pem
-          ssh -i ec2-key.pem $EC2_USER@$EC2_HOST << EOF
+          ssh -o StrictHostKeyChecking=no -i ec2-key.pem ubuntu@43.203.169.18 << EOF
           pm2 stop myapp || true
           pm2 start "java -jar /home/ubuntu/myapp.jar" --name myapp
           pm2 save
