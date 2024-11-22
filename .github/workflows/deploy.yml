@@ -1,4 +1,4 @@
-name: Deploy Application
+name: Deploy to EC2
 
 on:
   push:
@@ -9,10 +9,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    environment: environment  # GitHub Environments 이름 
+    environment: environment  # GitHub Environments 이름
 
     steps:
-      - name: Check out repository
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Set up environment variables
@@ -32,6 +32,34 @@ jobs:
           TOUR_API_KEY: ${{ secrets.TOUR_API_KEY }}
         run: echo "Environment variables are set."
 
-      - name: Run application
+      - name: Build application
+        run: ./gradlew build
+
+      - name: Upload artifact to EC2
+        env:
+          EC2_USER: ubuntu
+          EC2_HOST: 13.124.30.46
+          PEM_FILE: ${{ secrets.EC2_SSH_KEY }} 
         run: |
-          java -jar build/libs/myapp.jar
+          scp -i $PEM_FILE build/libs/myapp.jar $EC2_USER@$EC2_HOST:/home/ubuntu/myapp.jar
+
+      - name: Install dependencies on EC2
+        env:
+          EC2_USER: ubuntu
+          EC2_HOST: 13.124.30.46
+          PEM_FILE: ${{ secrets.EC2_SSH_KEY }}
+        run: |
+          ssh -i $PEM_FILE $EC2_USER@$EC2_HOST << EOF
+          sudo apt update
+          sudo apt install -y openjdk-17-jdk redis
+          EOF
+
+      - name: Start application on EC2
+        env:
+          EC2_USER: ubuntu
+          EC2_HOST: 13.124.30.46
+          PEM_FILE: ${{ secrets.EC2_SSH_KEY }}
+        run: |
+          ssh -i $PEM_FILE $EC2_USER@$EC2_HOST << EOF
+          nohup java -jar /home/ubuntu/myapp.jar > /home/ubuntu/app.log 2>&1 &
+          EOF
