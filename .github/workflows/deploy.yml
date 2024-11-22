@@ -48,9 +48,10 @@ jobs:
         env:
           EC2_USER: ubuntu
           EC2_HOST: 13.124.30.46
-          PEM_FILE: ${{ secrets.EC2_SSH_KEY }} 
         run: |
-          scp -i $PEM_FILE build/libs/myapp.jar $EC2_USER@$EC2_HOST:/home/ubuntu/myapp.jar
+          echo "${{ secrets.EC2_SSH_KEY }}" > ec2-key.pem
+          chmod 600 ec2-key.pem
+          scp -i ec2-key.pem build/libs/myapp.jar $EC2_USER@$EC2_HOST:/home/ubuntu/myapp.jar
 
       - name: Install dependencies on EC2
         env:
