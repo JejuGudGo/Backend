@@ -28,7 +28,7 @@ spring:
       ddl-auto: update
 
   datasource:
-    url: jdbc:mysql://rds-jejugudgo.c1k0gky20mjs.ap-northeast-2.rds.amazonaws.com:3306/jejugudgo?useSSL\=false&allowPublicKeyRetrieval\=true&useUnicode\=true&characterEncoding\=UTF-8
+    url: jdbc:mysql://rds-jejugudgo.c1k0gky20mjs.ap-northeast-2.rds.amazonaws.com:3306/jejugudgo?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8
     username: jejugudgo
     password: jejugudgo123!
 
