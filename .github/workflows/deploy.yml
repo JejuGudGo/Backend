@@ -30,6 +30,7 @@ jobs:
           COOLSMS_SECRET_KEY: ${{ secrets.COOLSMS_SECRET_KEY }}
           SEND_NUMBER: ${{ secrets.SEND_NUMBER }}
           TOUR_API_KEY: ${{ secrets.TOUR_API_KEY }}
+        run: echo "Environment variables are set."
 
       - name: Run application
         run: |
