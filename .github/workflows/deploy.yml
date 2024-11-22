@@ -1,0 +1,36 @@
+name: Deploy Application
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    environment: environment  # GitHub Environments 이름 
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Set up environment variables
+        env:
+          DOCKER_COMPOSE_ENABLED: ${{ secrets.DOCKER_COMPOSE_ENABLED }}
+          MAIL_ID: ${{ secrets.MAIL_ID }}
+          MAIL_PASS: ${{ secrets.MAIL_PASS }}
+          DATASOURCE_URL: ${{ secrets.DATASOURCE_URL }}
+          DATASOURCE_USERNAME: ${{ secrets.DATASOURCE_USERNAME }}
+          DATASOURCE_PASSWORD: ${{ secrets.DATASOURCE_PASSWORD }}
+          REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          REDIS_HOST: ${{ secrets.REDIS_HOST }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          COOLSMS_KEY: ${{ secrets.COOLSMS_KEY }}
+          COOLSMS_SECRET_KEY: ${{ secrets.COOLSMS_SECRET_KEY }}
+          SEND_NUMBER: ${{ secrets.SEND_NUMBER }}
+          TOUR_API_KEY: ${{ secrets.TOUR_API_KEY }}
+
+      - name: Run application
+        run: |
+          java -jar build/libs/myapp.jar
