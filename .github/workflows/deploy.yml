@@ -68,12 +68,14 @@ jobs:
         env:
           EC2_USER: ubuntu
           EC2_HOST: 13.124.30.46
-          PEM_FILE: ${{ secrets.EC2_SSH_KEY }}
         run: |
-          ssh -i $PEM_FILE $EC2_USER@$EC2_HOST << EOF
+          echo "${{ secrets.EC2_SSH_KEY }}" > ec2-key.pem
+          chmod 600 ec2-key.pem
+          ssh -i ec2-key.pem $EC2_USER@$EC2_HOST << EOF
           sudo systemctl stop nginx
           pkill -f 'java -jar' || true
           nohup java -jar /home/ubuntu/myapp.jar > /home/ubuntu/app.log 2>&1 &
           sudo systemctl start nginx
           EOF
+
 
