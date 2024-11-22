@@ -51,11 +51,11 @@ jobs:
         run: |
           echo "${{ vars.EC2_SSH_KEY }}" > ec2-key.pem
           chmod 600 ec2-key.pem
-          scp -o StrictHostKeyChecking=no -i ec2-key.pem build/libs/jejugudgo-1.2.3-SNAPSHOT.jar ubuntu@43.203.169.18:/home/ubuntu/jejugudgo-1.2.3-SNAPSHOT.jar
+          scp -o StrictHostKeyChecking=no -i ec2-key.pem build/libs/jejugudgo-1.2.3-SNAPSHOT.jar ubuntu@13.124.30.46:/home/ubuntu/jejugudgo-1.2.3-SNAPSHOT.jar
       
       - name: Start application on EC2
         run: |
-          ssh -o StrictHostKeyChecking=no -i ec2-key.pem ubuntu@43.203.169.18 << EOF
+          ssh -o StrictHostKeyChecking=no -i ec2-key.pem ubuntu@13.124.30.46 << EOF
           pm2 stop myapp || true
           pm2 start "java -jar /home/ubuntu/jejugudgo-1.2.3-SNAPSHOT.jar" --name myapp
           pm2 save
