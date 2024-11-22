@@ -30,8 +30,7 @@ spring:
   datasource:
     url: jdbc:mysql://rds-jejugudgo.c1k0gky20mjs.ap-northeast-2.rds.amazonaws.com:3306/jejugudgo?useSSL\=false&allowPublicKeyRetrieval\=true&useUnicode\=true&characterEncoding\=UTF-8
     username: jejugudgo
-    password: 
-jejugudgo123!
+    password: jejugudgo123!
 
   data:
     redis:
@@ -102,4 +101,4 @@ logging:
 tour:
   api:
     key:
-      ${TOUR_API_KEY}
+    Awl7QKVZm9ygqL9hCjkRj4GE%2FrfVqKDmTjoZuuoyl7XiJ1aP041sorWVVCEUw217Z5iCsyhijpOkpYTVJc70Sg%3D%3D
