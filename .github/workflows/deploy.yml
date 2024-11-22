@@ -47,10 +47,6 @@ jobs:
       - name: Verify build output
         run: ls -l build/libs
 
-      - name: Rename built artifact
-        run: |
-          mv build/libs/*.jar build/libs/myapp.jar
-
       - name: Upload artifact to EC2
         run: |
           echo "${{ vars.EC2_SSH_KEY }}" > ec2-key.pem
