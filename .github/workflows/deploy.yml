@@ -15,6 +15,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Set up Java 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17' # Java 17 설치
+          distribution: 'temurin' # OpenJDK 배포판
+
+      - name: Verify Java version
+        run: java -version # Java 버전 확인
+
       - name: Set up environment variables
         env:
           DOCKER_COMPOSE_ENABLED: ${{ secrets.DOCKER_COMPOSE_ENABLED }}
@@ -61,5 +70,9 @@ jobs:
           PEM_FILE: ${{ secrets.EC2_SSH_KEY }}
         run: |
           ssh -i $PEM_FILE $EC2_USER@$EC2_HOST << EOF
+          sudo systemctl stop nginx
+          pkill -f 'java -jar' || true
           nohup java -jar /home/ubuntu/myapp.jar > /home/ubuntu/app.log 2>&1 &
+          sudo systemctl start nginx
           EOF
+
