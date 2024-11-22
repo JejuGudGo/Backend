@@ -1,7 +1,7 @@
 spring:
   docker:
     compose:
-      enabled: ${{secrets.DOCKER_COMPOSE_ENABLED}}
+      enabled: ${DOCKER_COMPOSE_ENABLED}
 
   main:
     allow-bean-definition-overriding: true
@@ -9,8 +9,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${{secrets.MAIL_ID}}
-    password: ${{secrets.MAIL_PASS}}
+    username: ${MAIL_ID}
+    password: ${MAIL_PASS}
     properties:
       mail:
         smtp:
@@ -28,21 +28,21 @@ spring:
       ddl-auto: update
 
   datasource:
-    url: ${{secrets.DATASOURCE_URL}}
-    username: ${{secrets.DATASOURCE_USERNAME}}
-    password: ${{secrets.DATASOURCE_PASSWORD}}
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
 
   data:
     redis:
-      port: ${{secrets.REDIS_PORT}}
-      host: ${{secrets.REDIS_HOST}}
+      port: ${REDIS_PORT}
+      host: ${REDIS_HOST}
 
   springdoc:
     version: v1.0.0
     default-consumes-media-type: application/json;charset=UTF-8
 
   secret:
-    key: ${{secrets.SECRET_KEY}}
+    key: ${SECRET_KEY}
 
   servlet:
     multipart:
@@ -80,10 +80,10 @@ spring:
 
 coolsms:
   api:
-    key: ${{secrets.COOLSMS_KEY}}
-    secret: ${{secrets.COOLSMS_SECRET_KEY}}
+    key: ${COOLSMS_KEY}
+    secret: ${COOLSMS_SECRET_KEY}
 
-sendNumber: ${{secrets.SEND_NUMBER}}
+sendNumber: ${SEND_NUMBER}
 
 logging:
   level:
@@ -101,4 +101,4 @@ logging:
 tour:
   api:
     key:
-      ${{secrets.TOUR_API_KEY}}
+      ${TOUR_API_KEY}
