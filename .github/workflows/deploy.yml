@@ -47,7 +47,7 @@ jobs:
       - name: Upload artifact to EC2
         env:
           EC2_USER: ubuntu
-          EC2_HOST: 13.124.30.46
+          EC2_HOST: 43.203.169.18
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > ec2-key.pem
           chmod 600 ec2-key.pem
@@ -56,26 +56,27 @@ jobs:
       - name: Install dependencies on EC2
         env:
           EC2_USER: ubuntu
-          EC2_HOST: 13.124.30.46
-          PEM_FILE: ${{ secrets.EC2_SSH_KEY }}
-        run: |
-          ssh -i $PEM_FILE $EC2_USER@$EC2_HOST << EOF
-          sudo apt update
-          sudo apt install -y openjdk-17-jdk redis
-          EOF
-
-      - name: Start application on EC2
-        env:
-          EC2_USER: ubuntu
-          EC2_HOST: 13.124.30.46
+          EC2_HOST: 43.203.169.18
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > ec2-key.pem
           chmod 600 ec2-key.pem
           ssh -i ec2-key.pem $EC2_USER@$EC2_HOST << EOF
-          sudo systemctl stop nginx
-          pkill -f 'java -jar' || true
-          nohup java -jar /home/ubuntu/myapp.jar > /home/ubuntu/app.log 2>&1 &
-          sudo systemctl start nginx
+          sudo apt update
+          sudo apt install -y openjdk-17-jdk redis
+          curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+          sudo apt install -y nodejs
+          sudo npm install -g pm2
           EOF
 
-
+      - name: Start application with PM2
+        env:
+          EC2_USER: ubuntu
+          EC2_HOST: 43.203.169.18
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" > ec2-key.pem
+          chmod 600 ec2-key.pem
+          ssh -i ec2-key.pem $EC2_USER@$EC2_HOST << EOF
+          pm2 stop myapp || true
+          pm2 start "java -jar /home/ubuntu/myapp.jar" --name myapp
+          pm2 save
+          EOF
