@@ -181,6 +181,7 @@ public class ElasticSearchQueryService {
         if (field != null) {
             List<FieldValue> mappedCat2 = cat2.stream()
                     .map(FieldValue::of)
+//                    .filter(Objects::nonNull) // 여러개가 가능하므로 일단 null 이 아닌 태그는 넣어둔다.
                     .collect(Collectors.toList());
 
             if (!mappedCat2.isEmpty()) {
@@ -305,9 +306,9 @@ public class ElasticSearchQueryService {
     private String getCat2FieldByCat1(String cat1) {
         switch (cat1) {
             case "제주객의 길", "산책로":
-                return "tag";
+                return "tags";
             case "올레길":
-                return "type";
+                return "tags";
             default:
                 return null;
         }
