@@ -144,7 +144,7 @@ public class TrailSearchQueryService {
                             trail.getImageUrl(),
                             starAvg == 0.0 ? null : starAvg,
                             reviewCounter.getReviewCount(BookmarkType.TRAIL, trailId),
-                            trail.getTitle(),
+                            null,
                             trail.getLatitude(),
                             trail.getLongitude()
                     );
