@@ -31,8 +31,8 @@ public class BookmarkController {
         return ResponseEntity.ok(apiResponseUtil.success(null));
     }
 
-    @DeleteMapping("/{bookmarkId}")
-    public ResponseEntity<CommonApiResponse> delete(@PathVariable("bookmarkId") Long bookMarkId, HttpServletRequest request) {
+    @DeleteMapping("")
+    public ResponseEntity<CommonApiResponse> delete(@RequestParam("bookmarkId") Long bookMarkId, HttpServletRequest request) {
         bookMarkService.delete(bookMarkId, request);
         return ResponseEntity.ok(apiResponseUtil.success(null));
     }
