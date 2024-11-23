@@ -42,14 +42,14 @@ public class BookmarkUtil {
     private Bookmark isJejuOlleCourseBookmarked(HttpServletRequest request, Long id) {
         User user = findUser(request);
         return bookMarkRepository
-                .findByUserAndBookMarkTypeAndTargetId(user, BookmarkType.JEJU_GUDGO, id)
+                .findByUserAndBookMarkTypeAndTargetId(user, BookmarkType.OLLE, id)
                 .orElse(null);
     }
 
     private Bookmark isJejuTrailBookmarked(HttpServletRequest request, Long id) {
         User user = findUser(request);
         return bookMarkRepository
-                .findByUserAndBookMarkTypeAndTargetId(user, BookmarkType.JEJU_GUDGO, id)
+                .findByUserAndBookMarkTypeAndTargetId(user, BookmarkType.TRAIL, id)
                 .orElse(null);
     }
 
