@@ -20,9 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,7 +59,8 @@ public class TrailSearchQueryService {
             String latitude, String longitude, Pageable pageable
     ) {
         JPAQuery<Trail> query = queryFactory
-                .selectFrom(qTrail);
+                .selectDistinct(qTrail)
+                .from(qTrail);
 
         if (pageable.isPaged()) {
             query.offset(pageable.getOffset())
@@ -116,7 +115,7 @@ public class TrailSearchQueryService {
                 .orderBy(qTrail.id.asc())
                 .fetch();
 
-        return trails;
+        return trails.stream().distinct().toList();
     }
 
     private List<SearchListResponse> getResponses(HttpServletRequest request, List<Trail> trails) {
@@ -148,7 +147,6 @@ public class TrailSearchQueryService {
                             trail.getLongitude()
                     );
                 })
-                .distinct()
                 .collect(Collectors.toList());
     }
 }

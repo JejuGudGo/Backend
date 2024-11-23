@@ -4,7 +4,6 @@ import com.example.jejugudgo.domain.course.olle.entity.*;
 import com.example.jejugudgo.domain.review.entity.QReview;
 import com.example.jejugudgo.domain.review.entity.QReviewCategory;
 import com.example.jejugudgo.domain.review.enums.ReviewCategory3;
-import com.example.jejugudgo.domain.review.enums.ReviewType;
 import com.example.jejugudgo.domain.review.util.ReviewCounter;
 import com.example.jejugudgo.domain.search.component.SpotCalculator;
 import com.example.jejugudgo.domain.search.dto.SearchListResponse;
@@ -19,9 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,7 +58,8 @@ public class JejuOlleSearchQueryService {
             String latitude, String longitude, Pageable pageable
     ) {
         JPAQuery<JejuOlleCourse> query = queryFactory
-                .selectFrom(qJejuOlleCourse);
+                .selectDistinct(qJejuOlleCourse)
+                .from(qJejuOlleCourse);
 
         if (pageable.isPaged()) {
             query.offset(pageable.getOffset())
@@ -119,7 +117,7 @@ public class JejuOlleSearchQueryService {
                 .orderBy(qJejuOlleCourse.id.asc())
                 .fetch();
 
-        return jejuOlleCourses;
+        return jejuOlleCourses.stream().distinct().toList();
     }
 
     private List<SearchListResponse> getResponses(HttpServletRequest request, List<JejuOlleCourse> jejuOlleCourses) {
@@ -156,7 +154,6 @@ public class JejuOlleSearchQueryService {
                             course.getStartLongitude()
                     );
                 })
-                .distinct()
                 .collect(Collectors.toList());
     }
 }

@@ -4,7 +4,6 @@ import com.example.jejugudgo.domain.course.jejugudgo.entity.*;
 import com.example.jejugudgo.domain.review.entity.QReview;
 import com.example.jejugudgo.domain.review.entity.QReviewCategory;
 import com.example.jejugudgo.domain.review.enums.ReviewCategory3;
-import com.example.jejugudgo.domain.review.enums.ReviewType;
 import com.example.jejugudgo.domain.review.util.ReviewCounter;
 import com.example.jejugudgo.domain.search.component.SpotCalculator;
 import com.example.jejugudgo.domain.search.dto.SearchListResponse;
@@ -19,9 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,10 +58,12 @@ public class JejuGudgoSearchQueryService {
             String latitude, String longitude, Pageable pageable
     ) {
         JPAQuery<JejuGudgoCourse> query = queryFactory
-                .selectFrom(qJejuGudgoCourse)
+                .selectDistinct(qJejuGudgoCourse)
+                .from(qJejuGudgoCourse)
                 .where(
                         qJejuGudgoCourse.isDeleted.eq(false)
-                );
+                )
+                .groupBy(qJejuGudgoCourse.id);;
 
         if (pageable.isPaged()) {
             query.offset(pageable.getOffset())
@@ -121,7 +120,7 @@ public class JejuGudgoSearchQueryService {
                 .orderBy(qJejuGudgoCourse.id.asc())
                 .fetch();
 
-        return jejuGudgoCourses;
+        return jejuGudgoCourses.stream().distinct().toList();
     }
 
     private List<SearchListResponse> getResponses(HttpServletRequest request, List<JejuGudgoCourse> jejuGudgoCourses) {
@@ -160,7 +159,6 @@ public class JejuGudgoSearchQueryService {
                             course.getStartLongitude()
                     );
                 })
-                .distinct()
                 .collect(Collectors.toList());
     }
 }
