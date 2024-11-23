@@ -45,6 +45,8 @@ public class TrailSearchDetailService {
         Bookmark bookmark =  bookmarkUtil
                 .isBookmarked(request, BookmarkType.TRAIL, trail.getId());
 
+        Double starAvg = trail.getStarAvg();
+
         return new CourseBasicResponse(
                 trail.getId(),
                 "산책로",
@@ -56,7 +58,7 @@ public class TrailSearchDetailService {
                 trail.getContent(),
                 null,
                 null,
-                trail.getStarAvg(),
+                starAvg == 0.0 ? null : starAvg,
                 reviewCounter.getReviewCount(BookmarkType.TRAIL, trail.getId())
         );
     }

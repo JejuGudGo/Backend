@@ -141,6 +141,8 @@ public class JejuGudgoSearchQueryService {
                     Bookmark bookmark =  bookmarkUtil
                             .isBookmarked(request, BookmarkType.JEJU_GUDGO, course.getId());
 
+                    Double starAvg = course.getStarAvg();
+
                     return new SearchListResponse(
                             courseId,
                             BookmarkType.JEJU_GUDGO.getCode(),
@@ -152,7 +154,7 @@ public class JejuGudgoSearchQueryService {
                             course.getDistance(),
                             course.getTime(),
                             course.getImageUrl(),
-                            course.getStarAvg(),
+                            starAvg == 0.0 ? null : starAvg,
                             reviewCounter.getReviewCount(BookmarkType.JEJU_GUDGO, courseId),
                             course.getStartSpotTitle(),
                             course.getStartLatitude(),

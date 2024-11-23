@@ -55,6 +55,8 @@ public class JejuOlleSearchDetailService {
         Bookmark bookmark =  bookmarkUtil
                 .isBookmarked(request, BookmarkType.OLLE, jejuOlleCourse.getId());
 
+        Double starAvg = jejuOlleCourse.getStarAvg();
+
         return new CourseBasicResponse(
                 jejuOlleCourse.getId(),
                 jejuOlleCourse.getOlleType().getType(),
@@ -66,7 +68,7 @@ public class JejuOlleSearchDetailService {
                 jejuOlleCourse.getSummary(),
                 jejuOlleCourse.getDistance(),
                 jejuOlleCourse.getTime(),
-                jejuOlleCourse.getStarAvg(),
+                starAvg == 0.0  ? null : starAvg,
                 reviewCounter.getReviewCount(BookmarkType.OLLE, jejuOlleCourse.getId())
         );
     }

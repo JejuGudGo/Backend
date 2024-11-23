@@ -55,6 +55,8 @@ public class JejuGudgoSearchDetailService {
         Bookmark bookmark =  bookmarkUtil
                 .isBookmarked(request, BookmarkType.JEJU_GUDGO, jejuGudgoCourse.getId());
 
+        Double starAvg = jejuGudgoCourse.getStarAvg();
+
         return new CourseBasicResponse (
                 jejuGudgoCourse.getId(),
                 BookmarkType.JEJU_GUDGO.getCode(),
@@ -66,7 +68,7 @@ public class JejuGudgoSearchDetailService {
                 jejuGudgoCourse.getSummary(),
                 jejuGudgoCourse.getDistance(),
                 jejuGudgoCourse.getTime(),
-                jejuGudgoCourse.getStarAvg(),
+                starAvg == 0.0 ? null : starAvg,
                 reviewCounter.getReviewCount(BookmarkType.JEJU_GUDGO, jejuGudgoCourse.getId())
         );
     }

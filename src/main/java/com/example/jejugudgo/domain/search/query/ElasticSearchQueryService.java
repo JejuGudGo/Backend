@@ -257,6 +257,7 @@ public class ElasticSearchQueryService {
                         tags = (List<String>) source.get("tags");
                     }
 
+                    String type = (String) source.get("type");
                     BookmarkType  bookmarkType = BookmarkType.fromCode((String) source.get("type"));
                     Bookmark bookmark =  bookmarkUtil
                             .isBookmarked(request, bookmarkType, id);
@@ -265,6 +266,13 @@ public class ElasticSearchQueryService {
                     Double starAvg = (Double) source.get("starAvg");
                     starAvg = starAvg == 0.0 ? null : starAvg;
 
+                    String summary;
+
+                    if (type.equals(BookmarkType.TRAIL.getCode()))
+                        summary = (String) source.get("content");
+                    else
+                        summary = (String) source.get("summary");
+
                     return new SearchListResponse(
                             id,
                             (String) source.get("type"),
@@ -272,7 +280,7 @@ public class ElasticSearchQueryService {
                             bookmark != null,
                             bookmark != null ? bookmark.getId() : null,
                             (String) source.get("title"),
-                            (String) source.get("summary"),
+                            summary,
                             (String) source.get("distance"),
                             (String) source.get("time"),
                             (String) source.get("imageUrl"),

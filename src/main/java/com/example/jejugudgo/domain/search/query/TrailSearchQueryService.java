@@ -129,6 +129,8 @@ public class TrailSearchQueryService {
                     Bookmark bookmark =  bookmarkUtil
                             .isBookmarked(request, BookmarkType.TRAIL, trail.getId());
 
+                    Double starAvg = trail.getStarAvg();
+
                     return new SearchListResponse(
                             trailId,
                             BookmarkType.TRAIL.getCode(),
@@ -140,7 +142,7 @@ public class TrailSearchQueryService {
                             null,
                             null,
                             trail.getImageUrl(),
-                            trail.getStarAvg(),
+                            starAvg == 0.0 ? null : starAvg,
                             reviewCounter.getReviewCount(BookmarkType.TRAIL, trailId),
                             trail.getTitle(),
                             trail.getLatitude(),

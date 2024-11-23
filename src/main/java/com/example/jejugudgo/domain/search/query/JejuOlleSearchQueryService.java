@@ -136,6 +136,8 @@ public class JejuOlleSearchQueryService {
                             .map(OlleTag::getTag)
                             .toList();
 
+                    Double starAvg = course.getStarAvg();
+
                     return new SearchListResponse(
                             courseId,
                             BookmarkType.OLLE.getCode(),
@@ -147,7 +149,7 @@ public class JejuOlleSearchQueryService {
                             course.getDistance(),
                             course.getTime(),
                             course.getCourseImageUrl(),
-                            course.getStarAvg(),
+                            starAvg == 0.0  ? null : starAvg,
                             reviewCounter.getReviewCount(BookmarkType.OLLE, courseId),
                             course.getStartSpotTitle(),
                             course.getStartLatitude(),
