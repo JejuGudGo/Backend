@@ -52,6 +52,8 @@ public class JejuGudgoCourse {
 
     private double endLongitude;
 
+    private boolean isDeleted;
+
 
     @ManyToOne
     @JoinColumn(name = "originUserId")
@@ -69,6 +71,7 @@ public class JejuGudgoCourse {
                 .imageUrl(this.imageUrl)
                 .summary(this.summary)
                 .viewCount(this.viewCount)
+                .isDeleted(this.isDeleted)
                 .build();
     }
 }

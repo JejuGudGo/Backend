@@ -83,21 +83,20 @@ public class JejuOlleSearchDetailService {
                         )
                 ).toList();
 
-        int size = spots.size();
         SpotResponse startSpot = new SpotResponse (
-                spots.get(0).getId(),
-                spots.get(0).getTitle(),
-                spots.get(0).getSpotOrder(),
-                spots.get(0).getLatitude(),
-                spots.get(0).getLongitude()
+            null,
+                jejuOlleCourse.getStartSpotTitle(),
+                null,
+                jejuOlleCourse.getStartLatitude(),
+                jejuOlleCourse.getStartLongitude()
         );
 
         SpotResponse endSpot = new SpotResponse (
-                spots.get(size - 1).getId(),
-                spots.get(size - 1).getTitle(),
-                spots.get(size - 1).getSpotOrder(),
-                spots.get(size - 1).getLatitude(),
-                spots.get(size - 1).getLongitude()
+                null,
+                jejuOlleCourse.getEndSpotTitle(),
+                null,
+                jejuOlleCourse.getEndLatitude(),
+                jejuOlleCourse.getEndLongitude()
         );
 
         return new OlleCourseInfoResponse(

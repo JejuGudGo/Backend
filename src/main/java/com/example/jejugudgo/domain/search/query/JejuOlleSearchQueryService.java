@@ -19,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,7 +52,8 @@ public class JejuOlleSearchQueryService {
     ) {
         List<JejuOlleCourse> courses = findCoursesByCurrentSpotAndCategory(category2, category3, latitude, longitude, pageable);
         List<SearchListResponse> responses = getResponses(request, courses);
-        return responses;
+
+        return responses == null ? new ArrayList<>() : responses;
     }
 
     private List<JejuOlleCourse> findCoursesByCurrentSpotAndCategory(
@@ -80,19 +83,26 @@ public class JejuOlleSearchQueryService {
         if (category2 != null && !category2.isEmpty()) {
             List<OlleType> types = category2.stream()
                     .map(OlleType::fromType)
+                    .filter(Objects::nonNull) // 여러개가 가능하므로 일단 null 이 아닌 태그는 넣어둔다.
                     .toList();
+
+            if (types.isEmpty())
+                return new ArrayList<>();
 
             query
                     .where(
-                            qJejuOlleCourse.olleType
-                                    .in(types)
+                            qJejuOlleCourse.olleType.in(types)
                     );
         }
 
         if (category3 != null && !category3.isEmpty()) {
             List<ReviewCategory3> types = category3.stream()
                     .map(ReviewCategory3::fromQuery)
+                    .filter(Objects::nonNull) // 여러개가 가능하므로 일단 null 이 아닌 태그는 넣어둔다.
                     .toList();
+
+            if (types.isEmpty())
+                return new ArrayList<>();
 
             query
                     .leftJoin(qReview).on(qReview.jejuOlleCourse.eq(qJejuOlleCourse))
@@ -130,7 +140,7 @@ public class JejuOlleSearchQueryService {
 
                     return new SearchListResponse(
                             courseId,
-                            "제주올레",
+                            BookmarkType.OLLE.getCode(),
                             tags,
                             bookmark != null,
                             bookmark != null ? bookmark.getId() : null,

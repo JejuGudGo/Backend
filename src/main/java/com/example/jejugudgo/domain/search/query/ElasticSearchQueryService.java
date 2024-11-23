@@ -29,6 +29,10 @@ public class ElasticSearchQueryService {
     private final ReviewCounter reviewCounter;
     private final ElasticsearchClient elasticsearchClient;
 
+    static final String JEJU_GUDGO = BookmarkType.JEJU_GUDGO.getCode();
+    static final String OLLE = BookmarkType.OLLE.getCode();
+    static final String TRAIL = BookmarkType.TRAIL.getCode();
+
     public ElasticSearchQueryService(BookmarkUtil bookmarkUtil, ElasticsearchClient elasticsearchClient, ReviewCounter reviewCounter) {
         this.bookmarkUtil = bookmarkUtil;
         this.elasticsearchClient = elasticsearchClient;
@@ -60,34 +64,7 @@ public class ElasticSearchQueryService {
             }
 
             // 쿼리 요청 생성
-            SearchRequest searchRequest = SearchRequest.of(sr -> sr
-                    .index(List.of("jeju_gudgo_course", "jeju_olle_course", "trail"))
-                    .query(q -> q.bool(boolQueryBuilder.build()))
-                    .from(pageable.getPageNumber() * pageable.getPageSize())
-                    .size(pageable.getPageSize())
-                    .sort(List.of(
-                            SortOptions.of(s -> s
-                                    .field(f -> f
-                                            .field("titleKeyword") // 타이틀 정렬
-                                            .order(SortOrder.Asc)
-                                    )
-                            ),
-                            SortOptions.of(s -> s
-                                    .field(f -> f
-                                            .field("starAvg") // 평점 기준 정렬
-                                            .order(SortOrder.Desc)
-                                    )
-                            ),
-                            SortOptions.of(s -> s
-                                    .field(f -> f
-                                            .field("id") // 고유 ID 기준 정렬
-                                            .order(SortOrder.Asc)
-                                    )
-                            )
-                    ))
-            );
-
-            System.out.println("searchRequest: \n" + searchRequest);
+            SearchRequest searchRequest = createSearchRequest(boolQueryBuilder, pageable);
             return executeSearch(request, searchRequest);
 
         } catch (Exception e) {
@@ -116,7 +93,7 @@ public class ElasticSearchQueryService {
                 .boost(3.0f)
         ));
 
-        // "전체"일 때
+        // cat1 이 '전체' 일 때
         if ("전체".equalsIgnoreCase(cat1)) {
             // trail 인덱스를 위한 별도 쿼리
             BoolQuery.Builder trailQueryBuilder = QueryBuilders.bool();
@@ -132,7 +109,7 @@ public class ElasticSearchQueryService {
                     .boost(5.0f)
             ));
 
-            // trail이 아닌 인덱스용 쿼리
+            // trail 이 아닌 인덱스용 쿼리
             BoolQuery.Builder nonTrailQueryBuilder = QueryBuilders.bool();
             nonTrailQueryBuilder.should(QueryBuilders.match(m -> m
                     .field("title")
@@ -228,6 +205,38 @@ public class ElasticSearchQueryService {
         }
     }
 
+    private SearchRequest createSearchRequest(BoolQuery.Builder boolQueryBuilder, Pageable pageable) {
+        SearchRequest searchRequest = SearchRequest.of(sr -> sr
+                .index(List.of("jeju_gudgo_course", "jeju_olle_course", "trail"))
+                .query(q -> q.bool(boolQueryBuilder.build()))
+                .from(pageable.getPageNumber() * pageable.getPageSize())
+                .size(pageable.getPageSize())
+                .sort(List.of( // TODO: 정렬 기준 정리
+                        SortOptions.of(s -> s
+                                .field(f -> f
+                                        .field("titleKeyword") // 타이틀 정렬
+                                        .order(SortOrder.Asc)
+                                )
+                        ),
+                        SortOptions.of(s -> s
+                                .field(f -> f
+                                        .field("starAvg") // 평점 기준 정렬
+                                        .order(SortOrder.Desc)
+                                )
+                        ),
+                        SortOptions.of(s -> s
+                                .field(f -> f
+                                        .field("id") // 고유 ID 기준 정렬
+                                        .order(SortOrder.Asc)
+                                )
+                        )
+                ))
+        );
+
+//        System.out.println("searchRequest: \n" + searchRequest);
+        return searchRequest;
+    }
+
     private List<SearchListResponse> executeSearch(HttpServletRequest request, SearchRequest searchRequest) throws Exception {
         SearchResponse<Map> response = elasticsearchClient.search(searchRequest, Map.class);
 
@@ -280,22 +289,22 @@ public class ElasticSearchQueryService {
         if (cat1 == null || cat1.equalsIgnoreCase("전체")) {
             return List.of("jeju_gudgo_course", "jeju_olle_course", "trail");
         }
-        switch (cat1) {
-            case "제주객의 길":
-                return List.of("jeju_gudgo_course");
-            case "올레길":
-                return List.of("jeju_olle_course");
-            case "산책로":
-                return List.of("trail");
-            default:
-                throw new CustomException(RetCode.RET_CODE94);
-        }
+
+        if (cat1.equals(JEJU_GUDGO))
+            return List.of("jeju_gudgo_course");
+
+        else if (cat1.equals(OLLE))
+            return List.of("jeju_olle_course");
+
+        else if (cat1.equals(TRAIL))
+            return List.of("trail");
+        else
+            return new ArrayList<>();
     }
 
     private String getCat2FieldByCat1(String cat1) {
         switch (cat1) {
-            case "제주객의 길":
-            case "산책로":
+            case "제주객의 길", "산책로":
                 return "tag";
             case "올레길":
                 return "type";

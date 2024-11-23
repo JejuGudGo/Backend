@@ -19,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,7 +52,8 @@ public class JejuGudgoSearchQueryService {
     ) {
         List<JejuGudgoCourse> courses = findCoursesByCurrentSpotAndCategory(category2, category3, latitude, longitude, pageable);
         List<SearchListResponse> responses = getResponses(request, courses);
-        return responses;
+
+        return responses == null ? new ArrayList<>() : responses;
     }
 
     private List<JejuGudgoCourse> findCoursesByCurrentSpotAndCategory(
@@ -58,7 +61,10 @@ public class JejuGudgoSearchQueryService {
             String latitude, String longitude, Pageable pageable
     ) {
         JPAQuery<JejuGudgoCourse> query = queryFactory
-                .selectFrom(qJejuGudgoCourse);
+                .selectFrom(qJejuGudgoCourse)
+                .where(
+                        qJejuGudgoCourse.isDeleted.eq(false)
+                );
 
         if (pageable.isPaged()) {
             query.offset(pageable.getOffset())
@@ -78,9 +84,14 @@ public class JejuGudgoSearchQueryService {
         }
 
         if (category2 != null && !category2.isEmpty()) {
+            // fromTag  로 category2 에 해당하지 않는 태그는 null 로 반환.
             List<CourseTag> types = category2.stream()
                     .map(CourseTag::fromTag)
+                    .filter(Objects::nonNull) // 여러개가 가능하므로 일단 null 이 아닌 태그는 넣어둔다.
                     .toList();
+
+            if (types.isEmpty())
+                return new ArrayList<>();
 
             query
                     .join(qJejuGudgoCourseTag).on(qJejuGudgoCourseTag.jejuGudgoCourse.eq(qJejuGudgoCourse))
@@ -90,14 +101,17 @@ public class JejuGudgoSearchQueryService {
         if (category3 != null && !category3.isEmpty()) {
             List<ReviewCategory3> types = category3.stream()
                     .map(ReviewCategory3::fromQuery)
+                    .filter(Objects::nonNull) // 여러개가 가능하므로 일단 null 이 아닌 태그는 넣어둔다.
                     .toList();
+
+            if (types.isEmpty())
+                return new ArrayList<>();
 
             query
                     .leftJoin(qReview).on(qReview.jejuGudgoCourse.eq(qJejuGudgoCourse))
                     .leftJoin(qReviewCategory).on(qReviewCategory.eq(qReviewCategory))
                     .where(
-                            qReviewCategory.category3
-                                    .in(types)
+                            qReviewCategory.category3.in(types)
                     );
         }
 

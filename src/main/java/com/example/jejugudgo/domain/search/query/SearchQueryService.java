@@ -38,8 +38,10 @@ public class SearchQueryService {
         if (category1.equals("전체")) {
             List<SearchListResponse> olleCourses =
                     olleTagSearchQueryService.getJejuOlleCourses(request, category2, category3, latitude, longitude, Pageable.unpaged());
+
             List<SearchListResponse> gudgoCourses =
                     jejuGudgoSearchQueryService.getJejuGudgoCourses(request, category2, category3, latitude, longitude, Pageable.unpaged());
+
             List<SearchListResponse> trailCourses =
                     trailSearchQueryService.getTrails(request, category2, category3, latitude, longitude, Pageable.unpaged());
 
@@ -61,7 +63,7 @@ public class SearchQueryService {
             return trailSearchQueryService.getTrails(request, category2, category3, latitude, longitude, pageable);
         }
 
-        return null;
+        return new ArrayList<>();
     }
 
     private void sortCourses() {

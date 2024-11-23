@@ -1,10 +1,8 @@
 package com.example.jejugudgo.domain.search.query;
 
-import com.example.jejugudgo.domain.course.jejugudgo.entity.*;
 import com.example.jejugudgo.domain.review.entity.QReview;
 import com.example.jejugudgo.domain.review.entity.QReviewCategory;
 import com.example.jejugudgo.domain.review.enums.ReviewCategory3;
-import com.example.jejugudgo.domain.review.enums.ReviewType;
 import com.example.jejugudgo.domain.review.util.ReviewCounter;
 import com.example.jejugudgo.domain.search.component.SpotCalculator;
 import com.example.jejugudgo.domain.search.dto.SearchListResponse;
@@ -24,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,7 +52,8 @@ public class TrailSearchQueryService {
     ) {
         List<Trail> courses = findTrailsByCurrentSpotAndCategory(category2, category3, latitude, longitude, pageable);
         List<SearchListResponse> responses = getResponses(request, courses);
-        return responses;
+
+        return responses == null ? new ArrayList<>() : responses;
     }
 
     private List<Trail> findTrailsByCurrentSpotAndCategory(
@@ -83,7 +83,11 @@ public class TrailSearchQueryService {
         if (category2 != null && !category2.isEmpty()) {
             List<TrailType> types = category2.stream()
                     .map(TrailType::fromQuery)
+                    .filter(Objects::nonNull) // 여러개가 가능하므로 일단 null 이 아닌 태그는 넣어둔다.
                     .toList();
+
+            if (types.isEmpty())
+                return new ArrayList<>();
 
             query
                     .where(qTrail.trailType.in(types));
@@ -92,14 +96,17 @@ public class TrailSearchQueryService {
         if (category3 != null && !category3.isEmpty()) {
             List<ReviewCategory3> types = category3.stream()
                     .map(ReviewCategory3::fromQuery)
+                    .filter(Objects::nonNull) // 여러개가 가능하므로 일단 null 이 아닌 태그는 넣어둔다.
                     .toList();
+
+            if (types.isEmpty())
+                return new ArrayList<>();
 
             query
                     .leftJoin(qReview).on(qReview.trail.eq(qTrail))
                     .leftJoin(qReviewCategory).on(qReviewCategory.eq(qReviewCategory))
                     .where(
-                            qReviewCategory.category3
-                                    .in(types)
+                            qReviewCategory.category3.in(types)
                     );
         }
 

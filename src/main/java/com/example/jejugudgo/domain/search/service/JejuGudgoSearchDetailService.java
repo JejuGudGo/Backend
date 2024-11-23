@@ -55,8 +55,6 @@ public class JejuGudgoSearchDetailService {
         Bookmark bookmark =  bookmarkUtil
                 .isBookmarked(request, BookmarkType.JEJU_GUDGO, jejuGudgoCourse.getId());
 
-        System.out.println("bookmark: " + bookmark == null);
-
         return new CourseBasicResponse (
                 jejuGudgoCourse.getId(),
                 BookmarkType.JEJU_GUDGO.getCode(),
@@ -85,21 +83,20 @@ public class JejuGudgoSearchDetailService {
                         )
                 ).toList();
 
-        int size = spots.size();
         SpotResponse startSpot = new SpotResponse (
-                spots.get(0).getId(),
-                spots.get(0).getTitle(),
-                spots.get(0).getOrderNumber(),
-                spots.get(0).getLatitude(),
-                spots.get(0).getLongitude()
+                null,
+                jejuGudgoCourse.getStartSpotTitle(),
+                null,
+                jejuGudgoCourse.getStartLatitude(),
+                jejuGudgoCourse.getEndLongitude()
         );
 
         SpotResponse endSpot = new SpotResponse (
-                spots.get(size - 1).getId(),
-                spots.get(size - 1).getTitle(),
-                spots.get(size - 1).getOrderNumber(),
-                spots.get(size - 1).getLatitude(),
-                spots.get(size - 1).getLongitude()
+                null,
+                jejuGudgoCourse.getEndSpotTitle(),
+                null,
+                jejuGudgoCourse.getEndLatitude(),
+                jejuGudgoCourse.getEndLongitude()
         );
 
         return new JeujuGudgoCourseInfoResponse(
