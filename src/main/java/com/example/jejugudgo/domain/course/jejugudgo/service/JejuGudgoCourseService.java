@@ -32,7 +32,6 @@ public class JejuGudgoCourseService {
                 .time(request.userJejuGudgoCourse().getTime())
                 .distance(request.userJejuGudgoCourse().getDistance())
                 .imageUrl(request.userJejuGudgoCourse().getImageUrl())
-                .summary(request.userJejuGudgoCourse().getSummary())
                 .viewCount(0L)
                 .startSpotTitle(request.userJejuGudgoCourse().getStartSpotTitle())
                 .startLatitude(request.userJejuGudgoCourse().getStartLatitude())

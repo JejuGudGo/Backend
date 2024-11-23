@@ -55,6 +55,7 @@ public class TrailSearchDetailService {
                 bookmark != null ? bookmark.getId() : null,
                 trail.getImageUrl(),
                 trail.getTitle(),
+                null,
                 trail.getContent(),
                 null,
                 null,
@@ -68,7 +69,7 @@ public class TrailSearchDetailService {
                 courseBasicResponse,
                 null,
                 null,
-                keywords
+                keywords.isEmpty() ? null : keywords
         );
     }
 }

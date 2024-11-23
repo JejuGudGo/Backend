@@ -32,11 +32,9 @@ public class JejuGudgoCourse {
 
     private String imageUrl;
 
-    private String summary;
-
     @Lob
     @Column(columnDefinition = "TEXT")
-    private String content;
+    private String content; // 유저가 작성한 설명
 
     private Long viewCount;
 
@@ -69,7 +67,6 @@ public class JejuGudgoCourse {
                 .content(this.content)
                 .distance(this.distance)
                 .imageUrl(this.imageUrl)
-                .summary(this.summary)
                 .viewCount(this.viewCount)
                 .isDeleted(this.isDeleted)
                 .build();

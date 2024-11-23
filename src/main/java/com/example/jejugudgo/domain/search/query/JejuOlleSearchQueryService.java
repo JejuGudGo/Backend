@@ -145,6 +145,7 @@ public class JejuOlleSearchQueryService {
                             bookmark != null,
                             bookmark != null ? bookmark.getId() : null,
                             course.getTitle(),
+                            course.getStartSpotTitle() + "-" + course.getEndSpotTitle(),
                             course.getSummary(),
                             course.getDistance(),
                             course.getTime(),

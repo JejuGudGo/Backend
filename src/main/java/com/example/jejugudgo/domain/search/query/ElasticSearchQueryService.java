@@ -267,11 +267,21 @@ public class ElasticSearchQueryService {
                     starAvg = starAvg == 0.0 ? null : starAvg;
 
                     String summary;
+                    String startTitle;
+                    String endTitle;
+                    String course;
 
-                    if (type.equals(BookmarkType.TRAIL.getCode()))
+                    if (type.equals(BookmarkType.TRAIL.getCode())) {
                         summary = (String) source.get("content");
-                    else
+                        startTitle = null;
+                        course = null;
+
+                    } else {
+                        startTitle = (String) source.get("startSpotTitle");
+                        endTitle = (String) source.get("endSpotTitle");
                         summary = (String) source.get("summary");
+                        course = startTitle + "-" + endTitle;
+                    }
 
                     return new SearchListResponse(
                             id,
@@ -280,13 +290,14 @@ public class ElasticSearchQueryService {
                             bookmark != null,
                             bookmark != null ? bookmark.getId() : null,
                             (String) source.get("title"),
+                            course,
                             summary,
                             (String) source.get("distance"),
                             (String) source.get("time"),
                             (String) source.get("imageUrl"),
                             starAvg,
                             reviewCount,
-                            (String) source.get("startSpotTitle"),
+                            startTitle,
                             (Double) source.get("startLatitude"),
                             (Double) source.get("startLongitude")
                     );

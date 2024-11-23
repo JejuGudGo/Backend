@@ -10,7 +10,8 @@ public record CourseBasicResponse(
         Long bookmarkId,
         String imageUrl,
         String title,
-        String summary, // 시작점-종점
+        String course, // 시작점-종점
+        String summary,
         String distance,
         String time,
         Double starAvg,

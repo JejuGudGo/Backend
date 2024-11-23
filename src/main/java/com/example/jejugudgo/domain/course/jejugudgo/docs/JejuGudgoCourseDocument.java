@@ -35,8 +35,6 @@ public class JejuGudgoCourseDocument {
 
     private String imageUrl;
 
-    private String summary;
-
     private String content;
 
     private Long viewCount;
@@ -72,7 +70,6 @@ public class JejuGudgoCourseDocument {
         document.setTime(jejuGudgoCourse.getTime());
         document.setDistance(jejuGudgoCourse.getDistance());
         document.setImageUrl(jejuGudgoCourse.getImageUrl());
-        document.setSummary(jejuGudgoCourse.getSummary());
         document.setViewCount(jejuGudgoCourse.getViewCount());
         document.setStartSpotTitle(jejuGudgoCourse.getStartSpotTitle());
         document.setStartLatitude(jejuGudgoCourse.getStartLatitude());

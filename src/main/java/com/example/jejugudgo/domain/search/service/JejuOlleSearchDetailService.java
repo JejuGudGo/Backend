@@ -65,6 +65,7 @@ public class JejuOlleSearchDetailService {
                 bookmark != null ? bookmark.getId() : null,
                 jejuOlleCourse.getCourseImageUrl(),
                 jejuOlleCourse.getTitle(),
+                jejuOlleCourse.getStartSpotTitle() + "-" + jejuOlleCourse.getEndSpotTitle(),
                 jejuOlleCourse.getSummary(),
                 jejuOlleCourse.getDistance(),
                 jejuOlleCourse.getTime(),
@@ -121,7 +122,7 @@ public class JejuOlleSearchDetailService {
                 courseBasicResponse,
                 null,
                 olleCourseInfoResponse,
-                keywords
+                keywords.isEmpty() ? null : keywords
         );
     }
 }

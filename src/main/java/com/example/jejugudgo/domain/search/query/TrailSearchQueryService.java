@@ -138,6 +138,7 @@ public class TrailSearchQueryService {
                             bookmark != null,
                             bookmark != null ? bookmark.getId() : null,
                             trail.getTitle(),
+                            null,
                             trail.getContent(),
                             null,
                             null,

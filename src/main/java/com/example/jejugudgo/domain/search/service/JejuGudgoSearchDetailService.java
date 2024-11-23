@@ -65,7 +65,8 @@ public class JejuGudgoSearchDetailService {
                 bookmark != null ? bookmark.getId() : null,
                 jejuGudgoCourse.getImageUrl(),
                 jejuGudgoCourse.getTitle(),
-                jejuGudgoCourse.getSummary(),
+                jejuGudgoCourse.getStartSpotTitle() + "-" + jejuGudgoCourse.getEndSpotTitle(),
+                null,
                 jejuGudgoCourse.getDistance(),
                 jejuGudgoCourse.getTime(),
                 starAvg == 0.0 ? null : starAvg,
@@ -118,7 +119,7 @@ public class JejuGudgoSearchDetailService {
                 courseBasicResponse,
                 jeujuGudgoCourseInfoResponse,
                 null,
-                keywords
+                keywords.isEmpty() ? null : keywords
         );
     }
 }
