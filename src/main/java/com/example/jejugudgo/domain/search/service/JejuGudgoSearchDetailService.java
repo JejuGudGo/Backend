@@ -14,6 +14,7 @@ import com.example.jejugudgo.domain.search.dto.SearchDetailResponse;
 import com.example.jejugudgo.domain.search.dto.sub.CourseBasicResponse;
 import com.example.jejugudgo.domain.search.dto.sub.JeujuGudgoCourseInfoResponse;
 import com.example.jejugudgo.domain.search.dto.sub.SpotResponse;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.Bookmark;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.BookmarkType;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.util.BookmarkUtil;
 import com.example.jejugudgo.global.exception.enums.RetCode;
@@ -51,18 +52,25 @@ public class JejuGudgoSearchDetailService {
                 .map(tag -> tag.getCourseTag().getTag())
                 .toList();
 
+        Bookmark bookmark =  bookmarkUtil
+                .isBookmarked(request, BookmarkType.JEJU_GUDGO, jejuGudgoCourse.getId());
+
+        Double starAvg = jejuGudgoCourse.getStarAvg();
+
         return new CourseBasicResponse (
                 jejuGudgoCourse.getId(),
-                "제주걷고",
+                BookmarkType.JEJU_GUDGO.getCode(),
                 tags,
-                bookmarkUtil.isBookmarked(request, BookmarkType.JEJU_GUDGO, jejuGudgoCourse.getId()),
+                bookmark != null,
+                bookmark != null ? bookmark.getId() : null,
                 jejuGudgoCourse.getImageUrl(),
                 jejuGudgoCourse.getTitle(),
-                jejuGudgoCourse.getSummary(),
+                jejuGudgoCourse.getStartSpotTitle() + "-" + jejuGudgoCourse.getEndSpotTitle(),
+                null,
                 jejuGudgoCourse.getDistance(),
                 jejuGudgoCourse.getTime(),
-                jejuGudgoCourse.getStarAvg(),
-                reviewCounter.getReviewCount(ReviewType.JEJU_GUDGO, jejuGudgoCourse.getId())
+                starAvg == 0.0 ? null : starAvg,
+                reviewCounter.getReviewCount(BookmarkType.JEJU_GUDGO, jejuGudgoCourse.getId())
         );
     }
 
@@ -78,21 +86,20 @@ public class JejuGudgoSearchDetailService {
                         )
                 ).toList();
 
-        int size = spots.size();
         SpotResponse startSpot = new SpotResponse (
-                spots.get(0).getId(),
-                spots.get(0).getTitle(),
-                spots.get(0).getOrderNumber(),
-                spots.get(0).getLatitude(),
-                spots.get(0).getLongitude()
+                null,
+                jejuGudgoCourse.getStartSpotTitle(),
+                null,
+                jejuGudgoCourse.getStartLatitude(),
+                jejuGudgoCourse.getEndLongitude()
         );
 
         SpotResponse endSpot = new SpotResponse (
-                spots.get(size - 1).getId(),
-                spots.get(size - 1).getTitle(),
-                spots.get(size - 1).getOrderNumber(),
-                spots.get(size - 1).getLatitude(),
-                spots.get(size - 1).getLongitude()
+                null,
+                jejuGudgoCourse.getEndSpotTitle(),
+                null,
+                jejuGudgoCourse.getEndLatitude(),
+                jejuGudgoCourse.getEndLongitude()
         );
 
         return new JeujuGudgoCourseInfoResponse(
@@ -112,7 +119,7 @@ public class JejuGudgoSearchDetailService {
                 courseBasicResponse,
                 jeujuGudgoCourseInfoResponse,
                 null,
-                keywords
+                keywords.isEmpty() ? null : keywords
         );
     }
 }

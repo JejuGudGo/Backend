@@ -4,10 +4,10 @@ import com.example.jejugudgo.domain.course.jejugudgo.entity.*;
 import com.example.jejugudgo.domain.review.entity.QReview;
 import com.example.jejugudgo.domain.review.entity.QReviewCategory;
 import com.example.jejugudgo.domain.review.enums.ReviewCategory3;
-import com.example.jejugudgo.domain.review.enums.ReviewType;
 import com.example.jejugudgo.domain.review.util.ReviewCounter;
 import com.example.jejugudgo.domain.search.component.SpotCalculator;
 import com.example.jejugudgo.domain.search.dto.SearchListResponse;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.Bookmark;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.BookmarkType;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.util.BookmarkUtil;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,7 +49,8 @@ public class JejuGudgoSearchQueryService {
     ) {
         List<JejuGudgoCourse> courses = findCoursesByCurrentSpotAndCategory(category2, category3, latitude, longitude, pageable);
         List<SearchListResponse> responses = getResponses(request, courses);
-        return responses;
+
+        return responses == null ? new ArrayList<>() : responses;
     }
 
     private List<JejuGudgoCourse> findCoursesByCurrentSpotAndCategory(
@@ -57,7 +58,12 @@ public class JejuGudgoSearchQueryService {
             String latitude, String longitude, Pageable pageable
     ) {
         JPAQuery<JejuGudgoCourse> query = queryFactory
-                .selectFrom(qJejuGudgoCourse);
+                .selectDistinct(qJejuGudgoCourse)
+                .from(qJejuGudgoCourse)
+                .where(
+                        qJejuGudgoCourse.isDeleted.eq(false)
+                )
+                .groupBy(qJejuGudgoCourse.id);;
 
         if (pageable.isPaged()) {
             query.offset(pageable.getOffset())
@@ -77,9 +83,14 @@ public class JejuGudgoSearchQueryService {
         }
 
         if (category2 != null && !category2.isEmpty()) {
+            // fromTag  로 category2 에 해당하지 않는 태그는 null 로 반환.
             List<CourseTag> types = category2.stream()
                     .map(CourseTag::fromTag)
+                    .filter(Objects::nonNull) // 여러개가 가능하므로 일단 null 이 아닌 태그는 넣어둔다.
                     .toList();
+
+            if (types.isEmpty())
+                return new ArrayList<>();
 
             query
                     .join(qJejuGudgoCourseTag).on(qJejuGudgoCourseTag.jejuGudgoCourse.eq(qJejuGudgoCourse))
@@ -89,14 +100,17 @@ public class JejuGudgoSearchQueryService {
         if (category3 != null && !category3.isEmpty()) {
             List<ReviewCategory3> types = category3.stream()
                     .map(ReviewCategory3::fromQuery)
+                    .filter(Objects::nonNull) // 여러개가 가능하므로 일단 null 이 아닌 태그는 넣어둔다.
                     .toList();
+
+            if (types.isEmpty())
+                return new ArrayList<>();
 
             query
                     .leftJoin(qReview).on(qReview.jejuGudgoCourse.eq(qJejuGudgoCourse))
                     .leftJoin(qReviewCategory).on(qReviewCategory.eq(qReviewCategory))
                     .where(
-                            qReviewCategory.category3
-                                    .in(types)
+                            qReviewCategory.category3.in(types)
                     );
         }
 
@@ -106,11 +120,11 @@ public class JejuGudgoSearchQueryService {
                 .orderBy(qJejuGudgoCourse.id.asc())
                 .fetch();
 
-        return jejuGudgoCourses;
+        return jejuGudgoCourses.stream().distinct().toList();
     }
 
-    private List<SearchListResponse> getResponses(HttpServletRequest request, List<JejuGudgoCourse> jejuOlleCourses) {
-        return jejuOlleCourses.stream()
+    private List<SearchListResponse> getResponses(HttpServletRequest request, List<JejuGudgoCourse> jejuGudgoCourses) {
+        return jejuGudgoCourses.stream()
                 .map(course -> {
                     Long courseId = course.getId();
 
@@ -124,24 +138,30 @@ public class JejuGudgoSearchQueryService {
                             .map(CourseTag::getTag)
                             .toList();
 
+                    Bookmark bookmark =  bookmarkUtil
+                            .isBookmarked(request, BookmarkType.JEJU_GUDGO, course.getId());
+
+                    Double starAvg = course.getStarAvg();
+
                     return new SearchListResponse(
                             courseId,
-                            "제주걷고",
+                            BookmarkType.JEJU_GUDGO.getCode(),
                             tags,
-                            bookmarkUtil.isBookmarked(request, BookmarkType.JEJU_GUDGO, courseId),
+                            bookmark != null,
+                            bookmark != null ? bookmark.getId() : null,
                             course.getTitle(),
-                            course.getSummary(),
+                            course.getStartSpotTitle() + "-" + course.getEndSpotTitle(),
+                            null,
                             course.getDistance(),
                             course.getTime(),
                             course.getImageUrl(),
-                            course.getStarAvg(),
-                            reviewCounter.getReviewCount(ReviewType.JEJU_GUDGO, courseId),
+                            starAvg == 0.0 ? null : starAvg,
+                            reviewCounter.getReviewCount(BookmarkType.JEJU_GUDGO, courseId),
                             course.getStartSpotTitle(),
                             course.getStartLatitude(),
                             course.getStartLongitude()
                     );
                 })
-                .distinct()
                 .collect(Collectors.toList());
     }
 }

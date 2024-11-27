@@ -4,19 +4,21 @@ import java.util.List;
 
 public record SearchListResponse(
         Long id,
-        String type, // 제주걷고, 산책로, 제주올레, 하영올레
+        String type, // 올레길, 제주객의 길, 산책로
         List<String> tags, // 화면 명세상 태그
         boolean isBookmarked, // 즐겨찾기 여부
+        Long bookmarkId,
         String title,
-        String summary, // 시작점 - 종점
+        String course, // 시작점 - 종점
+        String summary,
         String distance,
         String time,
         String imgUrl,
-        double starAvg,
-        int reviewCount,
+        Double starAvg,
+        Long reviewCount,
 //        String content,
         String startSpotTitle,
-        double startSpotLatitude,
-        double startSpotLongitude
+        Double startSpotLatitude,
+        Double startSpotLongitude
 ) {
 }

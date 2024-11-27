@@ -4,7 +4,6 @@ import com.example.jejugudgo.domain.user.myGudgo.bookmark.dto.request.BookmarkRe
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.dto.response.BookmarkResponse;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.Bookmark;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.BookmarkType;
-import com.example.jejugudgo.domain.user.myGudgo.bookmark.message.BookmarkPublisher;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.repository.BookmarkRepository;
 import com.example.jejugudgo.domain.course.jejugudgo.dto.response.JejuGudgoCourseResponseForList;
 import com.example.jejugudgo.domain.course.olle.dto.response.JejuOlleCourseResponseForList;
@@ -36,7 +35,6 @@ public class BookmarkService {
 
     // 필요한 리포지토리 및 유틸 클래스 선언
     private final BookmarkRepository bookMarkRepository;
-    private final BookmarkPublisher bookmarkPublisher;
     private final TokenUtil tokenUtil;
     private final UserRepository userRepository;
     private final TrailRepository trailRepository;
@@ -113,9 +111,11 @@ public class BookmarkService {
     private BookmarkResponse convertGudgoBookmark(Bookmark bookmark) {
         JejuGudgoCourse jejuGudgoCourse = jejuGudgoCourseRepository.findById(bookmark.getTargetId())
                 .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
+
         String startSpotTitleGudgo = jejuGudgoCourseSpotRepository.findByJejuGudgoCourseIdOrderByIdAsc(jejuGudgoCourse.getId())
                 .map(spot -> spot.getTitle())
                 .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
+
         String endSpotTitleGudgo = jejuGudgoCourseSpotRepository.findByJejuGudgoCourseIdOrderByIdDesc(jejuGudgoCourse.getId())
                 .map(spot -> spot.getTitle())
                 .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
@@ -187,36 +187,22 @@ public class BookmarkService {
 
         BookmarkType bookMarkType = BookmarkType.fromCode(bookMarkRequest.code());
 
-        if (bookMarkType == null) {
-            throw new CustomException(RetCode.RET_CODE10);
+        Bookmark isBookmarked =  bookMarkRepository
+                .findByUserAndBookMarkTypeAndTargetId(user, bookMarkType, bookMarkRequest.targetId())
+                .orElse(null);
 
-        } else if (bookMarkType.equals(BookmarkType.JEJU_GUDGO)) {
-            JejuGudgoCourse jejuGudgoCourse  = jejuGudgoCourseRepository.findById(bookMarkRequest.targetId())
-                            .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
+        if (isBookmarked == null) {
+            Bookmark bookMark = Bookmark.builder()
+                    .user(user)
+                    .bookMarkType(bookMarkType)
+                    .targetId(bookMarkRequest.targetId())
+                    .build();
 
-            bookmarkPublisher.updateJejuGudgoBookmarkUsers(jejuGudgoCourse);
+            bookMarkRepository.save(bookMark);
 
-        } else if (bookMarkType.equals(BookmarkType.OLLE)) {
-            JejuOlleCourse jejuOlleCourse  = jejuOlleCourseRepository.findById(bookMarkRequest.targetId())
-                    .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
-
-            bookmarkPublisher.updateJejuOlleBookmarkUsers(jejuOlleCourse);
-
-        } else if (bookMarkType.equals(BookmarkType.TRAIL)) {
-            Trail trail = trailRepository.findById(bookMarkRequest.targetId())
-                    .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
-
-            bookmarkPublisher.updateTrailBookmarkUsers(trail);
+        } else {
+            throw new CustomException(RetCode.RET_CODE15);
         }
-
-        // 새로운 북마크 생성 및 저장
-        Bookmark bookMark = Bookmark.builder()
-                .user(user)
-                .bookMarkType(bookMarkType)
-                .targetId(bookMarkRequest.targetId())
-                .build();
-
-        bookMarkRepository.save(bookMark);
     }
 
     @Transactional

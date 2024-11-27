@@ -32,9 +32,6 @@ public class JejuGudgoConsumer {
                 case "UPDATE_STAR_AVG":
                     handleUpdateStarAvg(jsonNode.get("data"));
                     break;
-                case "UPDATE_BOOKMARK_USERS":
-                    handleUpdateBookmarkUsers(jsonNode.get("data"));
-                    break;
                 default:
                     throw new CustomException(RetCode.RET_CODE93);
             }
@@ -75,25 +72,6 @@ public class JejuGudgoConsumer {
         }
     }
 
-    private void handleUpdateBookmarkUsers(JsonNode updateRequest) {
-        try {
-            UpdateBookmarkElasticDataRequest request = objectMapper.treeToValue(updateRequest, UpdateBookmarkElasticDataRequest.class);
-            JejuGudgoCourseDocument courseDocument = jejuGudgoCourseDocumentRepository.findById(request.courseId())
-                    .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
-
-            courseDocument = courseDocument.updateBookmarkUsers(request.bookmarkUsers());
-            jejuGudgoCourseDocumentRepository.save(courseDocument);
-
-            System.out.println("===============================================================================");
-            System.out.println("Jeju gudgo course bookmark users changed to Elasticsearch: " + courseDocument.getId());
-            System.out.println("===============================================================================");
-
-        } catch (Exception e) {
-            throw new CustomException(RetCode.RET_CODE95);
-        }
-    }
-
     // TODO: elastic 에서 특정 course 수정
     // TODO: elastic 에서 특정 course 삭제
 }
-

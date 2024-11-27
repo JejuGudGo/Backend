@@ -6,7 +6,6 @@ import com.example.jejugudgo.domain.course.jejugudgo.entity.JejuGudgoCourse;
 import com.example.jejugudgo.domain.course.jejugudgo.entity.JejuGudgoCourseSpot;
 import com.example.jejugudgo.domain.course.jejugudgo.entity.JejuGudgoCourseTag;
 import com.example.jejugudgo.domain.course.jejugudgo.repository.JejuGudgoCourseRepository;
-import com.example.jejugudgo.domain.review.util.StarAvgCalculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +16,9 @@ import java.util.List;
 public class JejuGudgoCourseService {
     private final JejuGudgoPublisher publisher;
     private final JejuGudgoCourseRepository jejuGudgoCourseRepository;
-    private final StarAvgCalculator starAvgCalculator;
 
     private final JejuGudgoCourseSpotService jejuGudgoCourseSpotService;
     private final JejuGudgoCourseTagService jejuGudgoCourseTagService;
-    private final JejuGudgoCourseDocumentService jejuGudgoCourseDocumentService;
 
     /*
         해당 코드는 유저가 생성한 코스를 완료했을 때 동작합니다.
@@ -35,7 +32,6 @@ public class JejuGudgoCourseService {
                 .time(request.userJejuGudgoCourse().getTime())
                 .distance(request.userJejuGudgoCourse().getDistance())
                 .imageUrl(request.userJejuGudgoCourse().getImageUrl())
-                .summary(request.userJejuGudgoCourse().getSummary())
                 .viewCount(0L)
                 .startSpotTitle(request.userJejuGudgoCourse().getStartSpotTitle())
                 .startLatitude(request.userJejuGudgoCourse().getStartLatitude())
@@ -43,6 +39,7 @@ public class JejuGudgoCourseService {
                 .endSpotTitle(request.userJejuGudgoCourse().getEndSpotTitle())
                 .endLatitude(request.userJejuGudgoCourse().getEndLatitude())
                 .endLongitude(request.userJejuGudgoCourse().getEndLongitude())
+                .isDeleted(false)
                 .build();
 
         jejuGudgoCourseRepository.save(jejuGudgoCourse);

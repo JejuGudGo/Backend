@@ -1,5 +1,6 @@
 package com.example.jejugudgo.domain.user.myGudgo.bookmark.util;
 
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.Bookmark;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.BookmarkType;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.repository.BookmarkRepository;
 import com.example.jejugudgo.domain.user.user.entity.User;
@@ -18,7 +19,7 @@ public class BookmarkUtil {
     private final BookmarkRepository bookMarkRepository;
     private final TokenUtil tokenUtil;
 
-    public boolean isBookmarked(HttpServletRequest request, BookmarkType type, Long id) {
+    public Bookmark isBookmarked(HttpServletRequest request, BookmarkType type, Long id) {
         if (type.equals(BookmarkType.JEJU_GUDGO))
             return isJejuGudgoCourseBookmarked(request, id);
 
@@ -28,22 +29,28 @@ public class BookmarkUtil {
         else if (type.equals(BookmarkType.TRAIL))
             return isJejuTrailBookmarked(request, id);
 
-        return false;
+        return null;
     }
 
-    private boolean isJejuGudgoCourseBookmarked(HttpServletRequest request, Long id) {
+    private Bookmark isJejuGudgoCourseBookmarked(HttpServletRequest request, Long id) {
         User user = findUser(request);
-        return bookMarkRepository.existsByUserAndBookMarkTypeAndTargetId(user, BookmarkType.JEJU_GUDGO, id);
+        return bookMarkRepository
+                .findByUserAndBookMarkTypeAndTargetId(user, BookmarkType.JEJU_GUDGO, id)
+                .orElse(null);
     }
 
-    private boolean isJejuOlleCourseBookmarked(HttpServletRequest request, Long id) {
+    private Bookmark isJejuOlleCourseBookmarked(HttpServletRequest request, Long id) {
         User user = findUser(request);
-        return bookMarkRepository.existsByUserAndBookMarkTypeAndTargetId(user, BookmarkType.OLLE, id);
+        return bookMarkRepository
+                .findByUserAndBookMarkTypeAndTargetId(user, BookmarkType.OLLE, id)
+                .orElse(null);
     }
 
-    private boolean isJejuTrailBookmarked(HttpServletRequest request, Long id) {
+    private Bookmark isJejuTrailBookmarked(HttpServletRequest request, Long id) {
         User user = findUser(request);
-        return bookMarkRepository.existsByUserAndBookMarkTypeAndTargetId(user, BookmarkType.TRAIL, id);
+        return bookMarkRepository
+                .findByUserAndBookMarkTypeAndTargetId(user, BookmarkType.TRAIL, id)
+                .orElse(null);
     }
 
     private User findUser(HttpServletRequest request) {

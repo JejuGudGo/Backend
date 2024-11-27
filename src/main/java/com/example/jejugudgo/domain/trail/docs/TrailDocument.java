@@ -1,12 +1,16 @@
 package com.example.jejugudgo.domain.trail.docs;
 
+import com.example.jejugudgo.domain.course.jejugudgo.docs.JejuGudgoCourseTagDocument;
+import com.example.jejugudgo.domain.review.enums.ReviewType;
 import com.example.jejugudgo.domain.trail.entity.Trail;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.BookmarkType;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -15,11 +19,15 @@ public class TrailDocument {
     @Id
     private Long id;
 
+    @Field(type = FieldType.Text)
     private String title;
 
-    private double latitude;
+    @Field(type = FieldType.Keyword)
+    private String titleKeyword;
 
-    private double longitude;
+    private double startLatitude;
+
+    private double startLongitude;
 
     private String content;
 
@@ -43,16 +51,16 @@ public class TrailDocument {
 
     private String type;
 
-    @Field(type = FieldType.Nested, includeInParent = true)
-    private List<Long> bookmarkUsers;
+    private String tag;
 
 
-    public static TrailDocument of(Trail trail, List<Long> bookmarkUsers) {
+    public static TrailDocument of(Trail trail) {
         TrailDocument document = new TrailDocument();
         document.setId(trail.getId());
         document.setTitle(trail.getTitle());
-        document.setLatitude(trail.getLatitude());
-        document.setLongitude(trail.getLongitude());
+        document.setTitleKeyword(trail.getTitle());
+        document.setStartLatitude(trail.getLatitude());
+        document.setStartLongitude(trail.getLongitude());
         document.setContent(trail.getContent());
         document.setAddress(trail.getAddress());
         document.setPhoneNumber(trail.getPhoneNumber());
@@ -63,8 +71,8 @@ public class TrailDocument {
         document.setImageUrl(trail.getImageUrl());
         document.setReference(trail.getReference());
         document.setStarAvg(trail.getStarAvg());
-        document.setType(trail.getTrailType().getCode());
-        document.setBookmarkUsers(bookmarkUsers);
+        document.setType(BookmarkType.TRAIL.getCode());
+        document.setTag(trail.getTrailType().getCode());
 
         return document;
     }
@@ -72,12 +80,6 @@ public class TrailDocument {
     public TrailDocument updateStarAvg(double starAvg) {
         TrailDocument trailDocument = this;
         trailDocument.setStarAvg(starAvg);
-        return trailDocument;
-    }
-
-    public TrailDocument updateBookmarkUsers(List<Long> bookmarkUsers) {
-        TrailDocument trailDocument = this;
-        trailDocument.setBookmarkUsers(bookmarkUsers);
         return trailDocument;
     }
 }

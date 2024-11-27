@@ -1,13 +1,14 @@
 package com.example.jejugudgo.domain.search.query;
 
 import com.example.jejugudgo.domain.course.olle.entity.*;
+import com.example.jejugudgo.domain.course.olle.entity.QJejuOlleCourse;
 import com.example.jejugudgo.domain.review.entity.QReview;
 import com.example.jejugudgo.domain.review.entity.QReviewCategory;
 import com.example.jejugudgo.domain.review.enums.ReviewCategory3;
-import com.example.jejugudgo.domain.review.enums.ReviewType;
 import com.example.jejugudgo.domain.review.util.ReviewCounter;
 import com.example.jejugudgo.domain.search.component.SpotCalculator;
 import com.example.jejugudgo.domain.search.dto.SearchListResponse;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.Bookmark;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.BookmarkType;
 import com.example.jejugudgo.domain.user.myGudgo.bookmark.util.BookmarkUtil;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -18,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,7 +50,8 @@ public class JejuOlleSearchQueryService {
     ) {
         List<JejuOlleCourse> courses = findCoursesByCurrentSpotAndCategory(category2, category3, latitude, longitude, pageable);
         List<SearchListResponse> responses = getResponses(request, courses);
-        return responses;
+
+        return responses == null ? new ArrayList<>() : responses;
     }
 
     private List<JejuOlleCourse> findCoursesByCurrentSpotAndCategory(
@@ -57,7 +59,8 @@ public class JejuOlleSearchQueryService {
             String latitude, String longitude, Pageable pageable
     ) {
         JPAQuery<JejuOlleCourse> query = queryFactory
-                .selectFrom(qJejuOlleCourse);
+                .selectDistinct(qJejuOlleCourse)
+                .from(qJejuOlleCourse);
 
         if (pageable.isPaged()) {
             query.offset(pageable.getOffset())
@@ -79,19 +82,26 @@ public class JejuOlleSearchQueryService {
         if (category2 != null && !category2.isEmpty()) {
             List<OlleType> types = category2.stream()
                     .map(OlleType::fromType)
+                    .filter(Objects::nonNull) // 여러개가 가능하므로 일단 null 이 아닌 태그는 넣어둔다.
                     .toList();
+
+            if (types.isEmpty())
+                return new ArrayList<>();
 
             query
                     .where(
-                            qJejuOlleCourse.olleType
-                                    .in(types)
+                            qJejuOlleCourse.olleType.in(types)
                     );
         }
 
         if (category3 != null && !category3.isEmpty()) {
             List<ReviewCategory3> types = category3.stream()
                     .map(ReviewCategory3::fromQuery)
+                    .filter(Objects::nonNull) // 여러개가 가능하므로 일단 null 이 아닌 태그는 넣어둔다.
                     .toList();
+
+            if (types.isEmpty())
+                return new ArrayList<>();
 
             query
                     .leftJoin(qReview).on(qReview.jejuOlleCourse.eq(qJejuOlleCourse))
@@ -108,13 +118,14 @@ public class JejuOlleSearchQueryService {
                 .orderBy(qJejuOlleCourse.id.asc())
                 .fetch();
 
-        return jejuOlleCourses;
+        return jejuOlleCourses.stream().distinct().toList();
     }
 
     private List<SearchListResponse> getResponses(HttpServletRequest request, List<JejuOlleCourse> jejuOlleCourses) {
         return jejuOlleCourses.stream()
                 .map(course -> {
                     Long courseId = course.getId();
+                    Bookmark bookmark = bookmarkUtil.isBookmarked(request, BookmarkType.OLLE, courseId);
 
                     List<OlleTag> olleCourseTags = queryFactory
                             .select(qJejuOlleCourseTag.olleTag)
@@ -126,24 +137,27 @@ public class JejuOlleSearchQueryService {
                             .map(OlleTag::getTag)
                             .toList();
 
+                    Double starAvg = course.getStarAvg();
+
                     return new SearchListResponse(
                             courseId,
-                            "제주올레",
+                            BookmarkType.OLLE.getCode(),
                             tags,
-                            bookmarkUtil.isBookmarked(request, BookmarkType.OLLE, courseId),
+                            bookmark != null,
+                            bookmark != null ? bookmark.getId() : null,
                             course.getTitle(),
+                            course.getStartSpotTitle() + "-" + course.getEndSpotTitle(),
                             course.getSummary(),
                             course.getDistance(),
                             course.getTime(),
                             course.getCourseImageUrl(),
-                            course.getStarAvg(),
-                            reviewCounter.getReviewCount(ReviewType.OLLE, courseId),
+                            starAvg == 0.0  ? null : starAvg,
+                            reviewCounter.getReviewCount(BookmarkType.OLLE, courseId),
                             course.getStartSpotTitle(),
                             course.getStartLatitude(),
                             course.getStartLongitude()
                     );
                 })
-                .distinct()
                 .collect(Collectors.toList());
     }
 }

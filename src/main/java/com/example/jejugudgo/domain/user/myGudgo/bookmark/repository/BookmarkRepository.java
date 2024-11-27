@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 
@@ -15,7 +16,7 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 
     List<Bookmark> findByUserIdAndBookMarkType(Long userId, BookmarkType type);
 
-    boolean existsByUserAndBookMarkTypeAndTargetId(User user, BookmarkType bookMarkType, Long targetId);
+    Optional<Bookmark> findByUserAndBookMarkTypeAndTargetId(User user, BookmarkType bookMarkType, Long targetId);
 
     @Query("SELECT DISTINCT b.user.id FROM Bookmark b WHERE b.bookMarkType = :type AND b.targetId = :targetId")
     List<Long> findDistinctUserByBookMarkTypeAndTargetId(@Param("type") BookmarkType type, @Param("targetId") Long targetId);

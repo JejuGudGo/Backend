@@ -18,9 +18,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<CommonApiResponse> handleCustomException(CustomException e) {
+        System.out.println("handler: " + e.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(apiResponseUtil.error(e.getRetCode()));
+                .body(apiResponseUtil.error(e.getRetCode(), e.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)

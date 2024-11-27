@@ -90,7 +90,6 @@ public class TrailConsumer {
             TrailDocument trailDocument = trailDocumentRepository.findById(request.courseId())
                     .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
 
-            trailDocument = trailDocument.updateBookmarkUsers(request.bookmarkUsers());
             trailDocumentRepository.save(trailDocument);
 
             System.out.println("===============================================================================");

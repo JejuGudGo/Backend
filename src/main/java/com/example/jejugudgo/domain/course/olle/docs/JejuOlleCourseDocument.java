@@ -1,6 +1,7 @@
 package com.example.jejugudgo.domain.course.olle.docs;
 
 import com.example.jejugudgo.domain.course.olle.entity.JejuOlleCourse;
+import com.example.jejugudgo.domain.user.myGudgo.bookmark.entity.BookmarkType;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -16,7 +17,11 @@ public class JejuOlleCourseDocument {
     @Id
     private Long id;
 
+    @Field(type = FieldType.Text)
     private String title;
+
+    @Field(type = FieldType.Keyword)
+    private String titleKeyword;
 
     private String summary;
 
@@ -58,19 +63,17 @@ public class JejuOlleCourseDocument {
     @Field(type = FieldType.Nested, includeInParent = true)
     private List<JejuOlleSpotDocument> spots;
 
-    @Field(type = FieldType.Nested, includeInParent = true)
-    private List<Long> bookmarkUsers;
 
-
-    public static JejuOlleCourseDocument of(JejuOlleCourse jejuOlleCourse, List<JejuOlleSpotDocument> jejuOlleSpotDocuments, List<Long> bookmarkUsers, List<String> olleTags) {
+    public static JejuOlleCourseDocument of(JejuOlleCourse jejuOlleCourse, List<JejuOlleSpotDocument> jejuOlleSpotDocuments, List<String> olleTags) {
         JejuOlleCourseDocument document = new JejuOlleCourseDocument();
         document.setId(jejuOlleCourse.getId());
         document.setTitle(jejuOlleCourse.getTitle());
+        document.setTitleKeyword(jejuOlleCourse.getTitle());
         document.setContent(jejuOlleCourse.getContent());
         document.setTags(olleTags != null ? olleTags : Collections.emptyList());
         document.setTime(jejuOlleCourse.getTime());
         document.setDistance(jejuOlleCourse.getDistance());
-        document.setType(jejuOlleCourse.getOlleType().getType());
+        document.setType(BookmarkType.OLLE.getCode());
         document.setStartSpotTitle(jejuOlleCourse.getStartSpotTitle());
         document.setStartLatitude(jejuOlleCourse.getStartLatitude());
         document.setStartLongitude(jejuOlleCourse.getStartLongitude());
@@ -85,19 +88,12 @@ public class JejuOlleCourseDocument {
         document.setImageUrl(jejuOlleCourse.getCourseImageUrl());
         document.setViewCount(jejuOlleCourse.getViewCount());
         document.setSpots(jejuOlleSpotDocuments);
-        document.setBookmarkUsers(bookmarkUsers != null ? bookmarkUsers : Collections.emptyList());
         return document;
     }
 
     public JejuOlleCourseDocument updateStarAvg(double starAvg) {
         JejuOlleCourseDocument jejuOlleCourseDocument = this;
         jejuOlleCourseDocument.setStarAvg(starAvg);
-        return jejuOlleCourseDocument;
-    }
-
-    public JejuOlleCourseDocument updateBookmarkUsers(List<Long> bookmarkUsers) {
-        JejuOlleCourseDocument jejuOlleCourseDocument = this;
-        jejuOlleCourseDocument.setBookmarkUsers(bookmarkUsers);
         return jejuOlleCourseDocument;
     }
 }
