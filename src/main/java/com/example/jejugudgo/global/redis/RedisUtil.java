@@ -6,6 +6,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
@@ -16,6 +17,15 @@ public class RedisUtil {
     public String getData(String key) {
         valueOperations = stringRedisTemplate.opsForValue();
         return valueOperations.get(key);
+    }
+
+    public String[] getKeyTTL(String key) {
+        Long minutes = stringRedisTemplate.getExpire(key, TimeUnit.MINUTES);
+        if (minutes < 1) {
+            return new String[] {"sec", stringRedisTemplate.getExpire(key, TimeUnit.SECONDS).toString()};
+        } else {
+            return  new String[] {"min", minutes.toString()};
+        }
     }
 
     public void setData(String key, String value) {

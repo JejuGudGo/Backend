@@ -5,7 +5,7 @@ import com.example.jejugudgo.domain.auth.basic.dto.request.SignupRequest;
 import com.example.jejugudgo.domain.auth.basic.dto.response.SignupResponse;
 import com.example.jejugudgo.domain.auth.basic.service.BasicAuthService;
 import com.example.jejugudgo.domain.auth.mail.dto.EmailRequest;
-import com.example.jejugudgo.domain.auth.validation.UserValidation;
+import com.example.jejugudgo.domain.auth.validation.EmailValidation;
 import com.example.jejugudgo.domain.auth.basic.dto.response.UserInfoResponse;
 import com.example.jejugudgo.global.exception.dto.CommonApiResponse;
 import com.example.jejugudgo.global.exception.util.ApiResponseUtil;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
     private final BasicAuthService basicAuthService;
-    private final UserValidation userValidation;
+    private final EmailValidation emailValidation;
     private final ApiResponseUtil apiResponseUtil;
 
     @PostMapping(value = "/api/v1/auth/signup")
@@ -30,10 +30,9 @@ public class AuthController {
 
     @PostMapping(value = "/api/v1/auth/check/email")
     public ResponseEntity<CommonApiResponse> checkEmailDuplicate(@RequestBody EmailRequest request) {
-        userValidation.validateEmail(request.email());
+        emailValidation.validateEmail(request.email());
         return ResponseEntity.ok(apiResponseUtil.success(null));
     }
-
 
     @PostMapping(value = "/api/v1/auth/login")
     public ResponseEntity<CommonApiResponse> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {

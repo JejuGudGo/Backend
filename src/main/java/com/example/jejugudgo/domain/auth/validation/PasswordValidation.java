@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class PasswordValidation {
     private final BCryptPasswordEncoder passwordEncoder;
-    private final RedisUtil redisUtil;
+    private final UserValidation userValidation;
 
     private static final String PASSWORD_PATTERN =
             "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&#]{8,20}$";
@@ -34,29 +34,9 @@ public class PasswordValidation {
         return pattern.matcher(password).matches();
     }
 
-    public void validateLoginPassword(String password, User user) {
-        String count = redisUtil.getData(user.getId().toString() + "_password");
-        String status = redisUtil.getData(user.getId().toString() + "_status");
-
+    public void validatePassword(String password, User user) {
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            // 1. count 증가
-            if (count == null && status == null)
-                count = "1";
-            else {
-                count = String.valueOf(Integer.parseInt(count) + 1);
-
-                // 2. count validation
-                if (Integer.parseInt(count) == 5) {
-                    redisUtil.setDataWithExpire(user.getId().toString() , "pended", Duration.ofMinutes(10));
-                    throw new CustomException(RetCode.RET_CODE16);
-                }
-            }
-
-            redisUtil.setData(user.getId().toString() + "_password", count);
-            String message = RetCode.RET_CODE09.getMessage() + System.lineSeparator()
-                    + "현재 비밀번호를 " + count + " 회 잘못 입력하였습니다.";
-            System.out.println(message);
-            throw new CustomException(RetCode.RET_CODE09, message);
+            userValidation.setUserStatus(user);
         }
     }
 }

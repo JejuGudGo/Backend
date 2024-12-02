@@ -3,10 +3,11 @@ package com.example.jejugudgo.domain.auth.basic.service;
 import com.example.jejugudgo.domain.auth.basic.dto.request.LoginRequest;
 import com.example.jejugudgo.domain.auth.basic.dto.request.SignupRequest;
 import com.example.jejugudgo.domain.auth.basic.dto.response.SignupResponse;
+import com.example.jejugudgo.domain.auth.validation.UserValidation;
 import com.example.jejugudgo.domain.user.terms.dto.TermsAgreementRequest;
 import com.example.jejugudgo.domain.auth.validation.PasswordValidation;
 import com.example.jejugudgo.domain.auth.validation.PhoneValidation;
-import com.example.jejugudgo.domain.auth.validation.UserValidation;
+import com.example.jejugudgo.domain.auth.validation.EmailValidation;
 import com.example.jejugudgo.domain.user.myGudgo.profile.entity.UserProfile;
 import com.example.jejugudgo.domain.user.myGudgo.profile.service.UserProfileService;
 import com.example.jejugudgo.domain.auth.basic.dto.response.UserInfoResponse;
@@ -21,7 +22,6 @@ import com.example.jejugudgo.global.exception.exception.CustomException;
 import com.example.jejugudgo.global.exception.enums.RetCode;
 import com.example.jejugudgo.global.jwt.token.TokenGenerator;
 import com.example.jejugudgo.global.jwt.token.TokenUtil;
-import com.example.jejugudgo.global.redis.RedisUtil;
 import com.example.jejugudgo.global.util.random.RandomNicknameUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,10 +31,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Service
@@ -48,9 +46,9 @@ public class BasicAuthService {
     private final TokenGenerator tokenGenerator;
     private final PasswordValidation passwordValidation;
     private final PhoneValidation phoneValidation;
-    private final UserValidation userValidation;
+    private final EmailValidation emailValidation;
     private final TokenUtil tokenUtil;
-    private final RedisUtil redisUtil;
+    private final UserValidation userValidation;
     private final ApplicationEventPublisher eventPublisher;
 
     // 회원가입 메서드
@@ -60,7 +58,7 @@ public class BasicAuthService {
         String encodedPassword = passwordValidation.validatePassword(request.password());
 
         // 2. 이메일 중복 검사
-        userValidation.validateEmail(request.email());
+        emailValidation.validateEmail(request.email());
 
         // 3. 휴대폰 번호 형식 검증
         phoneValidation.validatePhoneNumber(request.phoneNumber());
@@ -126,23 +124,22 @@ public class BasicAuthService {
     }
 
     public UserInfoResponse loginAndGetUserInfo(LoginRequest request, HttpServletResponse response) {
-        // 1. 유저 정보 조회
+        // 유저 정보 조회, 상태 검증
         User user = userRepository.findByEmailAndProvider(request.email(), Provider.BASIC)
                 .orElseThrow(() -> new CustomException(RetCode.RET_CODE08));
 
-        // 2. 비밀번호 검증
-        passwordValidation.validateLoginPassword(request.password(), user);
-        if (redisUtil.getData(user.getId().toString() + "_password") != null) {
-            redisUtil.deleteData(user.getId() +  "_password");
-        }
+        // 비밀번호 검증
+        passwordValidation.validatePassword(request.password(), user);
 
-        // 3. 인증 처리
+        userValidation.validateUserStatus(user);
+
+        // 인증 처리
         authenticateUser(request);
 
-        // 4. 토큰 생성 및 헤더 추가
+        // 토큰 생성 및 헤더 추가
         String accessToken = addAccessTokenToHeader(user.getId(), response);
 
-        // 5. 사용자 정보 반환
+        //  사용자 정보 반환
         return new UserInfoResponse(
                 user.getId(),
                 user.getEmail(),
