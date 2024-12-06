@@ -1,7 +1,8 @@
 package com.example.jejugudgo.global.jwt.token;
 
-import com.example.jejugudgo.domain.user.user.entity.User;
-import com.example.jejugudgo.domain.user.user.repository.UserRepository;
+import com.example.jejugudgo.domain.user.common.entity.User;
+import com.example.jejugudgo.domain.user.common.repository.UserRepository;
+import com.example.jejugudgo.global.security.CustomAuthenticationToken;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import jakarta.persistence.EntityNotFoundException;
@@ -36,12 +37,15 @@ public class TokenUtil {
         }
     }
 
-    public void getAuthenticationUsingToken(String accessToken, Long userId) {
+    public void getAuthenticationUsingToken(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        UsernamePasswordAuthenticationToken authenticationToken
-                = new UsernamePasswordAuthenticationToken(user, accessToken, new ArrayList<>());
+        CustomAuthenticationToken authenticationToken = new CustomAuthenticationToken(
+                user.getEmail(),
+                user.getPassword(),
+                user.getProvider()
+        );
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
 

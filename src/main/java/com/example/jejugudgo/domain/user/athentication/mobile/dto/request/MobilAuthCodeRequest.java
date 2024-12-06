@@ -1,4 +1,4 @@
-package com.example.jejugudgo.domain.auth.mobile.dto.request;
+package com.example.jejugudgo.domain.user.athentication.mobile.dto.request;
 
 
 public record MobilAuthCodeRequest(

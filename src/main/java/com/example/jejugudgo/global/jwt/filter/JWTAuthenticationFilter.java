@@ -25,8 +25,10 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         String requestURI = request.getRequestURI();
 
         if (
-                requestURI.startsWith("/api/v1/auth") ||
-                        requestURI.startsWith("/api/v1/oauth") ||
+                requestURI.startsWith("/api/v1/signup") ||
+                        requestURI.startsWith("/api/v1/signin") ||
+                        requestURI.startsWith("/api/v1/auth") ||
+                        requestURI.startsWith("/api/v1/find") ||
                         requestURI.startsWith("/docs") ||
                         requestURI.startsWith("/favicon.ico") ||
                         requestURI.startsWith("/ws") ||
@@ -42,7 +44,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             tokenUtil.validateAccessToken(accessToken);
-            tokenUtil.getAuthenticationUsingToken(accessToken, userId);
+            tokenUtil.getAuthenticationUsingToken(userId);
 
         } catch (ExpiredJwtException e) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());

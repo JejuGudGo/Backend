@@ -1,10 +1,9 @@
-package com.example.jejugudgo.domain.auth.mail.controller;
+package com.example.jejugudgo.domain.user.athentication.mail.controller;
 
-import com.example.jejugudgo.domain.auth.mail.dto.EmailAuthenticationRequest;
-import com.example.jejugudgo.domain.auth.mail.dto.EmailRequest;
-import com.example.jejugudgo.domain.auth.mail.dto.MailAuthenticationRequest;
-import com.example.jejugudgo.domain.auth.mail.service.MailAuthService;
-import com.example.jejugudgo.domain.auth.mail.service.MailSendService;
+import com.example.jejugudgo.domain.user.athentication.mail.dto.EmailAuthenticationRequest;
+import com.example.jejugudgo.domain.user.athentication.mail.dto.EmailRequest;
+import com.example.jejugudgo.domain.user.athentication.mail.validation.MailAuthenticationValidator;
+import com.example.jejugudgo.domain.user.athentication.mail.service.MailSendService;
 import com.example.jejugudgo.global.exception.dto.CommonApiResponse;
 import com.example.jejugudgo.global.exception.util.ApiResponseUtil;
 import lombok.RequiredArgsConstructor;
@@ -19,23 +18,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/auth")
 public class MailController {
     private final MailSendService mailSendService;
-    private final MailAuthService mailAuthService;
+    private final MailAuthenticationValidator mailAuthenticationValidator;
     private final ApiResponseUtil apiResponseUtil;
 
     @PostMapping("/mail/send")
     public ResponseEntity<CommonApiResponse> sendAuthenticationEmail(@RequestBody EmailRequest request) {
-        MailAuthenticationRequest mailAuthenticationMessage = new MailAuthenticationRequest(
-                request.email(),
-                "[제주걷GO] 이메일 인증 코드입니다."
-        );
-
-        mailSendService.sendAuthCode(mailAuthenticationMessage);
+        mailSendService.sendAuthenticationCode(request.email());
         return ResponseEntity.ok(apiResponseUtil.success(null));
     }
 
     @PostMapping(value = "/mail/check")
     public ResponseEntity<CommonApiResponse> checkAuthenticationCode(@RequestBody EmailAuthenticationRequest request) {
-        mailAuthService.validateAuthCode(request);
+        mailAuthenticationValidator.validateAuthenticationCode(request);
         return ResponseEntity.ok(apiResponseUtil.success(null));
     }
 }

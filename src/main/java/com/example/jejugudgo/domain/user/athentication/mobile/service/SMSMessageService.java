@@ -1,12 +1,11 @@
-package com.example.jejugudgo.domain.auth.mobile.service;
+package com.example.jejugudgo.domain.user.athentication.mobile.service;
 
-import com.example.jejugudgo.domain.auth.mobile.dto.request.MobilAuthCodeRequest;
-import com.example.jejugudgo.domain.user.user.entity.User;
-import com.example.jejugudgo.domain.user.user.repository.UserRepository;
+import com.example.jejugudgo.domain.user.athentication.mobile.dto.request.MobilAuthCodeRequest;
+import com.example.jejugudgo.domain.user.common.entity.User;
+import com.example.jejugudgo.domain.user.common.repository.UserRepository;
 import com.example.jejugudgo.global.redis.RedisUtil;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
@@ -17,7 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
-import java.util.Optional;
 import java.util.Random;
 
 @Slf4j
@@ -44,15 +42,6 @@ public class SMSMessageService {
                 .initialize(apikey, apiSecretkey, "https://api.coolsms.co.kr");
     }
 
-    public boolean verificationUser(MobilAuthCodeRequest request) {
-        String phoneNumber = request.phoneNumber();
-        String name = request.name();
-
-        Optional<User> user = userRepository.findUserByPhoneNumberAndName(phoneNumber, name);
-
-        return user.isPresent();
-    }
-
     public SingleMessageSentResponse sendMessage(String sendTo, String verificationCode) {
         Message message = new Message();
         message.setFrom(sender);
@@ -76,11 +65,11 @@ public class SMSMessageService {
         return String.valueOf(randomNumber);
     }
 
-    public void saveDataForCheckUser(String phoneNumber, String verificationCode) {
+    public void setAuthentcationCode(String phoneNumber, String verificationCode) {
         redisUtil.setDataWithExpire(phoneNumber, verificationCode, Duration.ofMinutes(3));
 
         log.info("======================================================");
-        log.info("CheckRedisKeyValue: " + redisUtil.getData(phoneNumber));
+        log.info("CheckRedisKeyValue: {}", redisUtil.getData(phoneNumber));
         log.info("======================================================");
     }
 }
