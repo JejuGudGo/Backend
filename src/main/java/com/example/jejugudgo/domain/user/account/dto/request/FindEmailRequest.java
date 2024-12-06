@@ -1,4 +1,4 @@
-package com.example.jejugudgo.domain.auth.basic.dto.request;
+package com.example.jejugudgo.domain.user.account.dto.request;
 
 public record FindEmailRequest(
         String name,

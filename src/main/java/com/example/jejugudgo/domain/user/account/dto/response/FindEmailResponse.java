@@ -1,4 +1,4 @@
-package com.example.jejugudgo.domain.auth.basic.dto.response;
+package com.example.jejugudgo.domain.user.account.dto.response;
 
 import java.time.LocalDateTime;
 
