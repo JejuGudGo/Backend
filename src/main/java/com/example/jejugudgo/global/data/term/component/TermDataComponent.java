@@ -1,7 +1,7 @@
-package com.example.jejugudgo.global.data.terms;
+package com.example.jejugudgo.global.data.term.component;
 
-import com.example.jejugudgo.domain.auth.terms.entity.Terms;
-import com.example.jejugudgo.domain.auth.terms.repository.TermsRepository;
+import com.example.jejugudgo.global.data.term.entity.Term;
+import com.example.jejugudgo.global.data.term.repository.TermRepository;
 import com.example.jejugudgo.global.data.common.entity.DataCommandLog;
 import com.example.jejugudgo.global.data.common.repository.DataCommandLogRepository;
 import com.opencsv.CSVReader;
@@ -18,10 +18,10 @@ import static org.hibernate.query.sqm.tree.SqmNode.log;
 
 @Service
 @RequiredArgsConstructor
-public class TermsDataService {
+public class TermDataComponent {
 
     private final DataCommandLogRepository dataCommandLogRepository;
-    private final TermsRepository termsRepository;
+    private final TermRepository termsRepository;
 
     public void loadTermsCsvToDatabase() {
         DataCommandLog checkDataConfig = dataCommandLogRepository.findByConfigKey("TermsData")
@@ -30,8 +30,8 @@ public class TermsDataService {
         if (checkDataConfig == null || !checkDataConfig.isConfigValue()) {
             try (CSVReader csvReader = new CSVReader(new InputStreamReader(new ClassPathResource("csv/terms/terms.csv").getInputStream()))) {
 
-                List<Terms> terms = csvReader.readAll().stream()
-                        .map(fields -> Terms.builder()
+                List<Term> terms = csvReader.readAll().stream()
+                        .map(fields -> Term.builder()
                                 .title(fields[0].trim())
                                 .content(fields[1].trim())
                                 .build())
