@@ -21,6 +21,7 @@ spring:
         transport:
           protocol: smtp
         debug: true
+
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
     show-sql: true
@@ -65,6 +66,8 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
+  oauth:
+    password: ${OAUTH_PASS}
 #  security:
 #    oauth2:
 #      client:
@@ -118,3 +121,6 @@ tour:
   api:
     key:
       ${TOUR_API_KEY}
+
+server:
+  port: 8081
