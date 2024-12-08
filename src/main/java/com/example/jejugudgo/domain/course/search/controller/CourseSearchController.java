@@ -35,7 +35,7 @@ public class CourseSearchController {
         return ResponseEntity.ok(apiResponseUtil.success(responses, "results"));
     }
 
-    @GetMapping(value = "")
+    @GetMapping(value = "/detail")
     public ResponseEntity<CommonApiResponse> getCourses(
             @RequestParam(value = "cat1") String cat1,
             @RequestParam(value = "id") String id,

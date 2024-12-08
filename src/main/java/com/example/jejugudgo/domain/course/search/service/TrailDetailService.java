@@ -24,10 +24,17 @@ public class TrailDetailService implements CourseDetailService {
     private final UserLikeUtil userLikeUtil;
     private final TrailRepository trailRepository;
 
-
     @Override
     public CourseDetailResponse getCourseDetail(HttpServletRequest httpRequest, CourseDetailRequest request) {
-        return null;
+        Object basicData = getBasicData(httpRequest, request);
+        Object infoData = getInfoData(httpRequest, request);
+        Object reviewData = getReviewData(httpRequest, request);
+
+        return new CourseDetailResponse(
+                basicData,
+                infoData,
+                null
+        );
     }
 
     @Override
