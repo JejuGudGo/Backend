@@ -328,6 +328,9 @@ public class TextSearchService {
         if (tagsObj instanceof List) {
             return ((List<?>) tagsObj).stream()
                     .map(Object::toString)
+                    .map(tag -> tag
+                            .replaceAll("^\\{title=", "")
+                            .replaceAll("}$", ""))
                     .collect(Collectors.toList());
         } else {
             return new ArrayList<>();
