@@ -17,6 +17,8 @@ import com.example.jejugudgo.global.jwt.token.TokenUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -34,16 +36,16 @@ public class UserLikeService {
     /**
      * 사용자 좋아요 리스트 조회
      */
-    public List<UserLikeResponse> getUserLikes(String query, HttpServletRequest request, Pageable pageable) {
+    public Page<UserLikeResponse> getUserLikes(String query, HttpServletRequest request, Pageable pageable) {
         Long userId = tokenUtil.getUserIdFromHeader(request); // 토큰에서 사용자 ID 추출
 
         // "전체" 조회 요청 처리
         if ("전체".equals(query)) {
-            return getAllUserLikes(userId);
+            return getAllUserLikes(userId, pageable);
         }
 
         // 특정 타입 조회 처리
-        return getUserLikesByType(userId, query);
+        return getUserLikesByType(userId, query, pageable);
     }
 
     /**
@@ -104,24 +106,21 @@ public class UserLikeService {
     /**
      * 사용자 좋아요 전체 조회
      */
-    private List<UserLikeResponse> getAllUserLikes(Long userId) {
-        List<UserLike> userLikes = userLikeRepository.findByUserId(userId);
-        return userLikes.stream()
-                .map(this::mapToResponse)
-                .toList();
+    private Page<UserLikeResponse> getAllUserLikes(Long userId, Pageable pageable) {
+        Page<UserLike> userLikesPage = userLikeRepository.findByUserId(userId, pageable);
+        return userLikesPage.map(this::mapToResponse);
     }
 
     /**
      * 특정 타입의 좋아요 조회
      */
-    private List<UserLikeResponse> getUserLikesByType(Long userId, String query) {
+    private Page<UserLikeResponse> getUserLikesByType(Long userId, String query, Pageable pageable) {
         CourseType courseType = validateCourseType(query);
 
-        List<UserLike> userLikes = userLikeRepository.findByUserIdAndCourseType(userId, courseType);
-        return userLikes.stream()
-                .map(this::mapToResponse)
-                .toList();
+        Page<UserLike> userLikesPage = userLikeRepository.findByUserIdAndCourseType(userId, courseType, pageable);
+        return userLikesPage.map(this::mapToResponse);
     }
+
 
     /**
      * 유효한 사용자 반환

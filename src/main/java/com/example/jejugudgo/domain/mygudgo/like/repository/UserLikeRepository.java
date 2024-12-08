@@ -3,6 +3,8 @@ package com.example.jejugudgo.domain.mygudgo.like.repository;
 import com.example.jejugudgo.domain.course.common.enums.CourseType;
 import com.example.jejugudgo.domain.mygudgo.like.entity.UserLike;
 import com.example.jejugudgo.domain.user.common.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,10 +13,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserLikeRepository extends JpaRepository<UserLike, Long> {
+    Page<UserLike> findByUserId(Long userId, Pageable pageable);
 
-    List<UserLike> findByUserId(Long userId);
 
-    List<UserLike> findByUserIdAndCourseType(Long userId, CourseType type);
+    Page<UserLike> findByUserIdAndCourseType(Long userId, CourseType type, Pageable pageable);
 
     Optional<UserLike> findByUserAndCourseTypeAndTargetId(User user, CourseType bookMarkType, Long targetId);
 

@@ -4,11 +4,13 @@ import com.example.jejugudgo.domain.course.common.dto.response.CourseListRespons
 import com.example.jejugudgo.domain.course.common.entity.JejuGudgoCourse;
 import com.example.jejugudgo.domain.course.common.entity.OlleCourse;
 import com.example.jejugudgo.domain.course.common.entity.OlleCourseTag;
+import com.example.jejugudgo.domain.course.common.enums.OlleTag;
 import com.example.jejugudgo.domain.course.common.repository.JejuGudgoCourseRepository;
 import com.example.jejugudgo.domain.course.common.repository.OlleCourseRepository;
 import com.example.jejugudgo.domain.course.common.repository.OlleCourseTagRepository;
 import com.example.jejugudgo.domain.mygudgo.course.entity.UserJejuGudgoCourse;
 import com.example.jejugudgo.domain.mygudgo.course.entity.UserJejuGudgoCourseTag;
+import com.example.jejugudgo.domain.mygudgo.course.enums.JejuGudgoCourseTag;
 import com.example.jejugudgo.domain.mygudgo.course.repository.UserJejuGudgoCourseRepository;
 import com.example.jejugudgo.domain.mygudgo.course.repository.UserJejuGudgoCourseTagRepository;
 import lombok.RequiredArgsConstructor;
@@ -80,12 +82,12 @@ public class CourseQueryService {
      * UserJejuGudgoCourse와 연결된 태그 리스트를 반환
      *
      * @param userJejuGudgoCourse 사용자 정의 제주객의 길 엔티티
-     * @return 태그 리스트
+     * @return 태그 리스트 (문자열 형태)
      */
     private List<String> getTagsForUserCourse(UserJejuGudgoCourse userJejuGudgoCourse) {
         return userJejuGudgoCourseTagRepository.findByUserCourse(userJejuGudgoCourse).stream()
                 .map(UserJejuGudgoCourseTag::getTitle) // Enum 추출
-                .map(Enum::name) // Enum 값을 문자열로 변환
+                .map(JejuGudgoCourseTag::getTag) // Enum의 문자열 값 반환
                 .collect(Collectors.toList());
     }
 
@@ -93,12 +95,13 @@ public class CourseQueryService {
      * OlleCourse와 연결된 태그 리스트를 반환
      *
      * @param olleCourse 올레길 엔티티
-     * @return 태그 리스트
+     * @return 태그 리스트 (문자열 형태)
      */
     private List<String> getTagsForOlleCourse(OlleCourse olleCourse) {
         return olleCourseTagRepository.findByOlleCourse(olleCourse).stream()
                 .map(OlleCourseTag::getTitle) // Enum 추출
-                .map(Enum::name) // Enum 값을 문자열로 변환
+                .map(OlleTag::getTag) // Enum의 문자열 값 반환
                 .collect(Collectors.toList());
     }
+
 }

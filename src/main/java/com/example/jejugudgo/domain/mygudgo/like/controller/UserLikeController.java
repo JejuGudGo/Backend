@@ -6,6 +6,7 @@ import com.example.jejugudgo.domain.mygudgo.like.service.UserLikeService;
 import com.example.jejugudgo.global.exception.util.ApiResponseUtil;
 import com.example.jejugudgo.global.util.paging.PagingUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/v1/user/like/")
+@RequestMapping(value = "/api/v1/user/like")
 @RequiredArgsConstructor
 public class UserLikeController {
 
@@ -32,7 +33,7 @@ public class UserLikeController {
             HttpServletRequest request,
             Pageable pageable) {
         Pageable page = PagingUtil.createPageable(pageable.getPageNumber(), pageable.getPageSize());
-        List<UserLikeResponse> response = userLikeService.getUserLikes(query, request, page);
+        Page<UserLikeResponse> response = userLikeService.getUserLikes(query, request, page);
         return ResponseEntity.ok(apiResponseUtil.success(response, "userLikes"));
     }
 
