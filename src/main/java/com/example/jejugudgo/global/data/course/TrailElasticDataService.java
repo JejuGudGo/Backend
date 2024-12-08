@@ -7,6 +7,7 @@ import com.example.jejugudgo.domain.course.search.elastic.repository.TrailDocume
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -23,9 +24,12 @@ public class TrailElasticDataService {
     }
 
     private void createData(Trail trail) {
+        List<String> tags = new ArrayList<>();
+        tags.add(trail.getTrailTag().getTag());
+
         TrailDocument trailDocument = new TrailDocument();
         trailDocument.setId(trail.getId());
-        trailDocument.setTag(trail.getTrailTag().getTag());
+        trailDocument.setTags(tags);
         trailDocument.setTitle(trail.getTitle());
         trailDocument.setAddress(trail.getAddress());
         trailDocument.setContent(trail.getContent());
@@ -40,6 +44,7 @@ public class TrailElasticDataService {
         trailDocument.setReviewCount(trail.getReviewCount());
         trailDocument.setStarAvg(trail.getStarAvg());
         trailDocument.setLikeCount(trail.getLikeCount());
+        trailDocument.setClickCount(trail.getClickCount());
         trailDocument.setUpToDate(trail.getUpToDate());
 
         trailDocumentRepository.save(trailDocument);

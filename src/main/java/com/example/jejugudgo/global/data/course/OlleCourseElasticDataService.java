@@ -73,7 +73,7 @@ public class OlleCourseElasticDataService {
         olleCourseDocument.setTitle(olleCourse.getTitle());
         olleCourseDocument.setTitleKeyword(olleCourse.getTitle());
         olleCourseDocument.setRoute(olleCourse.getRoute());
-        olleCourseDocument.setDistance(olleCourse.getDistance());
+        olleCourseDocument.setDistance(olleCourse.getDistance() + "km");
         olleCourseDocument.setTime(olleCourse.getTime());
         olleCourseDocument.setSummary(olleCourse.getSummary());
         olleCourseDocument.setContent(olleCourse.getContent());
@@ -87,6 +87,7 @@ public class OlleCourseElasticDataService {
         olleCourseDocument.setStarAvg(olleCourse.getStarAvg());
         olleCourseDocument.setLikeCount(olleCourse.getLikeCount());
         olleCourseDocument.setUpToDate(olleCourse.getUpToDate());
+        olleCourseDocument.setClickCount(olleCourse.getClickCount());
         olleCourseDocument.setSpots(spotDocuments);
         olleCourseDocument.setTags(tagDocuments);
 
