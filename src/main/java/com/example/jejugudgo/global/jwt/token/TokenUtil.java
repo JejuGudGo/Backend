@@ -10,12 +10,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.util.ArrayList;
+
 
 @Component
 @RequiredArgsConstructor
@@ -53,9 +52,10 @@ public class TokenUtil {
         String accessTokenFromHeader = request.getHeader("Authorization")
                 .substring(7);
 
-        log.info("===========================================================================");
+        log.info("===============================================================================");
         log.info("AccessToken from header: " + accessTokenFromHeader);
-        log.info("===========================================================================");
+        log.info("===============================================================================");
+
 
         if (!accessTokenFromHeader.isEmpty()) {
             return accessTokenFromHeader;
