@@ -24,6 +24,8 @@ public class JejuGudgoCourse {
 
     private Long likeCount;
 
+    private Long clickCount;
+
     private Double upToDate;
 
     private boolean isDeleted;

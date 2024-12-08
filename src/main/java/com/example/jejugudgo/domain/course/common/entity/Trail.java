@@ -50,5 +50,7 @@ public class Trail {
 
     private Long likeCount;
 
+    private Long clickCount;
+
     private Double upToDate;
 }

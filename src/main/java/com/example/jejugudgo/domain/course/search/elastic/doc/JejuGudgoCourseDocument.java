@@ -36,6 +36,9 @@ public class JejuGudgoCourseDocument {
     @Field(type = FieldType.Long)
     private Long likeCount;
 
+    @Field(type = FieldType.Long)
+    private Long clickCount;
+
     @Field(type = FieldType.Double)
     private Double upToDate;
 

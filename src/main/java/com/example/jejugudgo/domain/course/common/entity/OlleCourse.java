@@ -52,6 +52,8 @@ public class OlleCourse {
 
     private Long likeCount;
 
+    private Long clickCount;
+
     private Double upToDate;
 
 

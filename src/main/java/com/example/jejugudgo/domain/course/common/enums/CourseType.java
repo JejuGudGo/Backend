@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum CourseType {
     COURSE_TYPE01("제주객의 길"),
     COURSE_TYPE02("올레길"),
-    COURSE_TYPE03("산책로");
+    COURSE_TYPE03("산책로"),
+    COURSE_TYPE04("전체");
 
     private final String type;
 

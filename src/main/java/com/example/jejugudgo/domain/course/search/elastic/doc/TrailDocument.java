@@ -5,6 +5,8 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import java.util.List;
+
 @Document(indexName = "trail")
 @Data
 public class TrailDocument {
@@ -12,7 +14,7 @@ public class TrailDocument {
     Long id;
 
     @Field(type = FieldType.Text)
-    String tag;
+    List<String> tags;
 
     @Field(type = FieldType.Text)
     String title;
@@ -55,6 +57,9 @@ public class TrailDocument {
 
     @Field(type = FieldType.Long)
     private Long likeCount;
+
+    @Field(type = FieldType.Long)
+    private Long clickCount;
 
     @Field(type = FieldType.Double)
     private Double upToDate;

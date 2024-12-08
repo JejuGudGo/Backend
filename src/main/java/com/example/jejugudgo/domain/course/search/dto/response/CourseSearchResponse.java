@@ -8,16 +8,22 @@ import java.util.List;
 
 public record CourseSearchResponse(
         Long id,
+        String cat1,
         List<String> tags,
         LikeInfo likeInfo,
         String title,
+        @Nullable String address,
         @Nullable String route,
         @Nullable String summary,
+        @Nullable String content,
         @Nullable String distance,
         @Nullable String time,
         String thumbnailUrl,
-        @Nullable String starAvg,
+        @Nullable Double starAvg,
         @Nullable Long reviewCount,
+        @Nullable Long likeCount,
+        @Nullable Long clickCount,
+        @Nullable Double upToDate,
         RoutePoint startPoint,
         RoutePoint endPoint
 ) {
