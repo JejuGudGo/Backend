@@ -51,9 +51,9 @@ public class SMSMessageService {
         SingleMessageSentResponse response = this.messageService
                 .sendOne(new SingleMessageSendingRequest(message));
 
-        log.info("======================================================");
+        log.info("===============================================================================");
         log.info("SMSMessage sent to: " + sendTo);
-        log.info("======================================================");
+        log.info("===============================================================================");
 
         return response;
     }
