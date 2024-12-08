@@ -18,7 +18,6 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static org.hibernate.query.sqm.tree.SqmNode.log;
 
@@ -27,6 +26,7 @@ import static org.hibernate.query.sqm.tree.SqmNode.log;
 public class TrailDataService {
     private final DataCommandLogRepository dataCommandLogRepository;
     private final TrailRepository trailRepository;
+    private final TrailElasticDataService trailElasticDataService;
 
     public void loadTrailCsvToDatabase() throws IOException, CsvException {
         DataCommandLog checkDataConfig = dataCommandLogRepository.findByConfigKey("TrailData")
@@ -74,6 +74,8 @@ public class TrailDataService {
             } catch (IOException | CsvException e) {
                 throw new CustomException(RetCode.RET_CODE92);
             }
+
+            trailElasticDataService.createTrailToElastic();
 
             DataCommandLog dataCommandLog = DataCommandLog.builder()
                     .configKey("TrailData")

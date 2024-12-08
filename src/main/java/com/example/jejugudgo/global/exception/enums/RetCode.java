@@ -24,7 +24,7 @@ public enum RetCode {
     RET_CODE93("93", "이미지 저장에 실패하였습니다."),
     RET_CODE94("94", "해당 이미지가 존재하지 않습니다."),
     RET_CODE95("95", "이미지 삭제에 실패하였습니다."),
-    RET_CODE96("96", "message publish 에 실패하였습니다."),
+    RET_CODE96("96", "message publish/consume 에 실패하였습니다."),
     RET_CODE97("97", "해당 결과가 존재하지 않습니다."),
     RET_CODE98("98", "토큰이 만료되었습니다."),
     RET_CODE99("99", "서버 오류로 인하여 요청에 실패하였습니다.");

@@ -1,11 +1,8 @@
 package com.example.jejugudgo.global.data.course;
 
 import com.example.jejugudgo.domain.course.common.entity.OlleCourse;
-import com.example.jejugudgo.domain.course.common.entity.OlleCourseTag;
-import com.example.jejugudgo.domain.course.common.enums.OlleTag;
 import com.example.jejugudgo.domain.course.common.enums.OlleType;
 import com.example.jejugudgo.domain.course.common.repository.OlleCourseRepository;
-import com.example.jejugudgo.domain.course.common.repository.OlleCourseTagRepository;
 import com.example.jejugudgo.global.data.common.entity.DataCommandLog;
 import com.example.jejugudgo.global.data.common.repository.DataCommandLogRepository;
 import com.example.jejugudgo.global.exception.enums.RetCode;
@@ -29,7 +26,6 @@ import static org.hibernate.query.sqm.tree.SqmNode.log;
 public class OlleCourseDataService {
     private final DataCommandLogRepository dataCommandLogRepository;
     private final OlleCourseRepository olleCourseRepository;
-    private final OlleCourseTagRepository olleCourseTagRepository;
 
     public void loadOlleCourseCsvToDatabase() throws IOException, CsvException {
         DataCommandLog checkDataConfig = dataCommandLogRepository.findByConfigKey("OlleCourseData")

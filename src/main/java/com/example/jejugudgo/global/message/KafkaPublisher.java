@@ -23,6 +23,25 @@ public class KafkaPublisher {
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
 
+    // actionType : CREATE, READ, UPDATE, DELETE
+
+    @Retryable(
+            value = { CustomException.class },
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 2000)
+    )
+    public void send(String topic, String actionType) {
+        try {
+            Map<String, Object> message = new HashMap<>();
+            message.put("actionType", actionType);
+
+            setMessage(topic, actionType, message);
+
+        } catch (JsonProcessingException e) {
+            throw new CustomException(RetCode.RET_CODE96);
+        }
+    }
+
     @Retryable(
             value = { CustomException.class },
             maxAttempts = 3,
@@ -34,22 +53,26 @@ public class KafkaPublisher {
             message.put("actionType", actionType);
             message.put("data", data);
 
-            String jsonData = objectMapper.writeValueAsString(message);
-            CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(topic, jsonData);
-
-            future.whenComplete((result, ex) -> {
-                if (ex != null) {
-                    throw new CustomException(RetCode.RET_CODE96);
-
-                } else {
-                    System.out.println("===============================================================================");
-                    System.out.println("Message sent successfully: " + topic + " actionType: " + actionType);
-                    System.out.println("===============================================================================");
-                }
-            });
+            setMessage(topic, actionType, message);
 
         } catch (JsonProcessingException e) {
             throw new CustomException(RetCode.RET_CODE96);
         }
+    }
+
+    private void setMessage(String topic, String actionType, Map<String, Object> message) throws JsonProcessingException {
+        String jsonData = objectMapper.writeValueAsString(message);
+        CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(topic, jsonData);
+
+        future.whenComplete((result, ex) -> {
+            if (ex != null) {
+                throw new CustomException(RetCode.RET_CODE96);
+
+            } else {
+                System.out.println("===============================================================================");
+                System.out.println("Message sent successfully: " + topic + " actionType: " + actionType);
+                System.out.println("===============================================================================");
+            }
+        });
     }
 }

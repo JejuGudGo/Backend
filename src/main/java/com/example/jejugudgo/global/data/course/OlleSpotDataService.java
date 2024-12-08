@@ -28,6 +28,7 @@ public class OlleSpotDataService {
     private final DataCommandLogRepository dataCommandLogRepository;
     private final OlleCourseRepository olleCourseRepository;
     private final OlleSpotRepository olleSpotRepository;
+    private final OlleCourseElasticDataService olleCourseElasticDataService;
 
     public void loadOlleSpotCsvToDatabase() throws IOException, CsvException {
         DataCommandLog checkDataConfig = dataCommandLogRepository.findByConfigKey("OlleSpotData")
@@ -61,10 +62,13 @@ public class OlleSpotDataService {
                         .toList();
 
                 olleSpotRepository.saveAll(olleSpots);
+                updateOlleCourseRoutes();
 
             } catch (Exception e) {
                 throw new CustomException(RetCode.RET_CODE92);
             }
+
+            olleCourseElasticDataService.createOlleCourseToElastic();
 
             DataCommandLog dataCommandLog = DataCommandLog.builder()
                     .configKey("OlleSpotData")
@@ -82,6 +86,24 @@ public class OlleSpotDataService {
             log.info("===============================================================================");
             log.info("Olle spot data is already loaded");
             log.info("===============================================================================");
+        }
+    }
+
+    private void updateOlleCourseRoutes() {
+        List<OlleCourse> courses = olleCourseRepository.findAll();
+
+        for (OlleCourse course : courses) {
+            List<OlleSpot> spots = olleSpotRepository.findByOlleCourseOrderBySpotOrderAsc(course);
+
+            if (!spots.isEmpty()) {
+                OlleSpot firstSpot = spots.get(0);
+                OlleSpot lastSpot = spots.get(spots.size() - 1);
+
+                String route = firstSpot.getTitle() + "-" + lastSpot.getTitle();
+                course = course.updateRoute(route);
+
+                olleCourseRepository.save(course);
+            }
         }
     }
 }

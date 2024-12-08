@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface OlleSpotRepository extends JpaRepository<OlleSpot, Long> {
-    List<OlleSpot> findByOlleCourse(OlleCourse olleCourse);
+    List<OlleSpot> findByOlleCourseOrderBySpotOrderAsc(OlleCourse olleCourse);
 }

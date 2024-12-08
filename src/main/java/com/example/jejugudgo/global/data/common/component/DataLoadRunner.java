@@ -32,8 +32,8 @@ public class DataLoadRunner implements CommandLineRunner {
 
         trailDataService.loadTrailCsvToDatabase();
         olleCourseDataService.loadOlleCourseCsvToDatabase();
-        olleSpotDataService.loadOlleSpotCsvToDatabase();
         olleCourseTagDataService.loadOlleTagCsvToDatabase();
+        olleSpotDataService.loadOlleSpotCsvToDatabase();
         olleGpxDataService.loadOlleGpxCsvToDatabase();
         hayongOlleGpxDataService.loadHaYoungOlleSpotCsvData();
     }

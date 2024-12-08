@@ -30,6 +30,8 @@ public class OlleCourse {
 
     private String summary;
 
+    private String thumbnailUrl = "default";
+
     @Lob
     @Column(columnDefinition = "TEXT")
     private String content;
@@ -51,4 +53,11 @@ public class OlleCourse {
     private Long likeCount;
 
     private Double upToDate;
+
+
+    public OlleCourse updateRoute(String route){
+        return toBuilder()
+                .route(route)
+                .build();
+    }
 }
