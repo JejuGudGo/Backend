@@ -60,6 +60,7 @@ public class User {
 
     public User updateDeletedAt() {
         return this.toBuilder()
+                .userStatus(UserStatus.DELETED)
                 .deletedAt(LocalDateTime.now())
                 .build();
     }

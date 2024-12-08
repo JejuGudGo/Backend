@@ -44,6 +44,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         if (!bCryptPasswordEncoder.matches(password, userDetails.getPassword())) {
             signInValidation.validateSignInStatus(user);
         }
+
         return new CustomAuthenticationToken(userDetails, password, provider);
     }
 

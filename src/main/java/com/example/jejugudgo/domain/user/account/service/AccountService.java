@@ -37,8 +37,8 @@ public class AccountService {
 
     // TODO: 회원탈퇴 이후 절차 문의
     public void cancelAccount(HttpServletRequest request) {
-        String userId = tokenUtil.getAccessTokenFromHeader(request);
-        User user = userRepository.findById(Long.parseLong(userId))
+        Long userId = tokenUtil.getUserIdFromHeader(request);
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(RetCode.RET_CODE07));
 
         user = user.updateDeletedAt();
