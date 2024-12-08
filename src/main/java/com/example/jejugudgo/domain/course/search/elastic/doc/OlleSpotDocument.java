@@ -13,6 +13,9 @@ public class OlleSpotDocument {
     @Field(type = FieldType.Text)
     String title;
 
+    @Field(type = FieldType.Keyword)
+    private String titleKeyword;
+
     @Field(type = FieldType.Long, index = false)
     Double latitude;
 

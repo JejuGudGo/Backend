@@ -90,6 +90,7 @@ public class OlleCourseElasticDataService {
         olleCourseDocument.setClickCount(olleCourse.getClickCount());
         olleCourseDocument.setSpots(spotDocuments);
         olleCourseDocument.setTags(tagDocuments);
+        olleCourseDocument.setOlleType(olleCourse.getOlleType().getType());
 
         olleCourseDocumentRepository.save(olleCourseDocument);
     }

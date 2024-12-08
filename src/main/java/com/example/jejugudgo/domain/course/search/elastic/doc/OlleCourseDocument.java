@@ -73,4 +73,7 @@ public class OlleCourseDocument {
 
     @Field(type = FieldType.Nested)
     private List<OlleCourseTagDocument> tags;
+
+    @Field(type = FieldType.Text)
+    private String olleType;
 }

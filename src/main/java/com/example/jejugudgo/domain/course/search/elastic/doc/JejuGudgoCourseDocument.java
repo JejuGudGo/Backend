@@ -15,6 +15,9 @@ public class JejuGudgoCourseDocument {
     @Field(type = FieldType.Text)
     private String title;
 
+    @Field(type = FieldType.Keyword)
+    private String titleKeyword;
+
     @Field(type = FieldType.Text, index = false)
     private String route;
 

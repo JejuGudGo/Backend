@@ -16,6 +16,9 @@ public class TrailDocument {
     @Field(type = FieldType.Text)
     List<String> tags;
 
+    @Field(type = FieldType.Keyword)
+    private String titleKeyword;
+
     @Field(type = FieldType.Text)
     String title;
 

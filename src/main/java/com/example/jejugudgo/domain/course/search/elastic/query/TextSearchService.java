@@ -57,7 +57,7 @@ public class TextSearchService implements SearchService {
 
             // 카테고리 2 조건 추가
             if (request.cat2() != null && !request.cat2().isEmpty()) {
-                addCategory2Filter(boolQueryBuilder, request.cat2());
+                addCategory2Filter(boolQueryBuilder, request.cat1(), request.cat2());
             }
 
             // 카테고리 3 조건 추가
@@ -69,85 +69,55 @@ public class TextSearchService implements SearchService {
             return executeSearch(httpRequest, searchRequest, request);
 
         } catch (Exception e) {
-            return List.of();
+            e.printStackTrace();
+            return null;
         }
     }
 
     private void addKeywordQueries(BoolQuery.Builder boolQueryBuilder, String keyword, String cat1) {
-        // 공통 조건
         boolQueryBuilder.should(QueryBuilders.match(m -> m
                 .field("title")
                 .query(keyword)
-                .boost(6.0f) // "title" 필드에 높은 가중치 부여
+                .boost(6.0f)
         ));
 
-        boolQueryBuilder.should(QueryBuilders.matchPhrase(m -> m
-                .field("title")
-                .query(keyword)
-                .boost(5.0f) // "title" 내 정확한 구문 검색
+        boolQueryBuilder.should(QueryBuilders.queryString(qs -> qs
+                .query("*" + keyword + "*") // 와일드카드 검색
+                .defaultField("title")
+                .boost(5.0f)
         ));
 
         boolQueryBuilder.should(QueryBuilders.match(m -> m
                 .field("tags")
                 .query(keyword)
-                .boost(4.0f) // "tags" 필드도 검색 가능
+                .boost(3.0f)
         ));
 
-        boolQueryBuilder.should(QueryBuilders.queryString(q -> q
-                .query("*" + keyword + "*")
-                .defaultField("title")
-                .boost(3.0f) // 부분 매칭을 허용
-        ));
-
-        if ("전체".equalsIgnoreCase(cat1)) {
+        if (cat1.equalsIgnoreCase(ALL)) {
             BoolQuery.Builder trailQueryBuilder = QueryBuilders.bool();
             trailQueryBuilder.should(QueryBuilders.match(m -> m
                     .field("title")
                     .query(keyword)
-                    .boost(6.0f) // "title" 필드에 높은 가중치 부여
-            ));
-
-            trailQueryBuilder.should(QueryBuilders.match(m -> m
-                    .field("title")
-                    .query(keyword)
-                    .boost(5.0f) // "title" 필드에 높은 가중치 부여
+                    .boost(6.0f)
             ));
 
             trailQueryBuilder.should(QueryBuilders.match(m -> m
                     .field("tags")
                     .query(keyword)
-                    .boost(4.0f) // "tags" 필드도 검색 가능
-            ));
-
-            trailQueryBuilder.should(QueryBuilders.queryString(q -> q
-                    .query("*" + keyword + "*")
-                    .defaultField("title")
-                    .boost(3.0f) // 부분 매칭을 허용
+                    .boost(5.0f)
             ));
 
             BoolQuery.Builder nonTrailQueryBuilder = QueryBuilders.bool();
             nonTrailQueryBuilder.should(QueryBuilders.match(m -> m
                     .field("title")
                     .query(keyword)
-                    .boost(6.0f) // "title" 필드에 높은 가중치 부여
-            ));
-
-            nonTrailQueryBuilder.should(QueryBuilders.matchPhrase(m -> m
-                    .field("title")
-                    .query(keyword)
-                    .boost(5.0f) // "title" 내 정확한 구문 검색
+                    .boost(6.0f)
             ));
 
             nonTrailQueryBuilder.should(QueryBuilders.match(m -> m
                     .field("tags")
                     .query(keyword)
-                    .boost(4.0f) // "tags" 필드도 검색 가능
-            ));
-
-            nonTrailQueryBuilder.should(QueryBuilders.queryString(q -> q
-                    .query("*" + keyword + "*")
-                    .defaultField("title")
-                    .boost(3.0f) // 부분 매칭을 허용
+                    .boost(3.0f)
             ));
 
             nonTrailQueryBuilder.should(QueryBuilders.nested(n -> n
@@ -159,7 +129,6 @@ public class TextSearchService implements SearchService {
                     ))
             ));
 
-            // Trail 인덱스
             boolQueryBuilder.should(QueryBuilders.bool(b -> b
                     .filter(QueryBuilders.terms(t -> t
                             .field("_index")
@@ -168,7 +137,6 @@ public class TextSearchService implements SearchService {
                     .must(trailQueryBuilder.build()._toQuery())
             ));
 
-            // Non-trail 인덱스
             boolQueryBuilder.should(QueryBuilders.bool(b -> b
                     .filter(QueryBuilders.terms(t -> t
                             .field("_index")
@@ -180,6 +148,19 @@ public class TextSearchService implements SearchService {
                     .must(nonTrailQueryBuilder.build()._toQuery())
             ));
         }
+
+        if (cat1.equalsIgnoreCase(JEJU_GUDGO) || cat1.equalsIgnoreCase(OLLE)) {
+            boolQueryBuilder.should(QueryBuilders.nested(n -> n
+                    .path("spots")
+                    .query(QueryBuilders.match(m -> m
+                            .field("spots.title")
+                            .query(keyword)
+                            .boost(5.0f)
+                    ))
+            ));
+        }
+
+        boolQueryBuilder.minimumShouldMatch("1");
     }
 
     private void addCategory1Filter(BoolQuery.Builder boolQueryBuilder, String cat1) {
@@ -193,15 +174,20 @@ public class TextSearchService implements SearchService {
         ));
     }
 
-    private void addCategory2Filter(BoolQuery.Builder boolQueryBuilder, List<String> cat2) {
-        List<FieldValue> cat2Values = cat2.stream()
-                .map(FieldValue::of)
-                .collect(Collectors.toList());
+    private void addCategory2Filter(BoolQuery.Builder boolQueryBuilder, String cat1, List<String> cat2) {
+        String field = getCat2FieldByCat1(cat1);
+        if (field != null) {
+            List<FieldValue> mappedCat2 = cat2.stream()
+                    .map(FieldValue::of)
+                    .collect(Collectors.toList());
 
-        boolQueryBuilder.filter(QueryBuilders.terms(t -> t
-                .field("tags")
-                .terms(TermsQueryField.of(tf -> tf.value(cat2Values)))
-        ));
+            if (!mappedCat2.isEmpty()) {
+                boolQueryBuilder.filter(QueryBuilders.terms(t -> t
+                        .field(field)
+                        .terms(TermsQueryField.of(tf -> tf.value(mappedCat2)))
+                ));
+            }
+        }
     }
 
     private void addCategory3Filter(BoolQuery.Builder boolQueryBuilder, List<String> cat3) {
@@ -224,25 +210,23 @@ public class TextSearchService implements SearchService {
 
     private List<CourseSearchResponse> executeSearch(HttpServletRequest httpRequest, SearchRequest searchRequest, CourseSearchRequest request) throws Exception {
         SearchResponse<Map> response = elasticsearchClient.search(searchRequest, Map.class);
-
         return response.hits().hits().stream()
                 .map(hit -> {
                     Map<String, Object> source = hit.source();
+                    String index = hit.index();
 
                     Long id = source.get("id") instanceof Integer
                             ? ((Integer) source.get("id")).longValue()
                             : (Long) source.get("id");
 
-                    List<String> tags = source.get("tags") instanceof List
-                            ? (List<String>) source.get("tags")
-                            : new ArrayList<>();
+                    List<String> tags = parseTags(source.get("tags"));
 
                     LikeInfo likeInfo = userLikeUtil.isLiked(httpRequest, request.cat1(), id);
 
                     // RoutePoint 시작/끝 지점
                     RoutePoint startPoint = null;
                     RoutePoint endPoint = null;
-                    if (!source.get("_index").equals(INDEX_TRAIL)) {
+                    if (!index.equals(INDEX_TRAIL)) {
                         if (source.containsKey("spots") && source.get("spots") instanceof List spots) {
                             List<Map<String, Object>> spotList = (List<Map<String, Object>>) spots;
                             if (!spotList.isEmpty()) {
@@ -270,10 +254,9 @@ public class TextSearchService implements SearchService {
                         );
                     }
 
-                    assert startPoint != null;
                     return new CourseSearchResponse(
                             id,
-                            request.cat1(),
+                            request.cat1().equals(ALL) ? getCourseType(index) : request.cat1(),
                             tags,
                             likeInfo,
                             (String) source.get("title"),
@@ -294,7 +277,7 @@ public class TextSearchService implements SearchService {
                     );
                 })
                 .filter(filter -> filter.startPoint() != null)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private List<String> getIndicesByCar1(String cat1) {
@@ -317,8 +300,39 @@ public class TextSearchService implements SearchService {
         MapCoordinate minCoordinate = request.coordinate().get(0);
         MapCoordinate maxCoordinate = request.coordinate().get(1);
 
-        if (startPoint.latitude() >= minCoordinate.latitude() && startPoint.latitude() <= maxCoordinate.latitude() && startPoint.longitude() >= minCoordinate.longitude() && startPoint.longitude() <= maxCoordinate.longitude())
-            return true;
-        return false;
+        return startPoint.latitude() >= minCoordinate.latitude()
+                && startPoint.latitude() <= maxCoordinate.latitude()
+                && startPoint.longitude() >= minCoordinate.longitude()
+                && startPoint.longitude() <= maxCoordinate.longitude();
+    }
+
+    private String getCourseType(String index) {
+        if (index.equals(INDEX_JEJU))
+            return JEJU_GUDGO;
+
+        else if (index.equals(INDEX_OLLE))
+            return OLLE;
+
+        else if (index.equals(INDEX_TRAIL))
+            return TRAIL;
+
+        return null;
+    }
+
+    private String getCat2FieldByCat1(String cat1) {
+        if (cat1.equals(OLLE))
+            return "olleType";
+        else
+            return "tags";
+    }
+
+    private List<String> parseTags(Object tagsObj) {
+        if (tagsObj instanceof List) {
+            return ((List<?>) tagsObj).stream()
+                    .map(Object::toString)
+                    .collect(Collectors.toList());
+        } else {
+            return new ArrayList<>();
+        }
     }
 }

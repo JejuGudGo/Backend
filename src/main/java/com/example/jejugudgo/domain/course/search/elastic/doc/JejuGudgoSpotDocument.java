@@ -17,5 +17,9 @@ public class JejuGudgoSpotDocument {
     @Field(type = FieldType.Long, index = false)
     private Long spotOrder;
 
+    @Field(type = FieldType.Text)
     private String title;
+
+    @Field(type = FieldType.Keyword)
+    private String titleKeyword;
 }
