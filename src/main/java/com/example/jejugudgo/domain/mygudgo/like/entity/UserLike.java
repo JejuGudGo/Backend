@@ -24,7 +24,7 @@ public class UserLike {
     private User user;
 
     @Enumerated(value = EnumType.STRING)
-    private CourseType bookmarkType;
+    private CourseType courseType;
 
     private Long targetId;
 }

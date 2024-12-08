@@ -42,36 +42,36 @@ public class UserLikeUtil {
 
     private LikeInfo isJejuGudgoCourseLiked(Long id, User user) {
         UserLike userLike =  userLikeRepository
-                .findByUserAndBookmarkTypeAndTargetId(user, JEJU_GUDGO, id)
+                .findByUserAndCourseTypeAndTargetId(user, JEJU_GUDGO, id)
                 .orElse(null);
 
         return new LikeInfo(
                 userLike != null,
-                userLike != null ? userLike.getBookmarkType().getType() : null,
+                userLike != null ? userLike.getCourseType().getType() : null,
                 userLike != null ? userLike.getId() : null
         );
     }
 
     private LikeInfo isOlleCourseLiked(Long id, User user) {
         UserLike userLike =  userLikeRepository
-                .findByUserAndBookmarkTypeAndTargetId(user, OLLE, id)
+                .findByUserAndCourseTypeAndTargetId(user, OLLE, id)
                 .orElse(null);
 
         return new LikeInfo(
                 userLike != null,
-                userLike != null ? userLike.getBookmarkType().getType() : null,
+                userLike != null ? userLike.getCourseType().getType() : null,
                 userLike != null ? userLike.getId() : null
         );
     }
 
     private LikeInfo isTrailLiked(Long id, User user) {
         UserLike userLike =  userLikeRepository
-                .findByUserAndBookmarkTypeAndTargetId(user, TRAIL, id)
+                .findByUserAndCourseTypeAndTargetId(user, TRAIL, id)
                 .orElse(null);
 
         return new LikeInfo(
                 userLike != null,
-                userLike != null ? userLike.getBookmarkType().getType() : null,
+                userLike != null ? userLike.getCourseType().getType() : null,
                 userLike != null ? userLike.getId() : null
         );
     }

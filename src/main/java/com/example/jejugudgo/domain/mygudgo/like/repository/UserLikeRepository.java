@@ -14,10 +14,10 @@ public interface UserLikeRepository extends JpaRepository<UserLike, Long> {
 
     List<UserLike> findByUserId(Long userId);
 
-    List<UserLike> findByUserIdAndBookmarkType(Long userId, CourseType type);
+    List<UserLike> findByUserIdAndCourseType(Long userId, CourseType type);
 
-    Optional<UserLike> findByUserAndBookmarkTypeAndTargetId(User user, CourseType bookMarkType, Long targetId);
+    Optional<UserLike> findByUserAndCourseTypeAndTargetId(User user, CourseType bookMarkType, Long targetId);
 
-    @Query("SELECT DISTINCT b.user.id FROM UserLike b WHERE b.bookmarkType = :type AND b.targetId = :targetId")
+    @Query("SELECT DISTINCT b.user.id FROM UserLike b WHERE b.courseType = :type AND b.targetId = :targetId")
     List<Long> findDistinctUserByBookMarkTypeAndTargetId(@Param("type") CourseType type, @Param("targetId") Long targetId);
 }
