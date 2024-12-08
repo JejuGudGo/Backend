@@ -7,6 +7,7 @@ import com.example.jejugudgo.domain.mygudgo.review.dto.response.Review;
 import com.example.jejugudgo.domain.mygudgo.review.entity.UserReview;
 import com.example.jejugudgo.domain.mygudgo.review.entity.UserReviewCategory3;
 import com.example.jejugudgo.domain.mygudgo.review.entity.UserReviewImage;
+import com.example.jejugudgo.domain.mygudgo.review.enums.Category3Type;
 import com.example.jejugudgo.domain.mygudgo.review.repository.UserReviewCategory3Repository;
 import com.example.jejugudgo.domain.mygudgo.review.repository.UserReviewImageRepository;
 import com.example.jejugudgo.domain.mygudgo.review.repository.UserReviewRepository;
@@ -49,7 +50,7 @@ public class UserReviewService {
                     .map(review -> {
                         List<UserReviewCategory3> reviewCategory3s = userReviewCategory3Repository.findAllByReview(review);
                         List<String> tags = reviewCategory3s.stream()
-                                .map(UserReviewCategory3::getTitle)
+                                .map(tag ->  tag.getTitle().getCategory3())
                                 .toList();
 
                         List<UserReviewImage> images = userReviewImageRepository.findAllByReview(review);

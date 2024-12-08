@@ -32,6 +32,15 @@ public enum Category3Type {
                 .anyMatch(type -> type.name().equalsIgnoreCase(query) || type.getCategory3().equals(query));
     }
 
+    public static Category3Type fromInput(String input) {
+        for (Category3Type olleTag : Category3Type.values()) {
+            if (olleTag.getCategory3().equals(input)) {
+                return olleTag;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         return category3;

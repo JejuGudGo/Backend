@@ -1,5 +1,6 @@
 package com.example.jejugudgo.domain.mygudgo.review.entity;
 
+import com.example.jejugudgo.domain.mygudgo.review.enums.Category2Type;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +17,7 @@ public class UserReviewCategory2 {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
+    private Category2Type title;
 
 
     @ManyToOne
