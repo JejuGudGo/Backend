@@ -12,7 +12,7 @@ import com.example.jejugudgo.domain.course.common.dto.RoutePoint;
 import com.example.jejugudgo.domain.course.common.enums.CourseType;
 import com.example.jejugudgo.domain.course.search.dto.request.CourseSearchRequest;
 import com.example.jejugudgo.domain.course.search.dto.response.CourseSearchResponse;
-import com.example.jejugudgo.domain.course.search.service.SearchService;
+import com.example.jejugudgo.domain.course.search.service.CourseDetailService;
 import com.example.jejugudgo.domain.mygudgo.like.dto.response.LikeInfo;
 import com.example.jejugudgo.domain.mygudgo.like.util.UserLikeUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,8 +26,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class TextSearchService implements SearchService {
-
+public class TextSearchService {
     private final ElasticsearchClient elasticsearchClient;
     private final UserLikeUtil userLikeUtil;
 
@@ -40,7 +39,6 @@ public class TextSearchService implements SearchService {
     private static final String INDEX_OLLE = "olle_course";
     private static final String INDEX_TRAIL = "trail";
 
-    @Override
     public List<CourseSearchResponse> getCourses(HttpServletRequest httpRequest, CourseSearchRequest request) {
         try {
             BoolQuery.Builder boolQueryBuilder = QueryBuilders.bool();

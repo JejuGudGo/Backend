@@ -14,7 +14,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class TagSearchService implements SearchService {
+public class TagSearchService {
     private final OlleTagSearchService olleTagSearchService;
     private final TrailTagSearchService trailTagSearchService;
 
@@ -24,7 +24,6 @@ public class TagSearchService implements SearchService {
     private final String ALL = CourseType.COURSE_TYPE04.getType();
 
 
-    @Override
     public List<CourseSearchResponse> getCourses(HttpServletRequest httpRequest, CourseSearchRequest request) {
         if (request.cat1().equals(ALL))
             return getAllCourses(httpRequest, request);

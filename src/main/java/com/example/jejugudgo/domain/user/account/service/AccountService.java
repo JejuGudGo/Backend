@@ -39,7 +39,7 @@ public class AccountService {
     public void cancelAccount(HttpServletRequest request) {
         Long userId = tokenUtil.getUserIdFromHeader(request);
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(RetCode.RET_CODE07));
+                .orElseThrow(() -> new CustomException(RetCode.RET_CODE13));
 
         user = user.updateDeletedAt();
         userRepository.save(user);
