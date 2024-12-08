@@ -45,6 +45,7 @@ public class TokenUtil {
                 user.getPassword(),
                 user.getProvider()
         );
+
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
 

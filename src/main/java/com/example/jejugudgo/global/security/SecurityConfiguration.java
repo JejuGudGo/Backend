@@ -64,8 +64,7 @@ public class SecurityConfiguration {
         CustomAuthenticationFilter filter = new CustomAuthenticationFilter(
                 authenticationManager(authenticationConfiguration),
                 signUpService,
-                userRepository,
-                signInValidation
+                userRepository
         );
         filter.setAuthenticationSuccessHandler(customAuthenticationSuccessHandler);
         return filter;
@@ -73,7 +72,7 @@ public class SecurityConfiguration {
 
     @Bean
     public CustomAuthenticationProvider customAuthenticationProvider() {
-        return new CustomAuthenticationProvider(customUserDetailsService, passwordEncoder, userRepository);
+        return new CustomAuthenticationProvider(customUserDetailsService, passwordEncoder, userRepository, signInValidation);
     }
 
     @Bean

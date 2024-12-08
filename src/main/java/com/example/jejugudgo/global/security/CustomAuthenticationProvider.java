@@ -1,5 +1,6 @@
 package com.example.jejugudgo.global.security;
 
+import com.example.jejugudgo.domain.user.athentication.signIn.validation.SignInValidation;
 import com.example.jejugudgo.domain.user.common.entity.User;
 import com.example.jejugudgo.domain.user.common.enums.Provider;
 import com.example.jejugudgo.domain.user.common.enums.UserStatus;
@@ -20,6 +21,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     private final CustomUserDetailsService customUserDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
+    private final SignInValidation signInValidation;
 
     @Override
     public Authentication authenticate(Authentication authentication) {
@@ -40,7 +42,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             throw new CustomException(RetCode.RET_CODE12);
 
         if (!bCryptPasswordEncoder.matches(password, userDetails.getPassword())) {
-            throw new BadCredentialsException(RetCode.RET_CODE09.getMessage());
+            signInValidation.validateSignInStatus(user);
         }
         return new CustomAuthenticationToken(userDetails, password, provider);
     }

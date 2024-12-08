@@ -34,7 +34,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     private String DEFAULT_PASSWORD;
     private final SignUpService signUpService;
     private final UserRepository userRepository;
-    private final SignInValidation signInValidation;
 
     private static final Map<String, Provider> URL_PROVIDER = Map.of(
             "/api/v1/signin", Provider.BASIC,
@@ -43,11 +42,10 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             "/api/v1/signin/apple", Provider.APPLE
     );
 
-    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, SignUpService signUpService, UserRepository userRepository, SignInValidation signInValidation) {
+    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, SignUpService signUpService, UserRepository userRepository) {
         super.setAuthenticationManager(authenticationManager);
         this.signUpService = signUpService;
         this.userRepository = userRepository;
-        this.signInValidation = signInValidation;
 
         RequestMatcher matcher = new OrRequestMatcher(
                 URL_PROVIDER.keySet().stream()
@@ -66,9 +64,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             if (provider == Provider.BASIC) {
                 SignInRequest signInRequest = objectMapper.readValue(httpRequest.getInputStream(), SignInRequest.class);
                 logRequest(signInRequest.email(), provider);
-
-                User user = findUser(signInRequest.email(), provider);
-                signInValidation.validateSignInStatus(user);
 
                 return this.getAuthenticationManager().authenticate(
                         new CustomAuthenticationToken(signInRequest.email(), signInRequest.password(), provider)
