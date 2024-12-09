@@ -26,17 +26,17 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) {
         try {
             CustomAuthenticationToken token = (CustomAuthenticationToken) authentication;
-            String email = token.getName();
+            String id = token.getName();
             String password = (String) token.getCredentials();
             Provider provider = token.getProvider();
-            CustomUserDetails userDetails = (CustomUserDetails) customUserDetailsService.loadUserByEmailAndProvider(email, provider);
+            CustomUserDetails userDetails = (CustomUserDetails) customUserDetailsService.loadUserByIdAndProvider(id, provider);
 
             log.info("======================================================");
-            log.info("[Authentication] email={}, provider={}", email, provider);
+            log.info("[Authentication] id={}, provider={}", id, provider);
             log.info("User details: {}", userDetails);
             log.info("======================================================");
 
-            User user = findUser(email, provider);
+            User user = findUser(id, provider);
 
             if (user.getUserStatus() == UserStatus.DELETED)
                 throw new CustomException(RetCode.RET_CODE12);
@@ -57,8 +57,12 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         return CustomAuthenticationToken.class.isAssignableFrom(authentication);
     }
 
-    private User findUser(String email, Provider provider) {
-        return userRepository.findByEmailAndProvider(email, provider)
+    private User findUser(String id, Provider provider) {
+        if (provider.equals(Provider.BASIC))
+            return userRepository.findByEmailAndProvider(id, provider)
                 .orElseThrow(() -> new UsernameNotFoundException(RetCode.RET_CODE08.getMessage()));
+
+        return userRepository.findByOauthUserIdAndProvider(id, provider)
+                .orElseThrow(() -> new UsernameNotFoundException(RetCode.RET_CODE97.getMessage()));
     }
 }

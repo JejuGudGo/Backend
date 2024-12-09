@@ -16,9 +16,15 @@ import org.springframework.stereotype.Service;
 public class CustomUserDetailsService {
     private final UserRepository userRepository;
 
-    public UserDetails loadUserByEmailAndProvider(String email, Provider provider) {
-        User user = userRepository.findByEmailAndProvider(email, provider)
+    public UserDetails loadUserByIdAndProvider(String id, Provider provider) {
+        User user;
+
+        if (provider.equals(Provider.BASIC))
+            user = userRepository.findByEmailAndProvider(id, provider)
                 .orElseThrow(() -> new UsernameNotFoundException(RetCode.RET_CODE08.getMessage()));
+        else
+            user = userRepository.findByOauthUserIdAndProvider(id, provider)
+                    .orElseThrow(() -> new UsernameNotFoundException(RetCode.RET_CODE97.getMessage()));
 
         return new CustomUserDetails(user);
     }

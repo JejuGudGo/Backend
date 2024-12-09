@@ -12,7 +12,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByNickname(String nickname);
 
-    Optional<User> findByProviderAndOauthUserId(Provider provider, String userId);
+    Optional<User> findByOauthUserIdAndProvider(String userId, Provider provider);
 
     Optional<User> findUserByPhoneNumberAndName(String phoneNumber, String name);
 
