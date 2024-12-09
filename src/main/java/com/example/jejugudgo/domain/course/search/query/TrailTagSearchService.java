@@ -144,7 +144,8 @@ public class TrailTagSearchService implements TagSearchQueryService {
                             null,
                             null,
                             startPoint,
-                            null
+                            null,
+                            "trail" + trailId
                     );
                 }).toList();
     }

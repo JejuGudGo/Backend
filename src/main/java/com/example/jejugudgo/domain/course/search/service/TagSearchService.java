@@ -7,6 +7,7 @@ import com.example.jejugudgo.domain.course.search.query.OlleTagSearchService;
 import com.example.jejugudgo.domain.course.search.query.TrailTagSearchService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TagSearchService {
     private final OlleTagSearchService olleTagSearchService;
     private final TrailTagSearchService trailTagSearchService;
@@ -41,8 +43,10 @@ public class TagSearchService {
         List<CourseSearchResponse> allResponses = new ArrayList<>();
 
         List<CourseSearchResponse> olleCourses = olleTagSearchService.getCourses(httpRequest, request);
+        List<CourseSearchResponse> trailCourses = trailTagSearchService.getCourses(httpRequest, request);
 
         allResponses.addAll(olleCourses);
+        allResponses.addAll(trailCourses);
 
         sortCourses(allResponses);
 

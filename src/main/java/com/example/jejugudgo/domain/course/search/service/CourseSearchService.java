@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -29,7 +30,7 @@ public class CourseSearchService {
 
     public List<CourseSearchResponse> getCourses(HttpServletRequest httpRequest, String keyword, String cat1, List<String> cat2, List<String> cat3, List<String> coordinates) {
         CourseSearchRequest request = setCourseSearchRequest(keyword, cat1, cat2, cat3, coordinates);
-        if (request.keyword() != null)
+        if (!request.keyword().isEmpty())
             return textSearchService.getCourses(httpRequest, request);
 
         return tagSearchService.getCourses(httpRequest, request);
@@ -64,13 +65,9 @@ public class CourseSearchService {
         mapCoordinates.add(minCoordinate);
         mapCoordinates.add(maxCoordinate);
 
-        return new CourseSearchRequest(
-                keyword,
-                cat1,
-                cat2,
-                cat3,
-                mapCoordinates
-        );
+        System.out.println("ALL: " + mapCoordinates);
+
+        return new CourseSearchRequest(keyword, cat1, cat2, cat3, mapCoordinates);
     }
 
     private CourseDetailRequest setCourseDetailRequest(String cat1, String id) {
