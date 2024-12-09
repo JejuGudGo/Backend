@@ -1,4 +1,4 @@
-package com.example.jejugudgo.domain.user.term.entity;
+package com.example.jejugudgo.domain.user.athentication.term.entity;
 
 import com.example.jejugudgo.global.data.term.entity.Term;
 import jakarta.persistence.*;

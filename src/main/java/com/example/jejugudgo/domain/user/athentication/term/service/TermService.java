@@ -1,6 +1,6 @@
-package com.example.jejugudgo.domain.user.term.service;
+package com.example.jejugudgo.domain.user.athentication.term.service;
 
-import com.example.jejugudgo.domain.user.term.dto.TermResponse;
+import com.example.jejugudgo.domain.user.athentication.term.dto.TermResponse;
 import com.example.jejugudgo.global.data.term.entity.Term;
 import com.example.jejugudgo.global.data.term.repository.TermRepository;
 import lombok.RequiredArgsConstructor;

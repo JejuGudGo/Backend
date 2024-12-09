@@ -1,7 +1,7 @@
-package com.example.jejugudgo.domain.user.term.controller;
+package com.example.jejugudgo.domain.user.athentication.term.controller;
 
-import com.example.jejugudgo.domain.user.term.dto.TermResponse;
-import com.example.jejugudgo.domain.user.term.service.TermService;
+import com.example.jejugudgo.domain.user.athentication.term.dto.TermResponse;
+import com.example.jejugudgo.domain.user.athentication.term.service.TermService;
 import com.example.jejugudgo.global.exception.dto.CommonApiResponse;
 import com.example.jejugudgo.global.exception.util.ApiResponseUtil;
 import lombok.RequiredArgsConstructor;

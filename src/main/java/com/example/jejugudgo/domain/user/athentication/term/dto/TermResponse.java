@@ -1,4 +1,4 @@
-package com.example.jejugudgo.domain.user.term.dto;
+package com.example.jejugudgo.domain.user.athentication.term.dto;
 
 public record TermResponse (
         Long termsId,
