@@ -57,7 +57,7 @@ public class UserLikeService {
         User user = findUserById(userId);
 
         // 코스타입 유효성 검사
-        CourseType courseType = validateCourseType(userLikeRequest.courseType());
+        CourseType courseType = validateCourseType(userLikeRequest.type());
 
         // 중복 좋아요 검사
         validateDuplicateLike(user, courseType, userLikeRequest.targetId());

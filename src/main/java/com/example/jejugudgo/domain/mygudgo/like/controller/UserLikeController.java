@@ -43,7 +43,7 @@ public class UserLikeController {
         return ResponseEntity.ok(apiResponseUtil.success(response));
     }
 
-    @DeleteMapping("")
+    @PostMapping("/cancel")
     public ResponseEntity<CommonApiResponse> delete(@RequestParam("userLikeId") Long userLikeId, HttpServletRequest request) {
         userLikeService.delete(userLikeId, request);
         return ResponseEntity.ok(apiResponseUtil.success(null));
