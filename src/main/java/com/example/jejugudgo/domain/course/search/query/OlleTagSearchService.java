@@ -172,9 +172,9 @@ public class OlleTagSearchService implements TagSearchQueryService {
                             course.getThumbnailUrl(),
                             course.getStarAvg(),
                             course.getReviewCount(),
-                            course.getLikeCount(),
-                            course.getClickCount(),
-                            course.getUpToDate(),
+                            null,
+                            null,
+                            null,
                             startPoint,
                             endPoint
                     );

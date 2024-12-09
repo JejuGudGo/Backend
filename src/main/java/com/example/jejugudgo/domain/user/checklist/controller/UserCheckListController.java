@@ -38,7 +38,7 @@ public class UserCheckListController {
         return ResponseEntity.ok(apiResponseUtil.success(userCheckListResponse));
     }
 
-    @PostMapping("/{checkItemId}")
+    @PostMapping("/{checkItemId}/update")
     public ResponseEntity<CommonApiResponse> updateContent(@PathVariable("checkItemId") Long checkItemId, @RequestBody UserCheckListUpdateRequest request, HttpServletRequest servletRequest) {
         UserCheckListResponse userCheckListResponse = userCheckListService.updateCheckList(checkItemId, request);
         return ResponseEntity.ok(apiResponseUtil.success(userCheckListResponse));
@@ -50,7 +50,7 @@ public class UserCheckListController {
         return ResponseEntity.ok(apiResponseUtil.success(userCheckListResponse));
     }
 
-    @PostMapping("/{checkItemId}")
+    @PostMapping("/{checkItemId}/delete")
     public ResponseEntity<CommonApiResponse> delete(@PathVariable("checkItemId") Long checkItemId) {
         userCheckListService.delete(checkItemId);
         return ResponseEntity.ok(apiResponseUtil.success(null));

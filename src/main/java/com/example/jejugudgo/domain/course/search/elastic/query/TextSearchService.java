@@ -267,9 +267,9 @@ public class TextSearchService {
                             (String) source.get("thumbnailUrl"),
                             source.get("starAvg") instanceof Double ? (Double) source.get("starAvg") : null,
                             source.get("reviewCount") instanceof Long ? (Long) source.get("reviewCount") : null,
-                            source.get("likeCount") instanceof Long ? (Long) source.get("likeCount") : null,
-                            source.get("clickCount") instanceof Long ? (Long) source.get("clickCount") : null,
-                            source.get("upToDate") instanceof Double ? (Double) source.get("upToDate") : null,
+                            null,
+                            null,
+                            null,
                             isValid(request, startPoint) ? startPoint : null,
                             endPoint
                     );
