@@ -70,11 +70,11 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 );
             } else {
                 OauthRequest oauthRequest = objectMapper.readValue(httpRequest.getInputStream(), OauthRequest.class);
-                logRequest(oauthRequest.email(), provider);
+                logRequest(oauthRequest.oauthUserId(), provider);
                 signUpService.signUp(oauthRequest, provider);
 
                 return this.getAuthenticationManager().authenticate(
-                        new CustomAuthenticationToken(oauthRequest.email(), DEFAULT_PASSWORD, provider)
+                        new CustomAuthenticationToken(oauthRequest.oauthUserId(), DEFAULT_PASSWORD, provider)
                 );
             }
         } catch (CustomException | IOException e) {
@@ -87,9 +87,9 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         return URL_PROVIDER.get(httpRequest.getRequestURI());
     }
 
-    private void logRequest(String email, Provider provider) {
+    private void logRequest(String id, Provider provider) {
         log.info("===========================================================================");
-        log.info("SignIn user's email : {}", email);
+        log.info("SignIn user's id : {}", id);
         log.info("SignIn user's provider : {}", provider);
         log.info("===========================================================================");
     }

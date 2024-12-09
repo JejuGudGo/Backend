@@ -55,7 +55,7 @@ public class SignUpService {
     }
 
     public void signUp(OauthRequest request, Provider provider) {
-        User targetUser = userRepository.findByEmailAndProvider(request.email(), provider)
+        User targetUser = userRepository.findByOauthUserIdAndProvider(request.oauthUserId(), provider)
                 .orElse(null);
 
         if (targetUser == null) {
@@ -106,6 +106,7 @@ public class SignUpService {
                     .email(request.email())
                     .password(encodedPassword)
                     .nickname(nickname)
+                    .oauthUserId(request.oauthUserId())
                     .createdAt(LocalDateTime.now())
                     .userProfile(userProfile)
                     .build();
