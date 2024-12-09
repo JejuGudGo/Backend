@@ -24,7 +24,7 @@ public class SignInValidation {
         String status = redisUtil.getData(userId + "_status");
 
         if (status != null && status.equals("5")) {
-            redisUtil.setDataWithExpire(userId + "_status", PENDING, Duration.ofMinutes(1));
+            redisUtil.setDataWithExpire(userId + "_status", PENDING, Duration.ofSeconds(10));
             returnSuspendException(PENDING, userId);
         }
 
