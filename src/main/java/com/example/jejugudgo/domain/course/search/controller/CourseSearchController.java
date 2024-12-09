@@ -28,7 +28,7 @@ public class CourseSearchController {
             @RequestParam(value = "cat1", defaultValue = "전체") String cat1,
             @RequestParam(value = "cat2", required = false) List<String> cat2,
             @RequestParam(value = "cat3", required = false) List<String> cat3,
-            @RequestParam("coordinates") List<String> coordinates,
+            @RequestParam(value = "coordinates") List<String> coordinates,
             HttpServletRequest httpRequest
     ) {
         List<CourseSearchResponse> responses = courseSearchService.getCourses(httpRequest, keyword, cat1, cat2, cat3, coordinates);

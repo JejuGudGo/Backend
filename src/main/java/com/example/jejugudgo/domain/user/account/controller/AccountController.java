@@ -3,6 +3,7 @@ package com.example.jejugudgo.domain.user.account.controller;
 import com.example.jejugudgo.domain.user.account.dto.request.FindEmailRequest;
 import com.example.jejugudgo.domain.user.account.dto.request.PasswordUpdateRequest;
 import com.example.jejugudgo.domain.user.account.dto.request.SignUpRequest;
+import com.example.jejugudgo.domain.user.account.dto.request.ValidateEmailRequest;
 import com.example.jejugudgo.domain.user.account.dto.response.FindEmailResponse;
 import com.example.jejugudgo.domain.user.account.dto.response.SignUpResponse;
 import com.example.jejugudgo.domain.user.account.service.AccountService;
@@ -28,9 +29,9 @@ public class AccountController {
     private final UserProfileService userProfileService;
     private final ValidationManager validationManager;
 
-    @GetMapping(value =  "/signup/check")
-    public ResponseEntity<CommonApiResponse> checkEmailDuplicate(@RequestParam("email") String email ) {
-        validationManager.validateEmailDuplication(email);
+    @PostMapping(value =  "/signup/check")
+    public ResponseEntity<CommonApiResponse> checkEmailDuplicate(@RequestBody ValidateEmailRequest request) {
+        validationManager.validateEmailDuplication(request.email());
         return ResponseEntity.ok(apiResponseUtil.success(null));
     }
 

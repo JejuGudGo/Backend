@@ -10,9 +10,8 @@ import com.example.jejugudgo.global.exception.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Slf4j
@@ -25,27 +24,32 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) {
-        CustomAuthenticationToken token = (CustomAuthenticationToken) authentication;
-        String email = token.getName();
-        String password = (String) token.getCredentials();
-        Provider provider = token.getProvider();
-        CustomUserDetails userDetails = (CustomUserDetails) customUserDetailsService.loadUserByEmailAndProvider(email, provider);
+        try {
+            CustomAuthenticationToken token = (CustomAuthenticationToken) authentication;
+            String email = token.getName();
+            String password = (String) token.getCredentials();
+            Provider provider = token.getProvider();
+            CustomUserDetails userDetails = (CustomUserDetails) customUserDetailsService.loadUserByEmailAndProvider(email, provider);
 
-        log.info("======================================================");
-        log.info("[Authentication] email={}, provider={}", email, provider);
-        log.info("User details: {}", userDetails);
-        log.info("======================================================");
+            log.info("======================================================");
+            log.info("[Authentication] email={}, provider={}", email, provider);
+            log.info("User details: {}", userDetails);
+            log.info("======================================================");
 
-        User user = findUser(email, provider);
+            User user = findUser(email, provider);
 
-        if (user.getUserStatus() == UserStatus.DELETED)
-            throw new CustomException(RetCode.RET_CODE12);
+            if (user.getUserStatus() == UserStatus.DELETED)
+                throw new CustomException(RetCode.RET_CODE12);
 
-        if (!bCryptPasswordEncoder.matches(password, userDetails.getPassword())) {
-            signInValidation.validateSignInStatus(user);
+            if (!bCryptPasswordEncoder.matches(password, userDetails.getPassword())) {
+                signInValidation.validateSignInStatus(user);
+            }
+
+            return new CustomAuthenticationToken(userDetails, password, provider);
+
+        } catch (UsernameNotFoundException e) {
+            throw new CustomException(RetCode.RET_CODE08);
         }
-
-        return new CustomAuthenticationToken(userDetails, password, provider);
     }
 
     @Override
@@ -55,6 +59,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     private User findUser(String email, Provider provider) {
         return userRepository.findByEmailAndProvider(email, provider)
-                .orElseThrow(() -> new CustomException(RetCode.RET_CODE07));
+                .orElseThrow(() -> new UsernameNotFoundException(RetCode.RET_CODE08.getMessage()));
     }
 }

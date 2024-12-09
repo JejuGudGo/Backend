@@ -6,6 +6,8 @@ import com.example.jejugudgo.global.redis.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
+
 @Component
 @RequiredArgsConstructor
 public class AuthenticationValidator {
@@ -24,6 +26,8 @@ public class AuthenticationValidator {
 
         if (!redisValue.equals(requestValue)) {
             throw new CustomException(RetCode.RET_CODE02);
+        } else {
+            redisUtil.deleteData(request.key());
         }
     }
 

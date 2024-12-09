@@ -140,11 +140,12 @@ public class TrailTagSearchService implements TagSearchQueryService {
                             trail.getThumbnailUrl(),
                             trail.getStarAvg(),
                             trail.getReviewCount(),
-                            trail.getLikeCount(),
-                            trail.getClickCount(),
-                            trail.getUpToDate(),
+                            null,
+                            null,
+                            null,
                             startPoint,
-                            null
+                            null,
+                            "trail" + trailId
                     );
                 }).toList();
     }

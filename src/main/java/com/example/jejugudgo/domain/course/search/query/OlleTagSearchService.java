@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
 @Component
 public class OlleTagSearchService implements TagSearchQueryService {
     private final JPAQueryFactory queryFactory;
@@ -43,76 +42,71 @@ public class OlleTagSearchService implements TagSearchQueryService {
 
     @Override
     public List<?> getCoursesByCategory(CourseSearchRequest request) {
+        System.out.println("Coordinates: " + request.coordinate());
+
+        // 기본 쿼리 설정
         JPAQuery<OlleCourse> query = queryFactory
                 .selectFrom(olleCourse)
-                .join(olleSpot)
-                .on(olleSpot.olleCourse.eq(olleCourse))
+                .join(olleSpot).on(olleSpot.olleCourse.eq(olleCourse))
                 .where(
                         olleSpot.spotOrder.eq(1L)
-                                .and(
-                                        olleSpot.latitude.between(
-                                                request.coordinate().get(0).latitude(),
-                                                request.coordinate().get(1).latitude()
-                                        )
-                                )
-                                .and(
-                                        olleSpot.longitude.between(
-                                                request.coordinate().get(0).longitude(),
-                                                request.coordinate().get(1).longitude()
-                                        )
-                                )
+                                .and(olleSpot.latitude.between(
+                                        request.coordinate().get(0).latitude(),
+                                        request.coordinate().get(1).latitude()
+                                ))
+                                .and(olleSpot.longitude.between(
+                                        request.coordinate().get(0).longitude(),
+                                        request.coordinate().get(1).longitude()
+                                ))
                 );
 
-        List<String> cat2 = request.cat2();
-        List<String> cat3 = request.cat3();
+        System.out.println("Base Query Executed");
 
+        // Category2 조건 추가
+        List<String> cat2 = request.cat2();
         if (cat2 != null && !cat2.isEmpty()) {
             List<OlleType> types = cat2.stream()
                     .map(OlleType::fromType)
-                    .filter(Objects::nonNull) // 여러개가 가능하므로 일단 null 이 아닌 태그는 넣어둔다.
+                    .filter(Objects::nonNull)
                     .toList();
 
-            if (types.isEmpty())
-                return new ArrayList<>();
-
-            query
-                    .where(
-                            olleCourse.olleType.in(types)
-                    );
+            if (!types.isEmpty()) {
+                query.where(olleCourse.olleType.in(types));
+                System.out.println("Category2 Filter Applied: " + types);
+            }
         }
 
-        if (cat3 != null && ! cat3.isEmpty()) {
+        // Category3 조건 추가
+        List<String> cat3 = request.cat3();
+        if (cat3 != null && !cat3.isEmpty()) {
             List<Category3Type> types = cat3.stream()
                     .map(Category3Type::fromInput)
-                    .filter(Objects::nonNull) // 여러개가 가능하므로 일단 null 이 아닌 태그는 넣어둔다.
+                    .filter(Objects::nonNull)
                     .toList();
 
-            if (types.isEmpty())
-                return new ArrayList<>();
-
-            query.leftJoin(userReview)
-                    .on(userReview.reviewType.eq(CourseType.COURSE_TYPE02)
-                            .and(userReview.targetId.eq(olleCourse.id)))
-                    .leftJoin(userReviewCategory3)
-                    .on(userReviewCategory3.review.eq(userReview))
-                    .where(userReviewCategory3.title.in(types));
+            if (!types.isEmpty()) {
+                query.leftJoin(userReview)
+                        .on(userReview.reviewType.eq(CourseType.COURSE_TYPE02)
+                                .and(userReview.targetId.eq(olleCourse.id)))
+                        .leftJoin(userReviewCategory3)
+                        .on(userReviewCategory3.review.eq(userReview))
+                        .where(userReviewCategory3.title.in(types));
+                System.out.println("Category3 Filter Applied: " + types);
+            }
         }
 
-            /*
-                [정렬 기준]
-                1. 리뷰수 > 별점평균 > 좋아요 > 클릭 수
-                2. 최근 항목 클릭 수 (최신성)
-             */
-
+        // 정렬 및 페치
         List<OlleCourse> olleCourses = query
-                .orderBy(olleCourse.reviewCount.desc().nullsLast())
-                .orderBy(olleCourse.starAvg.desc().nullsLast())
-                .orderBy(olleCourse.likeCount.desc().nullsLast())
-                .orderBy(olleCourse.clickCount.desc().nullsLast())
-                .orderBy(olleCourse.upToDate.desc())
+                .distinct()
+                .orderBy(olleCourse.reviewCount.desc().nullsLast(),
+                        olleCourse.starAvg.desc().nullsLast(),
+                        olleCourse.likeCount.desc().nullsLast(),
+                        olleCourse.clickCount.desc().nullsLast(),
+                        olleCourse.upToDate.desc())
                 .fetch();
 
-        return olleCourses.stream().distinct().toList();
+        System.out.println("Total Courses Found: " + olleCourses.size());
+        return olleCourses;
     }
 
     @Override
@@ -134,28 +128,20 @@ public class OlleTagSearchService implements TagSearchQueryService {
                             .map(OlleTag::getTag)
                             .toList();
 
-                    // 스팟의 시작점과 끝점 구하는 쿼리
                     List<OlleSpot> spots = queryFactory
                             .selectFrom(olleSpot)
                             .where(olleSpot.olleCourse.eq(course))
                             .orderBy(olleSpot.spotOrder.asc())
                             .fetch();
 
-                    OlleSpot startSpot = spots.isEmpty() ? null : spots.get(0); // 시작점
-                    OlleSpot endSpot = spots.isEmpty() ? null : spots.get(spots.size() - 1); // 끝점
+                    OlleSpot startSpot = spots.isEmpty() ? null : spots.get(0);
+                    OlleSpot endSpot = spots.isEmpty() ? null : spots.get(spots.size() - 1);
 
-                    RoutePoint startPoint = new RoutePoint(
-                            startSpot.getTitle(),
-                            startSpot.getLatitude(),
-                            startSpot.getLongitude()
-                    );
+                    RoutePoint startPoint = startSpot != null ?
+                            new RoutePoint(startSpot.getTitle(), startSpot.getLatitude(), startSpot.getLongitude()) : null;
 
-                    RoutePoint endPoint = new RoutePoint(
-                            endSpot.getTitle(),
-                            endSpot.getLatitude(),
-                            endSpot.getLongitude()
-                    );
-
+                    RoutePoint endPoint = endSpot != null ?
+                            new RoutePoint(endSpot.getTitle(), endSpot.getLatitude(), endSpot.getLongitude()) : null;
 
                     return new CourseSearchResponse(
                             courseId,
@@ -172,11 +158,12 @@ public class OlleTagSearchService implements TagSearchQueryService {
                             course.getThumbnailUrl(),
                             course.getStarAvg(),
                             course.getReviewCount(),
-                            course.getLikeCount(),
-                            course.getClickCount(),
-                            course.getUpToDate(),
+                            null,
+                            null,
+                            null,
                             startPoint,
-                            endPoint
+                            endPoint,
+                            "olle" + courseId
                     );
                 })
                 .toList();

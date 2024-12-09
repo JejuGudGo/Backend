@@ -93,14 +93,4 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         log.info("SignIn user's provider : {}", provider);
         log.info("===========================================================================");
     }
-
-    private User findUser(String email, Provider provider) {
-        User user = userRepository.findByEmailAndProvider(email, provider)
-                .orElseThrow(() -> new CustomException(RetCode.RET_CODE07));
-
-        if (user.getUserStatus() == UserStatus.DELETED)
-            throw new CustomException(RetCode.RET_CODE12);
-
-        return user;
-    }
 }
