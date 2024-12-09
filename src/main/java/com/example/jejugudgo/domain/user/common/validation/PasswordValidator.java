@@ -21,7 +21,7 @@ public class PasswordValidator {
 
     public String isPasswordValid(String password) {
         if (!pattern.matcher(password).matches())
-            throw new CustomException(RetCode.RET_CODE10);
+            throw new CustomException(RetCode.RET_CODE09);
 
         return passwordEncoder.encode(password);
     }
