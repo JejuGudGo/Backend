@@ -18,7 +18,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class OlleCourseElasticDataService {
+public class OlleCourseElasticDataComponent {
     private final OlleCourseRepository olleCourseRepository;
     private final OlleCourseTagRepository olleCourseTagRepository;
     private final OlleCourseDocumentRepository olleCourseDocumentRepository;

@@ -13,7 +13,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class TrailElasticDataService {
+public class TrailElasticDataComponent {
     private final TrailRepository trailRepository;
     private final TrailDocumentRepository trailDocumentRepository;
 

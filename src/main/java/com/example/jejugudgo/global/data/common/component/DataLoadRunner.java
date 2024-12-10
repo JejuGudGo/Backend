@@ -12,29 +12,31 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DataLoadRunner implements CommandLineRunner {
     private final NicknameDataComponent nicknameDataComponent;
-    private final TermDataComponent termsDataService;
-    private final EventDataService eventDataService;
-    private final TrailDataService trailDataService;
+    private final TermDataComponent termsDataComponent;
+    private final EventDataService eventDataComponent;
+    private final TrailDataComponent trailDataComponent;
 
-    private final OlleCourseDataService olleCourseDataService;
-    private final OlleSpotDataService olleSpotDataService;
-    private final OlleCourseTagDataService olleCourseTagDataService;
-    private final OlleGpxDataService olleGpxDataService;
-    private final HayongOlleGpxDataService hayongOlleGpxDataService;
+    private final OlleCourseDataComponent olleCourseDataComponent;
+    private final OlleSpotDataService olleSpotDataComponent;
+    private final OlleCourseTagDataComponent olleCourseTagDataComponent;
+    private final OlleGpxDataService olleGpxDataComponent;
+    private final HayongOlleGpxDataComponent hayongOlleGpxDataComponent;
+    private final TourApiDataComponent tourApiDataComponent;
 
     @Override
     public void run(String... args) throws Exception {
         nicknameDataComponent.loadAdjectiveCsvToDatabase();
         nicknameDataComponent.loadNounCsvToDatabase();
-        termsDataService.loadTermsCsvToDatabase();
+        termsDataComponent.loadTermsCsvToDatabase();
 
-        eventDataService.loadEventCsvToDatabase();
+        eventDataComponent.loadEventCsvToDatabase();
 
-        trailDataService.loadTrailCsvToDatabase();
-        olleCourseDataService.loadOlleCourseCsvToDatabase();
-        olleCourseTagDataService.loadOlleTagCsvToDatabase();
-        olleSpotDataService.loadOlleSpotCsvToDatabase();
-        olleGpxDataService.loadOlleGpxCsvToDatabase();
-        hayongOlleGpxDataService.loadHaYoungOlleSpotCsvData();
+        trailDataComponent.loadTrailCsvToDatabase();
+        olleCourseDataComponent.loadOlleCourseCsvToDatabase();
+        olleCourseTagDataComponent.loadOlleTagCsvToDatabase();
+        olleSpotDataComponent.loadOlleSpotCsvToDatabase();
+        olleGpxDataComponent.loadOlleGpxCsvToDatabase();
+        hayongOlleGpxDataComponent.loadHaYoungOlleSpotCsvData();
+        tourApiDataComponent.loadTourApiData();
     }
 }

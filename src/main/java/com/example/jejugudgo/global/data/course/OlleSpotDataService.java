@@ -28,7 +28,7 @@ public class OlleSpotDataService {
     private final DataCommandLogRepository dataCommandLogRepository;
     private final OlleCourseRepository olleCourseRepository;
     private final OlleSpotRepository olleSpotRepository;
-    private final OlleCourseElasticDataService olleCourseElasticDataService;
+    private final OlleCourseElasticDataComponent olleCourseElasticDataComponent;
 
     public void loadOlleSpotCsvToDatabase() throws IOException, CsvException {
         DataCommandLog checkDataConfig = dataCommandLogRepository.findByConfigKey("OlleSpotData")
@@ -68,7 +68,7 @@ public class OlleSpotDataService {
                 throw new CustomException(RetCode.RET_CODE92);
             }
 
-            olleCourseElasticDataService.createOlleCourseToElastic();
+            olleCourseElasticDataComponent.createOlleCourseToElastic();
 
             DataCommandLog dataCommandLog = DataCommandLog.builder()
                     .configKey("OlleSpotData")
