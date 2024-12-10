@@ -1,7 +1,7 @@
 package com.example.jejugudgo.global.data.message;
 
-import com.example.jejugudgo.global.data.course.OlleCourseElasticDataService;
-import com.example.jejugudgo.global.data.course.TrailElasticDataService;
+import com.example.jejugudgo.global.data.course.OlleCourseElasticDataComponent;
+import com.example.jejugudgo.global.data.course.TrailElasticDataComponent;
 import com.example.jejugudgo.global.exception.enums.RetCode;
 import com.example.jejugudgo.global.exception.exception.CustomException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,8 +18,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class CourseDataConsumer {
     private final ObjectMapper objectMapper;
-    private final OlleCourseElasticDataService olleCourseElasticDataService;
-    private final TrailElasticDataService trailElasticService;
+    private final OlleCourseElasticDataComponent olleCourseElasticDataComponent;
+    private final TrailElasticDataComponent trailElasticDataComponent;
     
     @KafkaListener(topics = "olle-course", groupId = "olle")
     public void consumeOlleMessage(String message) {
@@ -28,7 +28,7 @@ public class CourseDataConsumer {
             String actionType = jsonNode.get("actionType").asText();
             switch (actionType) {
                 case "CREATE":
-                    olleCourseElasticDataService.createOlleCourseToElastic();
+                    olleCourseElasticDataComponent.createOlleCourseToElastic();
                     break;
                 default:
                     log.info("===============================================================================");
@@ -48,7 +48,7 @@ public class CourseDataConsumer {
             String actionType = jsonNode.get("actionType").asText();
             switch (actionType) {
                 case "CREATE":
-                    trailElasticService.createTrailToElastic();
+                    trailElasticDataComponent.createTrailToElastic();
                     break;
                 default:
                     log.info("===============================================================================");

@@ -23,7 +23,7 @@ import java.util.Objects;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class HayongOlleGpxDataService {
+public class HayongOlleGpxDataComponent {
     private final DataCommandLogRepository dataCommandLogRepository;
     private final OlleCourseRepository olleCourseRepository;
     private final OlleCourseLineDataRepository olleCourseLineDataRepository;

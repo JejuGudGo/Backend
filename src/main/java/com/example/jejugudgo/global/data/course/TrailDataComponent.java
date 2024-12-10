@@ -23,10 +23,10 @@ import static org.hibernate.query.sqm.tree.SqmNode.log;
 
 @Component
 @RequiredArgsConstructor
-public class TrailDataService {
+public class TrailDataComponent {
     private final DataCommandLogRepository dataCommandLogRepository;
     private final TrailRepository trailRepository;
-    private final TrailElasticDataService trailElasticDataService;
+    private final TrailElasticDataComponent trailElasticDataService;
 
     public void loadTrailCsvToDatabase() throws IOException, CsvException {
         DataCommandLog checkDataConfig = dataCommandLogRepository.findByConfigKey("TrailData")

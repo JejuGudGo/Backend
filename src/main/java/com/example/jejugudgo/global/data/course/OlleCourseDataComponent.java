@@ -23,7 +23,7 @@ import static org.hibernate.query.sqm.tree.SqmNode.log;
 
 @Component
 @RequiredArgsConstructor
-public class OlleCourseDataService {
+public class OlleCourseDataComponent {
     private final DataCommandLogRepository dataCommandLogRepository;
     private final OlleCourseRepository olleCourseRepository;
 
