@@ -78,9 +78,9 @@ public class UserLikeService {
      * 좋아요 삭제
      */
     @Transactional
-    public void delete(Long userLikeId, HttpServletRequest servletRequest) {
+    public void delete(UserLikeRequest userLikeRequest, HttpServletRequest servletRequest) {
         Long userId = tokenUtil.getUserIdFromHeader(servletRequest); // 토큰에서 사용자 ID 추출
-        UserLike userLike = findUserLikeById(userLikeId);
+        UserLike userLike = findUserLikeById(userLikeRequest.targetId());
 
         // 삭제 권한 검사
         validateDeletePermission(userLike, userId);
