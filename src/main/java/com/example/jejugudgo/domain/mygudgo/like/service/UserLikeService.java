@@ -6,6 +6,7 @@ import com.example.jejugudgo.domain.course.common.enums.CourseType;
 import com.example.jejugudgo.domain.course.common.query.CourseQueryService;
 import com.example.jejugudgo.domain.course.common.query.TrailQueryService;
 import com.example.jejugudgo.domain.mygudgo.like.dto.request.UserLikeRequest;
+import com.example.jejugudgo.domain.mygudgo.like.dto.response.LikeInfo;
 import com.example.jejugudgo.domain.mygudgo.like.dto.response.UserLikeResponse;
 import com.example.jejugudgo.domain.mygudgo.like.entity.UserLike;
 import com.example.jejugudgo.domain.mygudgo.like.repository.UserLikeRepository;
@@ -52,12 +53,12 @@ public class UserLikeService {
      * 좋아요 생성
      */
     @Transactional
-    public UserLikeResponse create(HttpServletRequest servletRequest, UserLikeRequest userLikeRequest) {
+    public LikeInfo create(HttpServletRequest servletRequest, UserLikeRequest userLikeRequest) {
         Long userId = tokenUtil.getUserIdFromHeader(servletRequest); // 토큰에서 사용자 ID 추출
         User user = findUserById(userId);
 
         // 코스타입 유효성 검사
-        CourseType courseType = validateCourseType(userLikeRequest.type());
+        CourseType courseType = validateCourseType(userLikeRequest.cat1());
 
         // 중복 좋아요 검사
         validateDuplicateLike(user, courseType, userLikeRequest.targetId());
@@ -65,8 +66,12 @@ public class UserLikeService {
         // 좋아요 저장
         UserLike userLike = saveUserLike(user, courseType, userLikeRequest.targetId());
 
-        // UserLikeResponse 생성
-        return mapToResponse(userLike);
+        // LikeInfo 생성
+        return new LikeInfo(
+                true,
+                courseType.getType(),
+                userLike.getId()
+        );
     }
 
     /**

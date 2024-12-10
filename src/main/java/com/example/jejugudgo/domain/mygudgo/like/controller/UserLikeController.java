@@ -1,6 +1,7 @@
 package com.example.jejugudgo.domain.mygudgo.like.controller;
 
 import com.example.jejugudgo.domain.mygudgo.like.dto.request.UserLikeRequest;
+import com.example.jejugudgo.domain.mygudgo.like.dto.response.LikeInfo;
 import com.example.jejugudgo.domain.mygudgo.like.dto.response.UserLikeResponse;
 import com.example.jejugudgo.domain.mygudgo.like.service.UserLikeService;
 import com.example.jejugudgo.global.exception.util.ApiResponseUtil;
@@ -29,7 +30,7 @@ public class UserLikeController {
 
     @GetMapping("")
     public ResponseEntity<CommonApiResponse> getUserLikes(
-            @RequestParam("type") String query,
+            @RequestParam("cat1") String query,
             HttpServletRequest request,
             Pageable pageable) {
         Pageable page = PagingUtil.createPageable(pageable.getPageNumber(), pageable.getPageSize());
@@ -39,7 +40,7 @@ public class UserLikeController {
 
     @PostMapping("")
     public ResponseEntity<CommonApiResponse> create(HttpServletRequest servletRequest,@RequestBody UserLikeRequest userLikeRequest) {
-        UserLikeResponse response = userLikeService.create(servletRequest, userLikeRequest);
+        LikeInfo response = userLikeService.create(servletRequest, userLikeRequest);
         return ResponseEntity.ok(apiResponseUtil.success(response));
     }
 
