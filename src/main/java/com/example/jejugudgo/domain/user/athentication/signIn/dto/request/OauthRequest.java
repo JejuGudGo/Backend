@@ -4,8 +4,8 @@ import jakarta.annotation.Nullable;
 
 public record OauthRequest(
     String oauthUserId,
-    String email,
+    @Nullable String email,
     @Nullable String profileImgUrl,
-    String nickname
+    @Nullable String nickname
 ) {
 }

@@ -97,7 +97,8 @@ public class SignUpService {
                     request.profileImgUrl() == null ? DEFAULT_IMAGE_URL : request.profileImgUrl()
             );
             String encodedPassword = validationManager.validatePasswordPattern(DEFAULT_PASSWORD);
-            String nickname = randomNicknameUtil.set();
+            String randomNickname = randomNicknameUtil.set();
+            String nickname = request.nickname();
 
             User user = User.builder()
                     .role(Role.USER)
@@ -105,7 +106,7 @@ public class SignUpService {
                     .provider(provider)
                     .email(request.email())
                     .password(encodedPassword)
-                    .nickname(nickname)
+                    .nickname(nickname == null ? randomNickname : nickname)
                     .oauthUserId(request.oauthUserId())
                     .createdAt(LocalDateTime.now())
                     .userProfile(userProfile)
