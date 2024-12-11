@@ -127,6 +127,7 @@ public class TrailTagSearchService implements TagSearchQueryService {
 
                     return new CourseSearchResponse(
                             trailId,
+                            CourseType.COURSE_TYPE03.getType(),
                             trailTags,
                             likeInfo,
                             trail.getTitle(),

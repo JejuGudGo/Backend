@@ -8,6 +8,7 @@ import java.util.List;
 
 public record CourseSearchResponse(
         Long id,
+        String cat1,
         List<String> tags,
         LikeInfo likeInfo,
         String title,

@@ -262,6 +262,7 @@ public class TextSearchService {
 
                     return new CourseSearchResponse(
                             id,
+                            courseType,
                             tags,
                             likeInfo,
                             (String) source.get("title"),
