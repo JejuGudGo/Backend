@@ -1,10 +1,12 @@
 package com.example.jejugudgo.domain.course.recommend.dto;
 
+import jakarta.annotation.Nullable;
+
 public record OpenApiResponse(
-    String thumbnailUrl,
+    @Nullable String thumbnailUrl,
     String title,
     String address,
-    String latitude,
-    String longitude
+    double latitude,
+    double longitude
 ) {
 }

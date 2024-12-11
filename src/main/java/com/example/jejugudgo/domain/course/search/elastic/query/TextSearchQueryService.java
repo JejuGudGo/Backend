@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class TextSearchService {
+public class TextSearchQueryService {
     private final ElasticsearchClient elasticsearchClient;
     private final UserLikeUtil userLikeUtil;
 

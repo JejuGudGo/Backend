@@ -19,17 +19,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Component
-public class OlleTagSearchService implements TagSearchQueryService {
+public class OlleTagSearchQueryService implements TagSearchQueryService {
     private final JPAQueryFactory queryFactory;
     private final UserLikeUtil userLikeUtil;
 
     @Autowired
-    public OlleTagSearchService(EntityManager entityManager, UserLikeUtil userLikeUtil) {
+    public OlleTagSearchQueryService(EntityManager entityManager, UserLikeUtil userLikeUtil) {
         this.queryFactory = new JPAQueryFactory(entityManager);
         this.userLikeUtil = userLikeUtil;
     }
@@ -42,8 +41,6 @@ public class OlleTagSearchService implements TagSearchQueryService {
 
     @Override
     public List<?> getCoursesByCategory(CourseSearchRequest request) {
-        System.out.println("Coordinates: " + request.coordinate());
-
         // 기본 쿼리 설정
         JPAQuery<OlleCourse> query = queryFactory
                 .selectFrom(olleCourse)
@@ -60,8 +57,6 @@ public class OlleTagSearchService implements TagSearchQueryService {
                                 ))
                 );
 
-        System.out.println("Base Query Executed");
-
         // Category2 조건 추가
         List<String> cat2 = request.cat2();
         if (cat2 != null && !cat2.isEmpty()) {
@@ -72,7 +67,6 @@ public class OlleTagSearchService implements TagSearchQueryService {
 
             if (!types.isEmpty()) {
                 query.where(olleCourse.olleType.in(types));
-                System.out.println("Category2 Filter Applied: " + types);
             }
         }
 
@@ -91,7 +85,6 @@ public class OlleTagSearchService implements TagSearchQueryService {
                         .leftJoin(userReviewCategory3)
                         .on(userReviewCategory3.review.eq(userReview))
                         .where(userReviewCategory3.title.in(types));
-                System.out.println("Category3 Filter Applied: " + types);
             }
         }
 
@@ -105,7 +98,6 @@ public class OlleTagSearchService implements TagSearchQueryService {
                         olleCourse.upToDate.desc())
                 .fetch();
 
-        System.out.println("Total Courses Found: " + olleCourses.size());
         return olleCourses;
     }
 

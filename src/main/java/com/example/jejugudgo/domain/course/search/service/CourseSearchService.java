@@ -6,20 +6,19 @@ import com.example.jejugudgo.domain.course.search.dto.request.CourseDetailReques
 import com.example.jejugudgo.domain.course.search.dto.request.CourseSearchRequest;
 import com.example.jejugudgo.domain.course.search.dto.response.CourseDetailResponse;
 import com.example.jejugudgo.domain.course.search.dto.response.CourseSearchResponse;
-import com.example.jejugudgo.domain.course.search.elastic.query.TextSearchService;
+import com.example.jejugudgo.domain.course.search.elastic.query.TextSearchQueryService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CourseSearchService {
     private final TagSearchService tagSearchService;
-    private final TextSearchService textSearchService;
+    private final TextSearchQueryService textSearchQueryService;
     private final JejuGudgoDetailService jejuGudgoDetailService;
     private final OIleDetailService olleDetailService;
     private final TrailDetailService trailDetailService;
@@ -31,7 +30,7 @@ public class CourseSearchService {
     public List<CourseSearchResponse> getCourses(HttpServletRequest httpRequest, String keyword, String cat1, List<String> cat2, List<String> cat3, List<String> coordinates) {
         CourseSearchRequest request = setCourseSearchRequest(keyword, cat1, cat2, cat3, coordinates);
         if (!request.keyword().isEmpty())
-            return textSearchService.getCourses(httpRequest, request);
+            return textSearchQueryService.getCourses(httpRequest, request);
 
         return tagSearchService.getCourses(httpRequest, request);
     }
