@@ -143,7 +143,8 @@ public class TrailTagSearchService implements TagSearchQueryService {
                             null,
                             null,
                             startPoint,
-                            null
+                            null,
+                            CourseType.COURSE_TYPE03.getPinKeyType() + trailId
                     );
                 }).toList();
     }
