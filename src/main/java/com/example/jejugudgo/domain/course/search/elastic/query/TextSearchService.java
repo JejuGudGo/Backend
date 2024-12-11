@@ -12,7 +12,6 @@ import com.example.jejugudgo.domain.course.common.dto.RoutePoint;
 import com.example.jejugudgo.domain.course.common.enums.CourseType;
 import com.example.jejugudgo.domain.course.search.dto.request.CourseSearchRequest;
 import com.example.jejugudgo.domain.course.search.dto.response.CourseSearchResponse;
-import com.example.jejugudgo.domain.course.search.service.CourseDetailService;
 import com.example.jejugudgo.domain.mygudgo.like.dto.response.LikeInfo;
 import com.example.jejugudgo.domain.mygudgo.like.util.UserLikeUtil;
 import jakarta.servlet.http.HttpServletRequest;

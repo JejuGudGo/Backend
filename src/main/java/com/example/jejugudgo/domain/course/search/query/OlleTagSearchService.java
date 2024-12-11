@@ -145,7 +145,7 @@ public class OlleTagSearchService implements TagSearchQueryService {
 
                     return new CourseSearchResponse(
                             courseId,
-                            request.cat1(),
+                            CourseType.COURSE_TYPE02.getType(),
                             tags,
                             likeInfo,
                             course.getTitle(),
