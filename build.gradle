@@ -43,13 +43,12 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
-    runtimeOnly 'com.mysql:mysql-connector-j'
+    runtimeOnly 'org.postgresql:postgresql:42.7.2'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.mockito:mockito-core:4.8.0'
-    testImplementation "com.h2database:h2:1.4.200"
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
     annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
@@ -68,7 +67,6 @@ dependencies {
     implementation 'org.springframework.kafka:spring-kafka'
 }
 
-
 tasks.named('test') {
     outputs.dir snippetsDir
     useJUnitPlatform()
@@ -85,7 +83,6 @@ sourceSets {
         }
     }
 }
-
 
 clean {
     delete file('src/main/generated')
