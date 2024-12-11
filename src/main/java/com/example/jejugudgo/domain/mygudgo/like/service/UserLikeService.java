@@ -7,7 +7,8 @@ import com.example.jejugudgo.domain.course.common.query.CourseQueryService;
 import com.example.jejugudgo.domain.course.common.query.TrailQueryService;
 import com.example.jejugudgo.domain.mygudgo.like.dto.request.UserLikeRequest;
 import com.example.jejugudgo.domain.mygudgo.like.dto.response.LikeInfo;
-import com.example.jejugudgo.domain.mygudgo.like.dto.response.UserLikeResponse;
+import com.example.jejugudgo.domain.mygudgo.like.dto.response.UserLikeCreateResponse;
+import com.example.jejugudgo.domain.mygudgo.like.dto.response.UserLikeListResponse;
 import com.example.jejugudgo.domain.mygudgo.like.entity.UserLike;
 import com.example.jejugudgo.domain.mygudgo.like.repository.UserLikeRepository;
 import com.example.jejugudgo.domain.user.common.entity.User;
@@ -23,7 +24,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserLikeService {
@@ -34,10 +34,16 @@ public class UserLikeService {
     private final CourseQueryService courseQueryService; // Course 데이터 조회 서비스
     private final TrailQueryService trailQueryService; // Trail 데이터 조회 서비스
 
+    private static final String JEJU_GUDGO = CourseType.COURSE_TYPE01.getType();
+    private static final String OLLE = CourseType.COURSE_TYPE02.getType();
+    private static final String TRAIL = CourseType.COURSE_TYPE03.getType();
+    private static final String ALL = CourseType.COURSE_TYPE04.getType();
+
+
     /**
      * 사용자 좋아요 리스트 조회
      */
-    public Page<UserLikeResponse> getUserLikes(String query, HttpServletRequest request, Pageable pageable) {
+    public Page<UserLikeListResponse> getUserLikes(String query, HttpServletRequest request, Pageable pageable) {
         Long userId = tokenUtil.getUserIdFromHeader(request); // 토큰에서 사용자 ID 추출
 
         // "전체" 조회 요청 처리
@@ -53,7 +59,7 @@ public class UserLikeService {
      * 좋아요 생성
      */
     @Transactional
-    public LikeInfo create(HttpServletRequest servletRequest, UserLikeRequest userLikeRequest) {
+    public UserLikeCreateResponse create(HttpServletRequest servletRequest, UserLikeRequest userLikeRequest) {
         Long userId = tokenUtil.getUserIdFromHeader(servletRequest); // 토큰에서 사용자 ID 추출
         User user = findUserById(userId);
 
@@ -66,11 +72,24 @@ public class UserLikeService {
         // 좋아요 저장
         UserLike userLike = saveUserLike(user, courseType, userLikeRequest.targetId());
 
-        // LikeInfo 생성
-        return new LikeInfo(
+        LikeInfo likeInfo = new LikeInfo(
                 true,
                 courseType.getType(),
                 userLike.getId()
+        );
+        String pinkey = "";
+
+
+        if (courseType.getType().equals(JEJU_GUDGO))
+            pinkey = "jeju" + userLikeRequest.targetId();
+        else if (courseType.getType().equals(OLLE))
+            pinkey = "olle" + userLikeRequest.targetId();
+        else if (courseType.getType().equals(TRAIL))
+            pinkey = "trail" + userLikeRequest.targetId();
+
+        return new UserLikeCreateResponse(
+                likeInfo,
+                pinkey
         );
     }
 
@@ -91,7 +110,7 @@ public class UserLikeService {
     /**
      * UserLike를 UserLikeResponse로 변환
      */
-    private UserLikeResponse mapToResponse(UserLike userLike) {
+    private UserLikeListResponse mapToResponse(UserLike userLike) {
         CourseListResponse courseForList = null;
         TrailListResponse trailForList = null;
 
@@ -101,7 +120,7 @@ public class UserLikeService {
             trailForList = trailQueryService.getTrailForList(userLike.getTargetId());
         }
 
-        return new UserLikeResponse(
+        return new UserLikeListResponse(
                 userLike.getId(),
                 courseForList,
                 trailForList
@@ -111,7 +130,7 @@ public class UserLikeService {
     /**
      * 사용자 좋아요 전체 조회
      */
-    private Page<UserLikeResponse> getAllUserLikes(Long userId, Pageable pageable) {
+    private Page<UserLikeListResponse> getAllUserLikes(Long userId, Pageable pageable) {
         Page<UserLike> userLikesPage = userLikeRepository.findByUserId(userId, pageable);
         return userLikesPage.map(this::mapToResponse);
     }
@@ -119,7 +138,7 @@ public class UserLikeService {
     /**
      * 특정 타입의 좋아요 조회
      */
-    private Page<UserLikeResponse> getUserLikesByType(Long userId, String query, Pageable pageable) {
+    private Page<UserLikeListResponse> getUserLikesByType(Long userId, String query, Pageable pageable) {
         CourseType courseType = validateCourseType(query);
 
         Page<UserLike> userLikesPage = userLikeRepository.findByUserIdAndCourseType(userId, courseType, pageable);

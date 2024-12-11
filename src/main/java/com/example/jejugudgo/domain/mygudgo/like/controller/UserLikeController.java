@@ -2,7 +2,8 @@ package com.example.jejugudgo.domain.mygudgo.like.controller;
 
 import com.example.jejugudgo.domain.mygudgo.like.dto.request.UserLikeRequest;
 import com.example.jejugudgo.domain.mygudgo.like.dto.response.LikeInfo;
-import com.example.jejugudgo.domain.mygudgo.like.dto.response.UserLikeResponse;
+import com.example.jejugudgo.domain.mygudgo.like.dto.response.UserLikeCreateResponse;
+import com.example.jejugudgo.domain.mygudgo.like.dto.response.UserLikeListResponse;
 import com.example.jejugudgo.domain.mygudgo.like.service.UserLikeService;
 import com.example.jejugudgo.global.exception.util.ApiResponseUtil;
 import com.example.jejugudgo.global.util.paging.PagingUtil;
@@ -18,8 +19,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping(value = "/api/v1/user/like")
 @RequiredArgsConstructor
@@ -34,13 +33,13 @@ public class UserLikeController {
             HttpServletRequest request,
             Pageable pageable) {
         Pageable page = PagingUtil.createPageable(pageable.getPageNumber(), pageable.getPageSize());
-        Page<UserLikeResponse> response = userLikeService.getUserLikes(query, request, page);
+        Page<UserLikeListResponse> response = userLikeService.getUserLikes(query, request, page);
         return ResponseEntity.ok(apiResponseUtil.success(response, "userLikes"));
     }
 
     @PostMapping("")
     public ResponseEntity<CommonApiResponse> create(HttpServletRequest servletRequest,@RequestBody UserLikeRequest userLikeRequest) {
-        LikeInfo response = userLikeService.create(servletRequest, userLikeRequest);
+        UserLikeCreateResponse response = userLikeService.create(servletRequest, userLikeRequest);
         return ResponseEntity.ok(apiResponseUtil.success(response));
     }
 

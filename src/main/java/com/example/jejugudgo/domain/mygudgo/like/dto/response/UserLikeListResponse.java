@@ -4,7 +4,7 @@ import com.example.jejugudgo.domain.course.common.dto.response.CourseListRespons
 import com.example.jejugudgo.domain.course.common.dto.response.TrailListResponse;
 import jakarta.annotation.Nullable;
 
-public record UserLikeResponse(
+public record UserLikeListResponse(
         @Nullable Long id,
         CourseListResponse courseForList,
         TrailListResponse trailForList
