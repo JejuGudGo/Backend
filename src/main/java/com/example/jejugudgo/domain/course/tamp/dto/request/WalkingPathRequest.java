@@ -1,4 +1,7 @@
 package com.example.jejugudgo.domain.course.tamp.dto.request;
 
-public record WalkingPathRequest() {
+public record WalkingPathRequest(
+        String type,
+        Long id
+) {
 }
