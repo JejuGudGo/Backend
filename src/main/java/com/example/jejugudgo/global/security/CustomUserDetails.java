@@ -1,6 +1,7 @@
 package com.example.jejugudgo.global.security;
 
-import com.example.jejugudgo.domain.user.user.entity.User;
+import com.example.jejugudgo.domain.user.common.entity.User;
+import com.example.jejugudgo.domain.user.common.enums.Provider;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

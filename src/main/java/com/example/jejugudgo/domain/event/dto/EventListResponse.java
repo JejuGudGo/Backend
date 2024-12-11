@@ -5,6 +5,6 @@ public record EventListResponse(
         String title,
         String status,
         String thumbnail,
-        String link
+        String homepage
 ) {
 }

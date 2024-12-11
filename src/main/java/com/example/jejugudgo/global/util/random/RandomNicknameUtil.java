@@ -1,6 +1,6 @@
 package com.example.jejugudgo.global.util.random;
 
-import com.example.jejugudgo.domain.user.user.repository.UserRepository;
+import com.example.jejugudgo.domain.user.common.repository.UserRepository;
 import com.example.jejugudgo.global.data.nickname.repository.AdjectiveRepository;
 import com.example.jejugudgo.global.data.nickname.repository.NounRepository;
 import lombok.RequiredArgsConstructor;

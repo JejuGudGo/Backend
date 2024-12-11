@@ -10,30 +10,18 @@ public enum EventStatus {
     SCHEDULED("진행예정"),
     END("종료");
 
-    private final String code;
+    private final String status;
 
-    EventStatus(String code) {
-        this.code = code;
+    EventStatus(String status) {
+        this.status = status;
     }
 
-    public static EventStatus fromQuery(String query) {
+    public static EventStatus fromInput(String input) {
         for (EventStatus eventStatus : EventStatus.values()) {
-            if (eventStatus.getCode().equals(query)) {
+            if (eventStatus.getStatus().equals(input)) {
                 return eventStatus;
             }
         }
         return null;
-    }
-
-    public static EventStatus getEventStatus(LocalDate startDate, LocalDate endDate) {
-        LocalDate today = LocalDate.now();
-        if (today.isBefore(startDate)) {
-            return EventStatus.SCHEDULED;
-        } else if (today.isAfter(endDate)) {
-            return EventStatus.END;
-        } else if (today.isAfter(startDate) && (today.isBefore(endDate) || today.isEqual(endDate))) {
-            return EventStatus.PROGRESS;
-        }
-        return EventStatus.END;
     }
 }

@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Getter
@@ -23,13 +22,11 @@ public class Event {
 
     private String host;
 
-    private LocalDate startDate;
+    private String time;
 
-    private LocalDate endDate;
+    private String thumbnailUrl;
 
-    private String thumbnail;
-
-    private String link;
+    private String homepage;
 
     @Enumerated(EnumType.STRING)
     private EventStatus eventStatus;

@@ -1,5 +1,7 @@
 package com.example.jejugudgo.global.redis;
 
+import com.example.jejugudgo.domain.user.athentication.signIn.dto.request.CurrentSignInStatus;
+import com.example.jejugudgo.domain.user.athentication.signIn.enums.TTL;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -19,13 +21,19 @@ public class RedisUtil {
         return valueOperations.get(key);
     }
 
-    public String[] getKeyTTL(String key) {
+    public CurrentSignInStatus getKeyTTL(String key) {
         Long minutes = stringRedisTemplate.getExpire(key, TimeUnit.MINUTES);
-        if (minutes < 1) {
-            return new String[] {"sec", stringRedisTemplate.getExpire(key, TimeUnit.SECONDS).toString()};
-        } else {
-            return  new String[] {"min", minutes.toString()};
-        }
+
+        if (minutes < 1)
+            return new CurrentSignInStatus(
+                    TTL.SECOND,
+                    stringRedisTemplate.getExpire(key, TimeUnit.SECONDS).toString()
+            );
+
+        return new CurrentSignInStatus(
+                TTL.MINUTE,
+                minutes.toString()
+        );
     }
 
     public void setData(String key, String value) {

@@ -21,8 +21,9 @@ spring:
         transport:
           protocol: smtp
         debug: true
+
   jpa:
-    database-platform: org.hibernate.dialect.MySQLDialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     hibernate:
       ddl-auto: update
@@ -39,9 +40,10 @@ spring:
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
   datasource:
-    url: ${DATASOURCE_URL}
+    url: jdbc:postgresql://${DATASOURCE_HOST}:${DATASOURCE_PORT}/${DATASOURCE_DB}
     username: ${DATASOURCE_USERNAME}
     password: ${DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
 
   data:
     redis:
@@ -65,6 +67,8 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
+  oauth:
+    password: ${OAUTH_PASS}
 #  security:
 #    oauth2:
 #      client:
@@ -116,5 +120,7 @@ logging:
 
 tour:
   api:
-    key:
-      ${TOUR_API_KEY}
+    key: ${TOUR_API_KEY}
+
+server:
+  port: 8080
