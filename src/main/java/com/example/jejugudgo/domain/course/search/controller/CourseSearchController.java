@@ -1,6 +1,7 @@
 package com.example.jejugudgo.domain.course.search.controller;
 
 import com.example.jejugudgo.domain.course.search.dto.response.CourseDetailResponse;
+import com.example.jejugudgo.domain.course.search.dto.response.CoursePathResponse;
 import com.example.jejugudgo.domain.course.search.dto.response.CourseSearchResponse;
 import com.example.jejugudgo.domain.course.search.service.CourseSearchService;
 import com.example.jejugudgo.global.exception.dto.CommonApiResponse;
@@ -42,6 +43,15 @@ public class CourseSearchController {
             HttpServletRequest httpRequest
     ) {
         CourseDetailResponse response = courseSearchService.getCourse(httpRequest, cat1, id);
+        return ResponseEntity.ok(apiResponseUtil.success(response));
+    }
+
+    @GetMapping(value = "/path")
+    public ResponseEntity<CommonApiResponse> getCourses(
+            @RequestParam(value = "cat1") String cat1,
+            @RequestParam(value = "id") String id
+    ) {
+        CoursePathResponse response = courseSearchService.getCoursePath(cat1, id);
         return ResponseEntity.ok(apiResponseUtil.success(response));
     }
 }

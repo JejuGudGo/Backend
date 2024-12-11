@@ -2,9 +2,10 @@ package com.example.jejugudgo.domain.course.search.service;
 
 import com.example.jejugudgo.domain.course.common.dto.MapCoordinate;
 import com.example.jejugudgo.domain.course.common.enums.CourseType;
-import com.example.jejugudgo.domain.course.search.dto.request.CourseDetailRequest;
+import com.example.jejugudgo.domain.course.search.dto.request.CourseRequest;
 import com.example.jejugudgo.domain.course.search.dto.request.CourseSearchRequest;
 import com.example.jejugudgo.domain.course.search.dto.response.CourseDetailResponse;
+import com.example.jejugudgo.domain.course.search.dto.response.CoursePathResponse;
 import com.example.jejugudgo.domain.course.search.dto.response.CourseSearchResponse;
 import com.example.jejugudgo.domain.course.search.elastic.query.TextSearchService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -21,6 +21,7 @@ public class CourseSearchService {
     private final TagSearchService tagSearchService;
     private final TextSearchService textSearchService;
     private final JejuGudgoDetailService jejuGudgoDetailService;
+    private final CoursePathService coursePathService;
     private final OIleDetailService olleDetailService;
     private final TrailDetailService trailDetailService;
 
@@ -37,7 +38,7 @@ public class CourseSearchService {
     }
 
     public CourseDetailResponse getCourse(HttpServletRequest httpRequest, String cat1, String id) {
-        CourseDetailRequest request = setCourseDetailRequest(cat1, id);
+        CourseRequest request = setCourseRequest(cat1, id);
 
         if (cat1.equals(JEJU_GUDGO))
             return jejuGudgoDetailService.getCourseDetail(httpRequest, request);
@@ -49,6 +50,11 @@ public class CourseSearchService {
             return trailDetailService.getCourseDetail(httpRequest, request);
 
         return null;
+    }
+
+    public CoursePathResponse getCoursePath(String cat1, String id) {
+        CourseRequest request = setCourseRequest(cat1, id);
+        return coursePathService.getCoursePath(request);
     }
 
     private CourseSearchRequest setCourseSearchRequest(String keyword, String cat1, List<String> cat2, List<String> cat3, List<String> coordinates) {
@@ -68,11 +74,11 @@ public class CourseSearchService {
         return new CourseSearchRequest(keyword, cat1, cat2, cat3, mapCoordinates);
     }
 
-    private CourseDetailRequest setCourseDetailRequest(String cat1, String id) {
+    private CourseRequest setCourseRequest(String cat1, String id) {
         Long targetId = Long.parseLong(id);
         CourseType courseType = CourseType.fromCat1(cat1);
 
-        return new CourseDetailRequest(
+        return new CourseRequest(
                 courseType,
                 targetId
         );
