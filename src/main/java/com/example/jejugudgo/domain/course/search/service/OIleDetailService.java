@@ -7,7 +7,7 @@ import com.example.jejugudgo.domain.course.common.entity.OlleSpot;
 import com.example.jejugudgo.domain.course.common.repository.OlleCourseRepository;
 import com.example.jejugudgo.domain.course.common.repository.OlleCourseTagRepository;
 import com.example.jejugudgo.domain.course.common.repository.OlleSpotRepository;
-import com.example.jejugudgo.domain.course.search.dto.request.CourseDetailRequest;
+import com.example.jejugudgo.domain.course.search.dto.request.CourseRequest;
 import com.example.jejugudgo.domain.course.search.dto.response.BasicData;
 import com.example.jejugudgo.domain.course.search.dto.response.CourseDetailResponse;
 import com.example.jejugudgo.domain.course.search.dto.response.OlleInfoData;
@@ -28,7 +28,7 @@ public class OIleDetailService implements CourseDetailService {
     private final OlleSpotRepository olleSpotRepository;
 
     @Override
-    public CourseDetailResponse getCourseDetail(HttpServletRequest httpRequest, CourseDetailRequest request) {
+    public CourseDetailResponse getCourseDetail(HttpServletRequest httpRequest, CourseRequest request) {
         Object basicData = getBasicData(httpRequest, request);
         Object infoData = getInfoData(httpRequest, request);
         Object reviewData = getReviewData(httpRequest, request);
@@ -41,7 +41,7 @@ public class OIleDetailService implements CourseDetailService {
     }
 
     @Override
-    public Object getBasicData(HttpServletRequest httpRequest, CourseDetailRequest request) {
+    public Object getBasicData(HttpServletRequest httpRequest, CourseRequest request) {
         OlleCourse olleCourse = getOlleCourse(request);
 
         List<OlleCourseTag> olleCourseTags = olleCourseTagRepository.findByOlleCourse(olleCourse);
@@ -66,7 +66,7 @@ public class OIleDetailService implements CourseDetailService {
     }
 
     @Override
-    public Object getInfoData(HttpServletRequest httpRequest, CourseDetailRequest request) {
+    public Object getInfoData(HttpServletRequest httpRequest, CourseRequest request) {
         OlleCourse olleCourse = getOlleCourse(request);
         List<OlleSpot> olleSpots = olleSpotRepository.findByOlleCourseOrderBySpotOrderAsc(olleCourse);
         int lastId = olleSpots.size() - 1;
@@ -92,11 +92,11 @@ public class OIleDetailService implements CourseDetailService {
 
     // TODO : 리뷰 기능 생성시 작성하기
     @Override
-    public Object getReviewData(HttpServletRequest httpRequest, CourseDetailRequest request) {
+    public Object getReviewData(HttpServletRequest httpRequest, CourseRequest request) {
         return null;
     }
 
-    private OlleCourse getOlleCourse(CourseDetailRequest request) {
+    private OlleCourse getOlleCourse(CourseRequest request) {
         return olleCourseRepository.findById(request.id())
                 .orElse(null);
     }
