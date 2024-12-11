@@ -1,14 +1,12 @@
 package com.example.jejugudgo.global.data.course;
 
-import com.example.jejugudgo.domain.course.api.entity.TourApiContentType;
-import com.example.jejugudgo.domain.course.api.entity.TourApiSpot;
-import com.example.jejugudgo.domain.course.api.enums.ContentType;
-import com.example.jejugudgo.domain.course.api.repository.TourApiContentTypeRepository;
-import com.example.jejugudgo.domain.course.api.repository.TourApiSpotRepository;
+import com.example.jejugudgo.domain.course.recommend.entity.TourApiContentType;
+import com.example.jejugudgo.domain.course.recommend.entity.TourApiSpot;
+import com.example.jejugudgo.domain.course.recommend.enums.ContentType;
+import com.example.jejugudgo.domain.course.recommend.repository.TourApiContentTypeRepository;
+import com.example.jejugudgo.domain.course.recommend.repository.TourApiSpotRepository;
 import com.example.jejugudgo.global.data.common.entity.DataCommandLog;
 import com.example.jejugudgo.global.data.common.repository.DataCommandLogRepository;
-import com.example.jejugudgo.global.exception.enums.RetCode;
-import com.example.jejugudgo.global.exception.exception.CustomException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

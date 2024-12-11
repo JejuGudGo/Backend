@@ -1,6 +1,6 @@
-package com.example.jejugudgo.domain.course.api.entity;
+package com.example.jejugudgo.domain.course.recommend.entity;
 
-import com.example.jejugudgo.domain.course.api.enums.ContentType;
+import com.example.jejugudgo.domain.course.recommend.enums.ContentType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

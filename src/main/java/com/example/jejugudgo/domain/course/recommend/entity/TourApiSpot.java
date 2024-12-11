@@ -1,4 +1,4 @@
-package com.example.jejugudgo.domain.course.api.entity;
+package com.example.jejugudgo.domain.course.recommend.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

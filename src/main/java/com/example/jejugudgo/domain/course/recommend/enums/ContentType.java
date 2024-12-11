@@ -1,4 +1,4 @@
-package com.example.jejugudgo.domain.course.api.enums;
+package com.example.jejugudgo.domain.course.recommend.enums;
 
 import lombok.Getter;
 

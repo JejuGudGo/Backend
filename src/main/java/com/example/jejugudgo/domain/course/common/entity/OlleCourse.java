@@ -32,7 +32,6 @@ public class OlleCourse {
 
     private String thumbnailUrl = "default";
 
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String content;
 

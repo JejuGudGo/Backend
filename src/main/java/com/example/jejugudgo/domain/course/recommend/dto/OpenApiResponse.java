@@ -1,4 +1,4 @@
-package com.example.jejugudgo.domain.course.api.dto;
+package com.example.jejugudgo.domain.course.recommend.dto;
 
 public record OpenApiResponse(
     String thumbnailUrl,

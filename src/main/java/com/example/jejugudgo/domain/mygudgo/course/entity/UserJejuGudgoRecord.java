@@ -24,7 +24,6 @@ public class UserJejuGudgoRecord {
 
     private double longitude;
 
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String content;
 

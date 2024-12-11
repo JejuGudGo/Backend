@@ -25,7 +25,6 @@ public class UserReview {
 
     private Long targetId;
 
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String content;
 

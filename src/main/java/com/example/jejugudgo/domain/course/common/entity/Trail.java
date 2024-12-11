@@ -24,7 +24,6 @@ public class Trail {
 
     private String address;
 
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String content;
 
