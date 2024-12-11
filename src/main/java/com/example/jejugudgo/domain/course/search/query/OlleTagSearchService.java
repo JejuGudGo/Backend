@@ -116,7 +116,7 @@ public class OlleTagSearchService implements TagSearchQueryService {
         return olleCourses.stream()
                 .map(course -> {
                     Long courseId = course.getId();
-                    LikeInfo likeInfo = userLikeUtil.isLiked(httpRequest, request.cat1(), courseId);
+                    LikeInfo likeInfo = userLikeUtil.isLiked(httpRequest, CourseType.COURSE_TYPE02.getType(), courseId);
 
                     List<OlleTag> courseTags = queryFactory
                             .select(olleCourseTag.title)
@@ -145,7 +145,6 @@ public class OlleTagSearchService implements TagSearchQueryService {
 
                     return new CourseSearchResponse(
                             courseId,
-                            CourseType.COURSE_TYPE02.getType(),
                             tags,
                             likeInfo,
                             course.getTitle(),
@@ -162,8 +161,7 @@ public class OlleTagSearchService implements TagSearchQueryService {
                             null,
                             null,
                             startPoint,
-                            endPoint,
-                            "olle" + courseId
+                            endPoint
                     );
                 })
                 .toList();

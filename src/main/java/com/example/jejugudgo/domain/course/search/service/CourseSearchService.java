@@ -65,8 +65,6 @@ public class CourseSearchService {
         mapCoordinates.add(minCoordinate);
         mapCoordinates.add(maxCoordinate);
 
-        System.out.println("ALL: " + mapCoordinates);
-
         return new CourseSearchRequest(keyword, cat1, cat2, cat3, mapCoordinates);
     }
 

@@ -9,7 +9,6 @@ import java.util.List;
 
 public record CourseSearchResponse(
         Long id,
-        String cat1,
         List<String> tags,
         LikeInfo likeInfo,
         String title,
@@ -26,7 +25,6 @@ public record CourseSearchResponse(
         @Nullable Long clickCount,
         @Nullable Double upToDate,
         RoutePoint startPoint,
-        @Nullable RoutePoint endPoint,
-        String pinKey
+        @Nullable RoutePoint endPoint
 ) {
 }

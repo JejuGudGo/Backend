@@ -218,16 +218,9 @@ public class TextSearchService {
 
                     List<String> tags = parseTags(source.get("tags"));
 
-                    LikeInfo likeInfo = userLikeUtil.isLiked(httpRequest, request.cat1(), id);
-                    
-                    String pinkey = "";
                     String courseType = getCourseType(index);
-                    if (courseType.equals(JEJU_GUDGO))
-                        pinkey = "jeju" + id;
-                    else if (courseType.equals(OLLE))
-                        pinkey = "olle" + id;
-                    else if (courseType.equals(TRAIL))
-                        pinkey = "trail" + id;
+
+                    LikeInfo likeInfo = userLikeUtil.isLiked(httpRequest, courseType, id);
 
                     // RoutePoint 시작/끝 지점
                     RoutePoint startPoint = null;
@@ -262,7 +255,6 @@ public class TextSearchService {
 
                     return new CourseSearchResponse(
                             id,
-                            courseType,
                             tags,
                             likeInfo,
                             (String) source.get("title"),
@@ -279,8 +271,7 @@ public class TextSearchService {
                             null,
                             null,
                             isValid(request, startPoint) ? startPoint : null,
-                            endPoint,
-                            pinkey
+                            endPoint
                     );
                 })
                 .filter(filter -> filter.startPoint() != null)

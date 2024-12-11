@@ -114,7 +114,7 @@ public class TrailTagSearchService implements TagSearchQueryService {
         return trails.stream()
                 .map(trail -> {
                     Long trailId = trail.getId();
-                    LikeInfo likeInfo = userLikeUtil.isLiked(httpRequest, request.cat1(), trailId);
+                    LikeInfo likeInfo = userLikeUtil.isLiked(httpRequest, CourseType.COURSE_TYPE03.getType(), trailId);
 
                     List<String> trailTags = new ArrayList<>();
                     trailTags.add(trail.getTrailTag().getTag());
@@ -127,7 +127,6 @@ public class TrailTagSearchService implements TagSearchQueryService {
 
                     return new CourseSearchResponse(
                             trailId,
-                            CourseType.COURSE_TYPE03.getType(),
                             trailTags,
                             likeInfo,
                             trail.getTitle(),
@@ -144,8 +143,7 @@ public class TrailTagSearchService implements TagSearchQueryService {
                             null,
                             null,
                             startPoint,
-                            null,
-                            "trail" + trailId
+                            null
                     );
                 }).toList();
     }
