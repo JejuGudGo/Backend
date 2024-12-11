@@ -2,9 +2,8 @@ package com.example.jejugudgo.domain.course.search.service;
 
 import com.example.jejugudgo.domain.course.common.dto.RoutePoint;
 import com.example.jejugudgo.domain.course.common.entity.Trail;
-import com.example.jejugudgo.domain.course.common.enums.CourseType;
 import com.example.jejugudgo.domain.course.common.repository.TrailRepository;
-import com.example.jejugudgo.domain.course.search.dto.request.CourseDetailRequest;
+import com.example.jejugudgo.domain.course.search.dto.request.CourseRequest;
 import com.example.jejugudgo.domain.course.search.dto.response.BasicData;
 import com.example.jejugudgo.domain.course.search.dto.response.CourseDetailResponse;
 import com.example.jejugudgo.domain.course.search.dto.response.SimilarPoint;
@@ -25,7 +24,7 @@ public class TrailDetailService implements CourseDetailService {
     private final TrailRepository trailRepository;
 
     @Override
-    public CourseDetailResponse getCourseDetail(HttpServletRequest httpRequest, CourseDetailRequest request) {
+    public CourseDetailResponse getCourseDetail(HttpServletRequest httpRequest, CourseRequest request) {
         Object basicData = getBasicData(httpRequest, request);
         Object infoData = getInfoData(httpRequest, request);
         Object reviewData = getReviewData(httpRequest, request);
@@ -38,7 +37,7 @@ public class TrailDetailService implements CourseDetailService {
     }
 
     @Override
-    public Object getBasicData(HttpServletRequest httpRequest, CourseDetailRequest request) {
+    public Object getBasicData(HttpServletRequest httpRequest, CourseRequest request) {
         Trail trail = getTrail(request);
         List<String> tags = new ArrayList<>();
         tags.add(trail.getTrailTag().getTag());
@@ -59,7 +58,7 @@ public class TrailDetailService implements CourseDetailService {
     }
 
     @Override
-    public Object getInfoData(HttpServletRequest httpRequest, CourseDetailRequest request) {
+    public Object getInfoData(HttpServletRequest httpRequest, CourseRequest request) {
         Trail trail = getTrail(request);
 
         RoutePoint startPointInfo = new RoutePoint(
@@ -94,11 +93,11 @@ public class TrailDetailService implements CourseDetailService {
     }
 
     @Override // TODO : 리뷰 기능 생성시 작성하기
-    public Object getReviewData(HttpServletRequest httpRequest, CourseDetailRequest request) {
+    public Object getReviewData(HttpServletRequest httpRequest, CourseRequest request) {
         return null;
     }
 
-    private Trail getTrail(CourseDetailRequest request) {
+    private Trail getTrail(CourseRequest request) {
         return trailRepository.findById(request.id())
                 .orElse(null);
     }
