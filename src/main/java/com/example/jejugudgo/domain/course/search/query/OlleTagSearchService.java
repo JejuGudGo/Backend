@@ -145,7 +145,6 @@ public class OlleTagSearchService implements TagSearchQueryService {
 
                     return new CourseSearchResponse(
                             courseId,
-                            CourseType.COURSE_TYPE02.getType(),
                             tags,
                             likeInfo,
                             course.getTitle(),
@@ -163,7 +162,7 @@ public class OlleTagSearchService implements TagSearchQueryService {
                             null,
                             startPoint,
                             endPoint,
-                            "olle" + courseId
+                            CourseType.COURSE_TYPE02.getPinKeyType() + courseId
                     );
                 })
                 .toList();

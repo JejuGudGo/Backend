@@ -24,6 +24,7 @@ public record CourseSearchResponse(
         @Nullable Long clickCount,
         @Nullable Double upToDate,
         RoutePoint startPoint,
-        @Nullable RoutePoint endPoint
+        @Nullable RoutePoint endPoint,
+        String pinKey
 ) {
 }

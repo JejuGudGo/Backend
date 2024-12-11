@@ -64,12 +64,13 @@ public class UserLikeService {
         validateDuplicateLike(user, courseType, userLikeRequest.targetId());
 
         // 좋아요 저장
-        saveUserLike(user, courseType, userLikeRequest.targetId());
+        UserLike userLike = saveUserLike(user, courseType, userLikeRequest.targetId());
 
         // LikeInfo 생성
         return new LikeInfo(
                 true,
-                courseType.getPinKeyType()
+                courseType.getType(),
+                userLike.getId()
         );
     }
 

@@ -47,7 +47,8 @@ public class UserLikeUtil {
 
         return new LikeInfo(
                 userLike != null,
-                CourseType.COURSE_TYPE01.getPinKeyType() + id
+                userLike != null ? userLike.getCourseType().getType() : null,
+                userLike != null ? userLike.getId() : null
         );
     }
 
@@ -58,7 +59,8 @@ public class UserLikeUtil {
 
         return new LikeInfo(
                 userLike != null,
-                CourseType.COURSE_TYPE02.getPinKeyType() + id
+                userLike != null ? userLike.getCourseType().getType() : null,
+                userLike != null ? userLike.getId() : null
         );
     }
 
@@ -69,7 +71,8 @@ public class UserLikeUtil {
 
         return new LikeInfo(
                 userLike != null,
-                CourseType.COURSE_TYPE03.getPinKeyType() + id
+                userLike != null ? userLike.getCourseType().getType() : null,
+                userLike != null ? userLike.getId() : null
         );
     }
 
