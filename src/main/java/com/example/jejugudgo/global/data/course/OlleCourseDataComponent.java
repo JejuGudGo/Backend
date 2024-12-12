@@ -32,7 +32,7 @@ public class OlleCourseDataComponent {
                 .orElse(null);
 
         if (checkDataConfig == null || !checkDataConfig.isConfigValue()) {
-            try (CSVReader csvReader = new CSVReader(new InputStreamReader(new ClassPathResource("csv/course/olleCourse.csv").getInputStream()))) {
+            try (CSVReader csvReader = new CSVReader(new InputStreamReader(new ClassPathResource("csv/course/olle_course.csv").getInputStream()))) {
                 List<OlleCourse> olleCourses = csvReader.readAll().stream()
                         .skip(1)
                         .map(fields -> {

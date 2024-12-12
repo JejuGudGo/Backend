@@ -35,7 +35,7 @@ public class OlleSpotDataService {
                 .orElse(null);
 
         if (checkDataConfig == null || !checkDataConfig.isConfigValue()) {
-            try (CSVReader csvReader = new CSVReader(new InputStreamReader(new ClassPathResource("csv/course/olleSpot.csv").getInputStream()))) {
+            try (CSVReader csvReader = new CSVReader(new InputStreamReader(new ClassPathResource("csv/course/olle_spot.csv").getInputStream()))) {
                 List<OlleSpot> olleSpots = csvReader.readAll().stream()
                         .skip(1)
                         .map(fields -> {
