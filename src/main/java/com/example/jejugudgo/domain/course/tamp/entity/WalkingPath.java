@@ -1,7 +1,6 @@
 package com.example.jejugudgo.domain.course.tamp.entity;
 
 import com.example.jejugudgo.domain.mygudgo.course.entity.UserJejuGudgoCourse;
-import com.vladmihalcea.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
