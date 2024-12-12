@@ -124,3 +124,7 @@ tour:
 
 server:
   port: 8080
+
+tmap:
+  api:
+    key: ${TMAP_API_KEY}
