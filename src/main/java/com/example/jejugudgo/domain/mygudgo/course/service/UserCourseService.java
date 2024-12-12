@@ -21,10 +21,13 @@ import com.example.jejugudgo.domain.user.common.repository.UserRepository;
 import com.example.jejugudgo.global.exception.enums.RetCode;
 import com.example.jejugudgo.global.exception.exception.CustomException;
 import com.example.jejugudgo.global.jwt.token.TokenUtil;
+import com.example.jejugudgo.global.util.image.ImageCategory;
+import com.example.jejugudgo.global.util.image.ImageUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -44,7 +47,7 @@ public class UserCourseService {
     private final JejuGudgoCourseRepository jejuGudgoCourseRepository;
 
     private final String DEFAULT_IMAGE_URL = "default";
-
+    private final ImageUtil imageUtil;
 
 
     public UserCourseCreateResponse create(HttpServletRequest httpRequest, UserCourseCreateRequest userCourseCreateRequest) {
@@ -84,7 +87,9 @@ public class UserCourseService {
 
 
     @Transactional
-    public UserCourseUpdateResponse update(HttpServletRequest httpRequest, UserCourseUpdateRequest userCourseUpdateRequest) {
+    public UserCourseUpdateResponse update(HttpServletRequest httpRequest, UserCourseUpdateRequest userCourseUpdateRequest) throws Exception {
+
+        Long userId = tokenUtil.getUserIdFromHeader(httpRequest);
 
         // request의 id값으로 jejuGudgoCourse 찾기
         JejuGudgoCourse jejuGudgoCourse = jejuGudgoCourseRepository.findById(userCourseUpdateRequest.id())
@@ -99,17 +104,27 @@ public class UserCourseService {
 
         // 해당하는 값 수정하기
         userCourses.forEach(course -> {
-            if (userCourseUpdateRequest.image() != null) {
-                course = course.updateThumbnailUrl(userCourseUpdateRequest.image());
-            }
             if (userCourseUpdateRequest.content() != null) {
                 course = course.updateContent(userCourseUpdateRequest.content());
             }
             if (userCourseUpdateRequest.title() != null) {
                 course = course.updateTitle(userCourseUpdateRequest.title());
             }
+
+            MultipartFile image = userCourseUpdateRequest.image();
+            if (image != null && !image.isEmpty()) {
+                String imageUrl = null;
+                try {
+                    imageUrl = imageUtil.save(userId, image, ImageCategory.COURSE).toString();
+                } catch (Exception e) {
+                    throw new CustomException(RetCode.RET_CODE93);
+                }
+                course = course.updateThumbnailUrl(imageUrl);
+            }
             userJejuGudgoCourseRepository.save(course);
         });
+
+
 
 
         UserJejuGudgoCourse userJejuGudgoCourse = userJejuGudgoCourseRepository.findByJejuGudgoCourseAndIsImportedFalse(jejuGudgoCourse)
@@ -235,4 +250,5 @@ public class UserCourseService {
                 .map(JejuGudgoCourseTag::getTag)
                 .collect(Collectors.toList());
     }
+
 }

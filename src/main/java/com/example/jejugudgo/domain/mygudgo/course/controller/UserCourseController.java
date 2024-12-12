@@ -11,10 +11,8 @@ import com.example.jejugudgo.global.exception.util.ApiResponseUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping(value = "/api/v1/course/user")
@@ -31,8 +29,15 @@ public class UserCourseController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<CommonApiResponse> update(HttpServletRequest httpRequest, @RequestBody UserCourseUpdateRequest userCourseUpdateRequest) {
-        UserCourseUpdateResponse response = userCourseService.update(httpRequest, userCourseUpdateRequest);
+    public ResponseEntity<CommonApiResponse> update(
+            HttpServletRequest httpRequest,
+            @RequestParam(value="id", required=true) Long id,
+            @RequestParam(value="title", required = false) String title,
+            @RequestParam(value="content", required = false) String content,
+            @RequestParam(value = "thumbnailImageUrl", required = false) MultipartFile image) throws Exception {
+        UserCourseUpdateRequest updateRequest = new UserCourseUpdateRequest(id, image, content, title);
+
+        UserCourseUpdateResponse response = userCourseService.update(httpRequest, updateRequest);
         return ResponseEntity.ok(apiResponseUtil.success(response));
     }
 
