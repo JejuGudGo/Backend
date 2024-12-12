@@ -3,8 +3,8 @@ package com.example.jejugudgo.domain.course.search.service;
 import com.example.jejugudgo.domain.course.common.enums.CourseType;
 import com.example.jejugudgo.domain.course.search.dto.request.CourseSearchRequest;
 import com.example.jejugudgo.domain.course.search.dto.response.CourseSearchResponse;
-import com.example.jejugudgo.domain.course.search.query.OlleTagSearchService;
-import com.example.jejugudgo.domain.course.search.query.TrailTagSearchService;
+import com.example.jejugudgo.domain.course.search.query.OlleTagSearchQueryService;
+import com.example.jejugudgo.domain.course.search.query.TrailTagSearchQueryService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +17,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class TagSearchService {
-    private final OlleTagSearchService olleTagSearchService;
-    private final TrailTagSearchService trailTagSearchService;
+    private final OlleTagSearchQueryService olleTagSearchQueryService;
+    private final TrailTagSearchQueryService trailTagSearchQueryService;
 
     private final String JEJU_GUDGO = CourseType.COURSE_TYPE01.getType();
     private final String OLLE = CourseType.COURSE_TYPE02.getType();
@@ -31,10 +31,10 @@ public class TagSearchService {
             return getAllCourses(httpRequest, request);
 
         else if (request.cat1().equals(OLLE))
-            return olleTagSearchService.getCourses(httpRequest, request);
+            return olleTagSearchQueryService.getCourses(httpRequest, request);
 
         else if (request.cat1().equals(TRAIL))
-            return trailTagSearchService.getCourses(httpRequest, request);
+            return trailTagSearchQueryService.getCourses(httpRequest, request);
 
         return List.of();
     }
@@ -42,8 +42,8 @@ public class TagSearchService {
     private List<CourseSearchResponse> getAllCourses(HttpServletRequest httpRequest, CourseSearchRequest request) {
         List<CourseSearchResponse> allResponses = new ArrayList<>();
 
-        List<CourseSearchResponse> olleCourses = olleTagSearchService.getCourses(httpRequest, request);
-        List<CourseSearchResponse> trailCourses = trailTagSearchService.getCourses(httpRequest, request);
+        List<CourseSearchResponse> olleCourses = olleTagSearchQueryService.getCourses(httpRequest, request);
+        List<CourseSearchResponse> trailCourses = trailTagSearchQueryService.getCourses(httpRequest, request);
 
         allResponses.addAll(olleCourses);
         allResponses.addAll(trailCourses);

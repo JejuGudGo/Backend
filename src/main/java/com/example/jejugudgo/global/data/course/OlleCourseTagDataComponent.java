@@ -35,7 +35,7 @@ public class OlleCourseTagDataComponent {
                 .orElse(null);
 
         if (checkDataConfig == null || !checkDataConfig.isConfigValue()) {
-            try (CSVReader csvReader = new CSVReader(new InputStreamReader(new ClassPathResource("csv/course/olleTag.csv").getInputStream()))) {
+            try (CSVReader csvReader = new CSVReader(new InputStreamReader(new ClassPathResource("csv/course/olle_tag.csv").getInputStream()))) {
                 List<String[]> rows = csvReader.readAll();
 
                 long courseId = 1L;

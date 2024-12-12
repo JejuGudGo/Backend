@@ -25,12 +25,12 @@ import java.util.Objects;
 
 
 @Component
-public class TrailTagSearchService implements TagSearchQueryService {
+public class TrailTagSearchQueryService implements TagSearchQueryService {
     private final JPAQueryFactory queryFactory;
     private final UserLikeUtil userLikeUtil;
 
     @Autowired
-    public TrailTagSearchService(EntityManager entityManager, UserLikeUtil userLikeUtil) {
+    public TrailTagSearchQueryService(EntityManager entityManager, UserLikeUtil userLikeUtil) {
         this.queryFactory = new JPAQueryFactory(entityManager);
         this.userLikeUtil = userLikeUtil;
     }

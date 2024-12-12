@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum ContentType {
-    CONTENT_TYPE12("12", "관광지"),
+    CONTENT_TYPE12("12", "관광명소"),
     CONTENT_TYPE14("14", "문화시설"),
     CONTENT_TYPE32("32", "숙박"),
     CONTENT_TYPE39("39", "식당/카페");
@@ -20,6 +20,15 @@ public enum ContentType {
     public static ContentType fromContentTypeId(String contentTypeId) {
         for (ContentType contentType : ContentType.values()) {
             if (contentType.contentTypeId.equals(contentTypeId)) {
+                return contentType;
+            }
+        }
+        return null;
+    }
+
+    public static ContentType fromContentTypeName(String contentTypeName) {
+        for (ContentType contentType : ContentType.values()) {
+            if (contentType.contentTypeName.equals(contentTypeName)) {
                 return contentType;
             }
         }

@@ -9,21 +9,27 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConvinentStore {
+public class ConvenienceStore {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
-    String title;
+    private String title;
 
-    double latitude;
+    private double latitude;
 
-    double longitude;
+    private double longitude;
 
-    String address;
+    private String address;
+
+    private LocalDateTime updatedAt;
+
+    private Long viewCount;
 }

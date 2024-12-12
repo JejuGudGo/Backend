@@ -30,6 +30,7 @@ public class TourApiSpot {
 
     private LocalDateTime updatedAt;
 
+    private Long viewCount;
 
     @ManyToOne
     @JoinColumn(name = "contentTypeId")

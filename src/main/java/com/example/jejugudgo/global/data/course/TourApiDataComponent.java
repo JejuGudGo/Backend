@@ -120,11 +120,11 @@ public class TourApiDataComponent {
                                 List<Map<String, Object>> itemList = (List<Map<String, Object>>) itemsMap.get("item");
 
                                 for (Map<String, Object> item : itemList) {
-                                    String imageUrl = item.get("firstimage") != null ? item.get("firstimage").toString() : "";
+                                    String imageUrl = item.get("firstimage") != null ? item.get("firstimage").toString() : "default";
                                     String title = item.get("title") != null ? item.get("title").toString() : "";
                                     String address = item.get("addr1") != null ? item.get("addr1").toString() : "";
-                                    double longitude = item.get("mapy") != null ? Double.parseDouble(item.get("mapy").toString()) : 0.0;
-                                    double latitude = item.get("mapx") != null ? Double.parseDouble(item.get("mapx").toString()) : 0.0;
+                                    double latitude = item.get("mapy") != null ? Double.parseDouble(item.get("mapy").toString()) : 0.0;
+                                    double longitude = item.get("mapx") != null ? Double.parseDouble(item.get("mapx").toString()) : 0.0;
                                     LocalDateTime createAt = item.get("createdtime") != null
                                             ? LocalDateTime.parse(item.get("createdtime").toString(), DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
                                             : null;

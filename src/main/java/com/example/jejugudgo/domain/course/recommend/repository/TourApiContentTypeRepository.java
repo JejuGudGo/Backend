@@ -6,5 +6,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TourApiContentTypeRepository extends JpaRepository<TourApiContentType, Long> {
     TourApiContentType findByContentType(ContentType contentType);
-
 }
