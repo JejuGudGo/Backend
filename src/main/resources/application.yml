@@ -21,7 +21,6 @@ spring:
         transport:
           protocol: smtp
         debug: true
-
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
@@ -128,3 +127,7 @@ open:
 
 server:
   port: 8080
+
+tmap:
+  api:
+    key: ${TMAP_API_KEY}
