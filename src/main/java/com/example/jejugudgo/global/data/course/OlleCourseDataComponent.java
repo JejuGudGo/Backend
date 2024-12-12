@@ -51,6 +51,7 @@ public class OlleCourseDataComponent {
                                         .openTime(fields[10] != null && !fields[10].isBlank() ? fields[10] : null)
                                         .tel(fields[11] != null && !fields[11].isBlank() ? fields[11] : null)
                                         .build();
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 return null;

@@ -22,6 +22,7 @@ public class DataLoadRunner implements CommandLineRunner {
     private final OlleGpxDataService olleGpxDataComponent;
     private final HayongOlleGpxDataComponent hayongOlleGpxDataComponent;
     private final TourApiDataComponent tourApiDataComponent;
+    private final ConvenienceStoreDataComponent convenienceStoreDataComponent;
 
     @Override
     public void run(String... args) throws Exception {
@@ -38,5 +39,6 @@ public class DataLoadRunner implements CommandLineRunner {
         olleGpxDataComponent.loadOlleGpxCsvToDatabase();
         hayongOlleGpxDataComponent.loadHaYoungOlleSpotCsvData();
         tourApiDataComponent.loadTourApiData();
+        convenienceStoreDataComponent.loadConvenienceStoreCsvToDatabase();
     }
 }

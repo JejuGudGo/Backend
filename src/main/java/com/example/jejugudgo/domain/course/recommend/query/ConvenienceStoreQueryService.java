@@ -2,6 +2,8 @@ package com.example.jejugudgo.domain.course.recommend.query;
 
 import com.example.jejugudgo.domain.course.recommend.dto.OpenApiRequest;
 import com.example.jejugudgo.domain.course.recommend.dto.OpenApiResponse;
+import com.example.jejugudgo.domain.course.recommend.entity.ConvenienceStore;
+import com.example.jejugudgo.domain.course.recommend.entity.QConvenienceStore;
 import com.example.jejugudgo.domain.course.recommend.entity.QTourApiSpot;
 import com.example.jejugudgo.domain.course.recommend.entity.TourApiSpot;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -15,26 +17,22 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class TourApiQueryService {
+public class ConvenienceStoreQueryService {
     private final JPAQueryFactory queryFactory;
 
     @Autowired
-    public TourApiQueryService(EntityManager entityManager) {
+    public ConvenienceStoreQueryService(EntityManager entityManager) {
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 
-    QTourApiSpot tourApiSpot = QTourApiSpot.tourApiSpot;
+    QConvenienceStore convenienceStore = QConvenienceStore.convenienceStore;
 
     public List<OpenApiResponse> getContents(OpenApiRequest request) {
-        System.out.println("request type: " + request.type());
-        JPQLQuery<TourApiSpot> query = queryFactory
-                .selectFrom(tourApiSpot)
-                .where(
-                        tourApiSpot.contentType.contentType.eq(request.type())
-                )
+        JPQLQuery<ConvenienceStore> query = queryFactory
+                .selectFrom(convenienceStore)
                 .orderBy(
-                        tourApiSpot.updatedAt.desc(),
-                        tourApiSpot.viewCount.desc()
+                        convenienceStore.updatedAt.desc(),
+                        convenienceStore.viewCount.desc()
                 );
 
         if (request.latitude() != null && request.longitude() != null && request.radius() != null) {
@@ -46,12 +44,12 @@ public class TourApiQueryService {
 
         return query.fetch()
                 .stream()
-                .map(spot -> new OpenApiResponse(
-                        spot.getThumbnailUrl(),
-                        spot.getTitle(),
-                        spot.getAddress(),
-                        spot.getLatitude(),
-                        spot.getLongitude()
+                .map(store -> new OpenApiResponse(
+                        null,
+                        store.getTitle(),
+                        store.getAddress(),
+                        store.getLatitude(),
+                        store.getLongitude()
                 ))
                 .toList();
     }
@@ -60,8 +58,8 @@ public class TourApiQueryService {
         return Expressions.booleanTemplate(
                 "6371 * acos(cos(radians({0})) * cos(radians({1})) * cos(radians({2}) - radians({3})) + sin(radians({0})) * sin(radians({1}))) <= {4}",
                 latitude,
-                tourApiSpot.latitude,
-                tourApiSpot.longitude,
+                convenienceStore.latitude,
+                convenienceStore.longitude,
                 longitude,
                 radius
         );
