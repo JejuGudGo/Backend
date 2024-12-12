@@ -68,5 +68,17 @@ public class UserJejuGudgoCourse {
                 .build();
     }
 
+    public UserJejuGudgoCourse updateTitle(String title) {
+        return toBuilder()
+                .title(title)
+                .build();
+    }
+
+    public UserJejuGudgoCourse updateIsPrivate(boolean isPrivate) {
+        return toBuilder()
+                .isPrivate(isPrivate)
+                .build();
+    }
+
     // TODO : 코스 완주시 업데이트 해야하는 부분 담긴 메서드 작성
 }

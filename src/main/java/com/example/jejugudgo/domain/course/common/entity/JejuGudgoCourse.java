@@ -34,4 +34,10 @@ public class JejuGudgoCourse {
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
+
+    public JejuGudgoCourse updateIsDeleted(boolean isDeleted) {
+        return toBuilder()
+                .isDeleted(isDeleted)
+                .build();
+    }
 }

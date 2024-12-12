@@ -1,10 +1,12 @@
 package com.example.jejugudgo.domain.mygudgo.course.service;
 
+import com.example.jejugudgo.domain.course.common.entity.JejuGudgoCourse;
+import com.example.jejugudgo.domain.course.common.query.CourseQueryService;
+import com.example.jejugudgo.domain.course.common.repository.JejuGudgoCourseRepository;
+import com.example.jejugudgo.domain.mygudgo.course.dto.request.*;
+import com.example.jejugudgo.domain.mygudgo.course.dto.response.UserCourseUpdateResponse;
 import com.example.jejugudgo.domain.mygudgo.course.enums.SearchOption;
 import com.example.jejugudgo.domain.course.tmap.service.WalkingPathService;
-import com.example.jejugudgo.domain.mygudgo.course.dto.request.GenerateWalkingPathRequest;
-import com.example.jejugudgo.domain.mygudgo.course.dto.request.SpotInfoRequest;
-import com.example.jejugudgo.domain.mygudgo.course.dto.request.UserCourseCreateRequest;
 import com.example.jejugudgo.domain.mygudgo.course.dto.response.SpotInfo;
 import com.example.jejugudgo.domain.mygudgo.course.dto.response.UserCourseCreateResponse;
 import com.example.jejugudgo.domain.mygudgo.course.entity.UserJejuGudgoCourse;
@@ -22,6 +24,7 @@ import com.example.jejugudgo.global.jwt.token.TokenUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -37,9 +40,11 @@ public class UserCourseService {
     private final UserJejuGudgoCourseRepository userJejuGudgoCourseRepository;
     private final UserJejuGudgoCourseTagRepository userJejuGudgoCourseTagRepository;
     private final UserJejuGudgoSpotRepository userJejuGudgoSpotRepository;
+    private final WalkingPathService walkingPathService;
+    private final JejuGudgoCourseRepository jejuGudgoCourseRepository;
 
     private final String DEFAULT_IMAGE_URL = "default";
-    private final WalkingPathService walkingPathService;
+
 
 
     public UserCourseCreateResponse create(HttpServletRequest httpRequest, UserCourseCreateRequest userCourseCreateRequest) {
@@ -149,7 +154,81 @@ public class UserCourseService {
         );
     }
 
-    public void generateWalkingPath(GenerateWalkingPathRequest generateWalkingPathRequest) {
+    @Transactional
+    public UserCourseUpdateResponse update(HttpServletRequest httpRequest, UserCourseUpdateRequest userCourseUpdateRequest) {
 
+        // request의 id값으로 jejuGudgoCourse 찾기
+        JejuGudgoCourse jejuGudgoCourse = jejuGudgoCourseRepository.findById(userCourseUpdateRequest.id())
+                .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
+
+
+        // 수정 권한 검사
+        validatePermission(httpRequest, jejuGudgoCourse);
+
+        // jejuGudgoCourse를 가진 모든 UserJejuGudgoCourse 불러오기
+        List<UserJejuGudgoCourse> userCourses = userJejuGudgoCourseRepository.findByJejuGudgoCourse(jejuGudgoCourse);
+
+        // 해당하는 값 수정하기
+        userCourses.forEach(course -> {
+            if (userCourseUpdateRequest.image() != null) {
+                course = course.updateThumbnailUrl(userCourseUpdateRequest.image());
+            }
+            if (userCourseUpdateRequest.content() != null) {
+                course = course.updateContent(userCourseUpdateRequest.content());
+            }
+            if (userCourseUpdateRequest.title() != null) {
+                course = course.updateTitle(userCourseUpdateRequest.title());
+            }
+            userJejuGudgoCourseRepository.save(course);
+        });
+
+
+        UserJejuGudgoCourse userJejuGudgoCourse = userJejuGudgoCourseRepository.findByJejuGudgoCourseAndIsImportedFalse(jejuGudgoCourse)
+                .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
+
+        List<String> tags = getTagsForUserCourse(userJejuGudgoCourse);
+
+        // 응답 생성
+        return new UserCourseUpdateResponse(
+                jejuGudgoCourse.getId(),
+                userJejuGudgoCourse.getTitle(),
+                tags,
+                userJejuGudgoCourse.getContent(),
+                userJejuGudgoCourse.getRoute(),
+                userJejuGudgoCourse.getThumbnailUrl()
+        );
+    }
+
+    @Transactional
+    public void delete(HttpServletRequest httpRequest, IdRequest idRequest) {
+
+        // isDeleted = true 처리
+        JejuGudgoCourse jejuGudgoCourse = jejuGudgoCourseRepository.findById(idRequest.id())
+                .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
+
+        // 삭제 권한 검사
+        validatePermission(httpRequest, jejuGudgoCourse);
+
+        jejuGudgoCourse = jejuGudgoCourse.updateIsDeleted(true);
+        jejuGudgoCourseRepository.save(jejuGudgoCourse);
+    }
+
+    /**
+    * 수정 및 삭제 권한 검사
+    * */
+    private void validatePermission(HttpServletRequest httpRequest, JejuGudgoCourse jejuGudgoCourse) {
+        Long userId = tokenUtil.getUserIdFromHeader(httpRequest);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(RetCode.RET_CODE13));
+        if (!jejuGudgoCourse.getUser().equals(user)) {
+            throw new CustomException(RetCode.RET_CODE15);
+        }
+    }
+
+    private List<String> getTagsForUserCourse(UserJejuGudgoCourse userJejuGudgoCourse) {
+        return userJejuGudgoCourseTagRepository.findByUserCourse(userJejuGudgoCourse).stream()
+                .map(UserJejuGudgoCourseTag::getTitle)
+                .map(JejuGudgoCourseTag::getTag)
+                .collect(Collectors.toList());
     }
 }

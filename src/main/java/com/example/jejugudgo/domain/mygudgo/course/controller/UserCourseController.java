@@ -1,7 +1,10 @@
 package com.example.jejugudgo.domain.mygudgo.course.controller;
 
+import com.example.jejugudgo.domain.mygudgo.course.dto.request.IdRequest;
 import com.example.jejugudgo.domain.mygudgo.course.dto.request.UserCourseCreateRequest;
+import com.example.jejugudgo.domain.mygudgo.course.dto.request.UserCourseUpdateRequest;
 import com.example.jejugudgo.domain.mygudgo.course.dto.response.UserCourseCreateResponse;
+import com.example.jejugudgo.domain.mygudgo.course.dto.response.UserCourseUpdateResponse;
 import com.example.jejugudgo.domain.mygudgo.course.service.UserCourseService;
 import com.example.jejugudgo.global.exception.dto.CommonApiResponse;
 import com.example.jejugudgo.global.exception.util.ApiResponseUtil;
@@ -21,10 +24,22 @@ public class UserCourseController {
     private final ApiResponseUtil apiResponseUtil;
     private final UserCourseService userCourseService;
 
-    @PostMapping("")
+    @PostMapping("/create")
     public ResponseEntity<CommonApiResponse> create(HttpServletRequest httpRequest, @RequestBody UserCourseCreateRequest userCourseCreateRequest) {
         UserCourseCreateResponse response = userCourseService.create(httpRequest, userCourseCreateRequest);
         return ResponseEntity.ok(apiResponseUtil.success(response));
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<CommonApiResponse> update(HttpServletRequest httpRequest, @RequestBody UserCourseUpdateRequest userCourseUpdateRequest) {
+        UserCourseUpdateResponse response = userCourseService.update(httpRequest, userCourseUpdateRequest);
+        return ResponseEntity.ok(apiResponseUtil.success(response));
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<CommonApiResponse> delete(HttpServletRequest httpRequest, @RequestBody IdRequest idRequest) {
+        userCourseService.delete(httpRequest, idRequest);
+        return ResponseEntity.ok(apiResponseUtil.success(null));
     }
 
 
