@@ -82,6 +82,69 @@ public class UserCourseService {
         return buildResponse(userCourse, userCourseCreateRequest);
     }
 
+
+    @Transactional
+    public UserCourseUpdateResponse update(HttpServletRequest httpRequest, UserCourseUpdateRequest userCourseUpdateRequest) {
+
+        // request의 id값으로 jejuGudgoCourse 찾기
+        JejuGudgoCourse jejuGudgoCourse = jejuGudgoCourseRepository.findById(userCourseUpdateRequest.id())
+                .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
+
+
+        // 수정 권한 검사
+        validatePermission(httpRequest, jejuGudgoCourse);
+
+        // jejuGudgoCourse를 가진 모든 UserJejuGudgoCourse 불러오기
+        List<UserJejuGudgoCourse> userCourses = userJejuGudgoCourseRepository.findByJejuGudgoCourse(jejuGudgoCourse);
+
+        // 해당하는 값 수정하기
+        userCourses.forEach(course -> {
+            if (userCourseUpdateRequest.image() != null) {
+                course = course.updateThumbnailUrl(userCourseUpdateRequest.image());
+            }
+            if (userCourseUpdateRequest.content() != null) {
+                course = course.updateContent(userCourseUpdateRequest.content());
+            }
+            if (userCourseUpdateRequest.title() != null) {
+                course = course.updateTitle(userCourseUpdateRequest.title());
+            }
+            userJejuGudgoCourseRepository.save(course);
+        });
+
+
+        UserJejuGudgoCourse userJejuGudgoCourse = userJejuGudgoCourseRepository.findByJejuGudgoCourseAndIsImportedFalse(jejuGudgoCourse)
+                .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
+
+        List<String> tags = getTagsForUserCourse(userJejuGudgoCourse);
+
+        // 응답 생성
+        return new UserCourseUpdateResponse(
+                jejuGudgoCourse.getId(),
+                userJejuGudgoCourse.getTitle(),
+                tags,
+                userJejuGudgoCourse.getContent(),
+                userJejuGudgoCourse.getRoute(),
+                userJejuGudgoCourse.getThumbnailUrl()
+        );
+    }
+
+    @Transactional
+    public void delete(HttpServletRequest httpRequest, IdRequest idRequest) {
+
+        // isDeleted = true 처리
+        JejuGudgoCourse jejuGudgoCourse = jejuGudgoCourseRepository.findById(idRequest.id())
+                .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
+
+        // 삭제 권한 검사
+        validatePermission(httpRequest, jejuGudgoCourse);
+
+        jejuGudgoCourse = jejuGudgoCourse.updateIsDeleted(true);
+        jejuGudgoCourseRepository.save(jejuGudgoCourse);
+    }
+
+
+
+
     private User validateUser(HttpServletRequest httpRequest) {
         Long userId = tokenUtil.getUserIdFromHeader(httpRequest);
         return userRepository.findById(userId)
@@ -154,68 +217,9 @@ public class UserCourseService {
         );
     }
 
-    @Transactional
-    public UserCourseUpdateResponse update(HttpServletRequest httpRequest, UserCourseUpdateRequest userCourseUpdateRequest) {
-
-        // request의 id값으로 jejuGudgoCourse 찾기
-        JejuGudgoCourse jejuGudgoCourse = jejuGudgoCourseRepository.findById(userCourseUpdateRequest.id())
-                .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
 
 
-        // 수정 권한 검사
-        validatePermission(httpRequest, jejuGudgoCourse);
-
-        // jejuGudgoCourse를 가진 모든 UserJejuGudgoCourse 불러오기
-        List<UserJejuGudgoCourse> userCourses = userJejuGudgoCourseRepository.findByJejuGudgoCourse(jejuGudgoCourse);
-
-        // 해당하는 값 수정하기
-        userCourses.forEach(course -> {
-            if (userCourseUpdateRequest.image() != null) {
-                course = course.updateThumbnailUrl(userCourseUpdateRequest.image());
-            }
-            if (userCourseUpdateRequest.content() != null) {
-                course = course.updateContent(userCourseUpdateRequest.content());
-            }
-            if (userCourseUpdateRequest.title() != null) {
-                course = course.updateTitle(userCourseUpdateRequest.title());
-            }
-            userJejuGudgoCourseRepository.save(course);
-        });
-
-
-        UserJejuGudgoCourse userJejuGudgoCourse = userJejuGudgoCourseRepository.findByJejuGudgoCourseAndIsImportedFalse(jejuGudgoCourse)
-                .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
-
-        List<String> tags = getTagsForUserCourse(userJejuGudgoCourse);
-
-        // 응답 생성
-        return new UserCourseUpdateResponse(
-                jejuGudgoCourse.getId(),
-                userJejuGudgoCourse.getTitle(),
-                tags,
-                userJejuGudgoCourse.getContent(),
-                userJejuGudgoCourse.getRoute(),
-                userJejuGudgoCourse.getThumbnailUrl()
-        );
-    }
-
-    @Transactional
-    public void delete(HttpServletRequest httpRequest, IdRequest idRequest) {
-
-        // isDeleted = true 처리
-        JejuGudgoCourse jejuGudgoCourse = jejuGudgoCourseRepository.findById(idRequest.id())
-                .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
-
-        // 삭제 권한 검사
-        validatePermission(httpRequest, jejuGudgoCourse);
-
-        jejuGudgoCourse = jejuGudgoCourse.updateIsDeleted(true);
-        jejuGudgoCourseRepository.save(jejuGudgoCourse);
-    }
-
-    /**
-    * 수정 및 삭제 권한 검사
-    * */
+    // 수정 및 삭제 권한 검사
     private void validatePermission(HttpServletRequest httpRequest, JejuGudgoCourse jejuGudgoCourse) {
         Long userId = tokenUtil.getUserIdFromHeader(httpRequest);
         User user = userRepository.findById(userId)
