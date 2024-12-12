@@ -12,7 +12,10 @@ public enum JejuGudgoCourseTag {
     JEJU_GUDGO_COURSE_TAG06("가족여행"),
     JEJU_GUDGO_COURSE_TAG07("예술과 문화"),
     JEJU_GUDGO_COURSE_TAG08("빵지순례"),
-    JEJU_GUDGO_COURSE_TAG09("액티비티");
+    JEJU_GUDGO_COURSE_TAG09("액티비티"),
+    JEJU_GUDGO_COURSE_TAG10("챌린지코스"),
+    JEJU_GUDGO_COURSE_TAG11("걷기크루"),
+    JEJU_GUDGO_COURSE_TAG12("동네산책");
 
     private final String tag;
 

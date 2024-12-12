@@ -10,6 +10,7 @@ import org.springframework.web.util.UriUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,20 +22,16 @@ public class TMapRequestService {
     // 경로 생성
     public WalkingPathResponse create(SpotInfoRequest spotInfoRequest) {
         var sortedSpots = spotInfoRequest.spots().stream()
-                .sorted((a, b) -> a.order().compareTo(b.order()))
+                .sorted(Comparator.comparing(SpotInfo::order))
                 .collect(Collectors.toList());
 
         var startSpot = sortedSpots.get(0);
         var endSpot = sortedSpots.get(sortedSpots.size() - 1);
 
-        List<String> waypointList = new ArrayList<>();
-        String waypoints = sortedSpots.stream()
+        List<String> waypointList = sortedSpots.stream()
                 .filter(spot -> !spot.equals(startSpot) && !spot.equals(endSpot))
-                .map(spot -> {
-                    waypointList.add(String.format("%f,%f", spot.longitude(), spot.latitude()));
-                    return String.format("%f,%f", spot.longitude(), spot.latitude());
-                })
-                .collect(Collectors.joining("_"));
+                .map(spot -> String.format("%f,%f", spot.longitude(), spot.latitude()))
+                .collect(Collectors.toList());
 
         String passList = waypointList.stream()
                 .limit(5)
@@ -51,7 +48,7 @@ public class TMapRequestService {
                 endTitle,
                 endSpot.longitude(),
                 endSpot.latitude(),
-                waypoints
+                waypointList.stream().collect(Collectors.joining("_"))
         );
 
         return walkingPathComponent.sendRequest(tMapRequest, passList, spotInfoRequest);

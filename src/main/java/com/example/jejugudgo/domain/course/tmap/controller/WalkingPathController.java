@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/api/v1/course/user/walk")
+@RequestMapping(value = "/api/v1/course/user/path")
 @RequiredArgsConstructor
 public class WalkingPathController {
     private final TMapRequestService tMapRequestService;

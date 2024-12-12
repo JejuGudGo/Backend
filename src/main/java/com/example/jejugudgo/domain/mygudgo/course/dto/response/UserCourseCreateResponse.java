@@ -5,7 +5,7 @@ import java.util.List;
 public record UserCourseCreateResponse(
         Long id,
         String title,
-        List<String> tag,
+        List<String> tags,
         String content,
         List<SpotInfo> spotInfo
 ) {

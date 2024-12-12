@@ -1,4 +1,11 @@
 package com.example.jejugudgo.domain.mygudgo.course.dto.request;
 
-public record UserCourseUpdateRequest() {
+import org.springframework.web.multipart.MultipartFile;
+
+public record UserCourseUpdateRequest(
+        Long id,
+        MultipartFile image,
+        String title,
+        String content
+) {
 }
