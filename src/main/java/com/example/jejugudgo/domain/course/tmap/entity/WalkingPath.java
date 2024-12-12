@@ -1,5 +1,6 @@
 package com.example.jejugudgo.domain.course.tmap.entity;
 
+import com.example.jejugudgo.domain.mygudgo.course.entity.UserJejuGudgoSearchOption;
 import com.example.jejugudgo.domain.mygudgo.course.entity.UserJejuGudgoCourse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,8 +20,9 @@ public class WalkingPath {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Enumerated(value = EnumType.STRING)
-    private SearchOption searchOption;
+    @ManyToOne
+    @JoinColumn(name = "userJejuGudgoSearchOptionId")
+    private UserJejuGudgoSearchOption searchOption;
 
     @ManyToOne
     @JoinColumn(name = "userJejuGudgoCourseId")

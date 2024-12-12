@@ -6,7 +6,7 @@ import java.util.List;
 
 public record UserCourseCreateRequest(
         String title,
-        List<String> tag,
+        List<String> tags,
         String content,
         List<SpotInfo> spotInfo
 ) {

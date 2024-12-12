@@ -1,4 +1,4 @@
-package com.example.jejugudgo.domain.course.tmap.entity;
+package com.example.jejugudgo.domain.mygudgo.course.enums;
 
 import lombok.Getter;
 
@@ -20,6 +20,15 @@ public enum SearchOption {
     public static SearchOption fromSearchOptionId(String searchOptionId) {
         for (SearchOption searchOption : SearchOption.values()) {
             if (searchOption.searchOptionId.equals(searchOptionId)) {
+                return searchOption;
+            }
+        }
+        return null;
+    }
+
+    public static SearchOption fromSearchOptionName(String searchOptionName) {
+        for (SearchOption searchOption : SearchOption.values()) {
+            if (searchOption.searchOptionName.equals(searchOptionName)) {
                 return searchOption;
             }
         }

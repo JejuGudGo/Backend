@@ -23,6 +23,7 @@ public class DataLoadRunner implements CommandLineRunner {
     private final HayongOlleGpxDataComponent hayongOlleGpxDataComponent;
     private final TourApiDataComponent tourApiDataComponent;
     private final ConvenienceStoreDataComponent convenienceStoreDataComponent;
+    private final TmapSearchOptionComponent tmapSearchOptionComponent;
 
     @Override
     public void run(String... args) throws Exception {
@@ -40,5 +41,7 @@ public class DataLoadRunner implements CommandLineRunner {
         hayongOlleGpxDataComponent.loadHaYoungOlleSpotCsvData();
         tourApiDataComponent.loadTourApiData();
         convenienceStoreDataComponent.loadConvenienceStoreCsvToDatabase();
+
+        tmapSearchOptionComponent.createTMAPSearchOption();
     }
 }

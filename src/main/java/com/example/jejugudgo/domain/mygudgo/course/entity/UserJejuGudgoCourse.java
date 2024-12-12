@@ -44,7 +44,7 @@ public class UserJejuGudgoCourse {
 
     private String steps;
 
-    private String isImported; // 퍼온 코스 여부
+    private boolean isImported; // 퍼온 코스 여부
 
 
     @ManyToOne
