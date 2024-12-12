@@ -12,6 +12,8 @@ import com.example.jejugudgo.domain.mygudgo.course.dto.request.SpotInfoRequest;
 import com.example.jejugudgo.domain.mygudgo.course.entity.UserJejuGudgoCourse;
 import com.example.jejugudgo.domain.mygudgo.course.repository.UserJejuGudgoCourseRepository;
 import com.example.jejugudgo.domain.mygudgo.course.repository.UserJejuGudgoSearchOptionRepository;
+import com.example.jejugudgo.global.exception.enums.RetCode;
+import com.example.jejugudgo.global.exception.exception.CustomException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -85,18 +87,19 @@ public class WalkingPathService {
         // SearchOption 변환
         SearchOption searchOption = SearchOption.fromSearchOptionName(request.type());
         if (searchOption == null) {
-            throw new IllegalArgumentException("유효하지 않은 검색 옵션입니다: " + request.type());
+            throw new CustomException(RetCode.RET_CODE18);
         }
 
         // SearchOption 조회
         UserJejuGudgoSearchOption searchOptionEntity = Optional.ofNullable(
                 userJejuGudgoSearchOptionRepository.findBySearchOption(searchOption)
-        ).orElseThrow(() -> new IllegalArgumentException("해당 검색 옵션을 찾을 수 없습니다: " + searchOption));
+        ).orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
+
 
         // WalkingPath 조회
         WalkingPath walkingPath = walkingPathRepository
                 .findByUserJejuGudgoCourseIdAndSearchOption(request.id(), searchOptionEntity)
-                .orElseThrow(() -> new IllegalArgumentException("해당 경로를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(RetCode.RET_CODE97));
 
         // 결과 반환
         return parseWalkingPathResponse(walkingPath.getLineData());
