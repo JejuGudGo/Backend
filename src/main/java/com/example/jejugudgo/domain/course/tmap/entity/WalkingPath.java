@@ -19,6 +19,9 @@ public class WalkingPath {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @Enumerated(value = EnumType.STRING)
+    private SearchOption searchOption;
+
     @ManyToOne
     @JoinColumn(name = "userJejuGudgoCourseId")
     private UserJejuGudgoCourse userJejuGudgoCourse;

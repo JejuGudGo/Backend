@@ -4,14 +4,14 @@ import com.example.jejugudgo.domain.course.tmap.dto.request.TMapRequest;
 import com.example.jejugudgo.domain.course.tmap.dto.response.WalkingPathCoordination;
 import com.example.jejugudgo.domain.course.tmap.dto.response.WalkingPathResponse;
 import com.example.jejugudgo.domain.course.tmap.entity.SearchOption;
-import org.springframework.stereotype.Component;
-
 import com.example.jejugudgo.domain.mygudgo.course.dto.request.SpotInfoRequest;
 import com.example.jejugudgo.domain.mygudgo.course.dto.response.SpotInfo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;

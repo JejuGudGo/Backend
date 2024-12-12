@@ -3,6 +3,7 @@ package com.example.jejugudgo.domain.course.tmap.service;
 import com.example.jejugudgo.domain.course.tmap.dto.request.TMapRequest;
 import com.example.jejugudgo.domain.course.tmap.dto.response.WalkingPathResponse;
 import com.example.jejugudgo.domain.mygudgo.course.dto.request.SpotInfoRequest;
+import com.example.jejugudgo.domain.mygudgo.course.dto.response.SpotInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
