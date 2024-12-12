@@ -30,58 +30,57 @@ public class WalkingPathService {
 
     @Transactional
     public void generateAndSaveWalkingPath(GenerateWalkingPathRequest request) {
-        // UserJejuGudgoCourse 조회
         UserJejuGudgoCourse userJejuGudgoCourse = userJejuGudgoCourseRepository.findById(request.userJejuGudgoCourseId())
                 .orElseThrow(() -> new RuntimeException("해당 코스를 찾을 수 없습니다."));
 
-        // 4개의 SearchOption에 대해 각각 요청 및 저장
         for (SearchOption searchOption : SearchOption.values()) {
-            // 새로운 SpotInfoRequest 생성 (검색 옵션만 변경)
-            SpotInfoRequest modifiedSpotInfoRequest = new SpotInfoRequest(
-                    searchOption.getSearchOptionId(),
-                    request.spotInfoRequest().spots()
-            );
+            saveWalkingPath(request, userJejuGudgoCourse, searchOption);
+        }
+    }
 
-            // TMap API 요청을 통해 경로 정보 생성
-            WalkingPathResponse walkingPathResponse = tMapRequestService.create(modifiedSpotInfoRequest);
+    private void saveWalkingPath(GenerateWalkingPathRequest request, UserJejuGudgoCourse userJejuGudgoCourse, SearchOption searchOption) {
+        SpotInfoRequest modifiedSpotInfoRequest = new SpotInfoRequest(
+                searchOption.getSearchOptionId(),
+                request.spotInfoRequest().spots()
+        );
 
-            // JSON 형식으로 lineData 생성
-            Map<String, Object> lineDataMap = new HashMap<>();
-            lineDataMap.put("type", walkingPathResponse.type());
-            lineDataMap.put("totalTime", walkingPathResponse.totalTime());
-            lineDataMap.put("totalDistance", walkingPathResponse.totalDistance());
-            lineDataMap.put("walkingPathCoordinations", walkingPathResponse.walkingPathCoordinations());
+        WalkingPathResponse walkingPathResponse = tMapRequestService.create(modifiedSpotInfoRequest);
 
-            try {
-                String lineDataJson = objectMapper.writeValueAsString(lineDataMap);
+        Map<String, Object> lineDataMap = new HashMap<>();
+        lineDataMap.put("type", walkingPathResponse.type());
+        lineDataMap.put("totalTime", walkingPathResponse.totalTime());
+        lineDataMap.put("totalDistance", walkingPathResponse.totalDistance());
+        lineDataMap.put("walkingPathCoordinations", walkingPathResponse.walkingPathCoordinations());
 
-                // WalkingPath 엔티티 생성 및 저장
-                WalkingPath walkingPath = WalkingPath.builder()
-                        .searchOption(searchOption)
-                        .userJejuGudgoCourse(userJejuGudgoCourse)
-                        .lineData(lineDataJson)
-                        .build();
+        try {
+            String lineDataJson = objectMapper.writeValueAsString(lineDataMap);
 
-                walkingPathRepository.save(walkingPath);
-            } catch (Exception e) {
-                throw new RuntimeException("JSON 변환 중 오류 발생", e);
-            }
+            WalkingPath walkingPath = WalkingPath.builder()
+                    .searchOption(searchOption)
+                    .userJejuGudgoCourse(userJejuGudgoCourse)
+                    .lineData(lineDataJson)
+                    .build();
+
+            walkingPathRepository.save(walkingPath);
+        } catch (Exception e) {
+            throw new RuntimeException("JSON 변환 중 오류 발생", e);
         }
     }
 
     @Transactional(readOnly = true)
     public WalkingPathResponse getWalkingPath(HttpServletRequest servletRequest, WalkingPathRequest request) {
-        // WalkingPath 조회
-        WalkingPath walkingPath = walkingPathRepository.findByUserJejuGudgoCourseIdAndSearchOptionSearchOptionName(
+        WalkingPath walkingPath = walkingPathRepository.findByUserJejuGudgoCourseIdAndSearchOption(
                 request.userJejuGudgoCourseId(),
-                request.type()
+                SearchOption.valueOf(request.type())
         ).orElseThrow(() -> new RuntimeException("해당 경로를 찾을 수 없습니다."));
 
-        try {
-            // lineData JSON 파싱
-            Map<String, Object> lineDataMap = objectMapper.readValue(walkingPath.getLineData(), Map.class);
+        return parseWalkingPathResponse(walkingPath.getLineData());
+    }
 
-            // WalkingPathResponse로 변환
+    private WalkingPathResponse parseWalkingPathResponse(String lineData) {
+        try {
+            Map<String, Object> lineDataMap = objectMapper.readValue(lineData, Map.class);
+
             return new WalkingPathResponse(
                     (String) lineDataMap.get("type"),
                     (String) lineDataMap.get("totalTime"),
