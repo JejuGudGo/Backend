@@ -1,13 +1,12 @@
-package com.example.jejugudgo.domain.course.tamp.service;
+package com.example.jejugudgo.domain.course.tmap.service;
 
-import com.example.jejugudgo.domain.course.tamp.dto.request.TMapRequest;
-import com.example.jejugudgo.domain.course.tamp.dto.response.WalkingPathCoordination;
-import com.example.jejugudgo.domain.course.tamp.dto.response.WalkingPathResponse;
-import com.example.jejugudgo.domain.course.tamp.entity.SearchOption;
+import com.example.jejugudgo.domain.course.tmap.dto.request.TMapRequest;
+import com.example.jejugudgo.domain.course.tmap.dto.response.WalkingPathCoordination;
+import com.example.jejugudgo.domain.course.tmap.dto.response.WalkingPathResponse;
+import com.example.jejugudgo.domain.course.tmap.entity.SearchOption;
 import com.example.jejugudgo.domain.mygudgo.course.dto.request.SpotInfoRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -157,44 +156,29 @@ public class TMapRequestService {
 
         for (JsonNode feature : featuresNode) {
             JsonNode geometryNode = feature.path("geometry");
-            String geoType = geometryNode.path("type").asText();
-            JsonNode coordinatesNode = geometryNode.path("coordinates");
-            String pointType = feature.path("properties").path("pointType").asText();
-            String title = null;  // 기본적으로 제목은 null로 설정
-
-            // "SP", "PPn", "EP" 포인트 타입에 대해 제목 할당
-            if (pointType.equals("SP") || pointType.startsWith("PP") || pointType.equals("EP")) {
-                if (index < sortedSpots.size()) {
-                    title = sortedSpots.get(index).title();  // 현재 인덱스에 해당하는 제목 할당
-                }
-                index++;  // 제목이 할당된 포인트에 대해서만 인덱스 증가
-            }
-
-            if (geoType.equals("Point")) {
+            if ("Point".equals(geometryNode.path("type").asText())) {
+                JsonNode coordinatesNode = geometryNode.path("coordinates");
                 double longitude = coordinatesNode.get(0).asDouble();  // 경도
                 double latitude = coordinatesNode.get(1).asDouble();  // 위도
+                String pointType = feature.path("properties").path("pointType").asText();
+                String title = null;  // 기본적으로 제목은 null로 설정
+
+                // "SP", "PPn", "EP" 포인트 타입에 대해 제목 할당
+                if (pointType.equals("SP") || pointType.startsWith("PP") || pointType.equals("EP")) {
+                    if (index < sortedSpots.size()) {
+                        title = sortedSpots.get(index).title();  // 현재 인덱스에 해당하는 제목 할당
+                    }
+                    index++;  // 제목이 할당된 포인트에 대해서만 인덱스 증가
+                }
 
                 coordinates.add(new WalkingPathCoordination(
-                        title,
+                        title,  // 할당된 제목 또는 null
                         (long) order++,  // order 값을 1씩 증가
                         latitude,
                         longitude
                 ));
-            } else if (geoType.equals("LineString")) {
-                for (JsonNode coordNode : coordinatesNode) {
-                    double longitude = coordNode.get(0).asDouble();  // 경도
-                    double latitude = coordNode.get(1).asDouble();  // 위도
-
-                    coordinates.add(new WalkingPathCoordination(
-                            null,  // LineString은 제목 없음
-                            (long) order++,  // order 값을 1씩 증가
-                            latitude,
-                            longitude
-                    ));
-                }
             }
         }
-
 
 
 

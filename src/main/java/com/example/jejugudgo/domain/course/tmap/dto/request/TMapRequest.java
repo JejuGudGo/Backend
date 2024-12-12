@@ -1,4 +1,4 @@
-package com.example.jejugudgo.domain.course.tamp.dto.request;
+package com.example.jejugudgo.domain.course.tmap.dto.request;
 
 public record TMapRequest(
         Long searchOption,

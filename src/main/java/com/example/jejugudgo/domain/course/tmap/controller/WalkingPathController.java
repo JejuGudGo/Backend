@@ -1,9 +1,7 @@
-package com.example.jejugudgo.domain.course.tamp.controller;
+package com.example.jejugudgo.domain.course.tmap.controller;
 
-import com.example.jejugudgo.domain.course.tamp.dto.request.TMapRequest;
-import com.example.jejugudgo.domain.course.tamp.dto.request.WalkingPathRequest;
-import com.example.jejugudgo.domain.course.tamp.dto.response.WalkingPathResponse;
-import com.example.jejugudgo.domain.course.tamp.service.TMapRequestService;
+import com.example.jejugudgo.domain.course.tmap.dto.response.WalkingPathResponse;
+import com.example.jejugudgo.domain.course.tmap.service.TMapRequestService;
 import com.example.jejugudgo.domain.mygudgo.course.dto.request.SpotInfoRequest;
 import com.example.jejugudgo.global.exception.dto.CommonApiResponse;
 import com.example.jejugudgo.global.exception.util.ApiResponseUtil;

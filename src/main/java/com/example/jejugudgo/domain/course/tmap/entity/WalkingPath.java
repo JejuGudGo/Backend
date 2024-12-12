@@ -1,4 +1,4 @@
-package com.example.jejugudgo.domain.course.tamp.entity;
+package com.example.jejugudgo.domain.course.tmap.entity;
 
 import com.example.jejugudgo.domain.mygudgo.course.entity.UserJejuGudgoCourse;
 import jakarta.persistence.*;

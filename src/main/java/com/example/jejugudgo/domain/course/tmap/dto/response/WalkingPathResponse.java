@@ -1,4 +1,4 @@
-package com.example.jejugudgo.domain.course.tamp.dto.response;
+package com.example.jejugudgo.domain.course.tmap.dto.response;
 
 import javax.annotation.Nullable;
 import java.util.List;

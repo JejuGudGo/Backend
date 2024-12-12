@@ -1,6 +1,5 @@
-package com.example.jejugudgo.domain.course.tamp.service;
+package com.example.jejugudgo.domain.course.tmap.service;
 
-import com.example.jejugudgo.domain.course.tamp.dto.response.WalkingPathResponse;
 import org.springframework.stereotype.Component;
 
 @Component
