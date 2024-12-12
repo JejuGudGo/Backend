@@ -95,7 +95,7 @@ public class WalkingPathService {
 
         // WalkingPath 조회
         WalkingPath walkingPath = walkingPathRepository
-                .findByUserJejuGudgoCourseIdAndSearchOption(request.userJejuGudgoCourseId(), searchOptionEntity)
+                .findByUserJejuGudgoCourseIdAndSearchOption(request.id(), searchOptionEntity)
                 .orElseThrow(() -> new IllegalArgumentException("해당 경로를 찾을 수 없습니다."));
 
         // 결과 반환
