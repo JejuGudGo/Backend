@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum CourseType {
     COURSE_TYPE01("제주객의 길", "jeju_gudgo"),
-    COURSE_TYPE02("올레길"," olle"),
+    COURSE_TYPE02("올레길","olle"),
     COURSE_TYPE03("산책로", "trail"),
     COURSE_TYPE04("전체", "all");
 

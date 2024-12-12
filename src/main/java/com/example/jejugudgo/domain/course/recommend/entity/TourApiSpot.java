@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Builder
@@ -25,6 +27,8 @@ public class TourApiSpot {
     private double latitude;
 
     private double longitude;
+
+    private LocalDateTime updatedAt;
 
 
     @ManyToOne

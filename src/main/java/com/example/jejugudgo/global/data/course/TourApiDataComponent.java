@@ -18,6 +18,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -123,6 +125,12 @@ public class TourApiDataComponent {
                                     String address = item.get("addr1") != null ? item.get("addr1").toString() : "";
                                     double longitude = item.get("mapy") != null ? Double.parseDouble(item.get("mapy").toString()) : 0.0;
                                     double latitude = item.get("mapx") != null ? Double.parseDouble(item.get("mapx").toString()) : 0.0;
+                                    LocalDateTime createAt = item.get("createdtime") != null
+                                            ? LocalDateTime.parse(item.get("createdtime").toString(), DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
+                                            : null;
+                                    LocalDateTime updateAt = item.get("modifiedtime") != null
+                                            ? LocalDateTime.parse(item.get("modifiedtime").toString(), DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
+                                            : createAt;
 
                                     TourApiContentType tourApiContentType = tourApiContentTypeRepository.findByContentType(ContentType.fromContentTypeId(contentTypeId));
                                     Optional<TourApiSpot> tourApiSpot = tourApiSpotRepository.findByContentTypeAndTitle(tourApiContentType, title);
@@ -135,6 +143,7 @@ public class TourApiDataComponent {
                                                 .thumbnailUrl(imageUrl)
                                                 .longitude(longitude)
                                                 .latitude(latitude)
+                                                .updatedAt(updateAt)
                                                 .build();
 
                                         tourApiSpotRepository.save(newTourApiSpot);
