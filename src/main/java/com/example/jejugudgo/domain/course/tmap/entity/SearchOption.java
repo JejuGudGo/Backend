@@ -7,7 +7,7 @@ public enum SearchOption {
     SEARCH_OPTION01("0", "추천(기본값)"),
     SEARCH_OPTION02("4", "추천+대로우선"),
     SEARCH_OPTION03("10", "최단"),
-    SEARCH_OPTION("30", "최단거리+계단제외");
+    SEARCH_OPTION04("30", "최단거리+계단제외");
 
     private final String searchOptionId;
     private final String searchOptionName;
