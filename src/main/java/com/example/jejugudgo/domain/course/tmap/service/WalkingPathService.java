@@ -11,6 +11,7 @@ import com.example.jejugudgo.domain.mygudgo.course.dto.request.SpotInfoRequest;
 import com.example.jejugudgo.domain.mygudgo.course.entity.UserJejuGudgoCourse;
 import com.example.jejugudgo.domain.mygudgo.course.repository.UserJejuGudgoCourseRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,7 +70,7 @@ public class WalkingPathService {
     }
 
     @Transactional(readOnly = true)
-    public WalkingPathResponse getWalkingPath(WalkingPathRequest request) {
+    public WalkingPathResponse getWalkingPath(HttpServletRequest servletRequest, WalkingPathRequest request) {
         // WalkingPath 조회
         WalkingPath walkingPath = walkingPathRepository.findByUserJejuGudgoCourseIdAndSearchOptionSearchOptionName(
                 request.userJejuGudgoCourseId(),
