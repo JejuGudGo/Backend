@@ -1,4 +1,4 @@
-package com.example.jejugudgo.domain.course.common.query;
+package com.example.jejugudgo.domain.course.common.service;
 
 import com.example.jejugudgo.domain.course.common.dto.response.CourseListResponse;
 import com.example.jejugudgo.domain.course.common.entity.JejuGudgoCourse;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
-public class CourseQueryService {
+public class CourseService {
 
     private final JejuGudgoCourseRepository jejuGudgoCourseRepository;
     private final OlleCourseRepository olleCourseRepository;

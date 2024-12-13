@@ -1,4 +1,4 @@
-package com.example.jejugudgo.domain.course.common.query;
+package com.example.jejugudgo.domain.course.common.service;
 
 import com.example.jejugudgo.domain.course.common.dto.response.TrailListResponse;
 import com.example.jejugudgo.domain.course.common.entity.Trail;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class TrailQueryService {
+public class TrailService {
 
     private final TrailRepository trailRepository;
 

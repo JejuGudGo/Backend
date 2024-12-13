@@ -3,8 +3,8 @@ package com.example.jejugudgo.domain.mygudgo.like.service;
 import com.example.jejugudgo.domain.course.common.dto.response.CourseListResponse;
 import com.example.jejugudgo.domain.course.common.dto.response.TrailListResponse;
 import com.example.jejugudgo.domain.course.common.enums.CourseType;
-import com.example.jejugudgo.domain.course.common.query.CourseQueryService;
-import com.example.jejugudgo.domain.course.common.query.TrailQueryService;
+import com.example.jejugudgo.domain.course.common.service.CourseService;
+import com.example.jejugudgo.domain.course.common.service.TrailService;
 import com.example.jejugudgo.domain.mygudgo.like.dto.request.UserLikeRequest;
 import com.example.jejugudgo.domain.mygudgo.like.dto.response.LikeInfo;
 import com.example.jejugudgo.domain.mygudgo.like.dto.response.UserLikeCreateResponse;
@@ -31,8 +31,8 @@ public class UserLikeService {
     private final TokenUtil tokenUtil; // JWT 토큰 유틸리티
     private final UserLikeRepository userLikeRepository; // UserLike 레포지토리
     private final UserRepository userRepository; // User 레포지토리
-    private final CourseQueryService courseQueryService; // Course 데이터 조회 서비스
-    private final TrailQueryService trailQueryService; // Trail 데이터 조회 서비스
+    private final CourseService courseService; // Course 데이터 조회 서비스
+    private final TrailService trailService; // Trail 데이터 조회 서비스
 
     private static final String JEJU_GUDGO = CourseType.COURSE_TYPE01.getType();
     private static final String OLLE = CourseType.COURSE_TYPE02.getType();
@@ -115,9 +115,9 @@ public class UserLikeService {
         TrailListResponse trailForList = null;
 
         if (userLike.getCourseType() == CourseType.COURSE_TYPE01 || userLike.getCourseType() == CourseType.COURSE_TYPE02) {
-            courseForList = courseQueryService.getCourseForList(userLike.getTargetId());
+            courseForList = courseService.getCourseForList(userLike.getTargetId());
         } else if (userLike.getCourseType() == CourseType.COURSE_TYPE03) {
-            trailForList = trailQueryService.getTrailForList(userLike.getTargetId());
+            trailForList = trailService.getTrailForList(userLike.getTargetId());
         }
 
         return new UserLikeListResponse(

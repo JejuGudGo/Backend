@@ -1,7 +1,6 @@
 package com.example.jejugudgo.domain.mygudgo.course.service;
 
 import com.example.jejugudgo.domain.course.common.entity.JejuGudgoCourse;
-import com.example.jejugudgo.domain.course.common.query.CourseQueryService;
 import com.example.jejugudgo.domain.course.common.repository.JejuGudgoCourseRepository;
 import com.example.jejugudgo.domain.mygudgo.course.dto.request.*;
 import com.example.jejugudgo.domain.mygudgo.course.dto.response.UserCourseUpdateResponse;
