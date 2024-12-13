@@ -1,7 +1,7 @@
-package com.example.jejugudgo.domain.event.controller;
+package com.example.jejugudgo.domain.home.event.controller;
 
-import com.example.jejugudgo.domain.event.dto.EventListResponse;
-import com.example.jejugudgo.domain.event.service.EventService;
+import com.example.jejugudgo.domain.home.event.dto.EventListResponse;
+import com.example.jejugudgo.domain.home.event.service.EventService;
 import com.example.jejugudgo.global.exception.dto.CommonApiResponse;
 import com.example.jejugudgo.global.exception.util.ApiResponseUtil;
 import lombok.RequiredArgsConstructor;

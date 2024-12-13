@@ -1,4 +1,4 @@
-package com.example.jejugudgo.domain.event.dto;
+package com.example.jejugudgo.domain.home.event.dto;
 
 public record EventListResponse(
         Long eventId,

@@ -1,8 +1,8 @@
 package com.example.jejugudgo.global.data.event;
 
-import com.example.jejugudgo.domain.event.entity.Event;
-import com.example.jejugudgo.domain.event.entity.EventStatus;
-import com.example.jejugudgo.domain.event.repository.EventRepository;
+import com.example.jejugudgo.domain.home.event.entity.Event;
+import com.example.jejugudgo.domain.home.event.entity.EventStatus;
+import com.example.jejugudgo.domain.home.event.repository.EventRepository;
 import com.example.jejugudgo.global.data.common.entity.DataCommandLog;
 import com.example.jejugudgo.global.data.common.repository.DataCommandLogRepository;
 import com.example.jejugudgo.global.exception.enums.RetCode;
@@ -18,7 +18,6 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static org.hibernate.query.sqm.tree.SqmNode.log;
 

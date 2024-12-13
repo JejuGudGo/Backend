@@ -1,9 +1,9 @@
-package com.example.jejugudgo.domain.event.service;
+package com.example.jejugudgo.domain.home.event.service;
 
 import com.example.jejugudgo.domain.course.common.enums.CourseType;
-import com.example.jejugudgo.domain.event.dto.EventListResponse;
-import com.example.jejugudgo.domain.event.entity.EventStatus;
-import com.example.jejugudgo.domain.event.repository.EventRepository;
+import com.example.jejugudgo.domain.home.event.dto.EventListResponse;
+import com.example.jejugudgo.domain.home.event.entity.EventStatus;
+import com.example.jejugudgo.domain.home.event.repository.EventRepository;
 import com.example.jejugudgo.global.exception.enums.RetCode;
 import com.example.jejugudgo.global.exception.exception.CustomException;
 import lombok.RequiredArgsConstructor;

@@ -1,8 +1,6 @@
-package com.example.jejugudgo.domain.event.entity;
+package com.example.jejugudgo.domain.home.event.entity;
 
 import lombok.Getter;
-
-import java.time.LocalDate;
 
 @Getter
 public enum EventStatus {
